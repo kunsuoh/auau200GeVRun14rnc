@@ -48,8 +48,6 @@ class StPicoNpeAnaMaker : public StMaker
     StPicoNpeAnaMaker() {}
     void readNextEvent();
 
-    bool isGoodPair(StElectronPair const*) const;
-    
     StPicoDstMaker* mPicoDstMaker;
     StPicoNpeEvent* mPicoNpeEvent;
 
@@ -63,8 +61,67 @@ class StPicoNpeAnaMaker : public StMaker
     // -------------- USER variables -------------------------
     // add your member variables here. 
     // Remember that ntuples size can be really big, use histograms where appropriate
+    bool isGoodElectron(StPicoTrack const*) const;
+    bool isGoodPion(StPicoTrack const*) const;
+    bool isGoodPartner(StPicoTrack const*) const;
+    bool isGoodTofTrack(StPicoTrack const*) const;
+    bool isGoodEmcTrack(StPicoTrack const*) const;
+    bool isGoodPair(StElectronPair const*) const;
+    bool isGoodPureElectron(StElectronPair const*) const;
+    bool isGoodEvent() const;
+    void setTree(TTree *, TString);
+    void initVariables();
+    void setVariables(StPicoTrack *);
+    void setVariables(StElectronPair *);
+
+    StPicoDst * picoDst;
+
+    TH1F * hEvent;
+    TH1F * hRefMult;
+    TH1F * hZDCx;
+    TH1I * hTrigger;
+    
+    TH2F * hHFTInnerOuter;
+    TH1F * hHFTInner;
+    TH1F * hHFTOuter;
+    
+    TTree * tIncPion;
+    TTree * tInc;
+    TTree * tPhE;
+    TTree * tPureE;
+    
+    Float_t pairAngle3d;
+    Float_t pairAnglePhi;
+    Float_t pairAngleTheta;
+    Float_t pairMass;
+    char pairCharge;
+    Float_t pairDca;
+    Float_t pairPositionX;
+    Float_t pairPositionY;
     
     
+    Float_t dca;
+    Float_t pt;
+    Float_t partner_pt;
+    Float_t eta;
+    Float_t nsige;
+    Float_t partner_nsige;
+    Float_t beta;
+    Float_t e;
+    Float_t e0;
+    Float_t e1;
+    Float_t e2;
+    Float_t e3;
+    unsigned char neta;
+    unsigned char nphi;
+    Float_t phiDist;
+    Float_t zDist;
+    Float_t etaTowDist;
+    Float_t phiTowDist;
+    
+    UShort_t mZDCx;
+    UShort_t mRefMult;
+
     
     
     ClassDef(StPicoNpeAnaMaker, 2)
