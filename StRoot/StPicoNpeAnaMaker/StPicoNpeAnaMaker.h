@@ -19,6 +19,7 @@
 #include "TChain.h"
 #include "StMaker.h"
 #include "TH2F.h"
+#include "StThreeVectorF.hh"
 
 class TString;
 class TFile;
