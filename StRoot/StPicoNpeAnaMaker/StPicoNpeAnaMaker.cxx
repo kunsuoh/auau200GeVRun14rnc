@@ -16,6 +16,7 @@
 #include "StPicoNpeEventMaker/StPicoNpeEvent.h"
 #include "StPicoNpeEventMaker/StElectronPair.h"
 #include "StBTofUtil/tofPathLength.hh"
+#include "StLorentzVectorF.hh"
 #include "phys_constants.h"
 #include "SystemOfUnits.h"
 
