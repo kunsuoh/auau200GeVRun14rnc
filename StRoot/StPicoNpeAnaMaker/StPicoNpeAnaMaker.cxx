@@ -211,6 +211,12 @@ Int_t StPicoNpeAnaMaker::Make()
     return kStOK;
 }
 //-----------------------------------------------------------------------------
+bool StPicoNpeAnaMaker::isGoodEvent() const
+{
+    return mPicoDstMaker->picoDst()->event()->triggerWord()>>cutsAna::trigger & cutsAna::triggerLength;
+    
+}
+//-----------------------------------------------------------------------------
 bool StPicoNpeAnaMaker::isGoodPair(StElectronPair const* const epair) const
 {
     if(!epair) return false;

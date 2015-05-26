@@ -62,6 +62,7 @@ class StPicoNpeAnaMaker : public StMaker
     // -------------- USER variables -------------------------
     // add your member variables here. 
     // Remember that ntuples size can be really big, use histograms where appropriate
+    bool isGoodEvent() const;
     bool isGoodElectron(StPicoTrack const*) const;
     bool isGoodPion(StPicoTrack const*) const;
     bool isGoodPartner(StPicoTrack const*) const;
@@ -69,7 +70,6 @@ class StPicoNpeAnaMaker : public StMaker
     bool isGoodEmcTrack(StPicoTrack const*) const;
     bool isGoodPair(StElectronPair const*) const;
     bool isGoodPureElectron(StElectronPair const*) const;
-    bool isGoodEvent() const;
     void setTree(TTree *, TString);
     void initVariables();
     void setVariables(StPicoTrack *);
