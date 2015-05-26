@@ -30,7 +30,6 @@ namespace cutsAna
     bool const pionRequireHFT = true;
     int const pionNHitsFit = 20;
     int const pionNhitsDedx = 15;
-    float const pionHitRatio = 0.52;
     float const pionEta = 0.7;
     float const pionPt = 1.5;
     
@@ -38,7 +37,6 @@ namespace cutsAna
     bool const electronRequireHFT = true;
     int const electronNHitsFit = 20;
     int const electronNhitsDedx = 15;
-    float const electronHitRatio = 0.52;
     float const electronEta = 0.7;
     float const electronPt = 1.5;
     

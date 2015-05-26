@@ -223,10 +223,9 @@ bool StPicoNpeAnaMaker::isGoodElectron(StPicoTrack const * const trk) const
     (!cutsAna::electronRequireHFT || trk->isHFTTrack()) &&
     trk->nHitsFit() >= cutsAna::electronNHitsFit &&
     trk->nHitsDedx() >= cutsAna::electronNhitsDedx &&
-    //  trk->hitRatio() >= cutsAna::electronHitRatio &&
     fabs(trk->gMom(pVtx, bField).pseudoRapidity()) <= cutsAna::electronEta &&
     trk->gPt() >= cutsAna::electronPt &&
-    trk->nSigmaElectron() <= cutsAna::nSigElectron
+    fabs(trk->nSigmaElectron()) <= cutsAna::nSigElectron
     ;
 }//-----------------------------------------------------------------------------
 bool StPicoNpeAnaMaker::isGoodPion(StPicoTrack const * const trk) const
@@ -235,10 +234,9 @@ bool StPicoNpeAnaMaker::isGoodPion(StPicoTrack const * const trk) const
     (!cutsAna::pionRequireHFT || trk->isHFTTrack()) &&
     trk->nHitsFit() >= cutsAna::pionNHitsFit &&
     trk->nHitsDedx() >= cutsAna::pionNhitsDedx &&
-    //  trk->hitRatio() >= cutsAna::pionHitRatio &&
     fabs(trk->gMom(pVtx, bField).pseudoRapidity()) <= cutsAna::pionEta &&
     trk->gPt() >= cutsAna::pionPt
-    //   trk->nSigmaPion() <= cutsAna::nSigPion
+    fabs(trk->nSigmaPion()) <= cutsAna::nSigPion
     ;
 }
 //-----------------------------------------------------------------------------
