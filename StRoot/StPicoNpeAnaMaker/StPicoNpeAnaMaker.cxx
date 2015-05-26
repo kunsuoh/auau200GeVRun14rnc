@@ -246,7 +246,7 @@ bool StPicoNpeAnaMaker::isGoodPartner(StPicoTrack const * const trk) const
     trk->nHitsFit() >= cutsAna::partnerNHitsFit &&
     fabs(trk->gMom(pVtx, bField).pseudoRapidity()) <= cutsAna::partnerEta &&
     trk->gPt() >= cutsAna::partnerPt &&
-    abs(trk->nSigmaElectron()) <= cutsAna::partnerNSigElectron
+    fabs(trk->nSigmaElectron()) <= cutsAna::partnerNSigElectron
     ;
 }
 //-----------------------------------------------------------------------------
