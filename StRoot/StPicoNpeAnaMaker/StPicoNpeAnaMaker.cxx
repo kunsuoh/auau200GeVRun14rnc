@@ -59,6 +59,23 @@ Int_t StPicoNpeAnaMaker::Init()
     mOutputFile->cd();
     
     // -------------- USER VARIABLES -------------------------
+    hEvent = new TH1F("hEvent","hEvent",10,0,10);
+    hRefMult = new TH1F("hRefMult","hRefMult",1000,0,1000);
+    hZDCx = new TH1F("hZDCx","hZDCx",100000,0,100000);
+    hHFTInnerOuter = new TH2F("hHFTInnerOuter","hHFTInnerOuter",1000,0,30000,1000,0,30000);
+    hHFTInner = new TH1F("hHFTInner","hHFTInner",1000,0,30000);
+    hHFTOuter = new TH1F("hHFTOuter","hHFTOuter",1000,0,30000);
+    hTrigger = new TH1I("hTrigger","hTrigger",30,0,30);
+    
+    tIncPion = new TTree("tIncPion","tree for Pion form PicoDst");
+    tInc = new TTree("tInc","tree for electron");
+    tPhE = new TTree("tPhE","tree for photonic electron");
+    tPureE = new TTree("tPureE","tree for pure electron");
+    
+    setTree(tIncPion,"T");
+    setTree(tInc,"T");
+    setTree(tPhE,"P");
+    setTree(tPureE,"P");
 
     
     
