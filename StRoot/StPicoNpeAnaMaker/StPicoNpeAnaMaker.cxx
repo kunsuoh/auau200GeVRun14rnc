@@ -235,7 +235,7 @@ bool StPicoNpeAnaMaker::isGoodPion(StPicoTrack const * const trk) const
     trk->nHitsFit() >= cutsAna::pionNHitsFit &&
     trk->nHitsDedx() >= cutsAna::pionNhitsDedx &&
     fabs(trk->gMom(pVtx, bField).pseudoRapidity()) <= cutsAna::pionEta &&
-    trk->gPt() >= cutsAna::pionPt
+    trk->gPt() >= cutsAna::pionPt &&
     fabs(trk->nSigmaPion()) <= cutsAna::nSigPion
     ;
 }
