@@ -18,7 +18,6 @@
 
 #include "TChain.h"
 #include "StMaker.h"
-#include "THnSparse.h"
 #include "TH2F.h"
 
 class TString;
@@ -29,6 +28,7 @@ class StElectronTrack;
 class StElectronPair;
 class StPicoDstMaker;
 class StPicoTrack;
+class StPicoDst;
 
 class StPicoNpeAnaMaker : public StMaker
 {
