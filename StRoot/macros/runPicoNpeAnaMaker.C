@@ -57,17 +57,13 @@ void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunList
     {
         if(iEvent%1000==0) cout << "Working on eventNumber " << iEvent << endl;
 
-        cout << "DEBUG" << endl;
         npeChain->Clear();
-        cout << "DEBUG" << endl;
         int iret = npeChain->Make();
-        cout << "DEBUG" << endl;
         if (iret)
         {
             cout << "Bad return code!" << iret << endl;
             break;
         }
-        cout << "DEBUG" << endl;
     }
     
     npeChain->Finish();

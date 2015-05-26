@@ -99,8 +99,11 @@ Int_t StPicoNpeAnaMaker::Finish()
 //-----------------------------------------------------------------------------
 Int_t StPicoNpeAnaMaker::Make()
 {
+    LOG_INFO << " StPicoNpeAnaMaker::Maker() " << endm;
+
     readNextEvent();
     hEvent->Fill(0);
+    LOG_INFO << " StPicoNpeAnaMaker::Maker() " << endm;
 
     if (!mPicoDstMaker)
     {
@@ -108,8 +111,10 @@ Int_t StPicoNpeAnaMaker::Make()
         return kStWarn;
     }
     hEvent->Fill(1);
+    LOG_INFO << " StPicoNpeAnaMaker::Maker() " << endm;
 
     StPicoDst const* picoDst = mPicoDstMaker->picoDst();
+    LOG_INFO << " StPicoNpeAnaMaker::Maker() " << endm;
     
     if (!picoDst)
     {
@@ -117,6 +122,7 @@ Int_t StPicoNpeAnaMaker::Make()
         return kStWarn;
     }
     hEvent->Fill(2);
+    LOG_INFO << " StPicoNpeAnaMaker::Maker() " << endm;
 
     if(mPicoNpeEvent->runId() != picoDst->event()->runId() ||
        mPicoNpeEvent->eventId() != picoDst->event()->eventId())
@@ -126,9 +132,11 @@ Int_t StPicoNpeAnaMaker::Make()
         exit(1);
     }
     hEvent->Fill(3);
-    
+    LOG_INFO << " StPicoNpeAnaMaker::Maker() " << endm;
+
     if (!isGoodEvent()) return kStOK;
     hEvent->Fill(4);
+    LOG_INFO << " StPicoNpeAnaMaker::Maker() " << endm;
 
     // -------------- USER ANALYSIS -------------------------
     // Event informaiton
@@ -148,6 +156,7 @@ Int_t StPicoNpeAnaMaker::Make()
     hHFTOuter->Fill(picoDst->event()->numberOfPxlOuterHits());
     
     for (int i=0;i<40;i++) if (picoDst->event()->triggerWord()>>i & 1)  hTrigger->Fill(i);
+    LOG_INFO << " StPicoNpeAnaMaker::Maker() " << endm;
 
     
     // hadrons & inclusive electron with StPicoTrack
@@ -164,7 +173,8 @@ Int_t StPicoNpeAnaMaker::Make()
             tInc->Fill();
         }
     }
-    
+    LOG_INFO << " StPicoNpeAnaMaker::Maker() " << endm;
+
     
     // Photonic Electron
     TClonesArray const * aElectronPair = mPicoNpeEvent->electronPairArray();
@@ -177,6 +187,7 @@ Int_t StPicoNpeAnaMaker::Make()
         if(isGoodPureElectron(epair)) tPureE->Fill();
         tPhE->Fill();
     }
+    LOG_INFO << " StPicoNpeAnaMaker::Maker() " << endm;
 
     
     return kStOK;
