@@ -70,12 +70,10 @@ Int_t StPicoNpeAnaMaker::Init()
     tIncPion = new TTree("tIncPion","tree for Pion form PicoDst");
     tInc = new TTree("tInc","tree for electron");
     tPhE = new TTree("tPhE","tree for photonic electron");
-    tPureE = new TTree("tPureE","tree for pure electron");
     
     setTree(tIncPion,"T");
     setTree(tInc,"T");
     setTree(tPhE,"P");
-    setTree(tPureE,"P");
 
     
     
@@ -106,8 +104,7 @@ Int_t StPicoNpeAnaMaker::Finish()
     tInc->Write();
     tIncPion->Write();
     tPhE->Write();
-    tPureE->Write();
-
+    
     
     mOutputFile->Close();
     
@@ -202,7 +199,6 @@ Int_t StPicoNpeAnaMaker::Make()
         StElectronPair * epair = (StElectronPair*)aElectronPair->At(idx);
         if ( !isGoodPair(epair) ) continue;
         setVariables(epair);
-        if(isGoodPureElectron(epair)) tPureE->Fill();
         tPhE->Fill();
     }
     LOG_INFO << " StPicoNpeAnaMaker::Maker() " << endm;

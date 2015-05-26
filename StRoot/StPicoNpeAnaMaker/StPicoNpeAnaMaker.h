@@ -69,7 +69,6 @@ class StPicoNpeAnaMaker : public StMaker
     bool isGoodTofTrack(StPicoTrack const*) const;
     bool isGoodEmcTrack(StPicoTrack const*) const;
     bool isGoodPair(StElectronPair const*) const;
-    bool isGoodPureElectron(StElectronPair const*) const;
     void setTree(TTree *, TString);
     void initVariables();
     void setVariables(StPicoTrack *);
@@ -89,7 +88,6 @@ class StPicoNpeAnaMaker : public StMaker
     TTree * tIncPion;
     TTree * tInc;
     TTree * tPhE;
-    TTree * tPureE;
     
     float bField;
     StThreeVectorF pVtx;
