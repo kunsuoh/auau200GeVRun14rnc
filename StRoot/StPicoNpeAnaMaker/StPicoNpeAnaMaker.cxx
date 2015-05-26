@@ -102,6 +102,7 @@ Int_t StPicoNpeAnaMaker::Make()
     LOG_INFO << " StPicoNpeAnaMaker::Maker() " << endm;
 
     readNextEvent();
+    LOG_INFO << " StPicoNpeAnaMaker::Maker() " << endm;
     hEvent->Fill(0);
     LOG_INFO << " StPicoNpeAnaMaker::Maker() " << endm;
 
