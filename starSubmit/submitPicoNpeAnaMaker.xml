@@ -20,9 +20,9 @@ root4star -q -b -l StRoot/macros/runPicoNpeAnaMaker.C\(\"$FILELIST\",\"$JOBID.ro
 tar -zcvf ${JOBID}.log.tgz ${JOBID}.log
 </command>
 
-    <input URL="filelist:/path/to/your/directory/&listOfFiles;" />
-    <output fromScratch="*.root" toURL="/path/to/your/directory/production/" />
-    <output fromScratch="*.log.tgz" toURL="/path/to/your/directory/log/" />
+    <input URL="filelist:/global/homes/k/kunsu/myAnalysis/&listOfFiles;" />
+    <output fromScratch="*.root" toURL="/global/homes/k/kunsu/myAnalysis/production/" />
+    <output fromScratch="*.log.tgz" toURL="/global/homes/k/kunsu/myAnalysis/log/" />
 
 <SandBox installer="ZIP">
 	<Package name="LocalLibraries">
