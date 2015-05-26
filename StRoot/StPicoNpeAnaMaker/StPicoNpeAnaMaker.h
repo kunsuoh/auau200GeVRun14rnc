@@ -90,6 +90,9 @@ class StPicoNpeAnaMaker : public StMaker
     TTree * tPhE;
     TTree * tPureE;
     
+    float bField;
+    StThreeVectorF pVtx;
+    
     Float_t pairAngle3d;
     Float_t pairAnglePhi;
     Float_t pairAngleTheta;

@@ -136,7 +136,10 @@ Int_t StPicoNpeAnaMaker::Make()
     
     mRefMult = picoDst->event()->refMult();
     mZDCx = picoDst->event()->ZDCx();
-    
+
+    bField = picoDst->event()->bField();
+    pVtx = picoDst->event()->primaryVertex();
+
     hRefMult->Fill(mRefMult);
     hZDCx->Fill(mZDCx);
     hHFTInnerOuter->Fill(picoDst->event()->numberOfPxlInnerHits(),picoDst->event()->numberOfPxlOuterHits());
@@ -146,7 +149,7 @@ Int_t StPicoNpeAnaMaker::Make()
     for (int i=0;i<40;i++) if (picoDst->event()->triggerWord()>>i & 1)  hTrigger->Fill(i);
 
     
-    // Inclusive hadrons with StPicoTrack
+    // hadrons & inclusive electron with StPicoTrack
     UInt_t nTracks = picoDst->numberOfTracks();
     for (unsigned short iTrack = 0; iTrack < nTracks; ++iTrack) {
         StPicoTrack* track = picoDst->track(iTrack);
@@ -155,19 +158,10 @@ Int_t StPicoNpeAnaMaker::Make()
             setVariables(track);
             tIncPion->Fill();
         }
-    }
-
-    
-    // Inclusive Electron with StPicoNpeEvents
-    TClonesArray const * aElectron = mPicoNpeEvent->electronArray();
-    for (int idx = 0; idx < aElectron->GetEntries(); ++idx)
-    {
-        StElectronTrack const* electron  = (StElectronTrack*)aElectron->At(idx);
-        StPicoTrack * etrack = picoDst->track(electron->electronIdx());
-        if (!etrack || !isGoodElectron(etrack)) continue;
-        if (!isGoodTofTrack(etrack) && !isGoodEmcTrack(etrack)) continue;
-        setVariables(etrack);
-        tInc->Fill();
+        if (isGoodElectron(track)) {
+            setVariables(track);
+            tInc->Fill();
+        }
     }
     
     
@@ -209,7 +203,7 @@ bool StPicoNpeAnaMaker::isGoodElectron(StPicoTrack const * const trk) const
     trk->nHitsFit() >= cutsAna::electronNHitsFit &&
     trk->nHitsDedx() >= cutsAna::electronNhitsDedx &&
     //  trk->hitRatio() >= cutsAna::electronHitRatio &&
-    fabs(trk->gMom().pseudoRapidity()) <= cutsAna::electronEta &&
+    fabs(trk->gMom(pVtx, bField).pseudoRapidity()) <= cutsAna::electronEta &&
     trk->gPt() >= cutsAna::electronPt &&
     trk->nSigmaElectron() <= cutsAna::nSigElectron
     ;
@@ -221,7 +215,7 @@ bool StPicoNpeAnaMaker::isGoodPion(StPicoTrack const * const trk) const
     trk->nHitsFit() >= cutsAna::pionNHitsFit &&
     trk->nHitsDedx() >= cutsAna::pionNhitsDedx &&
     //  trk->hitRatio() >= cutsAna::pionHitRatio &&
-    fabs(trk->gMom().pseudoRapidity()) <= cutsAna::pionEta &&
+    fabs(trk->gMom(pVtx, bField).pseudoRapidity()) <= cutsAna::pionEta &&
     trk->gPt() >= cutsAna::pionPt
     //   trk->nSigmaPion() <= cutsAna::nSigPion
     ;
@@ -231,7 +225,7 @@ bool StPicoNpeAnaMaker::isGoodPartner(StPicoTrack const * const trk) const
 {
     return
     trk->nHitsFit() >= cutsAna::partnerNHitsFit &&
-    fabs(trk->gMom().pseudoRapidity()) <= cutsAna::partnerEta &&
+    fabs(trk->gMom(pVtx, bField).pseudoRapidity()) <= cutsAna::partnerEta &&
     trk->gPt() >= cutsAna::partnerPt &&
     abs(trk->nSigmaElectron()) <= cutsAna::partnerNSigElectron
     ;
@@ -342,13 +336,12 @@ void StPicoNpeAnaMaker::setVariables(StPicoTrack * track)
 {
     initVariables();
     
-    StThreeVectorF const pVtx = picoDst->event()->primaryVertex();
     StPhysicalHelixD eHelix = track->dcaGeometry().helix();
     
     // Track
     dca = eHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
     pt = track->gPt();
-    eta = track->gMom().pseudoRapidity();
+    eta = track->gMom(pVtx, bField).pseudoRapidity();
     
     // PID
     nsige = track->nSigmaElectron();
@@ -385,8 +378,6 @@ void StPicoNpeAnaMaker::setVariables(StPicoTrack * track)
 //-----------------------------------------------------------------------------
 void StPicoNpeAnaMaker::setVariables(StElectronPair * epair)
 {
-    float const bField = picoDst->event()->bField();
-    
     pairMass = epair->pairMass();
     pairDca = epair->pairDca();
     
