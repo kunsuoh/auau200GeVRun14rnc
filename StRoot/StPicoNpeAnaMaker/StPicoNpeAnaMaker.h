@@ -123,6 +123,7 @@ class StPicoNpeAnaMaker : public StMaker
     
     UShort_t mZDCx;
     UShort_t mRefMult;
+    unsigned char isHTEvents;
 
     
     

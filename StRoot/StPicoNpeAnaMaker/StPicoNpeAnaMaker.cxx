@@ -162,8 +162,13 @@ Int_t StPicoNpeAnaMaker::Make()
     hHFTInner->Fill(picoDst->event()->numberOfPxlInnerHits());
     hHFTOuter->Fill(picoDst->event()->numberOfPxlOuterHits());
     
-    for (int i=0;i<40;i++) if (picoDst->event()->triggerWord()>>i & 1)  hTrigger->Fill(i);
-
+    for (int i=0;i<40;i++) if (picoDst->event()->triggerWord()>>i & 1) {
+        hTrigger->Fill(i);
+        isHTEvents = 0;
+        if (i < 7) isHTEvents = 1;
+        else if (i < 19) isHTEvents = 2;
+        else isHTEvents = 3;
+    }
     
     // hadrons & inclusive electron with StPicoTrack
     UInt_t nTracks = picoDst->numberOfTracks();
@@ -281,46 +286,29 @@ bool StPicoNpeAnaMaker::isGoodEmcTrack(StPicoTrack const * const trk) const
 //-----------------------------------------------------------------------------
 void StPicoNpeAnaMaker::setTree(TTree * tree, TString opt)
 {
-    if (opt=="T") {
-        tree->Branch("dca",&dca,"dca/F");
-        tree->Branch("pt",&pt,"pt/F");
-        tree->Branch("eta",&eta,"eta/F");
-        tree->Branch("nsige",&nsige,"nsige/F");
-        tree->Branch("beta",&beta,"beta/F");
-        tree->Branch("e",&e,"e/F");
-        tree->Branch("e0",&e0,"e0/F");
-        tree->Branch("e1",&e1,"e1/F");
-        tree->Branch("e2",&e2,"e2/F");
-        tree->Branch("e3",&e3,"e3/F");
-        tree->Branch("neta",&neta,"neta/b");
-        tree->Branch("nphi",&nphi,"nphi/b");
-        tree->Branch("phiDist",&phiDist,"phiDist/F");
-        tree->Branch("zDist",&zDist,"zDist/F");
-        tree->Branch("etaTowDist",&etaTowDist,"etaTowDist/F");
-        tree->Branch("phiTowDist",&phiTowDist,"phiTowDist/F");
-        tree->Branch("mZDCx",&mZDCx,"mZDCx/s");
-        tree->Branch("mRefMult",&mRefMult,"mRefMult/s");
-    }
-    else if (opt=="P"){
-        tree->Branch("dca",&dca,"dca/F");
-        tree->Branch("pt",&pt,"pt/F");
-        tree->Branch("eta",&eta,"eta/F");
-        tree->Branch("nsige",&nsige,"nsige/F");
-        tree->Branch("beta",&beta,"beta/F");
-        tree->Branch("e",&e,"e/F");
-        tree->Branch("e0",&e0,"e0/F");
-        tree->Branch("e1",&e1,"e1/F");
-        tree->Branch("e2",&e2,"e2/F");
-        tree->Branch("e3",&e3,"e3/F");
-        tree->Branch("neta",&neta,"neta/b");
-        tree->Branch("nphi",&nphi,"nphi/b");
-        tree->Branch("phiDist",&phiDist,"phiDist/F");
-        tree->Branch("zDist",&zDist,"zDist/F");
-        tree->Branch("etaTowDist",&etaTowDist,"etaTowDist/F");
-        tree->Branch("phiTowDist",&phiTowDist,"phiTowDist/F");
-        tree->Branch("mZDCx",&mZDCx,"mZDCx/s");
-        tree->Branch("mRefMult",&mRefMult,"mRefMult/s");
-        
+    tree->Branch("dca",&dca,"dca/F");
+    tree->Branch("pt",&pt,"pt/F");
+    tree->Branch("eta",&eta,"eta/F");
+    tree->Branch("nsige",&nsige,"nsige/F");
+    tree->Branch("beta",&beta,"beta/F");
+    tree->Branch("e",&e,"e/F");
+    tree->Branch("e0",&e0,"e0/F");
+    tree->Branch("e1",&e1,"e1/F");
+    tree->Branch("e2",&e2,"e2/F");
+    tree->Branch("e3",&e3,"e3/F");
+    tree->Branch("neta",&neta,"neta/b");
+    tree->Branch("nphi",&nphi,"nphi/b");
+    tree->Branch("phiDist",&phiDist,"phiDist/F");
+    tree->Branch("zDist",&zDist,"zDist/F");
+    tree->Branch("etaTowDist",&etaTowDist,"etaTowDist/F");
+    tree->Branch("phiTowDist",&phiTowDist,"phiTowDist/F");
+    tree->Branch("mZDCx",&mZDCx,"mZDCx/s");
+    tree->Branch("mRefMult",&mRefMult,"mRefMult/s");
+    tree->Branch("isHTEvents",&isHTEvents,"isHTEvents/b");
+
+    if (opt=="T") {}
+    else if (opt=="P")
+    {
         tree->Branch("parnter_pt",&partner_pt,"partner_pt/F");
         tree->Branch("partner_nsige",&partner_nsige,"partner_nsige/F");
         tree->Branch("pairAngle3d",&pairAngle3d,"pairAngle3d/F");

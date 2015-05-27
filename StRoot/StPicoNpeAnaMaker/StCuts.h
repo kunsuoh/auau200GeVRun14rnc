@@ -31,14 +31,14 @@ namespace cutsAna
     int const pionNHitsFit = 20;
     int const pionNhitsDedx = 15;
     float const pionEta = 0.7;
-    float const pionPt = 0.2;
+    float const pionPt = 1.5;
     
     // electron
     bool const electronRequireHFT = true;
     int const electronNHitsFit = 20;
     int const electronNhitsDedx = 15;
     float const electronEta = 0.7;
-    float const electronPt = 0.2;
+    float const electronPt = 1.5;
     
     
     // partner
