@@ -21,7 +21,7 @@
     </command>
     
     <input URL="filelist:/global/homes/k/kunsu/myAnalysis/&listOfFiles;" />
-    <output fromScratch="*.root" toURL="/global/homes/k/kunsu/myAnalysis/production/" />
+    <output fromScratch="*.root" toURL="/global/scratch2/sd/kunsu/Out_TestSample/" />
     <output fromScratch="*.log.tgz" toURL="/global/homes/k/kunsu/myAnalysis/log/" />
     
     <SandBox installer="ZIP">
