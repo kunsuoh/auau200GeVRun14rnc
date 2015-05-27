@@ -4,7 +4,7 @@
 mkdir csh list report err log production  
 3- Make sure the directory listed in the SandBox or links to them are in your submission directory.  
 4- To submit a list of files (e.g. fileTest.list):  
-star-submit-template -template submitPicoD0AnaMaker.xml -entities listOfFiles=fileTest.list
+star-submit-template -template submitPicoNpeAnaMaker.xml -entities listOfFiles=picoNpeList_all.list
 
 
 ### StPicoHFMaker based analysis
