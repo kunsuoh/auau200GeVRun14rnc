@@ -2,7 +2,7 @@
 
 <!-- Author: Kunsu OH (code maintainer, kunsuoh@gmail.com), Mustafa Mustafa (mmustafa@lbl.gov) -->
 
-<job fileListSyntax="paths" maxFilesPerProcess="150" simulateSubmission="false">
+<job fileListSyntax="paths" maxFilesPerProcess="90" simulateSubmission="false">
     
     <stdout discard="true" />
     <stderr URL="file:./err/$JOBID.err" />
