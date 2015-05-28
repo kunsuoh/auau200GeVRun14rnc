@@ -67,11 +67,9 @@ Int_t StPicoNpeAnaMaker::Init()
     hHFTOuter = new TH1F("hHFTOuter","hHFTOuter",1000,0,30000);
     hTrigger = new TH1I("hTrigger","hTrigger",30,0,30);
     
-    tIncPion = new TTree("tIncPion","tree for Pion form PicoDst");
     tInc = new TTree("tInc","tree for electron");
     tPhE = new TTree("tPhE","tree for photonic electron");
     
-    setTree(tIncPion,"T");
     setTree(tInc,"T");
     setTree(tPhE,"P");
 
@@ -102,7 +100,6 @@ Int_t StPicoNpeAnaMaker::Finish()
     hTrigger->Write();
     
     tInc->Write();
-    tIncPion->Write();
     tPhE->Write();
     
     
@@ -180,11 +177,7 @@ Int_t StPicoNpeAnaMaker::Make()
     for (unsigned short iTrack = 0; iTrack < nTracks; ++iTrack) {
         StPicoTrack* track = picoDst->track(iTrack);
         if (!track) continue;
-        if (isGoodPion(track)) {
-            setVariables(track);
-            tIncPion->Fill();
-        }
-        if (isGoodElectron(track)) {
+        if (isGoodTrack(track)) {
             setVariables(track);
             tInc->Fill();
         }
@@ -197,11 +190,12 @@ Int_t StPicoNpeAnaMaker::Make()
     {
         // this is an example of how to get the ElectronPair pairs and their corresponsing tracks
         StElectronPair * epair = (StElectronPair*)aElectronPair->At(idx);
-        if ( !isGoodPair(epair) ) continue;
-        setVariables(epair);
-        tPhE->Fill();
+        if (isGoodPair(epair))
+        {
+            setVariables(epair);
+            tPhE->Fill();
+        }
     }
-
     
     return kStOK;
 }
@@ -220,34 +214,28 @@ bool StPicoNpeAnaMaker::isGoodPair(StElectronPair const* const epair) const
     StPicoTrack const* partner = mPicoDstMaker->picoDst()->track(epair->partnerIdx());
     
     return
-    isGoodElectron(electron) &&
+    isGoodTagged(electron) &&
     isGoodPartner(partner) &&
     epair->pairMass() < cutsAna::pairMass &&
     epair->pairDca() < cutsAna::pairDca
     ;
 }
 //-----------------------------------------------------------------------------
-bool StPicoNpeAnaMaker::isGoodElectron(StPicoTrack const * const trk) const
+bool StPicoNpeAnaMaker::isGoodTrack(StPicoTrack const * const trk) const
 {
     return
-    (!cutsAna::electronRequireHFT || trk->isHFTTrack()) &&
-    trk->nHitsFit() >= cutsAna::electronNHitsFit &&
-    trk->nHitsDedx() >= cutsAna::electronNhitsDedx &&
-    fabs(trk->gMom(pVtx, bField).pseudoRapidity()) <= cutsAna::electronEta &&
-    trk->gPt() >= cutsAna::electronPt &&
-    fabs(trk->nSigmaElectron()) <= cutsAna::nSigElectron
+    (!cutsAna::trackRequireHFT || trk->isHFTTrack()) &&
+    trk->nHitsFit() >= cutsAna::trackNHitsFit &&
+    trk->nHitsDedx() >= cutsAna::trackNhitsDedx &&
+    fabs(trk->gMom(pVtx, bField).pseudoRapidity()) <= cutsAna::trackEta &&
+    trk->gPt() >= cutsAna::trackPt
     ;
-}//-----------------------------------------------------------------------------
-bool StPicoNpeAnaMaker::isGoodPion(StPicoTrack const * const trk) const
+}
+//-----------------------------------------------------------------------------
+bool StPicoNpeAnaMaker::isGoodTagged(StPicoTrack const * const trk) const
 {
-    return
-    (!cutsAna::pionRequireHFT || trk->isHFTTrack()) &&
-    trk->nHitsFit() >= cutsAna::pionNHitsFit &&
-    trk->nHitsDedx() >= cutsAna::pionNhitsDedx &&
-    fabs(trk->gMom(pVtx, bField).pseudoRapidity()) <= cutsAna::pionEta &&
-    trk->gPt() >= cutsAna::pionPt &&
-    fabs(trk->nSigmaPion()) <= cutsAna::nSigPion
-    ;
+    if (!isGoodTrack(trk)) return false
+    return fabs(trk->nSigmaElectron()) <= cutsAna::taggedNSigElectron;
 }
 //-----------------------------------------------------------------------------
 bool StPicoNpeAnaMaker::isGoodPartner(StPicoTrack const * const trk) const
@@ -295,6 +283,7 @@ void StPicoNpeAnaMaker::setTree(TTree * tree, TString opt)
     tree->Branch("pt",&pt,"pt/F");
     tree->Branch("eta",&eta,"eta/F");
     tree->Branch("nsige",&nsige,"nsige/F");
+    tree->Branch("nsigpion",&nsigpion,"nsigpion/F");
     tree->Branch("beta",&beta,"beta/F");
     tree->Branch("e",&e,"e/F");
     tree->Branch("e0",&e0,"e0/F");
@@ -357,6 +346,7 @@ void StPicoNpeAnaMaker::setVariables(StPicoTrack * track)
     
     // PID
     nsige = track->nSigmaElectron();
+    nsigpion = track->nSigmaPion();
     if (isGoodTofTrack(track))  {
         StPicoBTofPidTraits * Tof = picoDst->btofPidTraits(track->bTofPidTraitsIndex());
         

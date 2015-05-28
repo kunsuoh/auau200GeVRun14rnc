@@ -25,20 +25,13 @@ namespace cutsAna
     unsigned char const trigger = 0; // 19: BHT1, 21: BHT2, 23: BHT3
     unsigned int const triggerLength = 0xFFFF;
     
-    // hadron selectron
-    float const nSigPion = 2;
-    bool const pionRequireHFT = true;
-    int const pionNHitsFit = 20;
-    int const pionNhitsDedx = 15;
-    float const pionEta = 0.7;
-    float const pionPt = 1.5;
+    // track
+    bool const trackRequireHFT = true;
+    int const trackNHitsFit = 20;
+    int const trackNhitsDedx = 15;
+    float const trackEta = 0.7;
+    float const trackPt = 1.5;
     
-    // electron
-    bool const electronRequireHFT = true;
-    int const electronNHitsFit = 20;
-    int const electronNhitsDedx = 15;
-    float const electronEta = 0.7;
-    float const electronPt = 1.5;
     
     
     // partner
@@ -53,7 +46,7 @@ namespace cutsAna
     
     
     // pid
-    float const nSigElectron = 3;
+    float const taggedNSigElectron = 3;
     float const partnerNSigElectron = 3;
     
     int const emcNEta = 0;//1;

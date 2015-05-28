@@ -66,6 +66,11 @@ root4star -l -b -q -x runPicoNpeAnaMaker.C\(\"test.list\",\"test.root\"\)
 ###How to submit jobs:
 ```bash
 # You cah find STAR Scheduler XML file under:
-cp -p auau200GeVRun14/starSubmit/submitPicoNpeAnaMaker.xml .
-# auau200GeVRun14/starSubmit/README contains a how to use.
+1- cp -p auau200GeVRun14/starSubmit/submitPicoNpeAnaMaker.xml .
+2- Manually replace '/path/to/your/directory/' in the XML to your directory path (hint, you should change in three places).  
+3- Create the following directories in your submission directory:  
+mkdir csh list report err log production  
+4- Make sure the directory listed in the SandBox or links to them are in your submission directory.  
+5- To submit a list of files (e.g. fileTest.list):  
+star-submit-template -template submitPicoNpeAnaMaker.xml -entities listOfFiles=picoNpeList_all.list
 ```

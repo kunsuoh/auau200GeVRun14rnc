@@ -63,8 +63,8 @@ class StPicoNpeAnaMaker : public StMaker
     // add your member variables here. 
     // Remember that ntuples size can be really big, use histograms where appropriate
     bool isGoodEvent() const;
-    bool isGoodElectron(StPicoTrack const*) const;
-    bool isGoodPion(StPicoTrack const*) const;
+    bool isGoodTrack(StPicoTrack const*) const;
+    bool isGoodTagged(StPicoTrack const*) const;
     bool isGoodPartner(StPicoTrack const*) const;
     bool isGoodTofTrack(StPicoTrack const*) const;
     bool isGoodEmcTrack(StPicoTrack const*) const;
@@ -85,7 +85,6 @@ class StPicoNpeAnaMaker : public StMaker
     TH1F * hHFTInner;
     TH1F * hHFTOuter;
     
-    TTree * tIncPion;
     TTree * tInc;
     TTree * tPhE;
     
@@ -107,6 +106,7 @@ class StPicoNpeAnaMaker : public StMaker
     Float_t partner_pt;
     Float_t eta;
     Float_t nsige;
+    Float_t nsigpion;
     Float_t partner_nsige;
     Float_t beta;
     Float_t e;
