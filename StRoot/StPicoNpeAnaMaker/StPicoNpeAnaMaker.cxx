@@ -234,7 +234,7 @@ bool StPicoNpeAnaMaker::isGoodTrack(StPicoTrack const * const trk) const
 //-----------------------------------------------------------------------------
 bool StPicoNpeAnaMaker::isGoodTagged(StPicoTrack const * const trk) const
 {
-    if (!isGoodTrack(trk)) return false
+    if (!isGoodTrack(trk)) return false;
     return fabs(trk->nSigmaElectron()) <= cutsAna::taggedNSigElectron;
 }
 //-----------------------------------------------------------------------------
