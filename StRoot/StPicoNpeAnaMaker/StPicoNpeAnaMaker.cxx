@@ -142,7 +142,7 @@ Int_t StPicoNpeAnaMaker::Make()
     }
     hEvent->Fill(3);
 
-    if (!isGoodEvent()) return kStOK;
+  //  if (!isGoodEvent()) return kStOK;
     hEvent->Fill(4);
 
     // -------------- USER ANALYSIS -------------------------
