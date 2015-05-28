@@ -23,7 +23,7 @@ namespace cutsAna
     float const vz = 6.0;// cm.
     float const vzVpdVz = 3.0; // 3 cm.
     unsigned char const trigger = 0; // 19: BHT1, 21: BHT2, 23: BHT3
-    unsigned char const triggerLength = 0xFFFF;
+    unsigned int const triggerLength = 0xFFFF;
     
     // hadron selectron
     float const nSigPion = 2;
