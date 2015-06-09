@@ -168,11 +168,14 @@ Int_t StPicoNpeAnaMaker::Make()
     mRefMult = picoDst->event()->refMult();
     mZDCx = picoDst->event()->ZDCx();
 
-    cout << "DEBUG!!" << endl;
+    cout << "DEBUG!!!!" << endl;
     bField = picoDst->event()->bField();
+    cout << "DEBUG!!!?" << endl;
     pVtx = picoDst->event()->primaryVertex();
+    cout << "DEBUG!!?!" << endl;
 
     hZDCx->Fill(mZDCx);
+    cout << "DEBUG!!??" << endl;
     hHFTInnerOuter->Fill(picoDst->event()->numberOfPxlInnerHits(),picoDst->event()->numberOfPxlOuterHits());
     hHFTInner->Fill(picoDst->event()->numberOfPxlInnerHits());
     hHFTOuter->Fill(picoDst->event()->numberOfPxlOuterHits());
