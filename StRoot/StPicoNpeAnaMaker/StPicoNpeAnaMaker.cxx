@@ -170,6 +170,7 @@ Int_t StPicoNpeAnaMaker::Make()
         if (isGoodTrack(track)) {
             setVariables(track);
 //            tInc->Fill();
+            if (eoverp < 0 || eoverp > 4) continue;
             for (int i=0; i<5; i++) if (isHTEvents >> i & 0x1) sparse[i][0]->Fill(x);
         }
     }
@@ -185,6 +186,7 @@ Int_t StPicoNpeAnaMaker::Make()
         {
             setVariables(epair);
 //            tPhE->Fill();
+            if (eoverp < 0 || eoverp > 4) continue;
             for (int i=0; i<5; i++) if (isHTEvents >> i & 0x1) sparse[i][1]->Fill(x);
 
         }
@@ -370,7 +372,7 @@ void StPicoNpeAnaMaker::setVariables(StPicoTrack * track)
         etaTowDist = Emc->etaTowDist();
         phiTowDist = Emc->phiTowDist();
     }
-    x = {pt, eta, dca, nsige, eoverp, neta*1., nphi*1., zDist, phiDist, etaTowDist, phiTowDist, -999, -999};
+    x = {pt, eta, dca, nsige, eoverp, neta*1., nphi*1., zDist, phiDist, etaTowDist, phiTowDist, -999, -999, -999};
 }
 //-----------------------------------------------------------------------------
 void StPicoNpeAnaMaker::setVariables(StElectronPair * epair)
@@ -406,13 +408,14 @@ void StPicoNpeAnaMaker::setVariables(StElectronPair * epair)
     partner_nsige = partner->nSigmaElectron();
     x[11] = pairMass;
     x[12] = pairDca;
+    x[13] = pairCharge;
 }
 //-----------------------------------------------------------------------------
 void StPicoNpeAnaMaker::setTHnSparse(){
-    const Int_t nbin = 13;
-    const Int_t bins[nbin] = {85, 100, 100, 289, 200, 10, 10, 100, 100, 100, 100, 100, 100};
-    const Double_t xmin[nbin] = {1.5, -0.7, -0.1, -13, 0, 0, 0, -20, -0.1, -0.1, -0.1, 0, 0};
-    const Double_t xmax[nbin] = {10, 0.7, 0.1, 13, 4, 10, 10, 20, 0.1, 0.1, 0.1, 0.4, 1};
+    const Int_t nbin = 14;
+    const Int_t bins[nbin] = {85, 100, 100, 289, 200, 10, 10, 100, 100, 100, 100, 100, 100, 3};
+    const Double_t xmin[nbin] = {1.5, -0.7, -0.1, -13, 0, 0, 0, -20, -0.1, -0.1, -0.1, 0, 0 , -1.5};
+    const Double_t xmax[nbin] = {10, 0.7, 0.1, 13, 4, 10, 10, 20, 0.1, 0.1, 0.1, 0.4, 1, 1.5};
 
     for (int i=0; i<5; i++) {
         for (int j=0; j<3; j++) {
