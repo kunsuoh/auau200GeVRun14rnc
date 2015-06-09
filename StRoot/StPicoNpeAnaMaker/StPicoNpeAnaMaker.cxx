@@ -74,12 +74,12 @@ Int_t StPicoNpeAnaMaker::Init()
     for (int i=0; i<25; i++) {
         hRefMult[i] = new TH1F(Form("hRefMult_%d",i),Form("hRefMult_%d",i),1000,0,1000);
         for (int j=0; j<5; j++) { // 0: no cut, 1: ...
-            hDcaByPt[i][j] = new TH2D(Form("hDcaByPt_%d_%d",i,j),Form("hDcaByPt_%d_%d",i,j),nbin,ptbin,100,-0.1,0.1);
-            hNSigEByPt[i][j] = new TH2D(Form("hNSigEByPt_%d_%d",i,j),Form("hNSigEByPt_%d_%d",i,j),nbin,ptbni,289,-13,13);
-            hEOverPByPt[i][j] = new TH2D(Form("hEOverPByPt_%d_%d",i,j),Form("hEOverPByPt_%d_%d",i,j),nbin,ptbin,100,0,4);
-            hNEtaByPt[i][j] = new TH2D(Form("hNEtaByPt_%d_%d",i,j),Form("hNEtaByPt_%d_%d",i,j),nbin,ptbin,10,0,10);
-            hNPhiByPt[i][j] = new TH2D(Form("hNPhiByPt_%d_%d",i,j),Form("hNPhiByPt_%d_%d",i,j),nbin,ptbin,10,0,10);
-            hPairMassByPt[i][j] = new TH2D(Form("hPairMassByPt_%d_%d",i,j),Form("hPairMassByPt_%d_%d",i,j),nbin,ptbin,100,0,0.4);
+            hDcaByPt[i][j] = new TH2F(Form("hDcaByPt_%d_%d",i,j),Form("hDcaByPt_%d_%d",i,j),nbin,ptbin,100,-0.1,0.1);
+            hNSigEByPt[i][j] = new TH2F(Form("hNSigEByPt_%d_%d",i,j),Form("hNSigEByPt_%d_%d",i,j),nbin,ptbni,289,-13,13);
+            hEOverPByPt[i][j] = new TH2F(Form("hEOverPByPt_%d_%d",i,j),Form("hEOverPByPt_%d_%d",i,j),nbin,ptbin,100,0,4);
+            hNEtaByPt[i][j] = new TH2F(Form("hNEtaByPt_%d_%d",i,j),Form("hNEtaByPt_%d_%d",i,j),nbin,ptbin,10,0,10);
+            hNPhiByPt[i][j] = new TH2F(Form("hNPhiByPt_%d_%d",i,j),Form("hNPhiByPt_%d_%d",i,j),nbin,ptbin,10,0,10);
+            hPairMassByPt[i][j] = new TH2F(Form("hPairMassByPt_%d_%d",i,j),Form("hPairMassByPt_%d_%d",i,j),nbin,ptbin,100,0,0.4);
 
         }
     }

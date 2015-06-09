@@ -124,13 +124,13 @@ class StPicoNpeAnaMaker : public StMaker
     UShort_t mRefMult;
     unsigned char isHTEvents;
 
-    TH1D * hRefMult[25];
-    TH2D * hDcaByPt[25][5];
-    TH2D * hNSigEByPt[25][5];
-    TH2D * hEOverPByPt[25][5];
-    TH2D * hNEtaByPt[25][5];
-    TH2D * hNPhiByPt[25][5];
-    TH2D * hPairMassByPt[25][5];
+    TH1F * hRefMult[25];
+    TH2F * hDcaByPt[25][5];
+    TH2F * hNSigEByPt[25][5];
+    TH2F * hEOverPByPt[25][5];
+    TH2F * hNEtaByPt[25][5];
+    TH2F * hNPhiByPt[25][5];
+    TH2F * hPairMassByPt[25][5];
     
     
     ClassDef(StPicoNpeAnaMaker, 2)
