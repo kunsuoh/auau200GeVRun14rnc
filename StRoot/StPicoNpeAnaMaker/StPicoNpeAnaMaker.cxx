@@ -157,15 +157,18 @@ Int_t StPicoNpeAnaMaker::Make()
 
   //  if (!isGoodEvent()) return kStOK;
     hEvent->Fill(4);
+    cout << "DEBUG!!" << endl;
 
     // -------------- USER ANALYSIS -------------------------
     // Event informaiton
     mRefMult = std::numeric_limits<Int_t>::quiet_NaN();
     mZDCx = std::numeric_limits<Int_t>::quiet_NaN();
     
+    cout << "DEBUG!!" << endl;
     mRefMult = picoDst->event()->refMult();
     mZDCx = picoDst->event()->ZDCx();
 
+    cout << "DEBUG!!" << endl;
     bField = picoDst->event()->bField();
     pVtx = picoDst->event()->primaryVertex();
 
@@ -173,6 +176,7 @@ Int_t StPicoNpeAnaMaker::Make()
     hHFTInnerOuter->Fill(picoDst->event()->numberOfPxlInnerHits(),picoDst->event()->numberOfPxlOuterHits());
     hHFTInner->Fill(picoDst->event()->numberOfPxlInnerHits());
     hHFTOuter->Fill(picoDst->event()->numberOfPxlOuterHits());
+    cout << "DEBUG!!" << endl;
     cout << "DEBUG!!" << endl;
 
     for (int i=0;i<25;i++)
