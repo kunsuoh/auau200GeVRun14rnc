@@ -98,7 +98,6 @@ Int_t StPicoNpeAnaMaker::Finish()
 
     // --------------- USER HISTOGRAM WRITE --------------------
     hEvent->Write();
-    hRefMult->Write();
     hZDCx->Write();
     hHFTInnerOuter->Write();
     hHFTInner->Write();
