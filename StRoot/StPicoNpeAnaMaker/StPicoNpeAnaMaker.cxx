@@ -416,7 +416,7 @@ void StPicoNpeAnaMaker::setTHnSparse(){
 
     for (int i=0; i<5; i++) {
         for (int j=0; j<3; j++) {
-            sparse[i][j] = new THnSparse(Form("sparse_%d_%d",i,j),Form("sparse_%d_%d",i,j),nbin, bins, xmin, xmax);
+            sparse[i][j] = new THnSparseF(Form("sparse_%d_%d",i,j),Form("sparse_%d_%d",i,j),nbin, bins, xmin, xmax);
         }
     }
 }
