@@ -370,7 +370,7 @@ void StPicoNpeAnaMaker::setVariables(StPicoTrack * track)
         etaTowDist = Emc->etaTowDist();
         phiTowDist = Emc->phiTowDist();
     }
-    x = {pt, eta, dca, nsige, eoverp, neta, nphi, zDist, phiDist, etaTowDist, phiTowDist, -999, -999};
+    x = {pt, eta, dca, nsige, eoverp, neta*1., nphi*1., zDist, phiDist, etaTowDist, phiTowDist, -999, -999};
 }
 //-----------------------------------------------------------------------------
 void StPicoNpeAnaMaker::setVariables(StElectronPair * epair)
