@@ -121,22 +121,28 @@ Int_t StPicoNpeAnaMaker::Make()
     cout << "DEBUG!!" << endl;
 
     readNextEvent();
+    cout << "DEBUG!!" << endl;
     hEvent->Fill(0);
+    cout << "DEBUG!!" << endl;
 
     if (!mPicoDstMaker)
     {
         LOG_WARN << " StPicoNpeAnaMaker - No PicoDstMaker! Skip! " << endm;
         return kStWarn;
     }
+    cout << "DEBUG!!" << endl;
     hEvent->Fill(1);
+    cout << "DEBUG!!" << endl;
 
     StPicoDst const* picoDst = mPicoDstMaker->picoDst();
+    cout << "DEBUG!!" << endl;
     
     if (!picoDst)
     {
         LOG_WARN << "StPicoNpeAnaMaker - No PicoDst! Skip! " << endm;
         return kStWarn;
     }
+    cout << "DEBUG!!" << endl;
     hEvent->Fill(2);
 
     if(mPicoNpeEvent->runId() != picoDst->event()->runId() ||
@@ -146,6 +152,7 @@ Int_t StPicoNpeAnaMaker::Make()
         LOG_ERROR <<" StPicoNpeAnaMaker - SOMETHING TERRIBLE JUST HAPPENED. StPicoEvent and StPicoNpeEvent are not in sync."<<endm;
         exit(1);
     }
+    cout << "DEBUG!!" << endl;
     hEvent->Fill(3);
 
   //  if (!isGoodEvent()) return kStOK;
