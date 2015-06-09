@@ -70,7 +70,7 @@ Int_t StPicoNpeAnaMaker::Init()
     setTree(tPhE,"P");
     
     const int nbin = 6;
-    int ptbin[nbin+1] = {1.5, 1.7, 2.0, 2.5, 3.5, 5.5, 10.};
+    double ptbin[nbin+1] = {1.5, 1.7, 2.0, 2.5, 3.5, 5.5, 10.};
     for (int i=0; i<25; i++) {
         hRefMult[i] = new TH1F(Form("hRefMult_%d",i),Form("hRefMult_%d",i),1000,0,1000);
         for (int j=0; j<5; j++) { // 0: no cut, 1: ...
