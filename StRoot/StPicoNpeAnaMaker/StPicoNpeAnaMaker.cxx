@@ -171,7 +171,7 @@ Int_t StPicoNpeAnaMaker::Make()
             setVariables(track);
 //            tInc->Fill();
             for (int i=0; i<5; i++) {
-                if (i==0 && (eoverp < 0.8 || eoverp > 2)) continue;
+      //          if (i==0 && (eoverp < 0.8 || eoverp > 2)) continue;
                 if (isHTEvents >> i & 0x1) sparse[i][0]->Fill(x);
             }
         }
@@ -190,7 +190,7 @@ Int_t StPicoNpeAnaMaker::Make()
 //            tPhE->Fill();
             if (eoverp < 0 || eoverp > 4) continue;
             for (int i=0; i<5; i++) {
-                if (i==0 && (eoverp < 0.8 || eoverp > 2)) continue;
+       //         if (i==0 && (eoverp < 0.8 || eoverp > 2)) continue;
                 if (isHTEvents >> i & 0x1) sparse[i][1]->Fill(x);
             }
 
