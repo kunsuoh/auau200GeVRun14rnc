@@ -1,4 +1,5 @@
 #!/bin/bash
+scp pdsf.nersc.gov:/global/project/projectdirs/star/rnc/mustafa/npeTree/Run14/AuAu/200GeV/physics2/P15ic/picoNpeHists/$1 .
 if [ "$1" == "" ]; then
 	echo "No input file."
 elif [ -e $1 ]; then

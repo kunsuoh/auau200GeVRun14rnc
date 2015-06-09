@@ -60,11 +60,7 @@ Int_t StPicoNpeAnaMaker::Init()
     
     // -------------- USER VARIABLES -------------------------
     hEvent = new TH1F("hEvent","hEvent",10,0,10);
-    hRefMult = new TH1F("hRefMult","hRefMult",1000,0,1000);
     hZDCx = new TH1F("hZDCx","hZDCx",100000,0,100000);
-    hHFTInnerOuter = new TH2F("hHFTInnerOuter","hHFTInnerOuter",1000,0,30000,1000,0,30000);
-    hHFTInner = new TH1F("hHFTInner","hHFTInner",1000,0,30000);
-    hHFTOuter = new TH1F("hHFTOuter","hHFTOuter",1000,0,30000);
     hTrigger = new TH1I("hTrigger","hTrigger",30,0,30);
     
     tInc = new TTree("tInc","tree for electron");
@@ -72,11 +68,21 @@ Int_t StPicoNpeAnaMaker::Init()
     
     setTree(tInc,"T");
     setTree(tPhE,"P");
+    
+    int nbin = 6;
+    int ptbin[nbin+1] = {1.5, 1.7, 2.0, 2.5, 3.5, 5.5, 10.};
+    for (int i=0; i<25; i++) {
+        hRefMult[i] = new TH1F(Form("hRefMult_%d",i),Form("hRefMult_%d",i),1000,0,1000);
+        for (int j=0; j<5; j++) { // 0: no cut, 1: ...
+            hDcaByPt[i][j] = new TH2D(Form("hDcaByPt_%d_%d",i,j),Form("hDcaByPt_%d_%d",i,j),nbin,ptbin,100,-0.1,0.1);
+            hNSigEByPt[i][j] = new TH2D(Form("hNSigEByPt_%d_%d",i,j),Form("hNSigEByPt_%d_%d",i,j),nbin,ptbni,289,-13,13);
+            hEOverPByPt[i][j] = new TH2D(Form("hEOverPByPt_%d_%d",i,j),Form("hEOverPByPt_%d_%d",i,j),nbin,ptbin,100,0,4);
+            hNEtaByPt[i][j] = new TH2D(Form("hNEtaByPt_%d_%d",i,j),Form("hNEtaByPt_%d_%d",i,j),nbin,ptbin,10,0,10);
+            hNPhiByPt[i][j] = new TH2D(Form("hNPhiByPt_%d_%d",i,j),Form("hNPhiByPt_%d_%d",i,j),nbin,ptbin,10,0,10);
+            hPairMassByPt[i][j] = new TH2D(Form("hPairMassByPt_%d_%d",i,j),Form("hPairMassByPt_%d_%d",i,j),nbin,ptbin,100,0,0.4);
 
-    
-    
-    
-    
+        }
+    }
     return kStOK;
 }
 //-----------------------------------------------------------------------------
@@ -102,6 +108,9 @@ Int_t StPicoNpeAnaMaker::Finish()
     tInc->Write();
     tPhE->Write();
     
+    for (int i=0; i<25; i++) {
+        hRefMult[i]->Write();
+    }
     
     mOutputFile->Close();
     
@@ -153,17 +162,17 @@ Int_t StPicoNpeAnaMaker::Make()
     bField = picoDst->event()->bField();
     pVtx = picoDst->event()->primaryVertex();
 
-    hRefMult->Fill(mRefMult);
     hZDCx->Fill(mZDCx);
     hHFTInnerOuter->Fill(picoDst->event()->numberOfPxlInnerHits(),picoDst->event()->numberOfPxlOuterHits());
     hHFTInner->Fill(picoDst->event()->numberOfPxlInnerHits());
     hHFTOuter->Fill(picoDst->event()->numberOfPxlOuterHits());
     
-    for (int i=0;i<40;i++)
+    for (int i=0;i<25;i++)
     {
         if (picoDst->event()->triggerWord()>>i & 1)
         {
             hTrigger->Fill(i);
+            hRefMult[i]->Fill(mRefMult);
         }
     }
     isHTEvents = 0;
@@ -409,8 +418,6 @@ void StPicoNpeAnaMaker::setVariables(StElectronPair * epair)
     
     partner_pt = partner->gPt();
     partner_nsige = partner->nSigmaElectron();
-    
 }
-
 
 
