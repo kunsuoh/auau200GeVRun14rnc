@@ -20,6 +20,7 @@
 #include "StMaker.h"
 #include "TH2F.h"
 #include "StThreeVectorF.hh"
+#include "THnSparse.h"
 
 class TString;
 class TFile;
@@ -73,7 +74,8 @@ class StPicoNpeAnaMaker : public StMaker
     void initVariables();
     void setVariables(StPicoTrack *);
     void setVariables(StElectronPair *);
-
+    void StPicoNpeAnaMaker::setTHnSparse();
+    
     StPicoDst * picoDst;
 
     TH1F * hEvent;
@@ -109,6 +111,8 @@ class StPicoNpeAnaMaker : public StMaker
     Float_t e1;
     Float_t e2;
     Float_t e3;
+    Float_t eoverp;
+    
     unsigned char neta;
     unsigned char nphi;
     Float_t phiDist;
@@ -120,14 +124,8 @@ class StPicoNpeAnaMaker : public StMaker
     UShort_t mRefMult;
     unsigned char isHTEvents;
 
-    TH1F * hRefMult[25];
-    TH2F * hDcaByPt[25][5];
-    TH2F * hNSigEByPt[25][5];
-    TH2F * hEOverPByPt[25][5];
-    TH2F * hNEtaByPt[25][5];
-    TH2F * hNPhiByPt[25][5];
-    TH2F * hPairMassByPt[25][5];
-    
+    THnSparseF * sparse[5][3];
+    Float_t x[13];
     
     ClassDef(StPicoNpeAnaMaker, 2)
 };

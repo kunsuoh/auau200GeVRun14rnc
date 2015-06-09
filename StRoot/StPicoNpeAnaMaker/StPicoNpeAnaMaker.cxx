@@ -69,19 +69,8 @@ Int_t StPicoNpeAnaMaker::Init()
     setTree(tInc,"T");
     setTree(tPhE,"P");
     
-    const int nbin = 6;
-    double ptbin[nbin+1] = {1.5, 1.7, 2.0, 2.5, 3.5, 5.5, 10.};
     for (int i=0; i<25; i++) {
         hRefMult[i] = new TH1F(Form("hRefMult_%d",i),Form("hRefMult_%d",i),1000,0,1000);
-        for (int j=0; j<5; j++) { // 0: no cut, 1: ...
-            hDcaByPt[i][j] = new TH2F(Form("hDcaByPt_%d_%d",i,j),Form("hDcaByPt_%d_%d",i,j),nbin,ptbin,100,-0.1,0.1);
-            hNSigEByPt[i][j] = new TH2F(Form("hNSigEByPt_%d_%d",i,j),Form("hNSigEByPt_%d_%d",i,j),nbin,ptbin,289,-13,13);
-            hEOverPByPt[i][j] = new TH2F(Form("hEOverPByPt_%d_%d",i,j),Form("hEOverPByPt_%d_%d",i,j),nbin,ptbin,100,0,4);
-            hNEtaByPt[i][j] = new TH2F(Form("hNEtaByPt_%d_%d",i,j),Form("hNEtaByPt_%d_%d",i,j),nbin,ptbin,10,0,10);
-            hNPhiByPt[i][j] = new TH2F(Form("hNPhiByPt_%d_%d",i,j),Form("hNPhiByPt_%d_%d",i,j),nbin,ptbin,10,0,10);
-            hPairMassByPt[i][j] = new TH2F(Form("hPairMassByPt_%d_%d",i,j),Form("hPairMassByPt_%d_%d",i,j),nbin,ptbin,100,0,0.4);
-
-        }
     }
     return kStOK;
 }
@@ -101,13 +90,18 @@ Int_t StPicoNpeAnaMaker::Finish()
     hZDCx->Write();
     hTrigger->Write();
     
-    tInc->Write();
-    tPhE->Write();
+//    tInc->Write();
+//    tPhE->Write();
     
     for (int i=0; i<25; i++) {
         hRefMult[i]->Write();
     }
-    
+    for (int i=0; i<5; i++) {
+        for (int j=0; j<3; j++) {
+            sparse[i][j]->Write();
+        }
+    }
+
     mOutputFile->Close();
     
     return kStOK;
@@ -159,18 +153,13 @@ Int_t StPicoNpeAnaMaker::Make()
     pVtx = picoDst->event()->primaryVertex();
 
     hZDCx->Fill(mZDCx);
-    for (int i=0;i<25;i++)
-    {
-        if (picoDst->event()->triggerWord()>>i & 1)
-        {
-            hTrigger->Fill(i);
-            hRefMult[i]->Fill(mRefMult);
-        }
-    }
+    fillHistogram(0);
     isHTEvents = 0;
-    if (picoDst->event()->triggerWord()>>0 & 0x7F) isHTEvents += 1;
-    if (picoDst->event()->triggerWord()>>7 & 0xFFF) isHTEvents += 2;
-    if (picoDst->event()->triggerWord()>>19 & 0x3F) isHTEvents += 4;
+    if (picoDst->event()->triggerWord()>>0 & 0x7FF) isHTEvents += 1;
+    if (picoDst->event()->triggerWord()>>18 & 0x1) isHTEvents += 2;
+    if (picoDst->event()->triggerWord()>>19 & 0x3) isHTEvents += 4;
+    if (picoDst->event()->triggerWord()>>21 & 0x3) isHTEvents += 8;
+    if (picoDst->event()->triggerWord()>>23 & 0x3) isHTEvents += 16;
     
     // hadrons & inclusive electron with StPicoTrack
     UInt_t nTracks = picoDst->numberOfTracks();
@@ -179,7 +168,8 @@ Int_t StPicoNpeAnaMaker::Make()
         if (!track) continue;
         if (isGoodTrack(track)) {
             setVariables(track);
-            tInc->Fill();
+//            tInc->Fill();
+            for (int i=0; i<5; i++) if (isHTEvents >> i & 0x1) sparse[i][0]->Fill(x);
         }
     }
 
@@ -193,7 +183,9 @@ Int_t StPicoNpeAnaMaker::Make()
         if (isGoodPair(epair))
         {
             setVariables(epair);
-            tPhE->Fill();
+//            tPhE->Fill();
+            for (int i=0; i<5; i++) if (isHTEvents >> i & 0x1) sparse[i][1]->Fill(x);
+
         }
     }
     
@@ -331,6 +323,7 @@ void StPicoNpeAnaMaker::initVariables()
     zDist = std::numeric_limits<float>::quiet_NaN();
     etaTowDist = std::numeric_limits<float>::quiet_NaN();
     phiTowDist = std::numeric_limits<float>::quiet_NaN();
+    x = {0.};
 }
 //-----------------------------------------------------------------------------
 void StPicoNpeAnaMaker::setVariables(StPicoTrack * track)
@@ -368,6 +361,7 @@ void StPicoNpeAnaMaker::setVariables(StPicoTrack * track)
         e1 = Emc->e1();
         e2 = Emc->e2();
         e3 = Emc->e3();
+        eoverp = e0/pt/TMath::CosH(eta);
         nphi = Emc->nPhi();
         neta = Emc->nEta();
         phiDist = Emc->phiDist();
@@ -375,7 +369,7 @@ void StPicoNpeAnaMaker::setVariables(StPicoTrack * track)
         etaTowDist = Emc->etaTowDist();
         phiTowDist = Emc->phiTowDist();
     }
-    
+    x = {pt, eta, dca, nsige, eoverp, neta, nphi, zDist, phiDist, etaTowDist, phiTowDist, -999, -999};
 }
 //-----------------------------------------------------------------------------
 void StPicoNpeAnaMaker::setVariables(StElectronPair * epair)
@@ -409,6 +403,20 @@ void StPicoNpeAnaMaker::setVariables(StElectronPair * epair)
     
     partner_pt = partner->gPt();
     partner_nsige = partner->nSigmaElectron();
+    x[11] = pairMass;
+    x[12] = pairDca;
 }
+//-----------------------------------------------------------------------------
+void StPicoNpeAnaMaker::setTHnSparse(){
+    const int nbin = 13;
+    int bins[nbin] = {85, 100, 100, 289, 200, 10, 10, 100, 100, 100, 100, 100, 100};
+    float xmin[nbin] = {1.5, -0.7, -0.1, -13, 0, 0, 0, -20, -0.1, -0.1, -0.1, 0, 0};
+    float xmax[nbin] = {10, 0.7, 0.1, 13, 4, 10, 10, 20, 0.1, 0.1, 0.1, 0.4, 1};
 
+    for (int i=0; i<5; i++) {
+        for (int j=0; j<3; j++) {
+            sparse[i][j] = new THnSparse(Form("sparse_%d_%d",i,j),Form("sparse_%d_%d",i,j),nbin, bins, xmin, xmax);
+        }
+    }
+}
 
