@@ -74,7 +74,7 @@ class StPicoNpeAnaMaker : public StMaker
     void initVariables();
     void setVariables(StPicoTrack *);
     void setVariables(StElectronPair *);
-    void StPicoNpeAnaMaker::setTHnSparse();
+    void setTHnSparse();
     
     StPicoDst * picoDst;
 
@@ -124,6 +124,7 @@ class StPicoNpeAnaMaker : public StMaker
     UShort_t mRefMult;
     unsigned char isHTEvents;
 
+    TH1F * hRefMult[5];
     THnSparseF * sparse[5][3];
     Float_t x[13];
     

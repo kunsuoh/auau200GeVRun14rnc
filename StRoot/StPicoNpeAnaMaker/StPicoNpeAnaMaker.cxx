@@ -69,9 +69,11 @@ Int_t StPicoNpeAnaMaker::Init()
     setTree(tInc,"T");
     setTree(tPhE,"P");
     
-    for (int i=0; i<25; i++) {
+    for (int i=0; i<5; i++) {
         hRefMult[i] = new TH1F(Form("hRefMult_%d",i),Form("hRefMult_%d",i),1000,0,1000);
     }
+    setTHnSparse();
+    
     return kStOK;
 }
 //-----------------------------------------------------------------------------
@@ -93,10 +95,8 @@ Int_t StPicoNpeAnaMaker::Finish()
 //    tInc->Write();
 //    tPhE->Write();
     
-    for (int i=0; i<25; i++) {
-        hRefMult[i]->Write();
-    }
     for (int i=0; i<5; i++) {
+        hRefMult[i]->Write();
         for (int j=0; j<3; j++) {
             sparse[i][j]->Write();
         }
@@ -153,13 +153,14 @@ Int_t StPicoNpeAnaMaker::Make()
     pVtx = picoDst->event()->primaryVertex();
 
     hZDCx->Fill(mZDCx);
-    fillHistogram(0);
+
     isHTEvents = 0;
     if (picoDst->event()->triggerWord()>>0 & 0x7FF) isHTEvents += 1;
     if (picoDst->event()->triggerWord()>>18 & 0x1) isHTEvents += 2;
     if (picoDst->event()->triggerWord()>>19 & 0x3) isHTEvents += 4;
     if (picoDst->event()->triggerWord()>>21 & 0x3) isHTEvents += 8;
     if (picoDst->event()->triggerWord()>>23 & 0x3) isHTEvents += 16;
+    for (int i=0; i<5; i++) if (isHTEvents >> i & 0x1) hRefMult[i]->Fill(mRefMult);
     
     // hadrons & inclusive electron with StPicoTrack
     UInt_t nTracks = picoDst->numberOfTracks();
