@@ -118,6 +118,7 @@ Int_t StPicoNpeAnaMaker::Finish()
 //-----------------------------------------------------------------------------
 Int_t StPicoNpeAnaMaker::Make()
 {
+    cout << "DEBUG!!" << endl;
 
     readNextEvent();
     hEvent->Fill(0);
@@ -165,7 +166,8 @@ Int_t StPicoNpeAnaMaker::Make()
     hHFTInnerOuter->Fill(picoDst->event()->numberOfPxlInnerHits(),picoDst->event()->numberOfPxlOuterHits());
     hHFTInner->Fill(picoDst->event()->numberOfPxlInnerHits());
     hHFTOuter->Fill(picoDst->event()->numberOfPxlOuterHits());
-    
+    cout << "DEBUG!!" << endl;
+
     for (int i=0;i<25;i++)
     {
         if (picoDst->event()->triggerWord()>>i & 1)
@@ -178,7 +180,7 @@ Int_t StPicoNpeAnaMaker::Make()
     if (picoDst->event()->triggerWord()>>0 & 0x7F) isHTEvents += 1;
     if (picoDst->event()->triggerWord()>>7 & 0xFFF) isHTEvents += 2;
     if (picoDst->event()->triggerWord()>>19 & 0x3F) isHTEvents += 4;
-
+    cout << "DEBUG!!" << endl;
     
     // hadrons & inclusive electron with StPicoTrack
     UInt_t nTracks = picoDst->numberOfTracks();
