@@ -126,7 +126,7 @@ class StPicoNpeAnaMaker : public StMaker
 
     TH1F * hRefMult[5];
     THnSparseF * sparse[5][3];
-    Float_t x[13];
+    Double_t x[13];
     
     ClassDef(StPicoNpeAnaMaker, 2)
 };
