@@ -177,10 +177,11 @@ Int_t StPicoNpeAnaMaker::Make()
     hZDCx->Fill(mZDCx);
     cout << "DEBUG!!??" << endl;
     hHFTInnerOuter->Fill(picoDst->event()->numberOfPxlInnerHits(),picoDst->event()->numberOfPxlOuterHits());
+    cout << "DEBUG!?!!" << endl;
     hHFTInner->Fill(picoDst->event()->numberOfPxlInnerHits());
+    cout << "DEBUG!?!?" << endl;
     hHFTOuter->Fill(picoDst->event()->numberOfPxlOuterHits());
-    cout << "DEBUG!!" << endl;
-    cout << "DEBUG!!" << endl;
+    cout << "DEBUG!??!" << endl;
 
     for (int i=0;i<25;i++)
     {
