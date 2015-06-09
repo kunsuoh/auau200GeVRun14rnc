@@ -99,9 +99,6 @@ Int_t StPicoNpeAnaMaker::Finish()
     // --------------- USER HISTOGRAM WRITE --------------------
     hEvent->Write();
     hZDCx->Write();
-    hHFTInnerOuter->Write();
-    hHFTInner->Write();
-    hHFTOuter->Write();
     hTrigger->Write();
     
     tInc->Write();
@@ -118,31 +115,24 @@ Int_t StPicoNpeAnaMaker::Finish()
 //-----------------------------------------------------------------------------
 Int_t StPicoNpeAnaMaker::Make()
 {
-    cout << "DEBUG!!" << endl;
 
     readNextEvent();
-    cout << "DEBUG!!" << endl;
     hEvent->Fill(0);
-    cout << "DEBUG!!" << endl;
 
     if (!mPicoDstMaker)
     {
         LOG_WARN << " StPicoNpeAnaMaker - No PicoDstMaker! Skip! " << endm;
         return kStWarn;
     }
-    cout << "DEBUG!!" << endl;
     hEvent->Fill(1);
-    cout << "DEBUG!!" << endl;
 
     StPicoDst const* picoDst = mPicoDstMaker->picoDst();
-    cout << "DEBUG!!" << endl;
     
     if (!picoDst)
     {
         LOG_WARN << "StPicoNpeAnaMaker - No PicoDst! Skip! " << endm;
         return kStWarn;
     }
-    cout << "DEBUG!!" << endl;
     hEvent->Fill(2);
 
     if(mPicoNpeEvent->runId() != picoDst->event()->runId() ||
@@ -152,37 +142,23 @@ Int_t StPicoNpeAnaMaker::Make()
         LOG_ERROR <<" StPicoNpeAnaMaker - SOMETHING TERRIBLE JUST HAPPENED. StPicoEvent and StPicoNpeEvent are not in sync."<<endm;
         exit(1);
     }
-    cout << "DEBUG!!" << endl;
     hEvent->Fill(3);
 
   //  if (!isGoodEvent()) return kStOK;
     hEvent->Fill(4);
-    cout << "DEBUG!!" << endl;
 
     // -------------- USER ANALYSIS -------------------------
     // Event informaiton
     mRefMult = std::numeric_limits<Int_t>::quiet_NaN();
     mZDCx = std::numeric_limits<Int_t>::quiet_NaN();
     
-    cout << "DEBUG!!" << endl;
     mRefMult = picoDst->event()->refMult();
     mZDCx = picoDst->event()->ZDCx();
 
-    cout << "DEBUG!!!!" << endl;
     bField = picoDst->event()->bField();
-    cout << "DEBUG!!!?" << endl;
     pVtx = picoDst->event()->primaryVertex();
-    cout << "DEBUG!!?!" << endl;
 
     hZDCx->Fill(mZDCx);
-    cout << "DEBUG!!??" << endl;
-    hHFTInnerOuter->Fill(picoDst->event()->numberOfPxlInnerHits(),picoDst->event()->numberOfPxlOuterHits());
-    cout << "DEBUG!?!!" << endl;
-    hHFTInner->Fill(picoDst->event()->numberOfPxlInnerHits());
-    cout << "DEBUG!?!?" << endl;
-    hHFTOuter->Fill(picoDst->event()->numberOfPxlOuterHits());
-    cout << "DEBUG!??!" << endl;
-
     for (int i=0;i<25;i++)
     {
         if (picoDst->event()->triggerWord()>>i & 1)
@@ -195,7 +171,6 @@ Int_t StPicoNpeAnaMaker::Make()
     if (picoDst->event()->triggerWord()>>0 & 0x7F) isHTEvents += 1;
     if (picoDst->event()->triggerWord()>>7 & 0xFFF) isHTEvents += 2;
     if (picoDst->event()->triggerWord()>>19 & 0x3F) isHTEvents += 4;
-    cout << "DEBUG!!" << endl;
     
     // hadrons & inclusive electron with StPicoTrack
     UInt_t nTracks = picoDst->numberOfTracks();
