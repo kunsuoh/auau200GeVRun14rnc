@@ -170,8 +170,10 @@ Int_t StPicoNpeAnaMaker::Make()
         if (isGoodTrack(track)) {
             setVariables(track);
 //            tInc->Fill();
-            if (eoverp < 0 || eoverp > 4) continue;
-            for (int i=0; i<5; i++) if (isHTEvents >> i & 0x1) sparse[i][0]->Fill(x);
+            for (int i=0; i<5; i++) {
+                if (i==0 && (eoverp < 0.8 || eoverp > 2)) continue;
+                if (isHTEvents >> i & 0x1) sparse[i][0]->Fill(x);
+            }
         }
     }
 
@@ -187,7 +189,10 @@ Int_t StPicoNpeAnaMaker::Make()
             setVariables(epair);
 //            tPhE->Fill();
             if (eoverp < 0 || eoverp > 4) continue;
-            for (int i=0; i<5; i++) if (isHTEvents >> i & 0x1) sparse[i][1]->Fill(x);
+            for (int i=0; i<5; i++) {
+                if (i==0 && (eoverp < 0.8 || eoverp > 2)) continue;
+                if (isHTEvents >> i & 0x1) sparse[i][1]->Fill(x);
+            }
 
         }
     }
@@ -408,7 +413,7 @@ void StPicoNpeAnaMaker::setVariables(StElectronPair * epair)
     partner_nsige = partner->nSigmaElectron();
     x[11] = pairMass;
     x[12] = pairDca;
-    x[13] = pairCharge;
+    x[13] = pairCharge*1.;
 }
 //-----------------------------------------------------------------------------
 void StPicoNpeAnaMaker::setTHnSparse(){
