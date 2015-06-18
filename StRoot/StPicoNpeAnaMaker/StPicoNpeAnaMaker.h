@@ -70,11 +70,14 @@ class StPicoNpeAnaMaker : public StMaker
     bool isGoodTofTrack(StPicoTrack const*) const;
     bool isGoodEmcTrack(StPicoTrack const*) const;
     bool isGoodPair(StElectronPair const*) const;
-    void setTree(TTree *, TString);
     void initVariables();
     void setVariables(StPicoTrack *);
     void setVariables(StElectronPair *);
-    void setTHnSparse();
+    void fillHistogram(int);
+    void fillHistogram(int,int,int);
+    void setHistogram();
+    void getPtBin(double);
+    
     
     StPicoDst * picoDst;
 
@@ -127,6 +130,12 @@ class StPicoNpeAnaMaker : public StMaker
     TH1F * hRefMult[5];
     THnSparseF * sparse[5][3];
     Double_t x[14];
+    
+    const int nptbin = 6;
+    const int npid = 4;
+    const int ntype = 6;
+    const int nhisto = 2;
+
     
     ClassDef(StPicoNpeAnaMaker, 2)
 };

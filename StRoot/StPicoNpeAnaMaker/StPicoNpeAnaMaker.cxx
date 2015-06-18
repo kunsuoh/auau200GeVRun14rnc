@@ -63,16 +63,11 @@ Int_t StPicoNpeAnaMaker::Init()
     hZDCx = new TH1F("hZDCx","hZDCx",100000,0,100000);
     hTrigger = new TH1I("hTrigger","hTrigger",30,0,30);
     
-    tInc = new TTree("tInc","tree for electron");
-    tPhE = new TTree("tPhE","tree for photonic electron");
-    
-    setTree(tInc,"T");
-    setTree(tPhE,"P");
-    
-    for (int i=0; i<5; i++) {
+    for (int i=0; i<2; i++) {
         hRefMult[i] = new TH1F(Form("hRefMult_%d",i),Form("hRefMult_%d",i),1000,0,1000);
     }
-    setTHnSparse();
+
+    setHistogram();
     
     return kStOK;
 }
@@ -92,15 +87,14 @@ Int_t StPicoNpeAnaMaker::Finish()
     hZDCx->Write();
     hTrigger->Write();
     
-//    tInc->Write();
-//    tPhE->Write();
+    hRefMult[0]->Write();
+    hRefMult[1]->Write();
     
-    for (int i=0; i<5; i++) {
-        hRefMult[i]->Write();
-        for (int j=0; j<3; j++) {
-            sparse[i][j]->Write();
-        }
-    }
+    for (int j=0;j<npid;j++)
+        for (int i=0;i<nptbin;i++)
+            for (int k=0;k<ntype;k++)
+                for (int l=0;l<nhisto;l++)
+                    histo[i][j][k][l]->Write();
 
     mOutputFile->Close();
     
@@ -156,11 +150,8 @@ Int_t StPicoNpeAnaMaker::Make()
 
     isHTEvents = 0;
     if (picoDst->event()->triggerWord()>>0 & 0x7FF) isHTEvents += 1;
-    if (picoDst->event()->triggerWord()>>18 & 0x1) isHTEvents += 2;
-    if (picoDst->event()->triggerWord()>>19 & 0x3) isHTEvents += 4;
-    if (picoDst->event()->triggerWord()>>21 & 0x3) isHTEvents += 8;
-    if (picoDst->event()->triggerWord()>>23 & 0x3) isHTEvents += 16;
-    for (int i=0; i<5; i++) if (isHTEvents >> i & 0x1) hRefMult[i]->Fill(mRefMult);
+    if (picoDst->event()->triggerWord()>>19 & 0x3F) isHTEvents += 2;
+    for (int i=0; i<2; i++) if (isHTEvents >> i & 0x1) hRefMult[i]->Fill(mRefMult);
     
     // hadrons & inclusive electron with StPicoTrack
     UInt_t nTracks = picoDst->numberOfTracks();
@@ -169,12 +160,9 @@ Int_t StPicoNpeAnaMaker::Make()
         if (!track) continue;
         if (isGoodTrack(track)) {
             setVariables(track);
-//            tInc->Fill();
-            for (int i=0; i<5; i++) {
-                if (eoverp < 0.7 || eoverp > 2) continue;
-                if (isHTEvents >> i & 0x1) sparse[i][0]->Fill(x);
-            }
+            fillHistogram(2); // electron
         }
+        
     }
 
     
@@ -187,12 +175,8 @@ Int_t StPicoNpeAnaMaker::Make()
         if (isGoodPair(epair))
         {
             setVariables(epair);
-//            tPhE->Fill();
-            if (eoverp < 0 || eoverp > 4) continue;
-            for (int i=0; i<5; i++) {
-                if (isHTEvents >> i & 0x1) sparse[i][1]->Fill(x);
-            }
-
+            if (pairCharge == 0) fillHistogram(0);
+            else fillHistogram(1);
         }
     }
     
@@ -274,46 +258,6 @@ bool StPicoNpeAnaMaker::isGoodEmcTrack(StPicoTrack const * const trk) const
      */
     true
     ;
-}
-//-----------------------------------------------------------------------------
-void StPicoNpeAnaMaker::setTree(TTree * tree, TString opt)
-{
-    tree->Branch("dca",&dca,"dca/F");
-    tree->Branch("pt",&pt,"pt/F");
-    tree->Branch("eta",&eta,"eta/F");
-    tree->Branch("nsige",&nsige,"nsige/F");
-    tree->Branch("nsigpion",&nsigpion,"nsigpion/F");
-    tree->Branch("beta",&beta,"beta/F");
-    tree->Branch("e",&e,"e/F");
-    tree->Branch("e0",&e0,"e0/F");
-    tree->Branch("e1",&e1,"e1/F");
-    tree->Branch("e2",&e2,"e2/F");
-    tree->Branch("e3",&e3,"e3/F");
-    tree->Branch("neta",&neta,"neta/b");
-    tree->Branch("nphi",&nphi,"nphi/b");
-    tree->Branch("phiDist",&phiDist,"phiDist/F");
-    tree->Branch("zDist",&zDist,"zDist/F");
-    tree->Branch("etaTowDist",&etaTowDist,"etaTowDist/F");
-    tree->Branch("phiTowDist",&phiTowDist,"phiTowDist/F");
-    tree->Branch("mZDCx",&mZDCx,"mZDCx/s");
-    tree->Branch("mRefMult",&mRefMult,"mRefMult/s");
-    tree->Branch("isHTEvents",&isHTEvents,"isHTEvents/b");
-
-    if (opt=="T") {}
-    else if (opt=="P")
-    {
-        tree->Branch("parnter_pt",&partner_pt,"partner_pt/F");
-        tree->Branch("partner_nsige",&partner_nsige,"partner_nsige/F");
-        tree->Branch("pairAngle3d",&pairAngle3d,"pairAngle3d/F");
-        tree->Branch("pairAnglePhi",&pairAnglePhi,"pairAnglePhi/F");
-        tree->Branch("pairAngleTheta",&pairAngleTheta,"pairAngleTheta/F");
-        tree->Branch("pairMass",&pairMass,"pairMass/F");
-        tree->Branch("pairCharge",&pairCharge,"pairCharge/B");
-        tree->Branch("pairDca",&pairDca,"pairDca/F");
-        tree->Branch("pairPositionX",&pairPositionX,"pairPositionX/F");
-        tree->Branch("pairPositionY",&pairPositionY,"pairPositionY/F");
-    }
-    else LOG_WARN << "Select tree options. (T is for track, P is for pair.)" << endm;
 }
 //-----------------------------------------------------------------------------
 void StPicoNpeAnaMaker::initVariables()
@@ -415,16 +359,68 @@ void StPicoNpeAnaMaker::setVariables(StElectronPair * epair)
     x[13] = pairCharge * 0.5;
 }
 //-----------------------------------------------------------------------------
-void StPicoNpeAnaMaker::setTHnSparse(){
-    const Int_t nbin = 14;
-    const Int_t bins[nbin] = {85, 100, 100, 289, 200, 10, 10, 100, 100, 100, 100, 100, 100, 3};
-    const Double_t xmin[nbin] = {1.5, -0.7, -0.1, -13, 0, 0, 0, -20, -0.1, -0.1, -0.1, 0, 0 , -1.5};
-    const Double_t xmax[nbin] = {10, 0.7, 0.1, 13, 4, 10, 10, 20, 0.1, 0.1, 0.1, 0.4, 1, 1.5};
+void StPicoNpeAnaMaker::setHistogram(){
+    
+    double ptbin[nptbin] = {1.5,1.8,2.5,4.0,6.5,10.};
+    TString pid[npid] = {"Tpc","TpcTof","TpcBemc","TpcBemcBsmd"};
+    TString type[ntype] = {"PhEUS","PhELS","IncE","Pion","Kaon","Proton"};
+    TString histo[nhisto] = {"nSigE","DCA"};
+    
+    int binHisto[nhisto] = {289,100};
+    double minHisto[nhisto] = {-13,-0.1};
+    double maxHisto[nhisto] = {13,0.1};
+    
+    TH1F * histo[nptbin][npid][ntype][nhisto];
+    
+    for (int i=0;i<nptbin;i++)
+        for (int j=0;j<npid;j++)
+            for (int k=0;k<ntype;k++)
+                for (int l=0;l<nhisto;l++)
+                    histo[i][j][k][l] = new TH1F(
+                                                 Form("histo_%d_%d_%d_%d", i,j,k,l),
+                                                 Form("histo_pT%.1f_%.1f_%s_%s_%s",
+                                                      ptbin[i],
+                                                      ptbin[i+1],
+                                                      pid[j].Data(),
+                                                      type[k].Data(),
+                                                      histo[l].Data()
+                                                      ),
+                                                 binHisto[l],
+                                                 minHisto[l],
+                                                 maxHisto[l]
+                                                 );
+    
+    
+    
+}
+//-------------------------------------------------------------------------------
+int StPicoNpeAnaMaker::getPtBin(double pt) {
+    int nPt = 0;
+    if (pt < 1.5) nPt = 0;
+    else if (pt < 1.8) nPt = 1;
+    else if (pt < 2.5) nPt = 2;
+    else if (pt < 4.0) nPt = 3;
+    else if (pt < 6.5) nPt = 4;
+    else if (pt < 10.) nPt = 5;
+    else nPt = 6;
+    
+    return nPt;
+}
+//-------------------------------------------------------------------------------
+void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType){
+    histo[(const int)iPt][(const int)iPid][(const int)iType][0]->Fill(nsige);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][1]->Fill(dca);
+}
 
-    for (int i=0; i<5; i++) {
-        for (int j=0; j<3; j++) {
-            sparse[i][j] = new THnSparseF(Form("sparse_%d_%d",i,j),Form("sparse_%d_%d",i,j),nbin, bins, xmin, xmax);
-        }
+    //-------------------------------------------------------------------------------
+void StPicoNpeAnaMaker::fillHistogram(int iType){
+    int iPt = getPtBin(pt);
+    if (isHTEvents >> 0 & 0x1) {
+        fillHistogram(iPt, 0, iType);
+        if (abs(beta-1) < 0.025) fillHistogram(iPt, 1, iType);
+        if (e0/pt/TMath::CosH(eta) > 0.8) fillHistogram(iPt, 2, iType);
     }
+    if (isHTEvents >> 1 & 0x1 && nphi > 1 && neta > 1 && e0/pt/TMath::CosH(eta) > 0.8) fillHistogram(iPt, 3, iType);
+
 }
 
