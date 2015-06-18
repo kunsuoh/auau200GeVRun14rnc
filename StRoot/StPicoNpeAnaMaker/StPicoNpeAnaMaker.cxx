@@ -274,7 +274,7 @@ void StPicoNpeAnaMaker::initVariables()
     zDist = std::numeric_limits<float>::quiet_NaN();
     etaTowDist = std::numeric_limits<float>::quiet_NaN();
     phiTowDist = std::numeric_limits<float>::quiet_NaN();
-    x = {0.};
+
 }
 //-----------------------------------------------------------------------------
 void StPicoNpeAnaMaker::setVariables(StPicoTrack * track)

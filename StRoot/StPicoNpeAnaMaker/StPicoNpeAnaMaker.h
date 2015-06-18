@@ -76,7 +76,7 @@ class StPicoNpeAnaMaker : public StMaker
     void fillHistogram(int);
     void fillHistogram(int,int,int);
     void setHistogram(int,int,int,int);
-    void getPtBin(double);
+    int getPtBin(double);
     
     
     StPicoDst * picoDst;
@@ -129,6 +129,11 @@ class StPicoNpeAnaMaker : public StMaker
 
     TH1F * hRefMult[5];
     TH1F * histo[10][10][10][10];
+    int nptbin;
+    int npid;
+    int ntype;
+    int nhisto;
+
     
     ClassDef(StPicoNpeAnaMaker, 2)
 };
