@@ -60,8 +60,7 @@ Int_t StPicoNpeAnaMaker::Init()
     
     // -------------- USER VARIABLES -------------------------
     hEvent = new TH1F("hEvent","hEvent",10,0,10);
-    hZDCx = new TH1F("hZDCx","hZDCx",100000,0,100000);
-    hTrigger = new TH1I("hTrigger","hTrigger",30,0,30);
+    hZDCx = new TH1F("hZDCx","hZDCx",1000,0,100000);
     
     for (int i=0; i<2; i++) {
         hRefMult[i] = new TH1F(Form("hRefMult_%d",i),Form("hRefMult_%d",i),1000,0,1000);
@@ -85,7 +84,6 @@ Int_t StPicoNpeAnaMaker::Finish()
     // --------------- USER HISTOGRAM WRITE --------------------
     hEvent->Write();
     hZDCx->Write();
-    hTrigger->Write();
     
     hRefMult[0]->Write();
     hRefMult[1]->Write();
@@ -398,7 +396,7 @@ int StPicoNpeAnaMaker::getPtBin(double pt) {
     else if (pt < 4.0) nPt = 3;
     else if (pt < 6.5) nPt = 4;
     else if (pt < 10.) nPt = 5;
-    else nPt = 6;
+    else nPt = 0;
     
     return nPt;
 }
