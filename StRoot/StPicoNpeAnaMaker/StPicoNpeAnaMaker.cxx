@@ -68,7 +68,11 @@ Int_t StPicoNpeAnaMaker::Init()
     }
 
     setHistogram(6,4,6,2);
-    
+    nptbin = 6;
+    npid = 4;
+    ntype = 6;
+    nhisto = 2;
+
     return kStOK;
 }
 //-----------------------------------------------------------------------------
