@@ -90,10 +90,10 @@ Int_t StPicoNpeAnaMaker::Finish()
     hRefMult[0]->Write();
     hRefMult[1]->Write();
     
-    for (int j=0;j<4;j++)
-        for (int i=0;i<6;i++)
-            for (int k=0;k<6;k++)
-                for (int l=0;l<2;l++)
+    for (int j=0;j<4;j++) // PID
+        for (int i=1;i<6;i++) // PT
+            for (int k=0;k<3;k++) // Particle
+                for (int l=0;l<2;l++) // Histograms
                     histo[i][j][k][l]->Write();
 
     mOutputFile->Close();
