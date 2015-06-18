@@ -359,7 +359,7 @@ void StPicoNpeAnaMaker::setVariables(StElectronPair * epair)
     x[13] = pairCharge * 0.5;
 }
 //-----------------------------------------------------------------------------
-void StPicoNpeAnaMaker::setHistogram(a,b,c,d){
+void StPicoNpeAnaMaker::setHistogram(int a,int b,int c,int d){
     
     nptbin = a;
     npid = b;
