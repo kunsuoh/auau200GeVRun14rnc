@@ -131,11 +131,10 @@ class StPicoNpeAnaMaker : public StMaker
     THnSparseF * sparse[5][3];
     Double_t x[14];
     
-    const int nptbin = 6;
-    const int npid = 4;
-    const int ntype = 6;
-    const int nhisto = 2;
-
+    int nptbin;
+    int npid;
+    int ntype;
+    int nhisto;
     
     ClassDef(StPicoNpeAnaMaker, 2)
 };

@@ -67,6 +67,11 @@ Int_t StPicoNpeAnaMaker::Init()
         hRefMult[i] = new TH1F(Form("hRefMult_%d",i),Form("hRefMult_%d",i),1000,0,1000);
     }
 
+    nptbin = 6;
+    npid = 4;
+    ntype = 6;
+    nhisto = 2;
+
     setHistogram();
     
     return kStOK;
