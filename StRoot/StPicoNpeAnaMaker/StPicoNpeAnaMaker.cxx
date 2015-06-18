@@ -67,12 +67,7 @@ Int_t StPicoNpeAnaMaker::Init()
         hRefMult[i] = new TH1F(Form("hRefMult_%d",i),Form("hRefMult_%d",i),1000,0,1000);
     }
 
-    nptbin = 6;
-    npid = 4;
-    ntype = 6;
-    nhisto = 2;
-
-    setHistogram();
+    setHistogram(6,4,6,2);
     
     return kStOK;
 }
@@ -364,9 +359,14 @@ void StPicoNpeAnaMaker::setVariables(StElectronPair * epair)
     x[13] = pairCharge * 0.5;
 }
 //-----------------------------------------------------------------------------
-void StPicoNpeAnaMaker::setHistogram(){
+void StPicoNpeAnaMaker::setHistogram(a,b,c,d){
     
-    double ptbin[(const int)nptbin] = {1.5,1.8,2.5,4.0,6.5,10.};
+    nptbin = a;
+    npid = b;
+    ntype = c;
+    nhisto = d;
+
+    double ptbin[(const int)nptbin] = {1.5, 1.8, 2.5, 4.0, 6.5, 10.};
     TString pid[(const int)npid] = {"Tpc","TpcTof","TpcBemc","TpcBemcBsmd"};
     TString type[(const int)ntype] = {"PhEUS","PhELS","IncE","Pion","Kaon","Proton"};
     TString histo[(const int)nhisto] = {"nSigE","DCA"};
@@ -374,8 +374,6 @@ void StPicoNpeAnaMaker::setHistogram(){
     int binHisto[nhisto] = {289,100};
     double minHisto[nhisto] = {-13,-0.1};
     double maxHisto[nhisto] = {13,0.1};
-    
-    TH1F * histo[nptbin][npid][ntype][nhisto];
     
     for (int i=0;i<nptbin;i++)
         for (int j=0;j<npid;j++)
