@@ -173,7 +173,6 @@ Int_t StPicoNpeAnaMaker::Make()
         if (isGoodPair(epair))
         {
             setVariables(epair);
-            if (pairMass > 0.04 && pairDca > 0.1) continue;
             if (pairCharge == 0) fillHistogram(0);
             else fillHistogram(1);
         }
