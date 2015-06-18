@@ -358,14 +358,14 @@ void StPicoNpeAnaMaker::setVariables(StElectronPair * epair)
 void StPicoNpeAnaMaker::setHistogram(int nptbin,int npid,int ntype,int nhisto)
 {
     
-    double ptbin[6] = {1.5, 1.8, 2.5, 4.0, 6.5, 10.};
-    TString pid[(const int)npid] = {"Tpc","TpcTof","TpcBemc","TpcBemcBsmd"};
-    TString type[(const int)ntype] = {"PhEUS","PhELS","IncE","Pion","Kaon","Proton"};
-    TString histoname[(const int)nhisto] = {"nSigE","DCA"};
+    double ptbin[10] = {1.5, 1.8, 2.5, 4.0, 6.5, 10.};
+    TString pid[10] = {"Tpc","TpcTof","TpcBemc","TpcBemcBsmd"};
+    TString type[10] = {"PhEUS","PhELS","IncE","Pion","Kaon","Proton"};
+    TString histoname[10] = {"nSigE","DCA"};
     
-    int binHisto[nhisto] = {289,100};
-    double minHisto[nhisto] = {-13,-0.1};
-    double maxHisto[nhisto] = {13,0.1};
+    int binHisto[10] = {289,100};
+    double minHisto[10] = {-13,-0.1};
+    double maxHisto[10] = {13,0.1};
     
     for (int i=0;i<nptbin;i++)
         for (int j=0;j<npid;j++)
