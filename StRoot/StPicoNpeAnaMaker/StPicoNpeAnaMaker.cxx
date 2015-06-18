@@ -362,14 +362,14 @@ void StPicoNpeAnaMaker::setVariables(StElectronPair * epair)
 void StPicoNpeAnaMaker::setHistogram(int a,int b,int c,int d){
     
     nptbin = a;
-    npid = b;
-    ntype = c;
+    npid =   b;
+    ntype =  c;
     nhisto = d;
 
-    double ptbin[(const int)nptbin] = {1.5, 1.8, 2.5, 4.0, 6.5, 10.};
+    double ptbin[a] = {1.5, 1.8, 2.5, 4.0, 6.5, 10.};
     TString pid[(const int)npid] = {"Tpc","TpcTof","TpcBemc","TpcBemcBsmd"};
     TString type[(const int)ntype] = {"PhEUS","PhELS","IncE","Pion","Kaon","Proton"};
-    TString histo[(const int)nhisto] = {"nSigE","DCA"};
+    TString histoname[(const int)nhisto] = {"nSigE","DCA"};
     
     int binHisto[nhisto] = {289,100};
     double minHisto[nhisto] = {-13,-0.1};
@@ -386,7 +386,7 @@ void StPicoNpeAnaMaker::setHistogram(int a,int b,int c,int d){
                                                       ptbin[i+1],
                                                       pid[j].Data(),
                                                       type[k].Data(),
-                                                      histo[l].Data()
+                                                      histoname[l].Data()
                                                       ),
                                                  binHisto[l],
                                                  minHisto[l],
