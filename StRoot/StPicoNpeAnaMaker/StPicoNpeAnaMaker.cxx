@@ -68,10 +68,6 @@ Int_t StPicoNpeAnaMaker::Init()
     }
 
     setHistogram(6,4,6,2);
-    nptbin = 6;
-    npid = 4;
-    ntype = 6;
-    nhisto = 2;
 
     return kStOK;
 }
@@ -94,10 +90,10 @@ Int_t StPicoNpeAnaMaker::Finish()
     hRefMult[0]->Write();
     hRefMult[1]->Write();
     
-    for (int j=0;j<npid;j++)
-        for (int i=0;i<nptbin;i++)
-            for (int k=0;k<ntype;k++)
-                for (int l=0;l<nhisto;l++)
+    for (int j=0;j<4;j++)
+        for (int i=0;i<6;i++)
+            for (int k=0;k<6;k++)
+                for (int l=0;l<2;l++)
                     histo[i][j][k][l]->Write();
 
     mOutputFile->Close();
