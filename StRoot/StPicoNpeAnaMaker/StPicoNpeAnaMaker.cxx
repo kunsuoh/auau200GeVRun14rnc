@@ -320,7 +320,6 @@ void StPicoNpeAnaMaker::setVariables(StPicoTrack * track)
         etaTowDist = Emc->etaTowDist();
         phiTowDist = Emc->phiTowDist();
     }
-    x = {pt, eta, dca, nsige, eoverp, neta*1., nphi*1., zDist, phiDist, etaTowDist, phiTowDist, -999, -999, -999};
 }
 //-----------------------------------------------------------------------------
 void StPicoNpeAnaMaker::setVariables(StElectronPair * epair)
@@ -354,19 +353,12 @@ void StPicoNpeAnaMaker::setVariables(StElectronPair * epair)
     
     partner_pt = partner->gPt();
     partner_nsige = partner->nSigmaElectron();
-    x[11] = pairMass;
-    x[12] = pairDca;
-    x[13] = pairCharge * 0.5;
 }
 //-----------------------------------------------------------------------------
-void StPicoNpeAnaMaker::setHistogram(int a,int b,int c,int d){
+void StPicoNpeAnaMaker::setHistogram(int nptbin,int npid,int ntype,int nhisto)
+{
     
-    nptbin = a;
-    npid =   b;
-    ntype =  c;
-    nhisto = d;
-
-    double ptbin[a] = {1.5, 1.8, 2.5, 4.0, 6.5, 10.};
+    double ptbin[6] = {1.5, 1.8, 2.5, 4.0, 6.5, 10.};
     TString pid[(const int)npid] = {"Tpc","TpcTof","TpcBemc","TpcBemcBsmd"};
     TString type[(const int)ntype] = {"PhEUS","PhELS","IncE","Pion","Kaon","Proton"};
     TString histoname[(const int)nhisto] = {"nSigE","DCA"};
@@ -421,9 +413,9 @@ void StPicoNpeAnaMaker::fillHistogram(int iType){
     if (isHTEvents >> 0 & 0x1) {
         fillHistogram(iPt, 0, iType);
         if (abs(beta-1) < 0.025) fillHistogram(iPt, 1, iType);
-        if (e0/pt/TMath::CosH(eta) > 0.8) fillHistogram(iPt, 2, iType);
+        if (e0/pt/TMath::CosH(eta) > 0.8 && e0/pt/TMath::CosH(eta) < 2) fillHistogram(iPt, 2, iType);
     }
-    if (isHTEvents >> 1 & 0x1 && nphi > 1 && neta > 1 && e0/pt/TMath::CosH(eta) > 0.8) fillHistogram(iPt, 3, iType);
+    if (isHTEvents >> 1 & 0x1 && nphi > 1 && neta > 1 && e0/pt/TMath::CosH(eta) > 0.8 && e0/pt/TMath::CosH(eta) < 2) fillHistogram(iPt, 3, iType);
 
 }
 

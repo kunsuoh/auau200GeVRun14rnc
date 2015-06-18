@@ -128,19 +128,12 @@ class StPicoNpeAnaMaker : public StMaker
     unsigned char isHTEvents;
 
     TH1F * hRefMult[5];
-    THnSparseF * sparse[5][3];
-    Double_t x[14];
     TH1F * histo[10][10][10][10];
-    
-    int nptbin;
-    int npid;
-    int ntype;
-    int nhisto;
     
     ClassDef(StPicoNpeAnaMaker, 2)
 };
 
-inline int StPicoNpeAnaMaker::getEntries() const 
+inline int StPicoNpeAnaMaker::getEntries() const
 {
   return mChain? mChain->GetEntries() : 0;
 }
