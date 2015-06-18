@@ -258,6 +258,7 @@ bool StPicoNpeAnaMaker::isGoodEmcTrack(StPicoTrack const * const trk) const
      */
     true
     ;
+    
 }
 //-----------------------------------------------------------------------------
 void StPicoNpeAnaMaker::initVariables()
