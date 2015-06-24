@@ -95,6 +95,7 @@ Int_t StPicoNpeAnaMaker::Finish()
                     histo[i][j][k][l]->Write();
 
     for (int i=1;i<6;i++) histoTofMass[i]->Write(); // tofmass
+    for (int i=1;i<6;i++) for (int j=0;j<3;j++) histoNSigE[i][j]->Write();
 
     mOutputFile->Close();
     
@@ -305,10 +306,10 @@ void StPicoNpeAnaMaker::setVariables(StPicoTrack * track)
             float tof = Tof->btof();
             if (tof>0) {
                 newBeta = L/(tof*(C_C_LIGHT/1.e9));
-                tofmass = TMath::Sqrt((tof*(C_C_LIGHT/1.e9)/L)*(tof*(C_C_LIGHT/1.e9)/L)-1)*pt*TMath::CosH(eta);
             }
         }
         beta = 1./newBeta;
+        tofmass = TMath::Sqrt(beta*beta-1)*pt*TMath::CosH(eta);
         // end global beta calculation
     }
     if (isGoodEmcTrack(track)) {
@@ -374,7 +375,7 @@ void StPicoNpeAnaMaker::setHistogram(int nptbin,int npid,int ntype,int nhisto)
     double maxHisto[10] = {13,0.1};
     
     for (int i=0;i<nptbin;i++){
-        histoTofMass[i] = new TH1F(Form("histoTofMass_%d",i),Form("histoTofMass_%d",i),100,0,2);
+        histoTofMass[i] = new TH1F(Form("histoTofMass_%d",i),Form("histoTofMass_%d",i),1000,-0.5,2.5);
         for (int j=0;j<npid;j++)
             for (int k=0;k<ntype;k++)
                 for (int l=0;l<nhisto;l++)
@@ -424,7 +425,12 @@ void StPicoNpeAnaMaker::fillHistogram(int iType){
         if (e0/pt/TMath::CosH(eta) > 0.8 && e0/pt/TMath::CosH(eta) < 2) fillHistogram(iPt, 2, iType);
     }
     if (isHTEvents >> 1 & 0x1 && nphi > 1 && neta > 1 && e0/pt/TMath::CosH(eta) > 0.8 && e0/pt/TMath::CosH(eta) < 2) fillHistogram(iPt, 3, iType);
-    if (iType==3) histoTofMass[iPt]->Fill(tofmass);
+    if (iType==3) {
+        histoTofMass[iPt]->Fill(tofmass);
+        if (tofmass < 1 && tofmass > 0.86) histoNSigE[i][0]->Fill(nsige); // pion
+        else if (tofmass < 0.55 && tofmass > 0.4) histoNSigE[i][0]->Fill(nsige); // kona
+        else if (tofmass < 0.15 && tofmass > 0.12) histoNSigE[i][0]->Fill(nsige); // proton
+    }
 
 }
 

@@ -131,6 +131,7 @@ class StPicoNpeAnaMaker : public StMaker
     TH1F * hRefMult[5];
     TH1F * histo[10][10][10][10];
     TH1F * histoTofMass[10];
+    TH1F * histoNSigE[10][10];
     int nptbin;
     int npid;
     int ntype;
