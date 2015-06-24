@@ -305,7 +305,7 @@ void StPicoNpeAnaMaker::setVariables(StPicoTrack * track)
             float tof = Tof->btof();
             if (tof>0) {
                 newBeta = L/(tof*(C_C_LIGHT/1.e9));
-                tofmass = TMath::Sqrt((tof*(C_C_LIGHT/1.e9)/L)**2-1)*pt*TMath::CosH(eta);
+                tofmass = TMath::Sqrt((tof*(C_C_LIGHT/1.e9)/L)*(tof*(C_C_LIGHT/1.e9)/L)-1)*pt*TMath::CosH(eta);
             }
         }
         beta = 1./newBeta;
