@@ -94,7 +94,7 @@ Int_t StPicoNpeAnaMaker::Finish()
                 for (int l=0;l<2;l++) // Histograms
                     histo[i][j][k][l]->Write();
 
-    for (int i=1;i<6;i++) histoTofMass[i]->Write(); // tofmass 
+    for (int i=1;i<6;i++) histoTofMass[i]->Write(); // tofmass
 
     mOutputFile->Close();
     
@@ -303,8 +303,10 @@ void StPicoNpeAnaMaker::setVariables(StPicoTrack * track)
             StThreeVectorF btofHitPos = Tof->btofHitPos();
             float L = tofPathLength(&pVtx, &btofHitPos, eHelix.curvature());
             float tof = Tof->btof();
-            if (tof>0) newBeta = L/(tof*(C_C_LIGHT/1.e9));
-            tofmass = sqrt((tof/L)**2-1)*pt*TMath::CosH(eta);
+            if (tof>0) {
+                newBeta = L/(tof*(C_C_LIGHT/1.e9));
+                tofmass = TMath::Sqrt((tof/L)**2-1)*pt*TMath::CosH(eta);
+            }
         }
         beta = 1./newBeta;
         // end global beta calculation
