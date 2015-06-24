@@ -94,6 +94,8 @@ Int_t StPicoNpeAnaMaker::Finish()
                 for (int l=0;l<2;l++) // Histograms
                     histo[i][j][k][l]->Write();
 
+    for (int i=1;i<6;i++) histoTofMass[i]->Write(); // tofmass 
+
     mOutputFile->Close();
     
     return kStOK;
@@ -159,6 +161,7 @@ Int_t StPicoNpeAnaMaker::Make()
         if (isGoodTrack(track)) {
             setVariables(track);
             fillHistogram(2); // electron
+            fillHistogram(3); // hadron
         }
         
     }
@@ -173,8 +176,8 @@ Int_t StPicoNpeAnaMaker::Make()
         if (isGoodPair(epair))
         {
             setVariables(epair);
-            if (pairCharge == 0) fillHistogram(0);
-            else fillHistogram(1);
+            if (pairCharge == 0) fillHistogram(0); // US
+            else fillHistogram(1);                 // LS
         }
     }
     
@@ -262,6 +265,7 @@ bool StPicoNpeAnaMaker::isGoodEmcTrack(StPicoTrack const * const trk) const
 void StPicoNpeAnaMaker::initVariables()
 {
     beta = std::numeric_limits<float>::quiet_NaN();
+    tofmass = std::numeric_limits<float>::quiet_NaN();
     e = std::numeric_limits<float>::quiet_NaN();
     e0 = std::numeric_limits<float>::quiet_NaN();
     e1 = std::numeric_limits<float>::quiet_NaN();
@@ -300,6 +304,7 @@ void StPicoNpeAnaMaker::setVariables(StPicoTrack * track)
             float L = tofPathLength(&pVtx, &btofHitPos, eHelix.curvature());
             float tof = Tof->btof();
             if (tof>0) newBeta = L/(tof*(C_C_LIGHT/1.e9));
+            tofmass = sqrt((tof/L)**2-1)*pt*TMath::CosH(eta);
         }
         beta = 1./newBeta;
         // end global beta calculation
@@ -366,7 +371,8 @@ void StPicoNpeAnaMaker::setHistogram(int nptbin,int npid,int ntype,int nhisto)
     double minHisto[10] = {-13,-0.1};
     double maxHisto[10] = {13,0.1};
     
-    for (int i=0;i<nptbin;i++)
+    for (int i=0;i<nptbin;i++){
+        histoTofMass= new TH1F(Form("histoTofMass_%d",i),Form("histoTofMass_%d",i),100,0,2);
         for (int j=0;j<npid;j++)
             for (int k=0;k<ntype;k++)
                 for (int l=0;l<nhisto;l++)
@@ -384,6 +390,7 @@ void StPicoNpeAnaMaker::setHistogram(int nptbin,int npid,int ntype,int nhisto)
                                                  maxHisto[l]
                                                  );
     
+    }
     
     
 }
@@ -415,6 +422,7 @@ void StPicoNpeAnaMaker::fillHistogram(int iType){
         if (e0/pt/TMath::CosH(eta) > 0.8 && e0/pt/TMath::CosH(eta) < 2) fillHistogram(iPt, 2, iType);
     }
     if (isHTEvents >> 1 & 0x1 && nphi > 1 && neta > 1 && e0/pt/TMath::CosH(eta) > 0.8 && e0/pt/TMath::CosH(eta) < 2) fillHistogram(iPt, 3, iType);
+    if (iType==3) histoTofMass[iPt]->Fill(tofmass);
 
 }
 

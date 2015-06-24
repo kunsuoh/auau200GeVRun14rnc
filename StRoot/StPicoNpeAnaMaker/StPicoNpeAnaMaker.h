@@ -109,6 +109,7 @@ class StPicoNpeAnaMaker : public StMaker
     Float_t nsigpion;
     Float_t partner_nsige;
     Float_t beta;
+    Float_t tofmass;
     Float_t e;
     Float_t e0;
     Float_t e1;
@@ -129,6 +130,7 @@ class StPicoNpeAnaMaker : public StMaker
 
     TH1F * hRefMult[5];
     TH1F * histo[10][10][10][10];
+    TH1F * histoTofMass[10];
     int nptbin;
     int npid;
     int ntype;
