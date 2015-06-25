@@ -90,7 +90,7 @@ Int_t StPicoNpeAnaMaker::Finish()
     
     for (int j=0;j<4;j++) // PID
         for (int i=1;i<6;i++) // PT
-            for (int k=0;k<3;k++) // Particle/Type
+            for (int k=0;k<3;k++) // Particle:Type
                 for (int l=0;l<2;l++) // Histograms
                     histo[i][j][k][l]->Write();
 
@@ -434,12 +434,12 @@ void StPicoNpeAnaMaker::fillHistogram(int iType){
         if (abs(beta-1) < 0.025) fillHistogram(iPt, 1, iType); // PID 1 : TPC + TOF
         if (e0/pt/TMath::CosH(eta) > 0.8 && e0/pt/TMath::CosH(eta) < 2) { // PID 2 : TPC + BEMC
             fillHistogram(iPt, 2, iType);
-            if (iType == 2 && nsige > pidCutLw[2][iPt] && nsige < pidCutHi[2][iPt]) histo[iPt][2][iType][2]->Fill(dca);
+            if (iType == 2 && nsige > pidCutLw[2][iPt-1] && nsige < pidCutHi[2][iPt-1]) histo[iPt][2][iType][2]->Fill(dca);
         }
     }
     if (isHTEvents >> 1 & 0x1 && nphi > 1 && neta > 1 && e0/pt/TMath::CosH(eta) > 0.8 && e0/pt/TMath::CosH(eta) < 2) { // PID 3 TPC + BEMC + BSMC
         fillHistogram(iPt, 3, iType);
-        if (iType == 2 && nsige > pidCutLw[3][iPt] && nsige < pidCutHi[3][iPt]) histo[iPt][3][iType][2]->Fill(dca);
+        if (iType == 2 && nsige > pidCutLw[3][iPt-1] && nsige < pidCutHi[3][iPt-1]) histo[iPt][3][iType][2]->Fill(dca);
     }
     if (iType==3) {
         histoTofMass[iPt]->Fill(tofmass);
