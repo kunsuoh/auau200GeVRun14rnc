@@ -366,7 +366,7 @@ void StPicoNpeAnaMaker::setVariables(StElectronPair * epair)
 void StPicoNpeAnaMaker::setHistogram(int nptbin,int npid,int ntype,int nhisto)
 {
     
-    double ptbin[10] = {1.5, 1.8, 2.5, 4.0, 6.5, 10.};
+    double ptbin[10] = {0, 1.5, 1.8, 2.5, 4.0, 6.5, 10.};
     TString pid[10] = {"Tpc","TpcTof","TpcBemc","TpcBemcBsmd"};
     TString type[10] = {"PhEUS","PhELS","IncE","Pion","Kaon","Proton"};
     TString histoname[10] = {"nSigE","DCA","DCAafterPIDcut"};
@@ -375,7 +375,7 @@ void StPicoNpeAnaMaker::setHistogram(int nptbin,int npid,int ntype,int nhisto)
     double minHisto[10] = {-13, -0.1, -0.1};
     double maxHisto[10] = {13, 0.1, 0.1};
     
-    for (int i=0;i<nptbin+1;i++){
+    for (int i=0;i<nptbin;i++){
         histoTofMass[i] = new TH1F(Form("histoTofMass_%d",i),Form("histoTofMass_%d",i),1000,-0.5,2.5);
         for (int j=0;j<npid;j++) histoNSigE[i][j] =  new TH1F(Form("histoNSigE_%d_%d",i,j),Form("histoNSigE_%d_%d",i,j),1301,-13,13);
         for (int j=0;j<npid;j++)
@@ -384,8 +384,8 @@ void StPicoNpeAnaMaker::setHistogram(int nptbin,int npid,int ntype,int nhisto)
                     histo[i][j][k][l] = new TH1F(
                                                  Form("histo_%d_%d_%d_%d", i,j,k,l),
                                                  Form("histo_pT%.1f_%.1f_%s_%s_%s",
-                                                      ptbin[i-1],
                                                       ptbin[i],
+                                                      ptbin[i+1],
                                                       pid[j].Data(),
                                                       type[k].Data(),
                                                       histoname[l].Data()
