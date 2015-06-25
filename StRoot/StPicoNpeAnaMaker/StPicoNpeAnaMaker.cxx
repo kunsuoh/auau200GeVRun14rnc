@@ -66,7 +66,7 @@ Int_t StPicoNpeAnaMaker::Init()
         hRefMult[i] = new TH1F(Form("hRefMult_%d",i),Form("hRefMult_%d",i),1000,0,1000);
     }
 
-    setHistogram(6,4,6,2);
+    setHistogram(6,4,6,3);
 
     return kStOK;
 }
@@ -90,12 +90,13 @@ Int_t StPicoNpeAnaMaker::Finish()
     
     for (int j=0;j<4;j++) // PID
         for (int i=1;i<6;i++) // PT
-            for (int k=0;k<3;k++) // Particle
+            for (int k=0;k<3;k++) // Particle/Type
                 for (int l=0;l<2;l++) // Histograms
                     histo[i][j][k][l]->Write();
 
     for (int i=1;i<6;i++) histoTofMass[i]->Write(); // tofmass
     for (int i=1;i<6;i++) for (int j=0;j<3;j++) histoNSigE[i][j]->Write();
+    for (int j=2;j<4;j++) for (int i=1;i<5;i++) histo[i][j][3][2]->Write();
 
     mOutputFile->Close();
     
@@ -368,7 +369,7 @@ void StPicoNpeAnaMaker::setHistogram(int nptbin,int npid,int ntype,int nhisto)
     double ptbin[10] = {1.5, 1.8, 2.5, 4.0, 6.5, 10.};
     TString pid[10] = {"Tpc","TpcTof","TpcBemc","TpcBemcBsmd"};
     TString type[10] = {"PhEUS","PhELS","IncE","Pion","Kaon","Proton"};
-    TString histoname[10] = {"nSigE","DCA"};
+    TString histoname[10] = {"nSigE","DCA","DCAafterPIDcut"};
     
     int binHisto[10] = {1301,100};
     double minHisto[10] = {-13,-0.1};
@@ -419,19 +420,32 @@ void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType){
 
     //-------------------------------------------------------------------------------
 void StPicoNpeAnaMaker::fillHistogram(int iType){
+    float pidCutLw[10][10];
+    float pidCutHi[10][10];
+    pidCutLw[2]={-1.2, -1.2, -1.0, -1.0};
+    pidCutHi[2]={1.8, 2.5, 3.0, 3.0};
+    pidCutLw[3]={-1.5, -1.4, -1.5, -1.1};
+    pidCutHi[3]={1.8, 2.5, 3.0, 3.0};
+
     int iPt = getPtBin(pt);
+    
     if (isHTEvents >> 0 & 0x1) {
-        fillHistogram(iPt, 0, iType);
-        if (abs(beta-1) < 0.025) fillHistogram(iPt, 1, iType);
-        if (e0/pt/TMath::CosH(eta) > 0.8 && e0/pt/TMath::CosH(eta) < 2) fillHistogram(iPt, 2, iType);
+        fillHistogram(iPt, 0, iType); // PID 1 : TPC
+        if (abs(beta-1) < 0.025) fillHistogram(iPt, 1, iType); // PID 1 : TPC + TOF
+        if (e0/pt/TMath::CosH(eta) > 0.8 && e0/pt/TMath::CosH(eta) < 2) { // PID 2 : TPC + BEMC
+            fillHistogram(iPt, 2, iType);
+            if (nsige > pidCutLw[2][iPt] && nsige < pidCutLw[2][iPt]) histo[iPt][2][iType][2]->Fill(dca);
+        }
     }
-    if (isHTEvents >> 1 & 0x1 && nphi > 1 && neta > 1 && e0/pt/TMath::CosH(eta) > 0.8 && e0/pt/TMath::CosH(eta) < 2) fillHistogram(iPt, 3, iType);
+    if (isHTEvents >> 1 & 0x1 && nphi > 1 && neta > 1 && e0/pt/TMath::CosH(eta) > 0.8 && e0/pt/TMath::CosH(eta) < 2) { // Type 3 TPC + BEMC + BSMC
+        fillHistogram(iPt, 3, iType);
+        if (nsige > pidCutLw[3][iPt] && nsige < pidCutLw[3][iPt]) histo[iPt][3][iType][2]->Fill(dca);
+    }
     if (iType==3) {
         histoTofMass[iPt]->Fill(tofmass);
         if (tofmass < 1 && tofmass > 0.86) histoNSigE[iPt][0]->Fill(nsige); // pion
         else if (tofmass < 0.55 && tofmass > 0.4) histoNSigE[iPt][1]->Fill(nsige); // kona
         else if (tofmass < 0.15 && tofmass > 0.12) histoNSigE[iPt][2]->Fill(nsige); // proton
     }
-
 }
 
