@@ -422,10 +422,10 @@ void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType){
 void StPicoNpeAnaMaker::fillHistogram(int iType){
     float pidCutLw[10][10];
     float pidCutHi[10][10];
-    pidCutLw[2]={-1.2, -1.2, -1.0, -1.0};
-    pidCutHi[2]={1.8, 2.5, 3.0, 3.0};
-    pidCutLw[3]={-1.5, -1.4, -1.5, -1.1};
-    pidCutHi[3]={1.8, 2.5, 3.0, 3.0};
+    pidCutLw[2]={-1.2, -1.2, -1.0, -1.0, 0};
+    pidCutHi[2]={1.8, 2.5, 3.0, 3.0, 0};
+    pidCutLw[3]={-1.5, -1.4, -1.5, -1.1, 0};
+    pidCutHi[3]={1.8, 2.5, 3.0, 3.0, 0};
 
     int iPt = getPtBin(pt);
     
