@@ -143,7 +143,7 @@ Int_t StPicoNpeAnaMaker::Make()
   //  if (!isGoodEvent()) return kStOK;
     hEvent->Fill(4);
     
-    cout << "Prescales (Trigger0 Trigger19) : " << mPrescales->prescale(mPicoNpeEvent->runId(), 450050) << " " << mPrescales->prescale(mPicoNpeEvent->runId(), 450060) << " " << mPrescales->prescale(mPicoNpeEvent->runId(), 450005) << " " << mPrescales->prescale(mPicoNpeEvent->runId(), 450015) << " " << mPrescales->prescale(mPicoNpeEvent->runId(), 450025) << " " << mPrescales->prescale(mPicoNpeEvent->runId(), 450014) << " " << mPrescales->prescale(mPicoNpeEvent->runId(), 450201) << " " << mPrescales->prescale(mPicoNpeEvent->runId(), 450211) << " " << mPrescales->prescale(mPicoNpeEvent->runId(), 450202) << endl;
+    cout << "Prescales (Trigger0 Trigger19) : " << mPrescales->prescale(mPicoNpeEvent->runId(), 0) << " " << mPrescales->prescale(mPicoNpeEvent->runId(), 1) << " " << mPrescales->prescale(mPicoNpeEvent->runId(), 2) << " " << mPrescales->prescale(mPicoNpeEvent->runId(), 19) << " " << mPrescales->prescale(mPicoNpeEvent->runId(), 20) << " " << mPrescales->prescale(mPicoNpeEvent->runId(), 21) << " " << mPrescales->prescale(mPicoNpeEvent->runId(), 22) << " " << mPrescales->prescale(mPicoNpeEvent->runId(), 23) << " " << mPrescales->prescale(mPicoNpeEvent->runId(), 24) << endl;
 
     // -------------- USER ANALYSIS -------------------------
     // Event informaiton
