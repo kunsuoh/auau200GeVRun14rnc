@@ -13,6 +13,7 @@
 #include "StPicoDstMaker/StPicoTrack.h"
 #include "StPicoDstMaker/StPicoEmcPidTraits.h"
 #include "StPicoDstMaker/StPicoBTofPidTraits.h"
+#include "StPicoPrescales/StPicoPrescales.h"
 #include "StPicoNpeEventMaker/StPicoNpeEvent.h"
 #include "StPicoNpeEventMaker/StElectronPair.h"
 #include "StBTofUtil/tofPathLength.hh"
@@ -29,11 +30,13 @@ ClassImp(StPicoNpeAnaMaker)
 StPicoNpeAnaMaker::StPicoNpeAnaMaker(char const * name,char const * inputFilesList,
                                      char const * outName, StPicoDstMaker* picoDstMaker):
 StMaker(name),mPicoDstMaker(picoDstMaker),mPicoNpeEvent(NULL), mOutFileName(outName), mInputFileList(inputFilesList),
-mOutputFile(NULL), mChain(NULL), mEventCounter(0)
+mOutputFile(NULL), mChain(NULL), mEventCounter(0), mPrescales(NULL)
 {}
 
 Int_t StPicoNpeAnaMaker::Init()
 {
+    mPrescales = new StPicoPrescales(cutsAna::prescalesFilesDirectoryName);
+    
     mPicoNpeEvent = new StPicoNpeEvent();
     
     mChain = new TChain("T");
@@ -74,6 +77,9 @@ Int_t StPicoNpeAnaMaker::Init()
 StPicoNpeAnaMaker::~StPicoNpeAnaMaker()
 {
     /*  */
+    if (mPrescales)
+        delete mPrescales;
+    mPrescales = NULL;
 }
 //-----------------------------------------------------------------------------
 Int_t StPicoNpeAnaMaker::Finish()
@@ -136,6 +142,8 @@ Int_t StPicoNpeAnaMaker::Make()
 
   //  if (!isGoodEvent()) return kStOK;
     hEvent->Fill(4);
+    
+    cout << "Prescales (Trigger0 Trigger19) : " << mPrescales->prescale(mPicoNpeEvent->runId(), 0) << " " << mPrescales->prescale(mPicoNpeEvent->runId(), 19) << endl;
 
     // -------------- USER ANALYSIS -------------------------
     // Event informaiton

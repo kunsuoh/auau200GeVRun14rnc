@@ -31,6 +31,8 @@ class StElectronPair;
 class StPicoDstMaker;
 class StPicoTrack;
 class StPicoDst;
+class StPicoPrescales;
+
 
 class StPicoNpeAnaMaker : public StMaker
 {
@@ -52,6 +54,8 @@ class StPicoNpeAnaMaker : public StMaker
 
     StPicoDstMaker* mPicoDstMaker;
     StPicoNpeEvent* mPicoNpeEvent;
+    StPicoPrescales* mPrescales;
+
 
     TString mOutFileName;
     TString mInputFileList;

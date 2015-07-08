@@ -18,7 +18,8 @@ namespace cutsAna
 {
     // path to lists of triggers prescales
     // lists are obtained from http://www.star.bnl.gov/protected/common/common2014/trigger2014/plots_au200gev/
-
+    std::string const prescalesFilesDirectoryName = "./run14AuAu200GeVPrescales";
+    
     // event
     float const vz = 6.0;// cm.
     float const vzVpdVz = 3.0; // 3 cm.
