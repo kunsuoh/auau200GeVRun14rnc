@@ -143,7 +143,7 @@ Int_t StPicoNpeAnaMaker::Make()
   //  if (!isGoodEvent()) return kStOK;
     hEvent->Fill(4);
     
-    cout << "Prescales (Trigger0 Trigger19) : " << mPrescales->prescale(mPicoNpeEvent->runId(), 0) << " " << mPrescales->prescale(mPicoNpeEvent->runId(), 19) << endl;
+    cout << "Prescales (Trigger0 Trigger19) : " << mPrescales->prescale(mPicoNpeEvent->runId(), 0) << " " << mPrescales->prescale(mPicoNpeEvent->runId(), 1) << " " << mPrescales->prescale(mPicoNpeEvent->runId(), 2) << " " << mPrescales->prescale(mPicoNpeEvent->runId(), 3) << " " << mPrescales->prescale(mPicoNpeEvent->runId(), 4) << " " << mPrescales->prescale(mPicoNpeEvent->runId(), 5) << " " << mPrescales->prescale(mPicoNpeEvent->runId(), 6) << " " << mPrescales->prescale(mPicoNpeEvent->runId(), 7) << " " << mPrescales->prescale(mPicoNpeEvent->runId(), 19) << endl;
 
     // -------------- USER ANALYSIS -------------------------
     // Event informaiton
