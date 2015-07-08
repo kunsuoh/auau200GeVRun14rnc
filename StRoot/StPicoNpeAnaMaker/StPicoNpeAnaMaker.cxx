@@ -163,7 +163,9 @@ Int_t StPicoNpeAnaMaker::Make()
     if (picoDst->event()->triggerWord()>>19 & 0x3F) isHTEvents += 2;
     for (int i=0; i<2; i++) if (isHTEvents >> i & 0x1) {
         hRefMult[i]->Fill(mRefMult);
-        if (i!=0 && i!=1) cout << "Prescale (" << mPicoNpeEvent->runId() << ", " << i << ") : " << mPrescales->prescale(mPicoNpeEvent->runId(), i) << endl;
+    }
+    for (int i=0; i<25; i++) if (picoDst->event()->triggerWord() >> i & 0x1) {
+        cout << "Prescale (" << mPicoNpeEvent->runId() << ", " << i << ") : " << mPrescales->prescale(mPicoNpeEvent->runId(), i) << endl;
     }
     // hadrons & inclusive electron with StPicoTrack
     UInt_t nTracks = picoDst->numberOfTracks();
