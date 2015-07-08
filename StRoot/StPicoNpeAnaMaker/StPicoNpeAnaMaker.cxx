@@ -143,7 +143,7 @@ Int_t StPicoNpeAnaMaker::Make()
   //  if (!isGoodEvent()) return kStOK;
     hEvent->Fill(4);
     
-    cout << "Prescales (Trigger0 Trigger19) : " << mPrescales->prescale(mPicoNpeEvent->runId(), 0) << " " << mPrescales->prescale(mPicoNpeEvent->runId(), 1) << " " << mPrescales->prescale(mPicoNpeEvent->runId(), 2) << " " << mPrescales->prescale(mPicoNpeEvent->runId(), 19) << " " << mPrescales->prescale(mPicoNpeEvent->runId(), 20) << " " << mPrescales->prescale(mPicoNpeEvent->runId(), 21) << " " << mPrescales->prescale(mPicoNpeEvent->runId(), 22) << " " << mPrescales->prescale(mPicoNpeEvent->runId(), 23) << " " << mPrescales->prescale(mPicoNpeEvent->runId(), 24) << endl;
+
 
     // -------------- USER ANALYSIS -------------------------
     // Event informaiton
@@ -161,8 +161,10 @@ Int_t StPicoNpeAnaMaker::Make()
     isHTEvents = 0;
     if (picoDst->event()->triggerWord()>>0 & 0x7FF) isHTEvents += 1;
     if (picoDst->event()->triggerWord()>>19 & 0x3F) isHTEvents += 2;
-    for (int i=0; i<2; i++) if (isHTEvents >> i & 0x1) hRefMult[i]->Fill(mRefMult);
-    
+    for (int i=0; i<2; i++) if (isHTEvents >> i & 0x1) {
+        hRefMult[i]->Fill(mRefMult);
+        cout << "Prescale " << mPrescales->prescale(mPicoNpeEvent->runId() << ", " << i << ") : " << mPrescales->prescale(mPicoNpeEvent->runId(), i);
+    }
     // hadrons & inclusive electron with StPicoTrack
     UInt_t nTracks = picoDst->numberOfTracks();
     for (unsigned short iTrack = 0; iTrack < nTracks; ++iTrack) {
