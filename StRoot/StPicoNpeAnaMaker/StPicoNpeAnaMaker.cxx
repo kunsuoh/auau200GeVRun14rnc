@@ -166,7 +166,7 @@ Int_t StPicoNpeAnaMaker::Make()
     }
     int checkDoubleTrigger = 0;
     for (int i=0; i<25; i++) if (picoDst->event()->triggerWord() >> i & 0x1) {
-        cout << "Prescale (" << mPicoNpeEvent->runId() << ", " << i << ") : " << mPrescales->prescale(mPicoNpeEvent->runId(), i) << endl;
+        cout << "Prescale (" << mPicoNpeEvent->runId() << ", " << i << ", " << mPicoNpeEvent->eventId() << ") : " << mPrescales->prescale(mPicoNpeEvent->runId(), i) << endl;
         checkDoubleTrigger++;
     }
     if (checkDoubleTrigger > 1) {
