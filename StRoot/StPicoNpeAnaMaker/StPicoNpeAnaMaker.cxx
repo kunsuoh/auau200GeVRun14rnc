@@ -64,9 +64,11 @@ Int_t StPicoNpeAnaMaker::Init()
     // -------------- USER VARIABLES -------------------------
     hEvent = new TH1F("hEvent","hEvent",10,0,10);
     hZDCx = new TH1F("hZDCx","hZDCx",1000,0,100000);
+    hZDCxWt = new TH1F("hZDCxWt","hZDCxWt",1000,0,100000);
     
     for (int i=0; i<2; i++) {
         hRefMult[i] = new TH1F(Form("hRefMult_%d",i),Form("hRefMult_%d",i),1000,0,1000);
+        hRefMultWt[i] = new TH1F(Form("hRefMultWt_%d",i),Form("hRefMultWt_%d",i),1000,0,1000);
     }
 
     setHistogram(6,4,6,3);
@@ -90,9 +92,12 @@ Int_t StPicoNpeAnaMaker::Finish()
     // --------------- USER HISTOGRAM WRITE --------------------
     hEvent->Write();
     hZDCx->Write();
+    hZDCxWt->Write();
     
     hRefMult[0]->Write();
     hRefMult[1]->Write();
+    hRefMultWt[0]->Write();
+    hRefMultWt[1]->Write();
     
     for (int j=0;j<4;j++) // PID
         for (int i=1;i<6;i++) // PT
@@ -155,14 +160,10 @@ Int_t StPicoNpeAnaMaker::Make()
     bField = picoDst->event()->bField();
     pVtx = picoDst->event()->primaryVertex();
 
-    hZDCx->Fill(mZDCx);
 
     isHTEvents = 0;
     if (picoDst->event()->triggerWord()>>0 & 0x7FF) isHTEvents += 1;
     if (picoDst->event()->triggerWord()>>19 & 0x3F) isHTEvents += 2;
-    for (int i=0; i<2; i++) if (isHTEvents >> i & 0x1) {
-        hRefMult[i]->Fill(mRefMult);
-    }
     int checkDoubleTrigger = 0;
     for (int i=0; i<25; i++) if (picoDst->event()->triggerWord() >> i & 0x1) {
      //   cout << "Prescale (" << mPicoNpeEvent->runId() << ", " << i << ", " << mPicoNpeEvent->eventId() << ") : " << mPrescales->prescale(mPicoNpeEvent->runId(), i) << endl;
@@ -177,6 +178,15 @@ Int_t StPicoNpeAnaMaker::Make()
         return 0;
     }
     hEvent->Fill(4);
+    hEvent->Fill(5,weight);
+
+    hZDCx->Fill(mZDCx);
+    hZDCxWt->Fill(mZDCx,weight);
+    
+    for (int i=0; i<2; i++) if (isHTEvents >> i & 0x1) {
+        hRefMult[i]->Fill(mRefMult);
+        hRefMultWt[i]->Fill(mRefMult,weight);
+    }
 
     // hadrons & inclusive electron with StPicoTrack
     UInt_t nTracks = picoDst->numberOfTracks();
