@@ -71,7 +71,7 @@ Int_t StPicoNpeAnaMaker::Init()
         hRefMultWt[i] = new TH1F(Form("hRefMultWt_%d",i),Form("hRefMultWt_%d",i),1000,0,1000);
     }
 
-    setHistogram(6,4,6,3);
+    setHistogram(6,6,6,3);
 
     return kStOK;
 }
@@ -167,7 +167,8 @@ Int_t StPicoNpeAnaMaker::Make()
     int checkDoubleTrigger = 0;
     for (int i=0; i<25; i++) if (picoDst->event()->triggerWord() >> i & 0x1) {
      //   cout << "Prescale (" << mPicoNpeEvent->runId() << ", " << i << ", " << mPicoNpeEvent->eventId() << ") : " << mPrescales->prescale(mPicoNpeEvent->runId(), i) << endl;
-        weight = mPrescales->prescale(mPicoNpeEvent->runId(), i);
+        //weight = mPrescales->prescale(mPicoNpeEvent->runId(), i);
+        weight = 0;
         if (i==18) {
             continue;
         }
@@ -473,10 +474,13 @@ void StPicoNpeAnaMaker::fillHistogram(int iType){
         if (abs(beta-1) < 0.025) fillHistogram(iPt, 1, iType); // PID 1 : TPC + TOF
         if (e0/pt/TMath::CosH(eta) > 0.8 && e0/pt/TMath::CosH(eta) < 2) { // PID 2 : TPC + BEMC
             fillHistogram(iPt, 2, iType);
+            if (nphi > 1 && neta > 1) fillHistogram(iPt, 4, iType); // PID 4 : TPC + BEMC + BSMD for MB
+
         }
     }
-    if (isHTEvents >> 1 & 0x1 && nphi > 1 && neta > 1 && e0/pt/TMath::CosH(eta) > 0.8 && e0/pt/TMath::CosH(eta) < 2) { // PID 3 TPC + BEMC + BSMC
-        fillHistogram(iPt, 3, iType);
+    if (isHTEvents >> 1 & 0x1 && e0/pt/TMath::CosH(eta) > 0.8 && e0/pt/TMath::CosH(eta) < 2) { // PID 3 TPC + BEMC + BSMC
+        if (nphi > 1 && neta > 1) fillHistogram(iPt, 3, iType); // PID 3 : TPC + BEMC + BSMD for HT
+        fillHistogram(iPt, 5, iType); // PID 5 : TPC + BEMC for HT
     }
     if (iType==3) {
         histoTofMass[iPt]->Fill(tofmass,weight);
