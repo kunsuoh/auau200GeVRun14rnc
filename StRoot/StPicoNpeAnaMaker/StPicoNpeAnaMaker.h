@@ -92,6 +92,7 @@ class StPicoNpeAnaMaker : public StMaker
     TTree * tInc;
     TTree * tPhE;
     
+    float weight;
     float bField;
     StThreeVectorF pVtx;
     

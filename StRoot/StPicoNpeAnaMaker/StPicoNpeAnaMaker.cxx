@@ -166,6 +166,7 @@ Int_t StPicoNpeAnaMaker::Make()
     int checkDoubleTrigger = 0;
     for (int i=0; i<25; i++) if (picoDst->event()->triggerWord() >> i & 0x1) {
      //   cout << "Prescale (" << mPicoNpeEvent->runId() << ", " << i << ", " << mPicoNpeEvent->eventId() << ") : " << mPrescales->prescale(mPicoNpeEvent->runId(), i) << endl;
+        weight = mPrescales->prescale(mPicoNpeEvent->runId(), i);
         if (i==18) {
             continue;
         }
@@ -436,8 +437,8 @@ int StPicoNpeAnaMaker::getPtBin(double pt) {
 }
 //-------------------------------------------------------------------------------
 void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType){
-    histo[(const int)iPt][(const int)iPid][(const int)iType][0]->Fill(nsige);
-    histo[(const int)iPt][(const int)iPid][(const int)iType][1]->Fill(dca);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][0]->Fill(nsige,weight);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][1]->Fill(dca,weight);
     if (iType==2) {
         float pidCutLw[2][6];
         float pidCutHi[2][6];
@@ -445,8 +446,8 @@ void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType){
         pidCutHi[0]={0, 1.8, 2.5, 3.0, 3.0, 0};
         pidCutLw[1]={0, -1.5, -1.4, -1.5, -1.1, 0};
         pidCutHi[1]={0, 1.8, 2.5, 3.0, 3.0, 0};
-        if (iPid == 2 && nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) histo[iPt][2][2][2]->Fill(dca);
-        if (iPid == 3 && nsige > pidCutLw[1][iPt] && nsige < pidCutHi[1][iPt]) histo[iPt][3][2][2]->Fill(dca);
+        if (iPid == 2 && nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) histo[iPt][2][2][2]->Fill(dca,weight);
+        if (iPid == 3 && nsige > pidCutLw[1][iPt] && nsige < pidCutHi[1][iPt]) histo[iPt][3][2][2]->Fill(dca,weight);
 
 
     }
@@ -468,10 +469,10 @@ void StPicoNpeAnaMaker::fillHistogram(int iType){
         fillHistogram(iPt, 3, iType);
     }
     if (iType==3) {
-        histoTofMass[iPt]->Fill(tofmass);
-        if (tofmass < 1 && tofmass > 0.86) histoNSigE[iPt][0]->Fill(nsige); // pion
-        else if (tofmass < 0.55 && tofmass > 0.4) histoNSigE[iPt][1]->Fill(nsige); // kona
-        else if (tofmass < 0.15 && tofmass > 0.12) histoNSigE[iPt][2]->Fill(nsige); // proton
+        histoTofMass[iPt]->Fill(tofmass,weight);
+        if (tofmass < 1 && tofmass > 0.86) histoNSigE[iPt][0]->Fill(nsige,weight); // pion
+        else if (tofmass < 0.55 && tofmass > 0.4) histoNSigE[iPt][1]->Fill(nsige,weight); // kona
+        else if (tofmass < 0.15 && tofmass > 0.12) histoNSigE[iPt][2]->Fill(nsige,weight); // proton
     }
 }
 
