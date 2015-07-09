@@ -164,8 +164,14 @@ Int_t StPicoNpeAnaMaker::Make()
     for (int i=0; i<2; i++) if (isHTEvents >> i & 0x1) {
         hRefMult[i]->Fill(mRefMult);
     }
+    int checkDoubleTrigger = 0;
     for (int i=0; i<25; i++) if (picoDst->event()->triggerWord() >> i & 0x1) {
         cout << "Prescale (" << mPicoNpeEvent->runId() << ", " << i << ") : " << mPrescales->prescale(mPicoNpeEvent->runId(), i) << endl;
+        checkDoubleTrigger++;
+    }
+    if (checkDoubleTrigger > 1) {
+        cout << "This event has >2 trigger informaiton. " << endl;
+        return 0;
     }
     // hadrons & inclusive electron with StPicoTrack
     UInt_t nTracks = picoDst->numberOfTracks();
