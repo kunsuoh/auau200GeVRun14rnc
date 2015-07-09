@@ -99,7 +99,7 @@ Int_t StPicoNpeAnaMaker::Finish()
     hRefMultWt[0]->Write();
     hRefMultWt[1]->Write();
     
-    for (int j=0;j<4;j++) // PID
+    for (int j=0;j<6;j++) // PID
         for (int i=1;i<6;i++) // PT
             for (int k=0;k<3;k++) // Particle:Type
                 for (int l=0;l<2;l++) // Histograms
