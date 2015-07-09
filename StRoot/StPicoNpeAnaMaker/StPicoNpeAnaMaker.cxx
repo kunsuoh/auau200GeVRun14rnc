@@ -141,7 +141,6 @@ Int_t StPicoNpeAnaMaker::Make()
     hEvent->Fill(3);
 
   //  if (!isGoodEvent()) return kStOK;
-    hEvent->Fill(4);
     
 
 
@@ -176,6 +175,8 @@ Int_t StPicoNpeAnaMaker::Make()
         cout << "This event has >2 trigger informaiton. " << endl;
         return 0;
     }
+    hEvent->Fill(4);
+
     // hadrons & inclusive electron with StPicoTrack
     UInt_t nTracks = picoDst->numberOfTracks();
     for (unsigned short iTrack = 0; iTrack < nTracks; ++iTrack) {
