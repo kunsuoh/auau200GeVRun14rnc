@@ -168,7 +168,7 @@ Int_t StPicoNpeAnaMaker::Make()
     for (int i=0; i<25; i++) if (picoDst->event()->triggerWord() >> i & 0x1) {
      //   cout << "Prescale (" << mPicoNpeEvent->runId() << ", " << i << ", " << mPicoNpeEvent->eventId() << ") : " << mPrescales->prescale(mPicoNpeEvent->runId(), i) << endl;
         //weight = mPrescales->prescale(mPicoNpeEvent->runId(), i);
-        weight = 0;
+        weight = 1;
         if (i==18) {
             continue;
         }
