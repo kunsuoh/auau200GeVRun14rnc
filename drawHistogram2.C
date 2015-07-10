@@ -1,7 +1,7 @@
 
 void drawHistogram2(){
 
-    TFile * infile = new TFile("out_15.root");
+    TFile * infile = new TFile("out_16.root");
     TCanvas * cc = new TCanvas("cc","cc",500,500);
     TCanvas * cc2 = new TCanvas("cc2","cc2",500,1000);
     TCanvas * cc3 = new TCanvas("cc3","cc3",500,500);
@@ -13,7 +13,7 @@ void drawHistogram2(){
 
     cc->SetLogy();
     
-    TString pid[4] = {"TPC","TPC+TOF","TPC+BEMC","TPC+BEMC+BSMD (BHT)"};
+    TString pid[6] = {"TPC","TPC+TOF","TPC+BEMC","TPC+BEMC+BSMD (BHT)","TPC+BEMC+BSMD (MB)","TPC+BEMC (BHT)"};
     double pt[6] = {1.5, 1.8, 2.5, 4.0, 6.5, 10};
     double hadronNSigEShape[7][6];
     // PID #2
@@ -22,13 +22,14 @@ void drawHistogram2(){
     // PID # 3
     float pidCutLw[6] = {0, -1.5, -1.4, -1.5, -1.1, 0};
     float pidCutHi[6] = {0, 1.8, 2.5, 3.0, 3.0, 0};
-    
 
-    TH1F * hYield[4];
-    TH1F * hRatio[4];
-    TH1F * hMean[4];
-    TH1F * hSigma[4];
-    TH1F * hRawYield[4];
+    const int nPid = 6;
+
+    TH1F * hYield[nPid];
+    TH1F * hRatio[nPid];
+    TH1F * hMean[nPid];
+    TH1F * hSigma[nPid];
+    TH1F * hRawYield[nPid];
     TH1F * hUS;
     TH1F * hLS;
     TH1F * hSignal;
@@ -114,7 +115,7 @@ void drawHistogram2(){
     cout << "=========>END iPt loop !" << endl;
 
     cout << "=========>START iPt loop ! " << endl;
-    for (int iPid=0; iPid<4; iPid++){
+    for (int iPid=0; iPid<6; iPid++){
         cout << "=========>=========>iPid : " << iPid << endl;
         hRatio[iPid] = new TH1F(Form("hRatio_%d",iPid),Form("hRatio_%d",iPid),5,pt);
         hYield[iPid] = new TH1F(Form("hYield_%d",iPid),Form("hYield_%d",iPid),5,pt);
@@ -338,10 +339,28 @@ void drawHistogram2(){
     hRatio[i]->SetMarkerStyle(20);
     hRatio[i]->Draw("p");
     cc4->SaveAs(Form("~/Desktop/Ratio_%d.pdf",i));
-
+    
     int i = 2;
     hRatio[i]->Divide(hYield[1],hYield[0]);
     hRatio[i]->SetTitle("TPC+TOF / TPC only");
+    hRatio[i]->SetMaximum(2);
+    hRatio[i]->SetMinimum(0);
+    hRatio[i]->SetMarkerStyle(20);
+    hRatio[i]->Draw("p");
+    cc4->SaveAs(Form("~/Desktop/Ratio_%d.pdf",i));
+    
+    int i = 3;
+    hRatio[i]->Divide(hYield[3],hYield[5]);
+    hRatio[i]->SetTitle("(BHT)TPC+BEMC+BSMD / (BHT)TPC+BEMC");
+    hRatio[i]->SetMaximum(2);
+    hRatio[i]->SetMinimum(0);
+    hRatio[i]->SetMarkerStyle(20);
+    hRatio[i]->Draw("p");
+    cc4->SaveAs(Form("~/Desktop/Ratio_%d.pdf",i));
+    
+    int i = 4;
+    hRatio[i]->Divide(hYield[4],hYield[2]);
+    hRatio[i]->SetTitle("(MB)TPC+BEMC+BSMD / (MB)TPC+BEMC");
     hRatio[i]->SetMaximum(2);
     hRatio[i]->SetMinimum(0);
     hRatio[i]->SetMarkerStyle(20);

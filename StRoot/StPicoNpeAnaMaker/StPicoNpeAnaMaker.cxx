@@ -62,6 +62,8 @@ Int_t StPicoNpeAnaMaker::Init()
     mOutputFile->cd();
     
     // -------------- USER VARIABLES -------------------------
+    hCheckDoubleTrigger = new TH1I("hCheckDoubleTrigger","hCheckDoubleTrigger",20,0,20);
+    hTrigger = new TH1I("hTrigger","hTrigger",30,0,30);
     hEvent = new TH1F("hEvent","hEvent",10,0,10);
     hZDCx = new TH1F("hZDCx","hZDCx",1000,0,100000);
     hZDCxWt = new TH1F("hZDCxWt","hZDCxWt",1000,0,100000);
@@ -93,6 +95,8 @@ Int_t StPicoNpeAnaMaker::Finish()
     hEvent->Write();
     hZDCx->Write();
     hZDCxWt->Write();
+    hTrigger->Write();
+    hCheckDoubleTrigger->Write();
     
     hRefMult[0]->Write();
     hRefMult[1]->Write();
@@ -165,19 +169,21 @@ Int_t StPicoNpeAnaMaker::Make()
     if (picoDst->event()->triggerWord()>>0 & 0x7FF) isHTEvents += 1;
     if (picoDst->event()->triggerWord()>>19 & 0x3F) isHTEvents += 2;
     int checkDoubleTrigger = 0;
+    int checkDoubleTrigger = 10;
     for (int i=0; i<25; i++) if (picoDst->event()->triggerWord() >> i & 0x1) {
      //   cout << "Prescale (" << mPicoNpeEvent->runId() << ", " << i << ", " << mPicoNpeEvent->eventId() << ") : " << mPrescales->prescale(mPicoNpeEvent->runId(), i) << endl;
         //weight = mPrescales->prescale(mPicoNpeEvent->runId(), i);
         weight = 1;
+        hTrigger->Fill(i);
         if (i==18) {
             continue;
+            checkDoubleTrigger18++;
         }
         checkDoubleTrigger++;
     }
-    if (checkDoubleTrigger > 1) {
-    //    cout << "This event has >2 trigger informaiton. " << endl;
-        return 0;
-    }
+    hCheckDoubleTrigger->Fill(checkDoubleTrigger);
+    hCheckDoubleTrigger->Fill(checkDoubleTrigger18);
+    
     hEvent->Fill(4);
     hEvent->Fill(5,weight);
 
