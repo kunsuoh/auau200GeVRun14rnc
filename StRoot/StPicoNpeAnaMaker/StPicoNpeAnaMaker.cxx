@@ -463,7 +463,8 @@ void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType){
         pidCutHi[1]={0, 1.8, 2.5, 3.0, 3.0, 0};
         if (iPid == 2 && nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) histo[iPt][2][2][2]->Fill(dca,weight);
         if (iPid == 3 && nsige > pidCutLw[1][iPt] && nsige < pidCutHi[1][iPt]) histo[iPt][3][2][2]->Fill(dca,weight);
-
+        if (iPid == 4 && nsige > pidCutLw[1][iPt] && nsige < pidCutHi[1][iPt]) histo[iPt][4][2][2]->Fill(dca,weight);
+        if (iPid == 5 && nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) histo[iPt][5][2][2]->Fill(dca,weight);
 
     }
 }
