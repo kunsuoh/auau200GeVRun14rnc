@@ -111,7 +111,7 @@ Int_t StPicoNpeAnaMaker::Finish()
 
     for (int i=1;i<6;i++) histoTofMass[i]->Write(); // tofmass
     for (int i=1;i<6;i++) for (int j=0;j<3;j++) histoNSigE[i][j]->Write();
-    for (int j=2;j<4;j++) for (int i=1;i<5;i++) histo[i][j][2][2]->Write();
+    for (int j=2;j<6;j++) for (int i=1;i<6;i++) histo[i][j][2][2]->Write();
 
     mOutputFile->Close();
     
