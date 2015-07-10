@@ -169,7 +169,7 @@ Int_t StPicoNpeAnaMaker::Make()
     if (picoDst->event()->triggerWord()>>0 & 0x7FF) isHTEvents += 1;
     if (picoDst->event()->triggerWord()>>19 & 0x3F) isHTEvents += 2;
     int checkDoubleTrigger = 0;
-    int checkDoubleTrigger = 10;
+    int checkDoubleTrigger18 = 10;
     for (int i=0; i<25; i++) if (picoDst->event()->triggerWord() >> i & 0x1) {
      //   cout << "Prescale (" << mPicoNpeEvent->runId() << ", " << i << ", " << mPicoNpeEvent->eventId() << ") : " << mPrescales->prescale(mPicoNpeEvent->runId(), i) << endl;
         //weight = mPrescales->prescale(mPicoNpeEvent->runId(), i);
