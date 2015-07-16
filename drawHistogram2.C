@@ -1,7 +1,7 @@
 
 void drawHistogram2(){
 
-    TFile * infile = new TFile("out_16.root");
+    TFile * infile = new TFile("out_18.root");
     TCanvas * cc = new TCanvas("cc","cc",500,500);
     TCanvas * cc2 = new TCanvas("cc2","cc2",500,1000);
     TCanvas * cc3 = new TCanvas("cc3","cc3",500,500);
@@ -39,18 +39,27 @@ void drawHistogram2(){
     TH1F * hNSigEPion;
     TH1F * hNSigEKaon;
     TH1F * hNSigEProton;
-    TF1 * constant = new TF1("constant" ,"pol0", -1000, 1000);
+    TF1 * constant = new TF1("constant" ,"pol0", -0.1, 0.1);
     constant->SetParameter(0,1);
 
     cc6->cd();
     cc6->SetLogy();
-    for (int iPid=2; iPid<4; iPid++) for (int iPt=1; iPt<5; iPt++) {
+    for (int iPid=2; iPid<6; iPid++) for (int iPt=1; iPt<5; iPt++) {
         TH1F * dum = (TH1F*)infile->Get(Form("histo_%d_%d_2_1",iPt, iPid));
         TH1F * his = (TH1F*)infile->Get(Form("histo_%d_%d_2_2",iPt, iPid));
+        TH1F * hisLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_1",iPt, iPid));
+        TH1F * hisUS = (TH1F*)infile->Get(Form("histo_%d_%d_0_1",iPt, iPid));
+        TH1F * hisPE = new TH1F("hisPE","hisPE",100,-0.1,0.1);
         dum->Sumw2();
         his->Sumw2();
+        hisLS->Sumw2();
+        hisUS->Sumw2();
+        hisPE->Sumw2();
         
-        dum->Divide(constant,dum->GetMaximum());
+        hisPE->Add(hisUS,hisLS,1,-1);
+        double glo = 0.1;
+     //   hisPE->Divide(constant,hisPE->GetMaximum()*glo);
+        dum->Divide(constant,dum->GetMaximum()*glo);
         his->Divide(constant,his->GetMaximum());
         
         his->SetMarkerStyle(20);
@@ -62,14 +71,75 @@ void drawHistogram2(){
         dum->SetMarkerStyle(20);
         dum->SetMarkerColor(2);
         dum->SetMarkerSize(0.5);
+        
+        hisLS->SetMarkerStyle(20);
+        hisLS->SetMarkerColor(2);
+        hisLS->SetMarkerSize(0.5);
+
+        
+        hisUS->SetMarkerStyle(20);
+        hisUS->SetMarkerColor(4);
+        hisUS->SetMarkerSize(0.5);
+
+        
+        hisPE->SetMarkerStyle(20);
+        hisPE->SetMarkerColor(1);
+        hisPE->SetMarkerSize(0.5);
 
 
-        his->Draw("p");
-        dum->Draw("psame");
+     //   his->Draw("p");
+     //   dum->Draw("psame");
+        hisUS->Draw("p");
+        hisLS->Draw("psame");
+        hisPE->Draw("psame");
         cc6->SaveAs(Form("~/Desktop/DcaAterPid_Pid%d_Pt%d.pdf",iPid,iPt));
-    }
-    
+ 
+        TObjArray *mc = new TObjArray(3);        // MC histograms are put in this array
+        mc->Add(hisPE);
+        mc->Add(dum);
+        TF1 * fHF = new TF1("fHF",funHF,-0.1,0.1,3);
+        fHF->SetParameters(1,20,0);
+        TH1F * hHF = new TH1F("hHF","hHF",100,-0.1,0.1);
+        hHF->FillRandom("fHF",100000);
+        hHF->SetMarkerStyle(20);
+        hHF->SetMarkerColor(5);
+        hHF->SetMarkerSize(0.5);
+     //   hHF->Divide(constant,hHF->GetMaximum());
 
+     //   mc->Add(hHF);
+
+        TFractionFitter* fit = new TFractionFitter(his, mc); // initialise
+    //    fit->Constrain(1,0.0,10.0);               // constrain fraction 1 to be between 0 and 1
+    //    fit->Constrain(2,0.0,10.0);               // constrain fraction 1 to be between 0 and 1
+        fit->SetRangeX(1,100);                    // use only the first 15 bins in the fit
+        Int_t status = fit->Fit();               // perform the fit
+        std::cout << "fit status: " << status << std::endl;
+        if (status == 0) {                       // check on fit status
+            TH1F* result = (TH1F*) fit->GetPlot();
+            his->Draw("p");
+            result->SetMarkerStyle(24);
+            result->SetMarkerColor(1);
+            result->SetMarkerSize(1);
+            double aPE, aHD, aHF, ePE, eHD, eHF;
+            fit->GetResult(0,aPE,ePE);
+            fit->GetResult(1,aHD,eHD);
+          //  fit->GetResult(2,aHF,eHF);
+            
+            hisPE->Multiply(constant,aPE*glo);
+            dum->Multiply(constant,aHD*glo);
+            hHF->Multiply(constant,aHF);
+
+            result->Draw("samep");
+            hHF->Draw("psame");
+            dum->Draw("psame");
+            hisPE->Draw("psame");
+            cc6->SetLogy();
+            cc6->SaveAs(Form("~/Desktop/DcaAterPid_Fit_Pid%d_Pt%d.pdf",iPid,iPt));
+        }
+
+    }
+    return 0;
+    
     
     cout << "=========>START iPt loop ! " << endl;
     for (int iPt=1; iPt<6; iPt++){
@@ -368,4 +438,9 @@ void drawHistogram2(){
     cc4->SaveAs(Form("~/Desktop/Ratio_%d.pdf",i));
     
     
+}
+
+double funHF(double * x, double * par){
+    if (x[0]>0) return TMath::Exp(-1*x[0]*par[1]+par[2])*par[0];
+    else return TMath::Exp(x[0]*par[1]+par[2])*par[0];
 }

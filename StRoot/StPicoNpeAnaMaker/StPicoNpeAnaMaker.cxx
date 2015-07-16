@@ -73,7 +73,7 @@ Int_t StPicoNpeAnaMaker::Init()
         hRefMultWt[i] = new TH1F(Form("hRefMultWt_%d",i),Form("hRefMultWt_%d",i),1000,0,1000);
     }
 
-    setHistogram(6,6,6,3);
+    setHistogram(6,6,6,4);
 
     return kStOK;
 }
@@ -407,11 +407,11 @@ void StPicoNpeAnaMaker::setHistogram(int nptbin,int npid,int ntype,int nhisto)
     double ptbin[10] = {0, 1.5, 1.8, 2.5, 4.0, 6.5, 10.};
     TString pid[10] = {"Tpc","TpcTof","TpcBemc","TpcBemcBsmd"};
     TString type[10] = {"PhEUS","PhELS","IncE","Pion","Kaon","Proton"};
-    TString histoname[10] = {"nSigE","DCA","DCAafterPIDcut"};
+    TString histoname[10] = {"nSigE","DCA","DCAafterPIDcut","pairDca"};
     
-    int binHisto[10] = {1301, 100, 100};
-    double minHisto[10] = {-13, -0.1, -0.1};
-    double maxHisto[10] = {13, 0.1, 0.1};
+    int binHisto[10] = {1301, 100, 100,100};
+    double minHisto[10] = {-13, -0.1, -0.1,0);
+    double maxHisto[10] = {13, 0.1, 0.1,0.5};
     
     for (int i=0;i<nptbin;i++){
         histoTofMass[i] = new TH1F(Form("histoTofMass_%d",i),Form("histoTofMass_%d",i),1000,-0.5,2.5);
@@ -454,6 +454,7 @@ int StPicoNpeAnaMaker::getPtBin(double pt) {
 void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType){
     histo[(const int)iPt][(const int)iPid][(const int)iType][0]->Fill(nsige,weight);
     histo[(const int)iPt][(const int)iPid][(const int)iType][1]->Fill(dca,weight);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][2]->Fill(pairMass,weight);
     if (iType==2) {
         float pidCutLw[2][6];
         float pidCutHi[2][6];
