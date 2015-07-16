@@ -249,7 +249,7 @@ bool StPicoNpeAnaMaker::isGoodPair(StElectronPair const* const epair) const
 //-----------------------------------------------------------------------------
 bool StPicoNpeAnaMaker::isGoodTrack(StPicoTrack const * const trk) const
 {
-    StPhysicalHelixD eHelix = track->dcaGeometry().helix();
+    StPhysicalHelixD eHelix = trk->dcaGeometry().helix();
     
     return
     (!cutsAna::trackRequireHFT || trk->isHFTTrack()) &&
