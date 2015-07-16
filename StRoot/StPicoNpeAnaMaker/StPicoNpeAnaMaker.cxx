@@ -112,7 +112,8 @@ Int_t StPicoNpeAnaMaker::Finish()
     for (int i=1;i<6;i++) histoTofMass[i]->Write(); // tofmass
     for (int i=1;i<6;i++) for (int j=0;j<3;j++) histoNSigE[i][j]->Write();
     for (int j=2;j<6;j++) for (int i=1;i<6;i++) histo[i][j][2][2]->Write();
-
+    for (int j=0;j<6;j++) for (int i=1;i<6;i++) for (int k=0;k<2;k++) histo[i][j][k][3]->Write();
+ 
     mOutputFile->Close();
     
     return kStOK;
@@ -454,7 +455,7 @@ int StPicoNpeAnaMaker::getPtBin(double pt) {
 void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType){
     histo[(const int)iPt][(const int)iPid][(const int)iType][0]->Fill(nsige,weight);
     histo[(const int)iPt][(const int)iPid][(const int)iType][1]->Fill(dca,weight);
-    histo[(const int)iPt][(const int)iPid][(const int)iType][2]->Fill(pairMass,weight);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][3]->Fill(pairMass,weight);
     if (iType==2) {
         float pidCutLw[2][6];
         float pidCutHi[2][6];
