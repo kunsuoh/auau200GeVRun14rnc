@@ -411,7 +411,7 @@ void StPicoNpeAnaMaker::setHistogram(int nptbin,int npid,int ntype,int nhisto)
     
     int binHisto[10] = {1301, 100, 100,100};
     double minHisto[10] = {-13, -0.1, -0.1,0);
-    double maxHisto[10] = {13, 0.1, 0.1,0.5};
+    double maxHisto[10] = {13, 0.1, 0.1,0.5);
     
     for (int i=0;i<nptbin;i++){
         histoTofMass[i] = new TH1F(Form("histoTofMass_%d",i),Form("histoTofMass_%d",i),1000,-0.5,2.5);
