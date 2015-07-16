@@ -219,6 +219,7 @@ Int_t StPicoNpeAnaMaker::Make()
             setVariables(epair);
             if (pairCharge == 0) fillHistogram(0); // US
             else fillHistogram(1);                 // LS
+            
         }
     }
     
@@ -248,12 +249,15 @@ bool StPicoNpeAnaMaker::isGoodPair(StElectronPair const* const epair) const
 //-----------------------------------------------------------------------------
 bool StPicoNpeAnaMaker::isGoodTrack(StPicoTrack const * const trk) const
 {
+    StPhysicalHelixD eHelix = track->dcaGeometry().helix();
+    
     return
     (!cutsAna::trackRequireHFT || trk->isHFTTrack()) &&
     trk->nHitsFit() >= cutsAna::trackNHitsFit &&
     trk->nHitsDedx() >= cutsAna::trackNhitsDedx &&
     fabs(trk->gMom(pVtx, bField).pseudoRapidity()) <= cutsAna::trackEta &&
-    trk->gPt() >= cutsAna::trackPt
+    trk->gPt() >= cutsAna::trackPt &&
+    eHelix.curvatureSignedDistance(pVtx.x(),pVtx.y()) < cutsAna::trackDca
     ;
 }
 //-----------------------------------------------------------------------------

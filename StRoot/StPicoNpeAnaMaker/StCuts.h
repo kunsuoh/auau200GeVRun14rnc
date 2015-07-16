@@ -32,6 +32,7 @@ namespace cutsAna
     int const trackNhitsDedx = 15;
     float const trackEta = 0.7;
     float const trackPt = 1.5;
+    float const trackDca = 0.1;
     
     
     
@@ -42,8 +43,8 @@ namespace cutsAna
     
     
     // electron + partner pair cuts
-    float const pairMass = 0.04;
-    float const pairDca = 0.1;
+    float const pairMass = 0.4;
+    float const pairDca = 0.5;
     
     
     // pid
