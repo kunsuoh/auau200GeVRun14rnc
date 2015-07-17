@@ -7,7 +7,7 @@ void drawHistogram2(){
     TCanvas * cc3 = new TCanvas("cc3","cc3",500,500);
     TCanvas * cc4 = new TCanvas("cc4","cc4",500,500);
     TCanvas * cc5 = new TCanvas("cc5","cc5",500,500);
-    TCanvas * cc6 = new TCanvas("cc6","cc6",500,500);
+    TCanvas * cc6 = new TCanvas("cc6","cc6",500,1000);
     
     cc2->Divide(1,2);
 
@@ -43,8 +43,9 @@ void drawHistogram2(){
     constant->SetParameter(0,1);
 
     cc6->cd();
-    cc6->SetLogy();
+    cc6->Divide(1,2);
     for (int iPid=2; iPid<6; iPid++) for (int iPt=1; iPt<5; iPt++) {
+        cc6->cd(1)->SetLogy();
         TH1F * dum = (TH1F*)infile->Get(Form("histo_%d_%d_2_1",iPt, iPid));
         TH1F * his = (TH1F*)infile->Get(Form("histo_%d_%d_2_2",iPt, iPid));
         TH1F * hisLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_1",iPt, iPid));
@@ -80,6 +81,7 @@ void drawHistogram2(){
         hisUS->SetMarkerStyle(20);
         hisUS->SetMarkerColor(4);
         hisUS->SetMarkerSize(0.5);
+        hisUS->SetMinimum(0.5);
 
         
         hisPE->SetMarkerStyle(20);
@@ -92,6 +94,10 @@ void drawHistogram2(){
         hisUS->Draw("p");
         hisLS->Draw("psame");
         hisPE->Draw("psame");
+
+        cc6->cd(2)->SetLogy();
+   //     infile->Get(Form("histo_%d_%d_1_3",iPt, iPid))->Draw();
+   //     infile->Get(Form("histo_%d_%d_0_3",iPt, iPid))->Draw("same");
         cc6->SaveAs(Form("~/Desktop/DcaAterPid_Pid%d_Pt%d.pdf",iPid,iPt));
  
         TObjArray *mc = new TObjArray(3);        // MC histograms are put in this array
@@ -138,7 +144,6 @@ void drawHistogram2(){
         }
 
     }
-    return 0;
     
     
     cout << "=========>START iPt loop ! " << endl;
