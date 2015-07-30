@@ -465,16 +465,8 @@ void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType){
         }
     }
     else {
-        if (iType==2) {
-            if (fabs(nsigpion) < 2 ) {
-                histo[(const int)iPt][(const int)iPid][(const int)iType][1]->Fill(dca,weight);
-                histo[(const int)iPt][(const int)iPid][(const int)iType][3]->Fill(pairMass,weight);
-            }
-        }
-        else {
-            histo[(const int)iPt][(const int)iPid][(const int)iType][1]->Fill(dca,weight);
-            histo[(const int)iPt][(const int)iPid][(const int)iType][3]->Fill(pairMass,weight);
-        }
+        histo[(const int)iPt][(const int)iPid][(const int)iType][1]->Fill(dca,weight);
+        histo[(const int)iPt][(const int)iPid][(const int)iType][3]->Fill(pairMass,weight);
     }
     if (iType==2) {
         float pidCutLw[2][6];
