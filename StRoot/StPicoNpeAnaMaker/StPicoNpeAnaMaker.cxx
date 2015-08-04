@@ -545,7 +545,7 @@ void StPicoNpeAnaMaker::fillHistogramPID(int iType){
 
 //-------------------------------------------------------------------------------
 void StPicoNpeAnaMaker::fillHistogramPID(int iPt, int iPid, int iType){
-    if (iType < 2 && nsige > 0) fillHistogramPID();
+    if (iType < 2 && nsige > 0) fillHistogramPID(iPt, iPid, iType, 0);
     else if (iType==2) {
         float pidCutLw[2][6];
         float pidCutHi[2][6];
@@ -558,7 +558,7 @@ void StPicoNpeAnaMaker::fillHistogramPID(int iPt, int iPid, int iType){
         if (iPid == 4 && nsige > pidCutLw[1][iPt] && nsige < pidCutHi[1][iPt]) fillHistogramPID(iPt, iPid, iType, 0);
         if (iPid == 5 && nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) fillHistogramPID(iPt, iPid, iType, 0);
     }
-    else if (iType==3 && fabs(nsigpion) < 2) fillHistogramPID();
+    else if (iType==3 && fabs(nsigpion) < 2) fillHistogramPID(iPt, iPid, iType, 0);
     
 }
 //-------------------------------------------------------------------------------
