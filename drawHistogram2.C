@@ -1,7 +1,7 @@
 
 void drawHistogram2(){
 
-    TFile * infile = new TFile("out_16.root");
+    TFile * infile = new TFile("out_21.root");
     TCanvas * cc = new TCanvas("cc","cc",500,500);
     TCanvas * cc2 = new TCanvas("cc2","cc2",500,1000);
     TCanvas * cc3 = new TCanvas("cc3","cc3",500,500);
@@ -46,8 +46,8 @@ void drawHistogram2(){
 
     cc6->cd();
     cc6->Divide(1,2);
-    /*
-   for (int iPid=2; iPid<6; iPid++) for (int iPt=1; iPt<5; iPt++) {
+
+    for (int iPid=2; iPid<6; iPid++) for (int iPt=1; iPt<5; iPt++) {
         cc6->cd(1)->SetLogy();
         TH1F * dum = (TH1F*)infile->Get(Form("histo_%d_%d_2_1",iPt, iPid));
         TH1F * his = (TH1F*)infile->Get(Form("histo_%d_%d_2_2",iPt, iPid));
@@ -117,15 +117,15 @@ void drawHistogram2(){
         
         cc7->cd(1)->SetLogy();
         double glo = 0.1;
-        hisPE->Divide(constant,hisPE->GetMaximum());
-        dum->Divide(constant,dum->GetMaximum());
-        his->Divide(constant,his->GetMaximum());
+        hisPE->Divide(constant,hisPE->Integral(1,100)*10);
+        dum->Divide(constant,dum->Integral(1,100)*90);
+        his->Divide(constant,his->Integral(1,100)*10);
 
         his->SetMarkerStyle(20);
         his->SetMarkerColor(1);
         his->SetMarkerSize(0.5);
-        his->SetMaximum(2);
-        his->SetMinimum(1e-4);
+        his->SetMaximum(0.1);
+        his->SetMinimum(1e-6);
         
         dum->SetMarkerStyle(20);
         dum->SetMarkerColor(2);
@@ -134,11 +134,20 @@ void drawHistogram2(){
         
         his->DrawClone("p");
         dum->DrawClone("psame");
-        hisPE->DrawClone("psame");
+      //  hisPE->DrawClone("psame");
 
         
         
         cc7->cd(2)->SetLogy();
+        TH1F * hisdum = new TH1F("hisdum","hisdum",100,-0.1,0.1);
+        hisdum->Add(his,dum,1,-1);
+        hisdum->SetMaximum(0.1);
+        hisdum->SetMinimum(1e-6);
+        hisdum->Draw("p");
+        hisPE->DrawClone("psame");
+
+        cc7->SaveAs(Form("~/Desktop/DcaAterPid_Fit_Pid%d_Pt%d.pdf",iPid,iPt));
+
         TObjArray *mc = new TObjArray(3);        // MC histograms are put in this array
         hisPE->Divide(constant,glo);
         dum->Divide(constant,glo);
@@ -167,11 +176,9 @@ void drawHistogram2(){
         dum->Draw("psame");
         hisPE->Draw("psame");
 
-        cc7->SaveAs(Form("~/Desktop/DcaAterPid_Fit_Pid%d_Pt%d.pdf",iPid,iPt));
         
     }
     //return 0 ;
-     */
     
  
     cout << "=========>START iPt loop ! " << endl;

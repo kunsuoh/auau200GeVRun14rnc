@@ -79,8 +79,15 @@ class StPicoNpeAnaMaker : public StMaker
     void setVariables(StElectronPair *);
     void fillHistogram(int);
     void fillHistogram(int,int,int);
+    void fillHistogramPID();
+    void fillHistogramPID(int);
+    void fillHistogramPID(int,int,int);
     void setHistogram(int,int,int,int);
     int getPtBin(double);
+    bool isBHTevent();
+    bool isBemc();
+    bool isBsmd();
+    bool isTof();
     
     
     StPicoDst * picoDst;

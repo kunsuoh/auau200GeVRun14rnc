@@ -73,7 +73,7 @@ Int_t StPicoNpeAnaMaker::Init()
         hRefMultWt[i] = new TH1F(Form("hRefMultWt_%d",i),Form("hRefMultWt_%d",i),1000,0,1000);
     }
 
-    setHistogram(6,6,6,4);
+    setHistogram(6,6,6,11);
 
     return kStOK;
 }
@@ -106,13 +106,13 @@ Int_t StPicoNpeAnaMaker::Finish()
     for (int j=0;j<6;j++) // PID
         for (int i=1;i<6;i++) // PT
             for (int k=0;k<3;k++) // Particle:Type
-                for (int l=0;l<2;l++) // Histograms
+                for (int l=0;l<11;l++) // Histograms
                     histo[i][j][k][l]->Write();
 
     for (int i=1;i<6;i++) histoTofMass[i]->Write(); // tofmass
     for (int i=1;i<6;i++) for (int j=0;j<3;j++) histoNSigE[i][j]->Write();
-    for (int j=2;j<6;j++) for (int i=1;i<6;i++) histo[i][j][2][2]->Write();
-    for (int j=0;j<6;j++) for (int i=1;i<6;i++) for (int k=0;k<2;k++) histo[i][j][k][3]->Write();
+//    for (int j=2;j<6;j++) for (int i=1;i<6;i++) histo[i][j][2][2]->Write();
+//    for (int j=0;j<6;j++) for (int i=1;i<6;i++) for (int k=0;k<2;k++) histo[i][j][k][3]->Write();
  
     mOutputFile->Close();
     
@@ -203,6 +203,8 @@ Int_t StPicoNpeAnaMaker::Make()
             setVariables(track);
             fillHistogram(2); // electron
             fillHistogram(3); // hadron
+            fillHistogramPID(2); // nEta, nPhi, e0/p for Inclusive E
+            fillHistogramPID(3); // nEta, nPhi, e0/p for Hadron
         }
         
     }
@@ -217,8 +219,14 @@ Int_t StPicoNpeAnaMaker::Make()
         if (isGoodPair(epair))
         {
             setVariables(epair);
-            if (pairCharge == 0) fillHistogram(0); // US
-            else fillHistogram(1);                 // LS
+            if (pairCharge == 0) {                  // US
+                fillHistogram(0);
+                fillHistogramPID(0);
+            }
+            else {                                  // LS
+                fillHistogram(1);
+                fillHistogramPID(1);
+            }
             
         }
     }
@@ -412,7 +420,7 @@ void StPicoNpeAnaMaker::setHistogram(int nptbin,int npid,int ntype,int nhisto)
     double ptbin[10] = {0, 1.5, 1.8, 2.5, 4.0, 6.5, 10.};
     TString pid[10] = {"Tpc","TpcTof","TpcBemc","TpcBemcBsmd"};
     TString type[10] = {"PhEUS","PhELS","IncE","Pion","Kaon","Proton"};
-    TString histoname[10] = {"nSigE","DCA","DCAafterPIDcut","pairDca"};
+    TString histoname[11] = {"nSigE","DCA","DCAafterPIDcut","pairDca","nEta","nPhi","e0/p","zDist","phiDist","etaTowDist","phiTowDist"};
     
     int binHisto[10] = {289, 100, 100,100};
     double minHisto[10] = {-13, -0.1, -0.1,0};
@@ -491,13 +499,14 @@ void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType){
     }
 }
 
-    //-------------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------------
 void StPicoNpeAnaMaker::fillHistogram(int iType){
 
     int iPt = getPtBin(pt);
     
     if (isHTEvents >> 0 & 0x1) {
-        fillHistogram(iPt, 0, iType); // PID 1 : TPC
+        fillHistogram(iPt, 0, iType); // PID 0 : TPC
         if (abs(beta-1) < 0.025) fillHistogram(iPt, 1, iType); // PID 1 : TPC + TOF
         if (e0/pt/TMath::CosH(eta) > 0.8 && e0/pt/TMath::CosH(eta) < 2) { // PID 2 : TPC + BEMC
             fillHistogram(iPt, 2, iType);
@@ -516,4 +525,69 @@ void StPicoNpeAnaMaker::fillHistogram(int iType){
         else if (tofmass < 0.15 && tofmass > 0.12) histoNSigE[iPt][2]->Fill(nsige,weight); // proton
     }
 }
+
+
+
+
+
+
+//-------------------------------------------------------------------------------
+void StPicoNpeAnaMaker::fillHistogramPID(int iType){
+    int iPt = getPtBin(pt);
+    if (isBHTevent) fillHistogramPID(iPt, 0, iType);
+    if (isBHTevent && isTof) fillHistogramPID(iPt, 1, iType);
+    if (isBHTevent && isBemc) fillHistogramPID(iPt, 2, iType);
+    if (isBHTevent && isBemc && isBsmd) fillHistogramPID(iPt, 4, iType);
+    if (!isBHTevent && isBemc) fillHistogramPID(iPt, 5, iType);
+    if (!isBHTevent && isBemc && isBsmd) fillHistogramPID(iPt, 3, iType);
+    
+}
+
+//-------------------------------------------------------------------------------
+void StPicoNpeAnaMaker::fillHistogramPID(int iPt, int iPid, int iType){
+    if (iType < 2 && nsige > 0) fillHistogramPID();
+    else if (iType==2) {
+        float pidCutLw[2][6];
+        float pidCutHi[2][6];
+        pidCutLw[0]={0, -1.2, -1.2, -1.0, -1.0, 0};
+        pidCutHi[0]={0, 1.8, 2.5, 3.0, 3.0, 0};
+        pidCutLw[1]={0, -1.5, -1.4, -1.5, -1.1, 0};
+        pidCutHi[1]={0, 1.8, 2.5, 3.0, 3.0, 0};
+        if (iPid == 2 && nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) fillHistogramPID();
+        if (iPid == 3 && nsige > pidCutLw[1][iPt] && nsige < pidCutHi[1][iPt]) fillHistogramPID();
+        if (iPid == 4 && nsige > pidCutLw[1][iPt] && nsige < pidCutHi[1][iPt]) fillHistogramPID();
+        if (iPid == 5 && nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) fillHistogramPID();
+    }
+    else if (iType==3 && fabs(nsigpion) < 2) fillHistogramPID();
+    
+}
+//-------------------------------------------------------------------------------
+void StPicoNpeAnaMaker::fillHistogramPID(){
+    histo[(const int)iPt][(const int)iPid][(const int)iType][4]->Fill(neta,weight);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][5]->Fill(nphi,weight);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][6]->Fill(e0/pt/TMath::CosH(eta),weight);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][7]->Fill(zDist,weight);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][8]->Fill(phiDist,weight);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][9]->Fill(etaTowDist,weight);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][10]->Fill(phiTowDist,weight);
+}
+
+//-----------------------------------------------------------------------------------
+bool StPicoNpeAnaMaker::isBemc(){
+    if (e0/pt/TMath::CosH(eta) > 0.8 && e0/pt/TMath::CosH(eta) < 2) return true;
+    else return false;
+}
+bool StPicoNpeAnaMaker::isBsmd(){
+    if (nphi > 1 && neta > 1) return true;
+    else return false;
+}
+bool StPicoNpeAnaMaker::isTof(){
+    if (fabs(beta-1) < 0.025) return true;
+    else return false;
+}
+bool StPicoNpeAnaMaker::isBHTevent(){
+    if (isHTEvents >> 1 & 0x1 ) return true;
+    else return false;
+}
+
 
