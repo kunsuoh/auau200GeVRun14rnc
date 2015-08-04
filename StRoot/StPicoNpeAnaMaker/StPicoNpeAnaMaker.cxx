@@ -103,11 +103,11 @@ Int_t StPicoNpeAnaMaker::Finish()
     hRefMultWt[0]->Write();
     hRefMultWt[1]->Write();
     
+    for (int l=0;l<11;l++) // Histograms
     for (int j=0;j<6;j++) // PID
-        for (int i=1;i<6;i++) // PT
-            for (int k=0;k<4;k++) // Particle:Type
-                for (int l=0;l<11;l++) // Histograms
-                    histo[i][j][k][l]->Write();
+    for (int i=1;i<6;i++) // PT
+    for (int k=0;k<4;k++) // Particle:Type
+         histo[i][j][k][l]->Write();
 
     for (int i=1;i<6;i++) histoTofMass[i]->Write(); // tofmass
     for (int i=1;i<6;i++) for (int j=0;j<3;j++) histoNSigE[i][j]->Write();
@@ -429,6 +429,7 @@ void StPicoNpeAnaMaker::setHistogram(int nptbin,int npid,int ntype,int nhisto)
     for (int i=0;i<nptbin;i++){
         histoTofMass[i] = new TH1F(Form("histoTofMass_%d",i),Form("histoTofMass_%d",i),1000,-0.5,2.5);
         for (int j=0;j<npid;j++) histoNSigE[i][j] =  new TH1F(Form("histoNSigE_%d_%d",i,j),Form("histoNSigE_%d_%d",i,j),1301,-13,13);
+   
         for (int j=0;j<npid;j++)
             for (int k=0;k<ntype;k++)
                 for (int l=0;l<nhisto;l++)
