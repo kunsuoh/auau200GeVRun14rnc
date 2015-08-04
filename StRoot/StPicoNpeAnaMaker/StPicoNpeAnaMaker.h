@@ -79,7 +79,7 @@ class StPicoNpeAnaMaker : public StMaker
     void setVariables(StElectronPair *);
     void fillHistogram(int);
     void fillHistogram(int,int,int);
-    void fillHistogramPID();
+    void fillHistogramPID(int,int,int,int);
     void fillHistogramPID(int);
     void fillHistogramPID(int,int,int);
     void setHistogram(int,int,int,int);
