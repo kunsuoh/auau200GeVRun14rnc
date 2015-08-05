@@ -73,7 +73,7 @@ Int_t StPicoNpeAnaMaker::Init()
         hRefMultWt[i] = new TH1F(Form("hRefMultWt_%d",i),Form("hRefMultWt_%d",i),1000,0,1000);
     }
 
-    setHistogram(6,6,6,11);
+    setHistogram(6,6,6,12);
 
     return kStOK;
 }
@@ -103,7 +103,7 @@ Int_t StPicoNpeAnaMaker::Finish()
     hRefMultWt[0]->Write();
     hRefMultWt[1]->Write();
     
-    for (int l=0;l<11;l++) // Histograms
+    for (int l=0;l<12;l++) // Histograms
     for (int j=0;j<6;j++) // PID
     for (int i=1;i<6;i++) // PT
     for (int k=0;k<4;k++) // Particle:Type
@@ -378,6 +378,7 @@ void StPicoNpeAnaMaker::setVariables(StPicoTrack * track)
         zDist = Emc->zDist();
         etaTowDist = Emc->etaTowDist();
         phiTowDist = Emc->phiTowDist();
+        nphieta = nphi**2 + neta**2;
     }
 }
 //-----------------------------------------------------------------------------
@@ -420,11 +421,11 @@ void StPicoNpeAnaMaker::setHistogram(int nptbin,int npid,int ntype,int nhisto)
     double ptbin[10] = {0, 1.5, 1.8, 2.5, 4.0, 6.5, 10.};
     TString pid[10] = {"TpcMB","TpcTofMB","TpcBemcMB","TpcBemcBsmdHT","TpcBemcBsmdMB","TpcBemcHT"};
     TString type[10] = {"PhEUS","PhELS","IncE","Pion","Kaon","Proton"};
-    TString histoname[11] = {"nSigE","DCA","DCAafterPIDcut","pairDca","nEta","nPhi","e0/p","zDist","phiDist","etaTowDist","phiTowDist"};
+    TString histoname[12] = {"nSigE","DCA","DCAafterPIDcut","pairDca","nEta","nPhi","e0/p","zDist","phiDist","etaTowDist","phiTowDist","nphieta"};
     
-    int binHisto[11] = {    289,    100,    100,    100,    10, 10, 100,    100,    100,    100,    100};
-    double minHisto[11] = { -13,    -0.1,   -0.1,   0,      0,  0,  0,      -20,    -0.1,   -0.1,   -0.1};
-    double maxHisto[11] = { 13,     0.1,    0.1,    0.5,    10, 10, 3,      20,     0.1,    0.1,    0.1};
+    int binHisto[12] = {    289,    100,    100,    100,    10, 10, 100,    100,    100,    100,    100,    100};
+    double minHisto[12] = { -13,    -0.1,   -0.1,   0,      0,  0,  0,      -20,    -0.1,   -0.1,   -0.1,   0};
+    double maxHisto[12] = { 13,     0.1,    0.1,    0.5,    10, 10, 3,      20,     0.1,    0.1,    0.1,    100};
     
     for (int i=0;i<nptbin;i++){
         histoTofMass[i] = new TH1F(Form("histoTofMass_%d",i),Form("histoTofMass_%d",i),1000,-0.5,2.5);
@@ -571,6 +572,7 @@ void StPicoNpeAnaMaker::fillHistogramPID(int iPt, int iPid, int iType, int dummy
     histo[(const int)iPt][(const int)iPid][(const int)iType][8]->Fill(phiDist,weight);
     histo[(const int)iPt][(const int)iPid][(const int)iType][9]->Fill(etaTowDist,weight);
     histo[(const int)iPt][(const int)iPid][(const int)iType][10]->Fill(phiTowDist,weight);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][11]->Fill(nphieta,weight);
 }
 
 //-----------------------------------------------------------------------------------
