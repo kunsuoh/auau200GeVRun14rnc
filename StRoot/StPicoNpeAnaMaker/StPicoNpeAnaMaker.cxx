@@ -378,7 +378,7 @@ void StPicoNpeAnaMaker::setVariables(StPicoTrack * track)
         zDist = Emc->zDist();
         etaTowDist = Emc->etaTowDist();
         phiTowDist = Emc->phiTowDist();
-        nphieta = nphi*nphi + neta*neta;
+        nphieta = nphi+neta;
     }
 }
 //-----------------------------------------------------------------------------
@@ -423,9 +423,9 @@ void StPicoNpeAnaMaker::setHistogram(int nptbin,int npid,int ntype,int nhisto)
     TString type[10] = {"PhEUS","PhELS","IncE","Pion","Kaon","Proton"};
     TString histoname[12] = {"nSigE","DCA","DCAafterPIDcut","pairDca","nEta","nPhi","e0/p","zDist","phiDist","etaTowDist","phiTowDist","nphieta"};
     
-    int binHisto[12] = {    289,    100,    100,    100,    10, 10, 100,    100,    100,    100,    100,    100};
+    int binHisto[12] = {    289,    100,    100,    100,    10, 10, 100,    100,    100,    100,    100,    20};
     double minHisto[12] = { -13,    -0.1,   -0.1,   0,      0,  0,  0,      -20,    -0.1,   -0.1,   -0.1,   0};
-    double maxHisto[12] = { 13,     0.1,    0.1,    0.5,    10, 10, 3,      20,     0.1,    0.1,    0.1,    100};
+    double maxHisto[12] = { 13,     0.1,    0.1,    0.5,    10, 10, 3,      20,     0.1,    0.1,    0.1,    20};
     
     for (int i=0;i<nptbin;i++){
         histoTofMass[i] = new TH1F(Form("histoTofMass_%d",i),Form("histoTofMass_%d",i),1000,-0.5,2.5);
