@@ -122,15 +122,16 @@ Int_t StPicoNpeAnaMaker::Finish()
 Int_t StPicoNpeAnaMaker::Make()
 {
 
-    readNextEvent();
     hEvent->Fill(0);
+    readNextEvent();
+    hEvent->Fill(1);
 
     if (!mPicoDstMaker)
     {
         LOG_WARN << " StPicoNpeAnaMaker - No PicoDstMaker! Skip! " << endm;
         return kStWarn;
     }
-    hEvent->Fill(1);
+    hEvent->Fill(2);
 
     StPicoDst const* picoDst = mPicoDstMaker->picoDst();
     
@@ -139,7 +140,7 @@ Int_t StPicoNpeAnaMaker::Make()
         LOG_WARN << "StPicoNpeAnaMaker - No PicoDst! Skip! " << endm;
         return kStWarn;
     }
-    hEvent->Fill(2);
+    hEvent->Fill(3);
 
     if(mPicoNpeEvent->runId() != picoDst->event()->runId() ||
        mPicoNpeEvent->eventId() != picoDst->event()->eventId())
@@ -148,7 +149,7 @@ Int_t StPicoNpeAnaMaker::Make()
         LOG_ERROR <<" StPicoNpeAnaMaker - SOMETHING TERRIBLE JUST HAPPENED. StPicoEvent and StPicoNpeEvent are not in sync."<<endm;
         exit(1);
     }
-    hEvent->Fill(3);
+    hEvent->Fill(4);
 
   //  if (!isGoodEvent()) return kStOK;
     
@@ -183,7 +184,7 @@ Int_t StPicoNpeAnaMaker::Make()
     hCheckDoubleTrigger->Fill(checkDoubleTrigger);
     hCheckDoubleTrigger->Fill(checkDoubleTrigger18);
     
-    hEvent->Fill(4);
+    hEvent->Fill(5);
     hEvent->Fill(5,weight);
 
     hZDCx->Fill(mZDCx);
@@ -281,7 +282,8 @@ bool StPicoNpeAnaMaker::isGoodPartner(StPicoTrack const * const trk) const
     trk->nHitsFit() >= cutsAna::partnerNHitsFit &&
     fabs(trk->gMom(pVtx, bField).pseudoRapidity()) <= cutsAna::partnerEta &&
     trk->gPt() >= cutsAna::partnerPt &&
-    fabs(trk->nSigmaElectron()) <= cutsAna::partnerNSigElectron
+    trk->nSigmaElectron() <= cutsAna::partnerNSigElectronHigh &&
+    trk->nSigmaElectron() >= cutsAna::partnerNSigElectronLow
     ;
 }
 //-----------------------------------------------------------------------------

@@ -49,7 +49,8 @@ namespace cutsAna
     
     // pid
     float const taggedNSigElectron = 3;
-    float const partnerNSigElectron = 3;
+    float const partnerNSigElectronLow = 0;
+    float const partnerNSigElectronHigh = 3;
     
     int const emcNEta = 0;//1;
     int const emcNPhi = 0;//1;
