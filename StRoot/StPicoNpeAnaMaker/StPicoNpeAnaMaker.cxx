@@ -378,7 +378,7 @@ void StPicoNpeAnaMaker::setVariables(StPicoTrack * track)
         zDist = Emc->zDist();
         etaTowDist = Emc->etaTowDist();
         phiTowDist = Emc->phiTowDist();
-        nphieta = nphi**2 + neta**2;
+        nphieta = nphi*nphi + neta*neta;
     }
 }
 //-----------------------------------------------------------------------------
@@ -536,12 +536,12 @@ void StPicoNpeAnaMaker::fillHistogram(int iType){
 //-------------------------------------------------------------------------------
 void StPicoNpeAnaMaker::fillHistogramPID(int iType){
     int iPt = getPtBin(pt);
-    if (isBHTevent()) fillHistogramPID(iPt, 0, iType);
-    if (isBHTevent() && isTof()) fillHistogramPID(iPt, 1, iType);
-    if (isBHTevent() && isBemc()) fillHistogramPID(iPt, 2, iType);
-    if (isBHTevent() && isBemc() && isBsmd()) fillHistogramPID(iPt, 4, iType);
-    if (!isBHTevent() && isBemc()) fillHistogramPID(iPt, 5, iType);
-    if (!isBHTevent() && isBemc() && isBsmd()) fillHistogramPID(iPt, 3, iType);
+    if (isBHTevent())                           fillHistogramPID(iPt, 0, iType);
+    if (isBHTevent() && isTof())                fillHistogramPID(iPt, 1, iType);
+    if (isBHTevent() && isBemc())               fillHistogramPID(iPt, 2, iType);
+    if (isBHTevent() && isBemc() && isBsmd())   fillHistogramPID(iPt, 4, iType);
+    if (!isBHTevent() && isBemc())              fillHistogramPID(iPt, 5, iType);
+    if (!isBHTevent() && isBemc() && isBsmd())  fillHistogramPID(iPt, 3, iType);
     
 }
 
