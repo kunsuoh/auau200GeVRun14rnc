@@ -43,8 +43,8 @@ namespace cutsAna
     
     
     // electron + partner pair cuts
-    float const pairMass = 0.4;
-    float const pairDca = 1.5;
+    float const pairMass = 0.1;
+    float const pairDca = 0.5;
     
     
     // pid
