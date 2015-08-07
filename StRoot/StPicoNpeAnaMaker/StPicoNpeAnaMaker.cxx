@@ -174,24 +174,23 @@ Int_t StPicoNpeAnaMaker::Make()
     int checkDoubleTrigger18 = 10;
     weight = 1;
 
-    for (int i=0; i<30; i++) if (picoDst->event()->triggerWord() >> i & 0x1) {
-       // if ( mPrescales->prescale(mPicoNpeEvent->runId(), i) > 100)cout << "Prescale (" << mPicoNpeEvent->runId() << ", " << i << ", " << mPicoNpeEvent->eventId() << ") : " << mPrescales->prescale(mPicoNpeEvent->runId(), i) << endl;
+    for (int i=0; i<4; i++) if (picoDst->event()->triggerWord() >> i & 0x1) {
+        if ( mPrescales->prescale(mPicoNpeEvent->runId(), i) > 100)cout << "Prescale (" << mPicoNpeEvent->runId() << ", " << i << ", " << mPicoNpeEvent->eventId() << ") : " << mPrescales->prescale(mPicoNpeEvent->runId(), i) << endl;
         weight = mPrescales->prescale(mPicoNpeEvent->runId(), i);
         hTrigger->Fill(i);
+        hTriggerWt->Fill(i,weight);
         checkDoubleTrigger++;
-        if (i>18) checkDoubleTrigger18++;
     }
+    for (int i=19; i<24; i++) if (picoDst->event()->triggerWord() >> i & 0x1) {
+        if ( mPrescales->prescale(mPicoNpeEvent->runId(), i) > 100)cout << "Prescale (" << mPicoNpeEvent->runId() << ", " << i << ", " << mPicoNpeEvent->eventId() << ") : " << mPrescales->prescale(mPicoNpeEvent->runId(), i) << endl;
+        weight = mPrescales->prescale(mPicoNpeEvent->runId(), i);
+        hTrigger->Fill(i);
+        hTriggerWt->Fill(i,weight);
+        checkDoubleTrigger18++;
+    }
+
     hCheckDoubleTrigger->Fill(checkDoubleTrigger);
     hCheckDoubleTrigger->Fill(checkDoubleTrigger18);
-
-    ////////////////////////////////////////////////////
-
-    
-    if (picoDst->event()->triggerWord()>>19 & 0x1) isHTEvents = 2;
-    else return kStOK;
-    weight = mPrescales->prescale(mPicoNpeEvent->runId(), 19);
-    //   cout << "Prescale (" << mPicoNpeEvent->runId() << ", " << 19 << ", " << mPicoNpeEvent->eventId() << ") : " << mPrescales->prescale(mPicoNpeEvent->runId(), 19) << endl;
-    /////////////////////////////////////////////////////
     
     hEvent->Fill(5);
     hEvent->Fill(5,weight);
