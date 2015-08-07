@@ -185,7 +185,7 @@ Int_t StPicoNpeAnaMaker::Make()
     hCheckDoubleTrigger->Fill(checkDoubleTrigger18);
     
     
-    if (picoDst->event()->triggerWord()>>1 & 0x1) isHTEvents = 1;
+    if (picoDst->event()->triggerWord()>>0 & 0x3) isHTEvents = 1;
     else return kStOK;
     
     weight = mPrescales->prescale(mPicoNpeEvent->runId(), 1);
