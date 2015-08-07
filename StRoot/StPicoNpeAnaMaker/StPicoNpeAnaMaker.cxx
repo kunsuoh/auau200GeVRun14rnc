@@ -64,6 +64,7 @@ Int_t StPicoNpeAnaMaker::Init()
     // -------------- USER VARIABLES -------------------------
     hCheckDoubleTrigger = new TH1I("hCheckDoubleTrigger","hCheckDoubleTrigger",20,0,20);
     hTrigger = new TH1I("hTrigger","hTrigger",30,0,30);
+    hTriggerWt = new TH1I("hTriggerWt","hTriggerWt",30,0,30);
     hEvent = new TH1F("hEvent","hEvent",10,0,10);
     hZDCx = new TH1F("hZDCx","hZDCx",1000,0,100000);
     hZDCxWt = new TH1F("hZDCxWt","hZDCxWt",1000,0,100000);
@@ -96,6 +97,7 @@ Int_t StPicoNpeAnaMaker::Finish()
     hZDCx->Write();
     hZDCxWt->Write();
     hTrigger->Write();
+    hTriggerWt->Write();
     hCheckDoubleTrigger->Write();
     
     hRefMult[0]->Write();

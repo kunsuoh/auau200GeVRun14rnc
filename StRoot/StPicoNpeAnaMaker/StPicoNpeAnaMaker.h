@@ -96,6 +96,7 @@ class StPicoNpeAnaMaker : public StMaker
     TH1F * hZDCx;
     TH1F * hZDCxWt;
     TH1I * hTrigger;
+    TH1I * hTriggerWt;
     TH1I * hCheckDoubleTrigger;
     
     TTree * tInc;
