@@ -185,8 +185,8 @@ Int_t StPicoNpeAnaMaker::Make()
     hCheckDoubleTrigger->Fill(checkDoubleTrigger18);
 
     ////////////////////////////////////////////////////
-    weight = mPrescales->prescale(mPicoNpeEvent->runId(), 450060);
-    cout << "Prescale (" << mPicoNpeEvent->runId() << ", " << 1 << ", " << mPicoNpeEvent->eventId() << ") : " << mPrescales->prescale(mPicoNpeEvent->runId(), 450060) << endl;
+    weight = mPrescales->prescale(mPicoNpeEvent->runId(), 0);
+    cout << "Prescale (" << mPicoNpeEvent->runId() << ", " << 0 << ", " << mPicoNpeEvent->eventId() << ") : " << mPrescales->prescale(mPicoNpeEvent->runId(), 0) << endl;
 
     
     if (picoDst->event()->triggerWord()>>1 & 0x1) isHTEvents = 1;
