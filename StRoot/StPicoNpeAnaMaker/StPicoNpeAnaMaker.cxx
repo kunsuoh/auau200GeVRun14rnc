@@ -194,7 +194,6 @@ Int_t StPicoNpeAnaMaker::Make()
     else return kStOK;
     
     weight = mPrescales->prescale(mPicoNpeEvent->runId(), 1);
-    int i=1;
     cout << "Prescale (" << mPicoNpeEvent->runId() << ", " << i << ", " << mPicoNpeEvent->eventId() << ") : " << mPrescales->prescale(mPicoNpeEvent->runId(), i) << endl;
     /////////////////////////////////////////////////////
     
