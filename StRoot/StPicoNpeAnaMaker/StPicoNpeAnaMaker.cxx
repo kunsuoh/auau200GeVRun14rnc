@@ -186,8 +186,7 @@ Int_t StPicoNpeAnaMaker::Make()
 
     ////////////////////////////////////////////////////
     weight = mPrescales->prescale(mPicoNpeEvent->runId(), 1);
-    int i=1;
-    cout << "Prescale (" << mPicoNpeEvent->runId() << ", " << i << ", " << mPicoNpeEvent->eventId() << ") : " << mPrescales->prescale(mPicoNpeEvent->runId(), i) << endl;
+    cout << "Prescale (" << mPicoNpeEvent->runId() << ", " << 1 << ", " << mPicoNpeEvent->eventId() << ") : " << mPrescales->prescale(mPicoNpeEvent->runId(), 1) << endl;
 
     
     if (picoDst->event()->triggerWord()>>0 & 0x3) isHTEvents = 1;
