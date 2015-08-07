@@ -1,7 +1,7 @@
 
 void drawHistogram2(){
 
-    TFile * infile = new TFile("out_25.root");
+    TFile * infile = new TFile("out_27.root");
     TCanvas * cc = new TCanvas("cc","cc",500,500);
     TCanvas * cc2 = new TCanvas("cc2","cc2",500,1000);
     TCanvas * cc3 = new TCanvas("cc3","cc3",500,500);
@@ -9,11 +9,13 @@ void drawHistogram2(){
     TCanvas * cc5 = new TCanvas("cc5","cc5",500,500);
     TCanvas * cc6 = new TCanvas("cc6","cc6",500,1000);
     TCanvas * cc7 = new TCanvas("cc7","cc7",500,1000);
-    TCanvas * cc8 = new TCanvas("cc8","cc8",1000,500);
+    TCanvas * cc8 = new TCanvas("cc8","cc8",1000,1000);
+    TCanvas * cc9 = new TCanvas("cc9","cc9",1000,500);
     
     cc2->Divide(1,2);
     cc7->Divide(1,2);
-    cc8->Divide(4,2);
+    cc8->Divide(4,4);
+    cc9->Divide(4,2);
 
     cc->SetLogy();
     
@@ -46,373 +48,6 @@ void drawHistogram2(){
     TF1 * constant = new TF1("constant" ,"pol0", -0.1, 0.1);
     constant->SetParameter(0,1);
 
-    
-    for (int iPid=0; iPid<6; iPid++) for (int iPt=1; iPt<5; iPt++) {
-
-        cc8->cd(1)->SetLogy(); // neta
-        TH1I * hisQaLS = (TH1I*)infile->Get(Form("histo_%d_%d_1_4",iPt, iPid));
-        TH1I * hisQaUS = (TH1I*)infile->Get(Form("histo_%d_%d_0_4",iPt, iPid));
-        TH1I * hisQaPE = new TH1I("hisQaPE","hisQaPE",10,0,10);
-        
-        hisQaPE->Add(hisQaUS,hisQaLS,1,-1);
-        
-        
-        hisQaLS->SetMarkerStyle(20);
-        hisQaLS->SetMarkerColor(2);
-        hisQaLS->SetMarkerSize(0.5);
-        
-        
-        hisQaUS->SetMarkerStyle(20);
-        hisQaUS->SetMarkerColor(4);
-        hisQaUS->SetMarkerSize(0.5);
-        hisQaUS->SetMinimum(0.5);
-        
-        
-        hisQaPE->SetFillStyle(3001);
-        hisQaPE->SetFillColor(1);
-        hisQaPE->SetLineColor(1);
-        
-        hisQaUS->Draw("p");
-        hisQaLS->Draw("psame");
-        hisQaPE->Draw("BARsame");
-        
-        cc8->cd(2)->SetLogy(); // nphi
-        TH1I * hisQaLS = (TH1I*)infile->Get(Form("histo_%d_%d_1_5",iPt, iPid));
-        TH1I * hisQaUS = (TH1I*)infile->Get(Form("histo_%d_%d_0_5",iPt, iPid));
-        TH1I * hisQaPE = new TH1I("hisQaPE","hisQaPE",10,0,10);
-        
-        hisQaPE->Add(hisQaUS,hisQaLS,1,-1);
-        
-        
-        hisQaLS->SetMarkerStyle(20);
-        hisQaLS->SetMarkerColor(2);
-        hisQaLS->SetMarkerSize(0.5);
-        
-        
-        hisQaUS->SetMarkerStyle(20);
-        hisQaUS->SetMarkerColor(4);
-        hisQaUS->SetMarkerSize(0.5);
-        hisQaUS->SetMinimum(0.5);
-        
-        
-        hisQaPE->SetFillStyle(3001);
-        hisQaPE->SetFillColor(1);
-        hisQaPE->SetLineColor(1);
-        
-        hisQaUS->Draw("p");
-        hisQaLS->Draw("psame");
-        hisQaPE->Draw("BARsame");
-        
-        cc8->cd(3)->SetLogy(); // nphieta
-        TH1I * hisQaLS = (TH1I*)infile->Get(Form("histo_%d_%d_1_11",iPt, iPid));
-        TH1I * hisQaUS = (TH1I*)infile->Get(Form("histo_%d_%d_0_11",iPt, iPid));
-        TH1I * hisQaPE = new TH1I("hisQaPE","hisQaPE",20,0,20);
-        
-        hisQaPE->Add(hisQaUS,hisQaLS,1,-1);
-        
-        
-        hisQaLS->SetMarkerStyle(20);
-        hisQaLS->SetMarkerColor(2);
-        hisQaLS->SetMarkerSize(0.5);
-        
-        
-        hisQaUS->SetMarkerStyle(20);
-        hisQaUS->SetMarkerColor(4);
-        hisQaUS->SetMarkerSize(0.5);
-        hisQaUS->SetMinimum(0.5);
-        
-        
-        hisQaPE->SetFillStyle(3001);
-        hisQaPE->SetFillColor(1);
-        hisQaPE->SetLineColor(1);
-        
-        hisQaUS->Draw("p");
-        hisQaLS->Draw("psame");
-        hisQaPE->Draw("BARsame");
-
-        
-        cc8->cd(4)->SetLogy(); // e0/p
-        TH1F * hisLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_6",iPt, iPid));
-        TH1F * hisUS = (TH1F*)infile->Get(Form("histo_%d_%d_0_6",iPt, iPid));
-        TH1F * hisPE = new TH1F("hisPE","hisPE",100,0,3);
-        
-        hisPE->Add(hisUS,hisLS,1,-1);
-        
-        
-        hisLS->SetMarkerStyle(20);
-        hisLS->SetMarkerColor(2);
-        hisLS->SetMarkerSize(0.5);
-        
-        
-        hisUS->SetMarkerStyle(20);
-        hisUS->SetMarkerColor(4);
-        hisUS->SetMarkerSize(0.5);
-        hisUS->SetMinimum(0.5);
-        
-        
-        hisPE->SetFillStyle(3001);
-        hisPE->SetFillColor(1);
-        hisPE->SetLineColor(1);
-        
-        hisUS->Draw("p");
-        hisLS->Draw("psame");
-        hisPE->Draw("BARsame");
-        
-        cc8->cd(5)->SetLogy(); // zDist
-        TH1F * hisLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_7",iPt, iPid));
-        TH1F * hisUS = (TH1F*)infile->Get(Form("histo_%d_%d_0_7",iPt, iPid));
-        TH1F * hisPE = new TH1F("hisPE","hisPE",100,-20,20);
-        
-        hisPE->Add(hisUS,hisLS,1,-1);
-        
-        
-        hisLS->SetMarkerStyle(20);
-        hisLS->SetMarkerColor(2);
-        hisLS->SetMarkerSize(0.5);
-        
-        
-        hisUS->SetMarkerStyle(20);
-        hisUS->SetMarkerColor(4);
-        hisUS->SetMarkerSize(0.5);
-        hisUS->SetMinimum(0.5);
-        
-        
-        hisPE->SetFillStyle(3001);
-        hisPE->SetFillColor(1);
-        hisPE->SetLineColor(1);
-        
-        hisUS->Draw("p");
-        hisLS->Draw("psame");
-        hisPE->Draw("BARsame");
-        
-        
-        cc8->cd(6)->SetLogy(); // phiDist
-        TH1F * hisLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_8",iPt, iPid));
-        TH1F * hisUS = (TH1F*)infile->Get(Form("histo_%d_%d_0_8",iPt, iPid));
-        TH1F * hisPE = new TH1F("hisPE","hisPE",100,-0.1,0.1);
-        
-        hisPE->Add(hisUS,hisLS,1,-1);
-        
-        
-        hisLS->SetMarkerStyle(20);
-        hisLS->SetMarkerColor(2);
-        hisLS->SetMarkerSize(0.5);
-        
-        
-        hisUS->SetMarkerStyle(20);
-        hisUS->SetMarkerColor(4);
-        hisUS->SetMarkerSize(0.5);
-        hisUS->SetMinimum(0.5);
-        
-        
-        hisPE->SetFillStyle(3001);
-        hisPE->SetFillColor(1);
-        hisPE->SetLineColor(1);
-        
-        hisUS->Draw("p");
-        hisLS->Draw("psame");
-        hisPE->Draw("BARsame");
-        
-        
-        
-        cc8->cd(7)->SetLogy(); // etaTowDist
-        TH1F * hisLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_9",iPt, iPid));
-        TH1F * hisUS = (TH1F*)infile->Get(Form("histo_%d_%d_0_9",iPt, iPid));
-        TH1F * hisPE = new TH1F("hisPE","hisPE",100,-0.1,0.1);
-        
-        hisPE->Add(hisUS,hisLS,1,-1);
-        
-        
-        hisLS->SetMarkerStyle(20);
-        hisLS->SetMarkerColor(2);
-        hisLS->SetMarkerSize(0.5);
-        
-        
-        hisUS->SetMarkerStyle(20);
-        hisUS->SetMarkerColor(4);
-        hisUS->SetMarkerSize(0.5);
-        hisUS->SetMinimum(0.5);
-        
-        
-        hisPE->SetFillStyle(3001);
-        hisPE->SetFillColor(1);
-        hisPE->SetLineColor(1);
-        
-        hisUS->Draw("p");
-        hisLS->Draw("psame");
-        hisPE->Draw("BARsame");
-        
-        cc8->cd(8)->SetLogy(); // phiTowDist
-        TH1F * hisLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_10",iPt, iPid));
-        TH1F * hisUS = (TH1F*)infile->Get(Form("histo_%d_%d_0_10",iPt, iPid));
-        TH1F * hisPE = new TH1F("hisPE","hisPE",100,-0.1,0.1);
-        
-        hisPE->Add(hisUS,hisLS,1,-1);
-        
-        
-        hisLS->SetMarkerStyle(20);
-        hisLS->SetMarkerColor(2);
-        hisLS->SetMarkerSize(0.5);
-        
-        
-        hisUS->SetMarkerStyle(20);
-        hisUS->SetMarkerColor(4);
-        hisUS->SetMarkerSize(0.5);
-        hisUS->SetMinimum(0.5);
-        
-        
-        hisPE->SetFillStyle(3001);
-        hisPE->SetFillColor(1);
-        hisPE->SetLineColor(1);
-        
-        hisUS->Draw("p");
-        hisLS->Draw("psame");
-        hisPE->Draw("BARsame");
-        
-        
-        
-        
-        
-        
-        
-        cc8->SaveAs(Form("~/Desktop/QaBemcBsmd_Pid%d_Pt%d.pdf",iPid,iPt));
-    }
-    
-    cc6->cd();
-    cc6->Divide(1,2);
-
-    for (int iPid=2; iPid<6; iPid++) for (int iPt=1; iPt<5; iPt++) {
-        cc6->cd(1)->SetLogy();
-        TH1F * dum = (TH1F*)infile->Get(Form("histo_%d_%d_2_1",iPt, iPid));
-        TH1F * his = (TH1F*)infile->Get(Form("histo_%d_%d_2_2",iPt, iPid));
-        TH1F * hisLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_1",iPt, iPid));
-        TH1F * hisUS = (TH1F*)infile->Get(Form("histo_%d_%d_0_1",iPt, iPid));
-        TH1F * hisPE = new TH1F("hisPE","hisPE",100,-0.1,0.1);
-        dum->Sumw2();
-        his->Sumw2();
-        hisLS->Sumw2();
-        hisUS->Sumw2();
-        hisPE->Sumw2();
-        
-        hisPE->Add(hisUS,hisLS,1,-1);
-
-        
-        hisLS->SetMarkerStyle(20);
-        hisLS->SetMarkerColor(2);
-        hisLS->SetMarkerSize(0.5);
-
-        
-        hisUS->SetMarkerStyle(20);
-        hisUS->SetMarkerColor(4);
-        hisUS->SetMarkerSize(0.5);
-        hisUS->SetMinimum(0.5);
-
-        
-        hisPE->SetFillStyle(3004);
-        hisPE->SetFillColor(1);
-        hisPE->SetLineColor(1);
-        
-        hisUS->Draw("p");
-        hisLS->Draw("psame");
-        hisPE->Draw("BARsame");
-
-        cc6->cd(2);
-        TH1F * hPairMassUS = (TH1F*)infile->Get(Form("histo_%d_%d_0_3",iPt, iPid));
-        TH1F * hPairMassLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_3",iPt, iPid));
-        TH1F * hdum = new TH1F("hdum","hdum",100,0,0.5);
-     
-        hPairMassUS->Sumw2();
-        hPairMassLS->Sumw2();
-        
-        hPairMassUS->GetXaxis()->SetRangeUser(0,0.2);
-        hPairMassUS->SetMinimum(-1*hPairMassUS->GetMaximum()*0.1);
-        hPairMassUS->SetMarkerStyle(20);
-        hPairMassUS->SetMarkerColor(4);
-        hPairMassUS->SetMarkerSize(1);
-        
-        hPairMassLS->SetMarkerStyle(20);
-        hPairMassLS->SetMarkerColor(2);
-        hPairMassLS->SetMarkerSize(1);
-
-        hdum->Add(hPairMassUS,hPairMassLS,1,-1);
-        hdum->SetFillStyle(3004);
-        hdum->SetFillColor(1);
-        hdum->SetLineColor(1);
-        
-        
-
-        
-        hPairMassUS->Draw("p");
-        hPairMassLS->Draw("psame");
-        hdum->Draw("BARsame");
-        cc6->SaveAs(Form("~/Desktop/DcaAterPid_Pid%d_Pt%d.pdf",iPid,iPt));
- 
-        
-        
-        cc7->cd(1)->SetLogy();
-        double glo = 0.1;
-        hisPE->Divide(constant,hisPE->Integral(1,100)*10);
-        dum->Divide(constant,dum->Integral(1,100)*90);
-        his->Divide(constant,his->Integral(1,100)*10);
-
-        his->SetMarkerStyle(20);
-        his->SetMarkerColor(1);
-        his->SetMarkerSize(0.5);
-        his->SetMaximum(0.1);
-        his->SetMinimum(1e-6);
-        
-        dum->SetMarkerStyle(20);
-        dum->SetMarkerColor(2);
-        dum->SetMarkerSize(0.5);
-
-        
-        his->DrawClone("p");
-        dum->DrawClone("psame");
-      //  hisPE->DrawClone("psame");
-
-        
-        
-        cc7->cd(2)->SetLogy();
-        TH1F * hisdum = new TH1F("hisdum","hisdum",100,-0.1,0.1);
-        hisdum->Add(his,dum,1,-1);
-        hisdum->SetMaximum(0.1);
-        hisdum->SetMinimum(1e-6);
-        hisdum->Draw("p");
-        hisPE->DrawClone("psame");
-
-        cc7->SaveAs(Form("~/Desktop/DcaAterPid_Fit_Pid%d_Pt%d.pdf",iPid,iPt));
-
-        TObjArray *mc = new TObjArray(3);        // MC histograms are put in this array
-        hisPE->Divide(constant,glo);
-        dum->Divide(constant,glo);
-        mc->Add(hisPE);
-        mc->Add(dum);
-
-        TFractionFitter* fit = new TFractionFitter(his, mc); // initialise
-        fit->Constrain(1,0.0,10.0);               // constrain fraction 1 to be between 0 and 1
-        fit->SetRangeX(1,100);                    // use only the first 15 bins in the fit
-        Int_t status = fit->Fit();               // perform the fit
-        std::cout << "fit status: " << status << std::endl;
-        if (status == 0) {                       // check on fit status
-            TH1F* result = (TH1F*) fit->GetPlot();
-            result->SetMarkerStyle(24);
-            result->SetMarkerColor(4);
-            result->SetMarkerSize(1);
-            double aPE, aHD, ePE, eHD;
-            fit->GetResult(0,aPE,ePE);
-            fit->GetResult(1,aHD,eHD);
-            
-            hisPE->Multiply(constant,aPE*glo);
-            dum->Multiply(constant,aHD*glo);
-        }
-        result->Draw("p");
-        his->DrawClone("psame");
-        dum->Draw("psame");
-        hisPE->Draw("psame");
-
-        
-    }
-    //return 0 ;
     
  
     cout << "=========>START iPt loop ! " << endl;
@@ -461,11 +96,11 @@ void drawHistogram2(){
     cout << "=========>START iPt loop ! " << endl;
     for (int iPid=0; iPid<6; iPid++){
         cout << "=========>=========>iPid : " << iPid << endl;
-        hRatio[iPid] = new TH1F(Form("hRatio_%d",iPid),Form("hRatio_%d",iPid),5,pt);
-        hYield[iPid] = new TH1F(Form("hYield_%d",iPid),Form("hYield_%d",iPid),5,pt);
-        hMean[iPid] = new TH1F(Form("hMean_%d",iPid),Form("hMean_%d",iPid),5,pt);
-        hSigma[iPid] = new TH1F(Form("hSigma_%d",iPid),Form("hSigma_%d",iPid),5,pt);
-        hRawYield[iPid] = new TH1F(Form("hRawYield_%d",iPid),Form("hRawYield_%d",iPid),5,pt);
+        hRatio[iPid] = new TH1F(Form("hRatio_%d",iPid),Form("hRatio_%d",iPid),4,pt);
+        hYield[iPid] = new TH1F(Form("hYield_%d",iPid),Form("hYield_%d",iPid),4,pt);
+        hMean[iPid] = new TH1F(Form("hMean_%d",iPid),Form("hMean_%d",iPid),4,pt);
+        hSigma[iPid] = new TH1F(Form("hSigma_%d",iPid),Form("hSigma_%d",iPid),4,pt);
+        hRawYield[iPid] = new TH1F(Form("hRawYield_%d",iPid),Form("hRawYield_%d",iPid),4,pt);
 
         cout << "START iPt loop ! " << endl;
         for (int iPt=1; iPt<6; iPt++){
@@ -667,7 +302,7 @@ void drawHistogram2(){
     TCanvas * cc4 = new TCanvas("cc4","cc4",500,500);
     //cc4->SetLogy();
     int i = 0;
-    hRatio[i]->Divide(hYield[3],hYield[2]);
+    hRatio[i]->Divide(hYield[3],hYield[2],1,1,"B");
     hRatio[i]->SetTitle("(BHT)TPC+BEMC+BSMD / (MB)TPC+BEMC");
     hRatio[i]->SetMaximum(2);
     hRatio[i]->SetMinimum(0);
@@ -677,7 +312,7 @@ void drawHistogram2(){
     
     
     int i = 1;
-    hRatio[i]->Divide(hYield[2],hYield[0]);
+    hRatio[i]->Divide(hYield[2],hYield[0],1,1,"B");
     hRatio[i]->SetTitle("TPC+BEMC / TPC only");
     hRatio[i]->SetMaximum(2);
     hRatio[i]->SetMinimum(0);
@@ -686,7 +321,7 @@ void drawHistogram2(){
     cc4->SaveAs(Form("~/Desktop/Ratio_%d.pdf",i));
     
     int i = 2;
-    hRatio[i]->Divide(hYield[1],hYield[0]);
+    hRatio[i]->Divide(hYield[1],hYield[0],1,1,"B");
     hRatio[i]->SetTitle("TPC+TOF / TPC only");
     hRatio[i]->SetMaximum(2);
     hRatio[i]->SetMinimum(0);
@@ -695,7 +330,7 @@ void drawHistogram2(){
     cc4->SaveAs(Form("~/Desktop/Ratio_%d.pdf",i));
     
     int i = 3;
-    hRatio[i]->Divide(hYield[3],hYield[5]);
+    hRatio[i]->Divide(hYield[3],hYield[5],1,1,"B");
     hRatio[i]->SetTitle("(BHT)TPC+BEMC+BSMD / (BHT)TPC+BEMC");
     hRatio[i]->SetMaximum(2);
     hRatio[i]->SetMinimum(0);
@@ -704,7 +339,7 @@ void drawHistogram2(){
     cc4->SaveAs(Form("~/Desktop/Ratio_%d.pdf",i));
     
     int i = 4;
-    hRatio[i]->Divide(hYield[4],hYield[2]);
+    hRatio[i]->Divide(hYield[4],hYield[2],1,1,"B");
     hRatio[i]->SetTitle("(MB)TPC+BEMC+BSMD / (MB)TPC+BEMC");
     hRatio[i]->SetMaximum(2);
     hRatio[i]->SetMinimum(0);
@@ -712,6 +347,398 @@ void drawHistogram2(){
     hRatio[i]->Draw("p");
     cc4->SaveAs(Form("~/Desktop/Ratio_%d.pdf",i));
     
+    
+    for (int iPid=0; iPid<6; iPid++) for (int iPt=1; iPt<6; iPt++) {
+        
+        cc8->cd(1)->SetLogy(); // neta
+        TH1I * hisQaLS = (TH1I*)infile->Get(Form("histo_%d_%d_1_4",iPt, iPid));
+        TH1I * hisQaUS = (TH1I*)infile->Get(Form("histo_%d_%d_0_4",iPt, iPid));
+        TH1I * hisQaPE = new TH1I("hisQaPE","hisQaPE",10,0,10);
+        
+        hisQaPE->Add(hisQaUS,hisQaLS,1,-1);
+        
+        
+        hisQaLS->SetMarkerStyle(20);
+        hisQaLS->SetMarkerColor(2);
+        hisQaLS->SetMarkerSize(0.5);
+        
+        
+        hisQaUS->SetMarkerStyle(20);
+        hisQaUS->SetMarkerColor(4);
+        hisQaUS->SetMarkerSize(0.5);
+        hisQaUS->SetMinimum(0.5);
+        
+        
+        hisQaPE->SetFillStyle(3001);
+        hisQaPE->SetFillColor(1);
+        hisQaPE->SetLineColor(1);
+        
+        hisQaUS->Draw("p");
+        hisQaLS->Draw("psame");
+        hisQaPE->Draw("BARsame");
+        
+        cc8->cd(2)->SetLogy(); // nphi
+        TH1I * hisQaLS = (TH1I*)infile->Get(Form("histo_%d_%d_1_5",iPt, iPid));
+        TH1I * hisQaUS = (TH1I*)infile->Get(Form("histo_%d_%d_0_5",iPt, iPid));
+        TH1I * hisQaPE = new TH1I("hisQaPE","hisQaPE",10,0,10);
+        
+        hisQaPE->Add(hisQaUS,hisQaLS,1,-1);
+        
+        
+        hisQaLS->SetMarkerStyle(20);
+        hisQaLS->SetMarkerColor(2);
+        hisQaLS->SetMarkerSize(0.5);
+        
+        
+        hisQaUS->SetMarkerStyle(20);
+        hisQaUS->SetMarkerColor(4);
+        hisQaUS->SetMarkerSize(0.5);
+        hisQaUS->SetMinimum(0.5);
+        
+        
+        hisQaPE->SetFillStyle(3001);
+        hisQaPE->SetFillColor(1);
+        hisQaPE->SetLineColor(1);
+        
+        hisQaUS->Draw("p");
+        hisQaLS->Draw("psame");
+        hisQaPE->Draw("BARsame");
+        
+        cc8->cd(3)->SetLogy(); // nphieta
+        TH1I * hisQaLS = (TH1I*)infile->Get(Form("histo_%d_%d_1_11",iPt, iPid));
+        TH1I * hisQaUS = (TH1I*)infile->Get(Form("histo_%d_%d_0_11",iPt, iPid));
+        TH1I * hisQaPE = new TH1I("hisQaPE","hisQaPE",20,0,20);
+        
+        hisQaPE->Add(hisQaUS,hisQaLS,1,-1);
+        
+        
+        hisQaLS->SetMarkerStyle(20);
+        hisQaLS->SetMarkerColor(2);
+        hisQaLS->SetMarkerSize(0.5);
+        
+        
+        hisQaUS->SetMarkerStyle(20);
+        hisQaUS->SetMarkerColor(4);
+        hisQaUS->SetMarkerSize(0.5);
+        hisQaUS->SetMinimum(0.5);
+        
+        
+        hisQaPE->SetFillStyle(3001);
+        hisQaPE->SetFillColor(1);
+        hisQaPE->SetLineColor(1);
+        
+        hisQaUS->Draw("p");
+        hisQaLS->Draw("psame");
+        hisQaPE->Draw("BARsame");
+        
+        
+        cc8->cd(4)->SetLogy(); // e0/p
+        TH1F * hisLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_6",iPt, iPid));
+        TH1F * hisUS = (TH1F*)infile->Get(Form("histo_%d_%d_0_6",iPt, iPid));
+        TH1F * hisPE = new TH1F("hisPE","hisPE",100,0,3);
+        
+        hisPE->Add(hisUS,hisLS,1,-1);
+        
+        
+        hisLS->SetMarkerStyle(20);
+        hisLS->SetMarkerColor(2);
+        hisLS->SetMarkerSize(0.5);
+        
+        
+        hisUS->SetMarkerStyle(20);
+        hisUS->SetMarkerColor(4);
+        hisUS->SetMarkerSize(0.5);
+        hisUS->SetMinimum(0.5);
+        
+        
+        hisPE->SetFillStyle(3001);
+        hisPE->SetFillColor(1);
+        hisPE->SetLineColor(1);
+        
+        hisUS->Draw("p");
+        hisLS->Draw("psame");
+        hisPE->Draw("BARsame");
+        
+        cc8->cd(5)->SetLogy(); // zDist
+        TH1F * hisLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_7",iPt, iPid));
+        TH1F * hisUS = (TH1F*)infile->Get(Form("histo_%d_%d_0_7",iPt, iPid));
+        TH1F * hisPE = new TH1F("hisPE","hisPE",100,-20,20);
+        
+        hisPE->Add(hisUS,hisLS,1,-1);
+        
+        
+        hisLS->SetMarkerStyle(20);
+        hisLS->SetMarkerColor(2);
+        hisLS->SetMarkerSize(0.5);
+        
+        
+        hisUS->SetMarkerStyle(20);
+        hisUS->SetMarkerColor(4);
+        hisUS->SetMarkerSize(0.5);
+        hisUS->SetMinimum(0.5);
+        
+        
+        hisPE->SetFillStyle(3001);
+        hisPE->SetFillColor(1);
+        hisPE->SetLineColor(1);
+        
+        hisUS->Draw("p");
+        hisLS->Draw("psame");
+        hisPE->Draw("BARsame");
+        
+        
+        cc8->cd(6)->SetLogy(); // phiDist
+        TH1F * hisLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_8",iPt, iPid));
+        TH1F * hisUS = (TH1F*)infile->Get(Form("histo_%d_%d_0_8",iPt, iPid));
+        TH1F * hisPE = new TH1F("hisPE","hisPE",100,-0.1,0.1);
+        
+        hisPE->Add(hisUS,hisLS,1,-1);
+        
+        
+        hisLS->SetMarkerStyle(20);
+        hisLS->SetMarkerColor(2);
+        hisLS->SetMarkerSize(0.5);
+        
+        
+        hisUS->SetMarkerStyle(20);
+        hisUS->SetMarkerColor(4);
+        hisUS->SetMarkerSize(0.5);
+        hisUS->SetMinimum(0.5);
+        
+        
+        hisPE->SetFillStyle(3001);
+        hisPE->SetFillColor(1);
+        hisPE->SetLineColor(1);
+        
+        hisUS->Draw("p");
+        hisLS->Draw("psame");
+        hisPE->Draw("BARsame");
+        
+        
+        
+        cc8->cd(7)->SetLogy(); // etaTowDist
+        TH1F * hisLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_9",iPt, iPid));
+        TH1F * hisUS = (TH1F*)infile->Get(Form("histo_%d_%d_0_9",iPt, iPid));
+        TH1F * hisPE = new TH1F("hisPE","hisPE",100,-0.1,0.1);
+        
+        hisPE->Add(hisUS,hisLS,1,-1);
+        
+        
+        hisLS->SetMarkerStyle(20);
+        hisLS->SetMarkerColor(2);
+        hisLS->SetMarkerSize(0.5);
+        
+        
+        hisUS->SetMarkerStyle(20);
+        hisUS->SetMarkerColor(4);
+        hisUS->SetMarkerSize(0.5);
+        hisUS->SetMinimum(0.5);
+        
+        
+        hisPE->SetFillStyle(3001);
+        hisPE->SetFillColor(1);
+        hisPE->SetLineColor(1);
+        
+        hisUS->Draw("p");
+        hisLS->Draw("psame");
+        hisPE->Draw("BARsame");
+        
+        cc8->cd(8)->SetLogy(); // phiTowDist
+        TH1F * hisLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_10",iPt, iPid));
+        TH1F * hisUS = (TH1F*)infile->Get(Form("histo_%d_%d_0_10",iPt, iPid));
+        TH1F * hisPE = new TH1F("hisPE","hisPE",100,-0.1,0.1);
+        
+        hisPE->Add(hisUS,hisLS,1,-1);
+        
+        
+        hisLS->SetMarkerStyle(20);
+        hisLS->SetMarkerColor(2);
+        hisLS->SetMarkerSize(0.5);
+        
+        
+        hisUS->SetMarkerStyle(20);
+        hisUS->SetMarkerColor(4);
+        hisUS->SetMarkerSize(0.5);
+        hisUS->SetMinimum(0.5);
+        
+        
+        hisPE->SetFillStyle(3001);
+        hisPE->SetFillColor(1);
+        hisPE->SetLineColor(1);
+        
+        hisUS->Draw("p");
+        hisLS->Draw("psame");
+        hisPE->Draw("BARsame");
+        
+        
+        
+        
+        
+        
+        
+   //     cc8->SaveAs(Form("~/Desktop/QaBemcBsmd_Pid%d_Pt%d.pdf",iPid,iPt));
+        
+        
+        
+        // hadron
+        int jj;
+        for (int j=0; j<8; j++) {
+            cc8->cd(j+1+8)->SetLogy(); // neta
+            jj=j;
+            if (j==2) jj = 7;
+            else if (j > 2) jj=j-1;
+            TH1I * hisQaPE = (TH1I*)infile->Get(Form("histo_%d_%d_3_%d",iPt, iPid, jj+4));
+            
+            hisQaPE->SetFillStyle(3001);
+            hisQaPE->SetFillColor(2);
+            hisQaPE->SetLineColor(1);
+            
+            hisQaPE->Draw("BAR");
+
+        }
+        
+        
+        cc8->SaveAs(Form("~/Desktop/QaHadronBemcBsmd_Pid%d_Pt%d.pdf",iPid,iPt));
+        // end hadron
+    }
+    
+    cc6->cd();
+    cc6->Divide(1,2);
+    
+    for (int iPid=2; iPid<6; iPid++) for (int iPt=1; iPt<5; iPt++) {
+        cc6->cd(1)->SetLogy();
+        TH1F * dum = (TH1F*)infile->Get(Form("histo_%d_%d_2_1",iPt, iPid));
+        TH1F * his = (TH1F*)infile->Get(Form("histo_%d_%d_2_2",iPt, iPid));
+        TH1F * hisLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_1",iPt, iPid));
+        TH1F * hisUS = (TH1F*)infile->Get(Form("histo_%d_%d_0_1",iPt, iPid));
+        TH1F * hisPE = new TH1F("hisPE","hisPE",100,-0.1,0.1);
+        dum->Sumw2();
+        his->Sumw2();
+        hisLS->Sumw2();
+        hisUS->Sumw2();
+        hisPE->Sumw2();
+        
+        hisPE->Add(hisUS,hisLS,1,-1);
+        
+        
+        hisLS->SetMarkerStyle(20);
+        hisLS->SetMarkerColor(2);
+        hisLS->SetMarkerSize(0.5);
+        
+        
+        hisUS->SetMarkerStyle(20);
+        hisUS->SetMarkerColor(4);
+        hisUS->SetMarkerSize(0.5);
+        hisUS->SetMinimum(0.5);
+        
+        
+        hisPE->SetFillStyle(3004);
+        hisPE->SetFillColor(1);
+        hisPE->SetLineColor(1);
+        
+        hisUS->Draw("p");
+        hisLS->Draw("psame");
+        hisPE->Draw("BARsame");
+        
+        cc6->cd(2);
+        TH1F * hPairMassUS = (TH1F*)infile->Get(Form("histo_%d_%d_0_3",iPt, iPid));
+        TH1F * hPairMassLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_3",iPt, iPid));
+        TH1F * hdum = new TH1F("hdum","hdum",100,0,0.5);
+        
+        hPairMassUS->Sumw2();
+        hPairMassLS->Sumw2();
+        
+        hPairMassUS->GetXaxis()->SetRangeUser(0,0.2);
+        hPairMassUS->SetMinimum(-1*hPairMassUS->GetMaximum()*0.1);
+        hPairMassUS->SetMarkerStyle(20);
+        hPairMassUS->SetMarkerColor(4);
+        hPairMassUS->SetMarkerSize(1);
+        
+        hPairMassLS->SetMarkerStyle(20);
+        hPairMassLS->SetMarkerColor(2);
+        hPairMassLS->SetMarkerSize(1);
+        
+        hdum->Add(hPairMassUS,hPairMassLS,1,-1);
+        hdum->SetFillStyle(3004);
+        hdum->SetFillColor(1);
+        hdum->SetLineColor(1);
+        
+        
+        
+        
+        hPairMassUS->Draw("p");
+        hPairMassLS->Draw("psame");
+        hdum->Draw("BARsame");
+        cc6->SaveAs(Form("~/Desktop/DcaAterPid_Pid%d_Pt%d.pdf",iPid,iPt));
+        
+        
+        
+        cc7->cd(1)->SetLogy();
+        double glo = 0.1;
+        hisPE->Divide(constant,hisPE->Integral(1,100)*10);
+        dum->Divide(constant,dum->Integral(1,100)*90);
+        his->Divide(constant,his->Integral(1,100)*10);
+        
+        his->SetMarkerStyle(20);
+        his->SetMarkerColor(1);
+        his->SetMarkerSize(0.5);
+        his->SetMaximum(0.1);
+        his->SetMinimum(1e-6);
+        
+        dum->SetMarkerStyle(20);
+        dum->SetMarkerColor(2);
+        dum->SetMarkerSize(0.5);
+        
+        
+        his->DrawClone("p");
+        dum->DrawClone("psame");
+        //  hisPE->DrawClone("psame");
+        
+        
+        
+        cc7->cd(2)->SetLogy();
+        TH1F * hisdum = new TH1F("hisdum","hisdum",100,-0.1,0.1);
+        hisdum->Add(his,dum,1,-1);
+        hisdum->SetMaximum(0.1);
+        hisdum->SetMinimum(1e-6);
+        hisdum->Draw("p");
+        hisPE->DrawClone("psame");
+        
+        cc7->SaveAs(Form("~/Desktop/DcaAterPid_Fit_Pid%d_Pt%d.pdf",iPid,iPt));
+        
+        TObjArray *mc = new TObjArray(3);        // MC histograms are put in this array
+        hisPE->Divide(constant,glo);
+        dum->Divide(constant,glo);
+        mc->Add(hisPE);
+        mc->Add(dum);
+        
+        TFractionFitter* fit = new TFractionFitter(his, mc); // initialise
+        fit->Constrain(1,0.0,10.0);               // constrain fraction 1 to be between 0 and 1
+        fit->SetRangeX(1,100);                    // use only the first 15 bins in the fit
+        Int_t status = fit->Fit();               // perform the fit
+        std::cout << "fit status: " << status << std::endl;
+        if (status == 0) {                       // check on fit status
+            TH1F* result = (TH1F*) fit->GetPlot();
+            result->SetMarkerStyle(24);
+            result->SetMarkerColor(4);
+            result->SetMarkerSize(1);
+            double aPE, aHD, ePE, eHD;
+            fit->GetResult(0,aPE,ePE);
+            fit->GetResult(1,aHD,eHD);
+            
+            hisPE->Multiply(constant,aPE*glo);
+            dum->Multiply(constant,aHD*glo);
+        }
+        result->Draw("p");
+        his->DrawClone("psame");
+        dum->Draw("psame");
+        hisPE->Draw("psame");
+        
+        
+    }
+    //return 0 ;
+    
+
     
 }
 

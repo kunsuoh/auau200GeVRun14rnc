@@ -175,7 +175,7 @@ Int_t StPicoNpeAnaMaker::Make()
     weight = 1;
 
     for (int i=0; i<30; i++) if (picoDst->event()->triggerWord() >> i & 0x1) {
-        //cout << "Prescale (" << mPicoNpeEvent->runId() << ", " << i << ", " << mPicoNpeEvent->eventId() << ") : " << mPrescales->prescale(mPicoNpeEvent->runId(), i) << endl;
+        if ( mPrescales->prescale(mPicoNpeEvent->runId(), i) > 100)cout << "Prescale (" << mPicoNpeEvent->runId() << ", " << i << ", " << mPicoNpeEvent->eventId() << ") : " << mPrescales->prescale(mPicoNpeEvent->runId(), i) << endl;
         //weight = mPrescales->prescale(mPicoNpeEvent->runId(), i);
         hTrigger->Fill(i);
         checkDoubleTrigger++;
