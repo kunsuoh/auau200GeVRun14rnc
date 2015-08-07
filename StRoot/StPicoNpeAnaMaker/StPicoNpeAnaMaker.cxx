@@ -170,8 +170,6 @@ Int_t StPicoNpeAnaMaker::Make()
 
 
     isHTEvents = 0;
-    if (picoDst->event()->triggerWord()>>0 & 0x3) isHTEvents += 1;
-    if (picoDst->event()->triggerWord()>>19 & 0x1 ||picoDst->event()->triggerWord()>>21 & 0x1 ||picoDst->event()->triggerWord()>>23 & 0x1) isHTEvents += 2;
     int checkDoubleTrigger = 0;
     int checkDoubleTrigger18 = 10;
     weight = 1;
@@ -182,20 +180,22 @@ Int_t StPicoNpeAnaMaker::Make()
         hTrigger->Fill(i);
         hTriggerWt->Fill(i,weight);
         checkDoubleTrigger++;
+        isHTEvents=1;
     }
-    for (int i=19; i<24; i++) if (picoDst->event()->triggerWord() >> i & 0x1) {
+    for (int i=19; i<20; i++) if (picoDst->event()->triggerWord() >> i & 0x1) {
         if ( mPrescales->prescale(mPicoNpeEvent->runId(), i) > 100)cout << "Prescale (" << mPicoNpeEvent->runId() << ", " << i << ", " << mPicoNpeEvent->eventId() << ") : " << mPrescales->prescale(mPicoNpeEvent->runId(), i) << endl;
         weight = mPrescales->prescale(mPicoNpeEvent->runId(), i);
         hTrigger->Fill(i);
         hTriggerWt->Fill(i,weight);
         checkDoubleTrigger18++;
+        isHTEvents=2;
     }
 
     hCheckDoubleTrigger->Fill(checkDoubleTrigger);
     hCheckDoubleTrigger->Fill(checkDoubleTrigger18);
     
     hEvent->Fill(5);
-    hEvent->Fill(5,weight);
+    hEvent->Fill(6,weight);
 
     hZDCx->Fill(mZDCx);
     hZDCxWt->Fill(mZDCx,weight);
