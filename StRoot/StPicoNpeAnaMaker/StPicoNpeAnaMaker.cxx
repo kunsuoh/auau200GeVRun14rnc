@@ -124,6 +124,9 @@ Int_t StPicoNpeAnaMaker::Finish()
     for (int j=0;j<8;j++) // PID
         histo2d[j]->Write();
     
+    for (int j=0;j<8;j++) // PID
+    for (int i=1;i<6;i++) // PT
+        histoPosition[i][j]->Write();
     
 //    for (int i=1;i<6;i++) histoTofMass[i]->Write(); // tofmass
 //    for (int i=1;i<6;i++) for (int j=0;j<3;j++) histoNSigE[i][j]->Write();
@@ -252,12 +255,12 @@ Int_t StPicoNpeAnaMaker::Make()
                     setVariables(epair);
                     if (pairCharge == 0) fillHistogram(0); // US
                     else fillHistogram(1);                 // LS
-                    cout << "1 " << pairMass << " " << epair->pairMass() << " " <<pairDca << " " << pt << " " << eta << " " << dca << " " << nsige << " " << pairPositionX << " " << pairPositionY << " " << pairPositionZ << " " << electron->nHitsFit() << " " << electron->nHitsDedx() <<  " " << partner->nHitsFit() << " " << partner->nHitsDedx() << " " << partner->gPt() << endl;
+                    //cout << "1 " << pairMass << " " << epair->pairMass() << " " <<pairDca << " " << pt << " " << eta << " " << dca << " " << nsige << " " << pairPositionX << " " << pairPositionY << " " << pairPositionZ << " " << electron->nHitsFit() << " " << electron->nHitsDedx() <<  " " << partner->nHitsFit() << " " << partner->nHitsDedx() << " " << partner->gPt() << endl;
                 }
             } // .. end make electron pairs
         } // .. end of tagged e loop
     }
-  //  else {
+    else {
         // Photonic Electron
         TClonesArray const * aElectronPair = mPicoNpeEvent->electronPairArray();
         for (int idx = 0; idx < aElectronPair->GetEntries(); ++idx)
@@ -269,10 +272,10 @@ Int_t StPicoNpeAnaMaker::Make()
                 setVariables(epair);
                 if (pairCharge == 0) fillHistogram(0); // US
                 else fillHistogram(1);                 // LS
-                cout << "0 " << pairMass << " " << epair->pairMass() << " " << pairDca << " " << pt << " " << eta  << " " << dca << " " << nsige << " " << pairPositionX << " " << pairPositionY << " " << pairPositionZ << endl;
+                //cout << "0 " << pairMass << " " << epair->pairMass() << " " << pairDca << " " << pt << " " << eta  << " " << dca << " " << nsige << " " << pairPositionX << " " << pairPositionY << " " << pairPositionZ << endl;
             }
         }
-  //  }
+    }
     
     idxPicoTaggedEs.clear();
     idxPicoPartnerEs.clear();
@@ -490,6 +493,9 @@ void StPicoNpeAnaMaker::setHistogram(int nptbin,int npid,int ntype,int nhisto)
         for (int j=0;j<npid;j++) {
             histoNSigE[i][j] =  new TH1F(Form("histoNSigE_%d_%d",i,j),Form("histoNSigE_%d_%d",i,j),1301,-13,13);
             histoNSigE[i][j]->Sumw2();
+            histoPosition[i][j] = new TH2F(Form("histoPosition_%d_%d",i,j),Form("histoPosition_%d_%d",i,j),1000,-200,200,1000,-200,200);
+            histoPosition[i][j]->Sumw2();
+
         }
         for (int j=0;j<npid;j++)
             for (int k=0;k<ntype;k++)
@@ -510,7 +516,6 @@ void StPicoNpeAnaMaker::setHistogram(int nptbin,int npid,int ntype,int nhisto)
                     histo[i][j][k][l]->Sumw2();
                 }
     }
-    
     
 }
 //-------------------------------------------------------------------------------
@@ -563,6 +568,8 @@ void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType){
         if (iPid%4 < 3 && nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) fillHistogram(iPt, iPid, iType, 0);
         if (iPid%4 ==3 && nsige > pidCutLw[1][iPt] && nsige < pidCutHi[1][iPt]) fillHistogram(iPt, iPid, iType, 0);
         histo2d[iPid]->Fill(pt*TMath::CosH(eta),adc0,weight);
+        histoPosition[iPt][iPid]->Fill(positionX,positionY,weight);
+
     }
     else if (iType==3 && fabs(nsigpion) < 2) fillHistogram(iPt, iPid, iType, 0);
 }

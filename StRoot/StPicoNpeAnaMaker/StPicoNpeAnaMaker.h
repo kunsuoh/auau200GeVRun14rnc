@@ -150,6 +150,7 @@ class StPicoNpeAnaMaker : public StMaker
     TH1F * histoTofMass[10];
     TH1F * histoNSigE[10][10];
     TH2F * histo2d[10];
+    TH2F * histoPosition[10][10];
     int nptbin;
     int npid;
     int ntype;
