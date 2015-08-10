@@ -252,7 +252,7 @@ Int_t StPicoNpeAnaMaker::Make()
                     setVariables(epair);
                     if (pairCharge == 0) fillHistogram(0); // US
                     else fillHistogram(1);                 // LS
-                    cout << "1 " << pairMass << " " <<pairDca << " " << pt << " " << eta << " " << dca << " " << nsige << " " << pairPositionX << " " << pairPositionY << " " << pairPositionZ << " " << electron->nHitsFit() << " " << electron->nHitsDedx() <<  " " << partner->nHitsFit() << " " << partner->nHitsDedx() << " " << partner->gPt() << endl;
+                    cout << "1 " << pairMass << " " epair->pairMass() << " " <<pairDca << " " << pt << " " << eta << " " << dca << " " << nsige << " " << pairPositionX << " " << pairPositionY << " " << pairPositionZ << " " << electron->nHitsFit() << " " << electron->nHitsDedx() <<  " " << partner->nHitsFit() << " " << partner->nHitsDedx() << " " << partner->gPt() << endl;
                 }
             } // .. end make electron pairs
         } // .. end of tagged e loop
@@ -269,7 +269,7 @@ Int_t StPicoNpeAnaMaker::Make()
                 setVariables(epair);
                 if (pairCharge == 0) fillHistogram(0); // US
                 else fillHistogram(1);                 // LS
-                cout << "0 " << pairMass << " " << pairDca << " " << pt << " " << eta  << " " << dca << " " << nsige << " " << pairPositionX << " " << pairPositionY << " " << pairPositionZ << endl;
+                cout << "0 " << pairMass << " " epair->pairMass() << " " << pairDca << " " << pt << " " << eta  << " " << dca << " " << nsige << " " << pairPositionX << " " << pairPositionY << " " << pairPositionZ << endl;
             }
         }
   //  }
