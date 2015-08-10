@@ -256,12 +256,17 @@ Int_t StPicoNpeAnaMaker::Make()
             
             StPicoTrack const * partner = picoDst->track(idxPicoPartnerEs[ip]);
             
-            StElectronPair electronPair(electron, partner, idxPicoTaggedEs[ik], idxPicoPartnerEs[ip], pVtx, bField);
+            StElectronPair * electronPair =  new StElectronPair(electron, partner, idxPicoTaggedEs[ik], idxPicoPartnerEs[ip], pVtx, bField);
             
             
-            if (!isGoodElectronPair(electronPair, electron->gPt())) continue;
+            if (!isGoodPair(electronPair)) continue;
             
-            mPicoNpeEvent->addElectronPair(&electronPair);
+            setVariables(electronPair);
+            if (pairCharge == 0) {                  // US
+                fillHistogram(0);
+            }
+            else {                                  // LS
+                fillHistogram(1);
             }
         } // .. end make electron pairs
     } // .. end of tagged e loop
