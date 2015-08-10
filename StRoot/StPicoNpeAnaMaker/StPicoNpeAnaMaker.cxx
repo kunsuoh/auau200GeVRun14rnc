@@ -220,7 +220,6 @@ Int_t StPicoNpeAnaMaker::Make()
     }
 
     // hadrons & inclusive electron with StPicoTrack
-    mPicoNpeEvent = new StPicoNpeEvent();
     std::vector<unsigned short> idxPicoTaggedEs;
     std::vector<unsigned short> idxPicoPartnerEs;
 
