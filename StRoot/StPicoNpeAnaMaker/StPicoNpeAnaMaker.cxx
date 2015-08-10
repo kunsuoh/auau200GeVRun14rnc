@@ -220,9 +220,10 @@ Int_t StPicoNpeAnaMaker::Make()
     }
 
     // hadrons & inclusive electron with StPicoTrack
-    std::vector<unsigned short> idxPicoTaggedEs;
-    std::vector<unsigned short> idxPicoPartnerEs;
-
+    if (cutsAna::isRecoPhE) {
+        std::vector<unsigned short> idxPicoTaggedEs;
+        std::vector<unsigned short> idxPicoPartnerEs;
+    }
     UInt_t nTracks = picoDst->numberOfTracks();
     for (unsigned short iTrack = 0; iTrack < nTracks; ++iTrack) {
         StPicoTrack* track = picoDst->track(iTrack);
@@ -232,61 +233,51 @@ Int_t StPicoNpeAnaMaker::Make()
             fillHistogram(2); // electron
             fillHistogram(3); // hadron
             
-            if (isGoodTagged(track))  idxPicoTaggedEs.push_back(iTrack);
-            if (isGoodPartner(track)) idxPicoPartnerEs.push_back(iTrack);
+            if (cutsAna::isRecoPhE) {
+                if (isGoodTagged(track))  idxPicoTaggedEs.push_back(iTrack);
+                if (isGoodPartner(track)) idxPicoPartnerEs.push_back(iTrack);
+
+            }
 
         }
         
     }
     
-    for (unsigned short ik = 0; ik < idxPicoTaggedEs.size(); ++ik)
-    {
+    if (cutsAna::isRecoPhE) {
         
-        StPicoTrack const * electron = picoDst->track(idxPicoTaggedEs[ik]);
-        
-        // make electron pairs
-        for (unsigned short ip = 0; ip < idxPicoPartnerEs.size(); ++ip)
+        for (unsigned short ik = 0; ik < idxPicoTaggedEs.size(); ++ik)
         {
-            
-            if (idxPicoTaggedEs[ik] == idxPicoPartnerEs[ip]) continue;
-            
-            StPicoTrack const * partner = picoDst->track(idxPicoPartnerEs[ip]);
-            
-            StElectronPair * electronPair =  new StElectronPair(electron, partner, idxPicoTaggedEs[ik], idxPicoPartnerEs[ip], bField);
-            
-            
-            if (!isGoodPair(electronPair)) continue;
-            
-            setVariables(electronPair);
-            if (pairCharge == 0) {                  // US
-                fillHistogram(0);
-            }
-            else {                                  // LS
-                fillHistogram(1);
-            }
-        } // .. end make electron pairs
-    } // .. end of tagged e loop
-    
-    /*
-    // Photonic Electron
-    TClonesArray const * aElectronPair = mPicoNpeEvent->electronPairArray();
-    for (int idx = 0; idx < aElectronPair->GetEntries(); ++idx)
-    {
-        // this is an example of how to get the ElectronPair pairs and their corresponsing tracks
-        StElectronPair * epair = (StElectronPair*)aElectronPair->At(idx);
-        if (isGoodPair(epair))
+            StPicoTrack const * electron = picoDst->track(idxPicoTaggedEs[ik]);
+            // make electron pairs
+            for (unsigned short ip = 0; ip < idxPicoPartnerEs.size(); ++ip)
+            {
+                if (idxPicoTaggedEs[ik] == idxPicoPartnerEs[ip]) continue;
+                StPicoTrack const * partner = picoDst->track(idxPicoPartnerEs[ip]);
+                StElectronPair * epair =  new StElectronPair(electron, partner, idxPicoTaggedEs[ik], idxPicoPartnerEs[ip], bField);
+                if (isGoodPair(epair))
+                {
+                    setVariables(epair);
+                    if (pairCharge == 0) fillHistogram(0); // US
+                    else fillHistogram(1);                 // LS
+                }
+            } // .. end make electron pairs
+        } // .. end of tagged e loop
+    }
+    else {
+        // Photonic Electron
+        TClonesArray const * aElectronPair = mPicoNpeEvent->electronPairArray();
+        for (int idx = 0; idx < aElectronPair->GetEntries(); ++idx)
         {
-            setVariables(epair);
-            if (pairCharge == 0) {                  // US
-                fillHistogram(0);
+            // this is an example of how to get the ElectronPair pairs and their corresponsing tracks
+            StElectronPair * epair = (StElectronPair*)aElectronPair->At(idx);
+            if (isGoodPair(epair))
+            {
+                setVariables(epair);
+                if (pairCharge == 0) fillHistogram(0); // US
+                else fillHistogram(1);                 // LS
             }
-            else {                                  // LS
-                fillHistogram(1);
-            }
-            
         }
     }
-    */
     return kStOK;
 }
 //-----------------------------------------------------------------------------
