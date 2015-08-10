@@ -120,8 +120,7 @@ Int_t StPicoNpeAnaMaker::Finish()
          histo[i][j][k][l]->Write();
 
     for (int j=0;j<8;j++) // PID
-    for (int i=1;i<6;i++) // PT
-        histo2d[i][j]->Write();
+        histo2d[j]->Write();
     
     
 //    for (int i=1;i<6;i++) histoTofMass[i]->Write(); // tofmass
@@ -219,6 +218,10 @@ Int_t StPicoNpeAnaMaker::Make()
     }
 
     // hadrons & inclusive electron with StPicoTrack
+    mPicoNpeEvent = new StPicoNpeEvent();
+    std::vector<unsigned short> idxPicoTaggedEs;
+    std::vector<unsigned short> idxPicoPartnerEs;
+
     UInt_t nTracks = picoDst->numberOfTracks();
     for (unsigned short iTrack = 0; iTrack < nTracks; ++iTrack) {
         StPicoTrack* track = picoDst->track(iTrack);
@@ -227,10 +230,47 @@ Int_t StPicoNpeAnaMaker::Make()
             setVariables(track);
             fillHistogram(2); // electron
             fillHistogram(3); // hadron
+            
+            
+            if (isElectron(track)) {
+                idxPicoTaggedEs.push_back(iTrack);
+                StElectronTrack electronTrack((StPicoTrack const *)track, iTrack);
+                mPicoNpeEvent->addElectron(&electronTrack);
+            }
+            if (isPartnerElectron(trk)) idxPicoPartnerEs.push_back(iTrack);
+
         }
         
     }
+    float const bField = mPicoEvent->bField();
+    StThreeVectorF const pVtx = mPicoEvent->primaryVertex();
+    
+    mPicoNpeEvent->nElectrons(idxPicoTaggedEs.size());
+    mPicoNpeEvent->nPartners(idxPicoPartnerEs.size());
 
+    for (unsigned short ik = 0; ik < idxPicoTaggedEs.size(); ++ik)
+    {
+        
+        StPicoTrack const * electron = picoDst->track(idxPicoTaggedEs[ik]);
+        
+        // make electron pairs
+        for (unsigned short ip = 0; ip < idxPicoPartnerEs.size(); ++ip)
+        {
+            
+            if (idxPicoTaggedEs[ik] == idxPicoPartnerEs[ip]) continue;
+            
+            StPicoTrack const * partner = picoDst->track(idxPicoPartnerEs[ip]);
+            
+            StElectronPair electronPair(electron, partner, idxPicoTaggedEs[ik], idxPicoPartnerEs[ip], pVtx, bField);
+            
+            
+            if (!isGoodElectronPair(electronPair, electron->gPt())) continue;
+            
+            mPicoNpeEvent->addElectronPair(&electronPair);
+            }
+        } // .. end make electron pairs
+    } // .. end of tagged e loop
+    
     
     // Photonic Electron
     TClonesArray const * aElectronPair = mPicoNpeEvent->electronPairArray();
@@ -449,6 +489,13 @@ void StPicoNpeAnaMaker::setHistogram(int nptbin,int npid,int ntype,int nhisto)
     double minHisto[12] = { -13,    -13,   -0.1,    0,      0,  0,  0,      -20,    -0.1,   -0.1,   -0.1,   0};
     double maxHisto[12] = { 13,      13,    0.1,    0.5,    10, 10, 3,      20,     0.1,    0.1,    0.1,    20};
     
+    
+    for (int j=0; j<npid; j++) {
+        histo2d[j] = new TH2F(Form("histo2D_%d",j),Form("histo2D_%d",j),100,0,20,100,0,500);
+        histo2d[j]->Sumw2();
+
+    }
+    
     for (int i=0;i<nptbin;i++){
         histoTofMass[i] = new TH1F(Form("histoTofMass_%d",i),Form("histoTofMass_%d",i),1000,-0.5,2.5);
         histoTofMass[i]->Sumw2();
@@ -456,8 +503,6 @@ void StPicoNpeAnaMaker::setHistogram(int nptbin,int npid,int ntype,int nhisto)
         for (int j=0;j<npid;j++) {
             histoNSigE[i][j] =  new TH1F(Form("histoNSigE_%d_%d",i,j),Form("histoNSigE_%d_%d",i,j),1301,-13,13);
             histoNSigE[i][j]->Sumw2();
-            histo2d[i][j] = new TH2F(Form("histo2D_%d_%d",i,j),Form("histo2D_%d_%d",i,j),100,0,100,100,0,20);
-            histo2d[i][j]->Sumw2();
         }
         for (int j=0;j<npid;j++)
             for (int k=0;k<ntype;k++)
@@ -524,11 +569,13 @@ void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType){
         pidCutHi[0]={0, 1.8, 2.5, 3.0, 3.0, 0};
         pidCutLw[1]={0, -1.5, -1.4, -1.5, -1.1, 0};
         pidCutHi[1]={0, 1.8, 2.5, 3.0, 3.0, 0};
-        if (iPid == 2 && nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) fillHistogram(iPt, iPid, iType, 0);
-        if (iPid == 3 && nsige > pidCutLw[1][iPt] && nsige < pidCutHi[1][iPt]) fillHistogram(iPt, iPid, iType, 0);
-        if (iPid == 4 && nsige > pidCutLw[1][iPt] && nsige < pidCutHi[1][iPt]) fillHistogram(iPt, iPid, iType, 0);
-        if (iPid == 5 && nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) fillHistogram(iPt, iPid, iType, 0);
-        histo2d[iPt][iPid]->Fill(adc0,pt*TMath::CosH(eta),weight);
+//        if (iPid == 2 && nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) fillHistogram(iPt, iPid, iType, 0);
+//        if (iPid == 3 && nsige > pidCutLw[1][iPt] && nsige < pidCutHi[1][iPt]) fillHistogram(iPt, iPid, iType, 0);
+//        if (iPid == 4 && nsige > pidCutLw[1][iPt] && nsige < pidCutHi[1][iPt]) fillHistogram(iPt, iPid, iType, 0);
+//        if (iPid == 5 && nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) fillHistogram(iPt, iPid, iType, 0);
+        if (iPid%4 < 3 && nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) fillHistogram(iPt, iPid, iType, 0);
+        if (iPid%4 ==3 && nsige > pidCutLw[1][iPt] && nsige < pidCutHi[1][iPt]) fillHistogram(iPt, iPid, iType, 0);
+        histo2d[iPid]->Fill(pt*TMath::CosH(eta),adc0,weight);
     }
     else if (iType==3 && fabs(nsigpion) < 2) fillHistogram(iPt, iPid, iType, 0);
 }
