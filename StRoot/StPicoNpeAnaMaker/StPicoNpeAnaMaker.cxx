@@ -68,10 +68,18 @@ Int_t StPicoNpeAnaMaker::Init()
     hEvent = new TH1F("hEvent","hEvent",10,0,10);
     hZDCx = new TH1F("hZDCx","hZDCx",1000,0,100000);
     hZDCxWt = new TH1F("hZDCxWt","hZDCxWt",1000,0,100000);
+    hCheckDoubleTrigger->Sumw2();
+    hTrigger->Sumw2();
+    hTriggerWt->Sumw2();
+    hEvent->Sumw2();
+    hZDCx->Sumw2();
+    hZDCxWt->Sumw2();
     
     for (int i=0; i<2; i++) {
         hRefMult[i] = new TH1F(Form("hRefMult_%d",i),Form("hRefMult_%d",i),1000,0,1000);
         hRefMultWt[i] = new TH1F(Form("hRefMultWt_%d",i),Form("hRefMultWt_%d",i),1000,0,1000);
+        hRefMult[i]->Sumw2();
+        hRefMultWt[i]->Sumw2();
     }
 
     setHistogram(6,6,6,12);
@@ -441,11 +449,15 @@ void StPicoNpeAnaMaker::setHistogram(int nptbin,int npid,int ntype,int nhisto)
     
     for (int i=0;i<nptbin;i++){
         histoTofMass[i] = new TH1F(Form("histoTofMass_%d",i),Form("histoTofMass_%d",i),1000,-0.5,2.5);
-        for (int j=0;j<npid;j++) histoNSigE[i][j] =  new TH1F(Form("histoNSigE_%d_%d",i,j),Form("histoNSigE_%d_%d",i,j),1301,-13,13);
-   
+        histoTofMass[i]->Sumw2();
+        
+        for (int j=0;j<npid;j++) {
+            histoNSigE[i][j] =  new TH1F(Form("histoNSigE_%d_%d",i,j),Form("histoNSigE_%d_%d",i,j),1301,-13,13);
+            histoNSigE[i][j]->Sumw2();
+        }
         for (int j=0;j<npid;j++)
             for (int k=0;k<ntype;k++)
-                for (int l=0;l<nhisto;l++)
+                for (int l=0;l<nhisto;l++) {
                     histo[i][j][k][l] = new TH1F(
                                                  Form("histo_%d_%d_%d_%d", i,j,k,l),
                                                  Form("histo_pT%.1f_%.1f_%s_%s_%s",
@@ -459,7 +471,8 @@ void StPicoNpeAnaMaker::setHistogram(int nptbin,int npid,int ntype,int nhisto)
                                                  minHisto[l],
                                                  maxHisto[l]
                                                  );
-
+                    histo[i][j][k][l]->Sumw2();
+                }
     }
     
     

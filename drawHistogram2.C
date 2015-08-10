@@ -1,7 +1,7 @@
 
 void drawHistogram2(){
 
-    TFile * infile = new TFile("out_27.root");
+    TFile * infile = new TFile("out_28.root");
     TCanvas * cc = new TCanvas("cc","cc",500,500);
     TCanvas * cc2 = new TCanvas("cc2","cc2",500,1000);
     TCanvas * cc3 = new TCanvas("cc3","cc3",500,500);
@@ -11,6 +11,8 @@ void drawHistogram2(){
     TCanvas * cc7 = new TCanvas("cc7","cc7",500,1000);
     TCanvas * cc8 = new TCanvas("cc8","cc8",1000,1000);
     TCanvas * cc9 = new TCanvas("cc9","cc9",1000,500);
+    TCanvas * cc10 = new TCanvas("cc10","cc10",500,500);
+    TCanvas * cc11 = new TCanvas("cc11","cc11",500,500);
     
     cc2->Divide(1,2);
     cc7->Divide(1,2);
@@ -45,6 +47,17 @@ void drawHistogram2(){
     TH1F * hNSigEPion;
     TH1F * hNSigEKaon;
     TH1F * hNSigEProton;
+    TH1F * hEffBemc[2];
+    TH1F * hEffBsmd[2][2];
+    double effBemc[2][5];
+    
+    hEffBemc[0] = new TH1F("hEffBemc_0","hEffBemc_0",5, pt);
+    hEffBemc[1] = new TH1F("hEffBemc_1","hEffBemc_1",5, pt);
+    hEffBsmd[0][0] = new TH1F("hEffBsmd_0_0","hEffBsmd_0_0",5, pt);
+    hEffBsmd[1][0] = new TH1F("hEffBsmd_1_0","hEffBsmd_1_0",5, pt);
+    hEffBsmd[0][1] = new TH1F("hEffBsmd_0_1","hEffBsmd_0_1",5, pt);
+    hEffBsmd[1][1] = new TH1F("hEffBsmd_1_1","hEffBsmd_1_1",5, pt);
+    
     TF1 * constant = new TF1("constant" ,"pol0", -0.1, 0.1);
     constant->SetParameter(0,1);
 
@@ -377,6 +390,12 @@ void drawHistogram2(){
         hisQaLS->Draw("psame");
         hisQaPE->Draw("BARsame");
         
+        double err1, err2;
+        if (iPid < 2) {
+            hEffBsmd[iPid][0]->SetBinContent(iPt, hisQaPE->IntegralAndError(3,10,err1)/hisQaPE->IntegralAndError(2,10,err2));
+            hEffBsmd[iPid][0]->SetBinError(iPt, TMath::Sqrt(err1*err1/hisQaPE->Integral(3,10)/hisQaPE->Integral(3,10) + err2*err2/hisQaPE->Integral(2,10)/hisQaPE->Integral(2,10)));
+        }
+        
         cc8->cd(2)->SetLogy(); // nphi
         TH1I * hisQaLS = (TH1I*)infile->Get(Form("histo_%d_%d_1_5",iPt, iPid));
         TH1I * hisQaUS = (TH1I*)infile->Get(Form("histo_%d_%d_0_5",iPt, iPid));
@@ -403,7 +422,10 @@ void drawHistogram2(){
         hisQaUS->Draw("p");
         hisQaLS->Draw("psame");
         hisQaPE->Draw("BARsame");
-        
+        if (iPid < 2) {
+            hEffBsmd[iPid][1]->SetBinContent(iPt, hisQaPE->IntegralAndError(3,10,err1)/hisQaPE->IntegralAndError(2,10,err2));
+            hEffBsmd[iPid][1]->SetBinError(iPt, TMath::Sqrt(err1*err1/hisQaPE->Integral(3,10)/hisQaPE->Integral(3,10) + err2*err2/hisQaPE->Integral(2,10)/hisQaPE->Integral(2,10)));
+        }
         cc8->cd(3)->SetLogy(); // nphieta
         TH1I * hisQaLS = (TH1I*)infile->Get(Form("histo_%d_%d_1_11",iPt, iPid));
         TH1I * hisQaUS = (TH1I*)infile->Get(Form("histo_%d_%d_0_11",iPt, iPid));
@@ -458,6 +480,14 @@ void drawHistogram2(){
         hisUS->Draw("p");
         hisLS->Draw("psame");
         hisPE->Draw("BARsame");
+        
+        if(iPid < 2){
+            fitfunHadron->SetRange(0.4,1);
+            hisPE->Fit(fitfunHadron,"NOR+");
+            fitfunHadron->SetRange(0.,3);
+            fitfunHadron->SetLineColor(1);
+            fitfunHadron->Draw("same");
+        }
         
         cc8->cd(5)->SetLogy(); // zDist
         TH1F * hisLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_7",iPt, iPid));
@@ -599,13 +629,49 @@ void drawHistogram2(){
         
         
         cc8->SaveAs(Form("~/Desktop/QaHadronBemcBsmd_Pid%d_Pt%d.pdf",iPid,iPt));
-        // end hadron
+        if (iPid < 2) {
+            
+            cout << fitfunHadron->Integral(0,3)<< " " << fitfunHadron->Integral(0.8,2) /fitfunHadron->Integral(0.,3) << endl;
+            cout << fitfunHadron->GetParameter(0) << " " << fitfunHadron->GetParameter(1) << " " << fitfunHadron->GetParameter(2) << endl;
+            // end hadron
+            hEffBemc[iPid]->SetBinContent(iPt, fitfunHadron->Integral(0.8,2) /fitfunHadron->Integral(0.,3));
+            hEffBemc[iPid]->SetBinError(iPt, TMath::Sqrt(fitfunHadron->IntegralError(0.8,2)*fitfunHadron->IntegralError(0.8,2)/fitfunHadron->Integral(0.8,2)/fitfunHadron->Integral(0.8,2) + fitfunHadron->IntegralError(0.,3)*fitfunHadron->IntegralError(0.,3)/fitfunHadron->Integral(0.,3)/fitfunHadron->Integral(0.,3)));
+        }
+        if (iPid == 1 && iPt == 5)    {
+            
+            
+            
+            
+            cc11->cd();
+            
+            hEffBemc[0]->SetMaximum(1.1);
+            hEffBemc[0]->SetMinimum(0);
+            hEffBemc[0]->SetLineColor(2);
+            hEffBemc[0]->SetTitle("BEMC PID Efficiency");
+            hEffBemc[0]->Draw("");
+            hEffBemc[1]->Draw("same");
+            cc11->SaveAs("~/Desktop/EffBemc.png");
+            
+            hEffBsmd[0][0]->SetMaximum(1.5);
+            hEffBsmd[0][0]->SetMinimum(0);
+            hEffBsmd[0][0]->SetLineColor(2);
+            hEffBsmd[0][0]->SetTitle("BSMD PID Efficiency");
+            
+            hEffBsmd[0][1]->SetLineColor(7);
+            hEffBsmd[1][1]->SetLineColor(3);
+
+            hEffBsmd[0][0]->Draw("");
+            hEffBsmd[1][0]->Draw("same");
+            hEffBsmd[0][1]->Draw("same");
+            hEffBsmd[1][1]->Draw("same");
+            cc11->SaveAs("~/Desktop/EffBsmd.png");
+        }
     }
     
     cc6->cd();
     cc6->Divide(1,2);
     
-    for (int iPid=2; iPid<6; iPid++) for (int iPt=1; iPt<5; iPt++) {
+    for (int iPid=0; iPid<6; iPid++) for (int iPt=1; iPt<6; iPt++) {
         cc6->cd(1)->SetLogy();
         TH1F * dum = (TH1F*)infile->Get(Form("histo_%d_%d_2_1",iPt, iPid));
         TH1F * his = (TH1F*)infile->Get(Form("histo_%d_%d_2_2",iPt, iPid));
@@ -623,12 +689,12 @@ void drawHistogram2(){
         
         hisLS->SetMarkerStyle(20);
         hisLS->SetMarkerColor(2);
-        hisLS->SetMarkerSize(0.5);
+        hisLS->SetMarkerSize(1);
         
         
         hisUS->SetMarkerStyle(20);
         hisUS->SetMarkerColor(4);
-        hisUS->SetMarkerSize(0.5);
+        hisUS->SetMarkerSize(1);
         hisUS->SetMinimum(0.5);
         
         
@@ -644,11 +710,11 @@ void drawHistogram2(){
         TH1F * hPairMassUS = (TH1F*)infile->Get(Form("histo_%d_%d_0_3",iPt, iPid));
         TH1F * hPairMassLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_3",iPt, iPid));
         TH1F * hdum = new TH1F("hdum","hdum",100,0,0.5);
-        
+
         hPairMassUS->Sumw2();
         hPairMassLS->Sumw2();
         
-        hPairMassUS->GetXaxis()->SetRangeUser(0,0.2);
+        hPairMassUS->GetXaxis()->SetRangeUser(0,0.1);
         hPairMassUS->SetMinimum(-1*hPairMassUS->GetMaximum()*0.1);
         hPairMassUS->SetMarkerStyle(20);
         hPairMassUS->SetMarkerColor(4);
@@ -658,6 +724,7 @@ void drawHistogram2(){
         hPairMassLS->SetMarkerColor(2);
         hPairMassLS->SetMarkerSize(1);
         
+        hdum->GetXaxis()->SetRangeUser(0,0.1);
         hdum->Add(hPairMassUS,hPairMassLS,1,-1);
         hdum->SetFillStyle(3004);
         hdum->SetFillColor(1);
@@ -669,6 +736,11 @@ void drawHistogram2(){
         hPairMassUS->Draw("p");
         hPairMassLS->Draw("psame");
         hdum->Draw("BARsame");
+        TLine * line = new TLine(0,0,0.1,0);
+        line->SetLineColor(1);
+        line->SetLineStyle(2);
+        line->SetLineWidth(4);
+        line->Draw("same");
         cc6->SaveAs(Form("~/Desktop/DcaAterPid_Pid%d_Pt%d.pdf",iPid,iPt));
         
         
@@ -739,7 +811,12 @@ void drawHistogram2(){
     //return 0 ;
     
 
-    
+    cc10->cd();
+    infile->Get("hTrigger")->Draw();
+    cc10->SaveAs("~/Desktop/Trigger.png");
+    cc10->cd();
+    infile->Get("hTriggerWt")->Draw();
+    cc10->SaveAs("~/Desktop/TriggerWt.png");
 }
 
 double funHF(double * x, double * par){
