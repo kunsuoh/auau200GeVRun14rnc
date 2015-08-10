@@ -568,7 +568,7 @@ void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType){
         if (iPid%4 < 3 && nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) fillHistogram(iPt, iPid, iType, 0);
         if (iPid%4 ==3 && nsige > pidCutLw[1][iPt] && nsige < pidCutHi[1][iPt]) fillHistogram(iPt, iPid, iType, 0);
         histo2d[iPid]->Fill(pt*TMath::CosH(eta),adc0,weight);
-        histoPosition[iPt][iPid]->Fill(positionX,positionY,weight);
+        histoPosition[iPt][iPid]->Fill(pairPositionX,pairPositionY,weight);
 
     }
     else if (iType==3 && fabs(nsigpion) < 2) fillHistogram(iPt, iPid, iType, 0);
