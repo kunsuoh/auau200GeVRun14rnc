@@ -252,7 +252,7 @@ Int_t StPicoNpeAnaMaker::Make()
                     setVariables(epair);
                     if (pairCharge == 0) fillHistogram(0); // US
                     else fillHistogram(1);                 // LS
-                    cout << " 1-" << pairMass ;
+                    cout << " 1-" << pairMass << "," <<pairDca ;
                 }
             } // .. end make electron pairs
         } // .. end of tagged e loop
@@ -269,7 +269,7 @@ Int_t StPicoNpeAnaMaker::Make()
                 setVariables(epair);
                 if (pairCharge == 0) fillHistogram(0); // US
                 else fillHistogram(1);                 // LS
-                cout << " 0-" << pairMass;
+                cout << " 0-" << pairMass << "," <<pairDca ;
             }
         }
   //  }
