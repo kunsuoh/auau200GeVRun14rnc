@@ -258,7 +258,7 @@ Int_t StPicoNpeAnaMaker::Make()
         } // .. end of tagged e loop
         cout << endl;
     }
-    else {
+  //  else {
         // Photonic Electron
         TClonesArray const * aElectronPair = mPicoNpeEvent->electronPairArray();
         for (int idx = 0; idx < aElectronPair->GetEntries(); ++idx)
@@ -274,7 +274,7 @@ Int_t StPicoNpeAnaMaker::Make()
             }
         }
         cout << endl;
-    }
+  //  }
     
     idxPicoTaggedEs.clear();
     idxPicoPartnerEs.clear();
