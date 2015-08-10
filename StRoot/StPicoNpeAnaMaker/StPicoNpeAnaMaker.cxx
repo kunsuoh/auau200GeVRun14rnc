@@ -233,7 +233,7 @@ Int_t StPicoNpeAnaMaker::Make()
             
             if (cutsAna::isRecoPhE && isGoodTagged(track))  idxPicoTaggedEs.push_back(iTrack);
         }
-        if (isGoodPartner(track)) idxPicoPartnerEs.push_back(iTrack);
+        if (cutsAna::isRecoPhE && isGoodPartner(track)) idxPicoPartnerEs.push_back(iTrack);
 
         
     }
