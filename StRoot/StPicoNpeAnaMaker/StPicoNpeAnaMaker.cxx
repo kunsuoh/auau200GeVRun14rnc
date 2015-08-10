@@ -294,7 +294,8 @@ bool StPicoNpeAnaMaker::isGoodPair(StElectronPair const* const epair) const
     isGoodTagged(electron) &&
     isGoodPartner(partner) &&
     epair->pairMass() < cutsAna::pairMass &&
-    epair->pairDca() < cutsAna::pairDca
+    epair->pairDca() < cutsAna::pairDca &&
+    (isRecoPhE && pairPositionX < 200 && pairPositionY < 200 && pairPositionZ < 200 && )
     ;
 }
 //-----------------------------------------------------------------------------
@@ -455,6 +456,7 @@ void StPicoNpeAnaMaker::setVariables(StElectronPair * epair)
     pairCharge = electron->charge()+partner->charge();
     pairPositionX = epair->positionX();
     pairPositionY = epair->positionY();
+    pairPositionZ = epair->positionZ();
     
     partner_pt = partner->gPt();
     partner_nsige = partner->nSigmaElectron();

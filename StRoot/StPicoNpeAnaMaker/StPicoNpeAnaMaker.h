@@ -112,6 +112,7 @@ class StPicoNpeAnaMaker : public StMaker
     Float_t pairDca;
     Float_t pairPositionX;
     Float_t pairPositionY;
+    Float_t pairPositionZ;
     
     
     Float_t dca;

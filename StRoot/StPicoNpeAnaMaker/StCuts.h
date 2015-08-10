@@ -43,7 +43,7 @@ namespace cutsAna
     
     
     // electron + partner pair cuts
-    bool const isRecoPhE = false;
+    bool const isRecoPhE = true;
     float const pairMass = 0.1;
     float const pairDca = 0.5;
     
