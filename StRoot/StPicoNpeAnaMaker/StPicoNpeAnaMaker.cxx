@@ -218,12 +218,10 @@ Int_t StPicoNpeAnaMaker::Make()
         hRefMult[i]->Fill(mRefMult);
         hRefMultWt[i]->Fill(mRefMult,weight);
     }
-
+    
     // hadrons & inclusive electron with StPicoTrack
-    if (cutsAna::isRecoPhE) {
-        std::vector<unsigned short> idxPicoTaggedEs;
-        std::vector<unsigned short> idxPicoPartnerEs;
-    }
+    std::vector<unsigned short> idxPicoTaggedEs;
+    std::vector<unsigned short> idxPicoPartnerEs;
     UInt_t nTracks = picoDst->numberOfTracks();
     for (unsigned short iTrack = 0; iTrack < nTracks; ++iTrack) {
         StPicoTrack* track = picoDst->track(iTrack);
