@@ -256,7 +256,6 @@ Int_t StPicoNpeAnaMaker::Make()
                 }
             } // .. end make electron pairs
         } // .. end of tagged e loop
-        cout << endl;
     }
   //  else {
         // Photonic Electron
@@ -273,7 +272,6 @@ Int_t StPicoNpeAnaMaker::Make()
                 cout << "?";
             }
         }
-        cout << endl;
   //  }
     
     idxPicoTaggedEs.clear();
