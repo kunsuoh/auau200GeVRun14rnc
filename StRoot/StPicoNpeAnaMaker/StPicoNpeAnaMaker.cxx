@@ -231,8 +231,8 @@ Int_t StPicoNpeAnaMaker::Make()
             fillHistogram(2); // electron
             fillHistogram(3); // hadron
             
-            if (cutsAna::isRecoPhE && isGoodTagged(track))  idxPicoTaggedEs.push_back(iTrack);
         }
+        if (cutsAna::isRecoPhE && isGoodTagged(track))  idxPicoTaggedEs.push_back(iTrack);
         if (cutsAna::isRecoPhE && isGoodPartner(track)) idxPicoPartnerEs.push_back(iTrack);
 
         
@@ -252,7 +252,7 @@ Int_t StPicoNpeAnaMaker::Make()
                     setVariables(epair);
                     if (pairCharge == 0) fillHistogram(0); // US
                     else fillHistogram(1);                 // LS
-                    cout << "!" ;
+                    cout << "1" ;
                 }
             } // .. end make electron pairs
         } // .. end of tagged e loop
@@ -269,7 +269,7 @@ Int_t StPicoNpeAnaMaker::Make()
                 setVariables(epair);
                 if (pairCharge == 0) fillHistogram(0); // US
                 else fillHistogram(1);                 // LS
-                cout << "?";
+                cout << "0";
             }
         }
   //  }
