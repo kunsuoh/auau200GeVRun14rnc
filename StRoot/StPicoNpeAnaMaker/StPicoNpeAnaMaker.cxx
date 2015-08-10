@@ -259,9 +259,6 @@ Int_t StPicoNpeAnaMaker::Make()
             } // .. end make electron pairs
         } // .. end of tagged e loop
     }
-    idxPicoTaggedEs.clear();
-    idxPicoPartnerEs.clear();
-
     else {
         // Photonic Electron
         TClonesArray const * aElectronPair = mPicoNpeEvent->electronPairArray();
@@ -277,6 +274,9 @@ Int_t StPicoNpeAnaMaker::Make()
             }
         }
     }
+    
+    idxPicoTaggedEs.clear();
+    idxPicoPartnerEs.clear();
     return kStOK;
 }
 //-----------------------------------------------------------------------------
