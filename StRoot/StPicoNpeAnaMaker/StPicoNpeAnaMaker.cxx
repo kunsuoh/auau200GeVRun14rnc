@@ -256,7 +256,7 @@ Int_t StPicoNpeAnaMaker::Make()
             
             StPicoTrack const * partner = picoDst->track(idxPicoPartnerEs[ip]);
             
-            StElectronPair * electronPair =  new StElectronPair(electron, partner, idxPicoTaggedEs[ik], idxPicoPartnerEs[ip], pVtx, bField);
+            StElectronPair * electronPair =  new StElectronPair(electron, partner, idxPicoTaggedEs[ik], idxPicoPartnerEs[ip], bField);
             
             
             if (!isGoodPair(electronPair)) continue;
