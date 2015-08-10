@@ -231,13 +231,10 @@ Int_t StPicoNpeAnaMaker::Make()
             fillHistogram(2); // electron
             fillHistogram(3); // hadron
             
-            if (cutsAna::isRecoPhE) {
-                if (isGoodTagged(track))  idxPicoTaggedEs.push_back(iTrack);
-                if (isGoodPartner(track)) idxPicoPartnerEs.push_back(iTrack);
-
-            }
-
+            if (cutsAna::isRecoPhE && isGoodTagged(track))  idxPicoTaggedEs.push_back(iTrack);
         }
+        if (isGoodPartner(track)) idxPicoPartnerEs.push_back(iTrack);
+
         
     }
     int ncheck = 0;
