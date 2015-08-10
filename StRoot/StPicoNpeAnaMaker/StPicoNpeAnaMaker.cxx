@@ -295,7 +295,7 @@ bool StPicoNpeAnaMaker::isGoodPair(StElectronPair const* const epair) const
     isGoodPartner(partner) &&
     epair->pairMass() < cutsAna::pairMass &&
     epair->pairDca() < cutsAna::pairDca &&
-    (isRecoPhE && pairPositionX < 200 && pairPositionY < 200 && pairPositionZ < 200 && )
+    ((cutsAna::isRecoPhE && pairPositionX < 200 && pairPositionY < 200 && pairPositionZ < 200) || !cutsAna::isRecoPhE)
     ;
 }
 //-----------------------------------------------------------------------------
