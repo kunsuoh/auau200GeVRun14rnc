@@ -15,6 +15,7 @@
 #include "StPicoDstMaker/StPicoBTofPidTraits.h"
 #include "StPicoPrescales/StPicoPrescales.h"
 #include "StPicoNpeEventMaker/StPicoNpeEvent.h"
+#include "StPicoNpeEventMaker/StPicoNpeEventMaker.h"
 #include "StPicoNpeEventMaker/StElectronPair.h"
 #include "StBTofUtil/tofPathLength.hh"
 #include "StLorentzVectorF.hh"
@@ -237,13 +238,11 @@ Int_t StPicoNpeAnaMaker::Make()
                 StElectronTrack electronTrack((StPicoTrack const *)track, iTrack);
                 mPicoNpeEvent->addElectron(&electronTrack);
             }
-            if (isPartnerElectron(trk)) idxPicoPartnerEs.push_back(iTrack);
+            if (isPartnerElectron(track)) idxPicoPartnerEs.push_back(iTrack);
 
         }
         
     }
-    float const bField = mPicoEvent->bField();
-    StThreeVectorF const pVtx = mPicoEvent->primaryVertex();
     
     mPicoNpeEvent->nElectrons(idxPicoTaggedEs.size());
     mPicoNpeEvent->nPartners(idxPicoPartnerEs.size());
