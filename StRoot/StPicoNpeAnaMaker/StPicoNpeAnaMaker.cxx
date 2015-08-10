@@ -252,9 +252,11 @@ Int_t StPicoNpeAnaMaker::Make()
                     setVariables(epair);
                     if (pairCharge == 0) fillHistogram(0); // US
                     else fillHistogram(1);                 // LS
+                    cout << "!" ;
                 }
             } // .. end make electron pairs
         } // .. end of tagged e loop
+        cout << endl;
     }
     else {
         // Photonic Electron
@@ -268,8 +270,10 @@ Int_t StPicoNpeAnaMaker::Make()
                 setVariables(epair);
                 if (pairCharge == 0) fillHistogram(0); // US
                 else fillHistogram(1);                 // LS
+                cout << "?";
             }
         }
+        cout << endl;
     }
     
     idxPicoTaggedEs.clear();
