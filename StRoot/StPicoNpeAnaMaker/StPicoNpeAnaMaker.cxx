@@ -240,20 +240,26 @@ Int_t StPicoNpeAnaMaker::Make()
         }
         
     }
-    
+    int ncheck = 0;
+    cout << "CHECK !!" << endl; ncheck++;
     if (cutsAna::isRecoPhE) {
+        cout << "CHECK !!" << endl; ncheck++;
         
         for (unsigned short ik = 0; ik < idxPicoTaggedEs.size(); ++ik)
         {
+            cout << "CHECK !!" << endl; ncheck++;
             StPicoTrack const * electron = picoDst->track(idxPicoTaggedEs[ik]);
             // make electron pairs
             for (unsigned short ip = 0; ip < idxPicoPartnerEs.size(); ++ip)
             {
+                cout << "CHECK !!" << endl; ncheck++;
                 if (idxPicoTaggedEs[ik] == idxPicoPartnerEs[ip]) continue;
+                cout << "CHECK !!" << endl; ncheck++;
                 StPicoTrack const * partner = picoDst->track(idxPicoPartnerEs[ip]);
                 StElectronPair * epair =  new StElectronPair(electron, partner, idxPicoTaggedEs[ik], idxPicoPartnerEs[ip], bField);
                 if (isGoodPair(epair))
                 {
+                    cout << "CHECK !!" << endl; ncheck++;
                     setVariables(epair);
                     if (pairCharge == 0) fillHistogram(0); // US
                     else fillHistogram(1);                 // LS
