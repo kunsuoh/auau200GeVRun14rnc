@@ -252,9 +252,6 @@ Int_t StPicoNpeAnaMaker::Make()
                     setVariables(epair);
                     if (pairCharge == 0) fillHistogram(0); // US
                     else fillHistogram(1);                 // LS
-                    
-                    // QA
-                    cout << pairMass << endl;
                 }
             } // .. end make electron pairs
         } // .. end of tagged e loop
@@ -298,7 +295,7 @@ bool StPicoNpeAnaMaker::isGoodPair(StElectronPair const* const epair) const
     isGoodPartner(partner) &&
     epair->pairMass() < cutsAna::pairMass &&
     epair->pairDca() < cutsAna::pairDca &&
-    ((cutsAna::isRecoPhE && pairPositionX < 200 && pairPositionY < 200 && pairPositionZ < 200) || !cutsAna::isRecoPhE)
+    ((cutsAna::isRecoPhE && fabs(pairPositionX) < 200. && fabs(pairPositionY) < 200. && fabs(pairPositionZ) < 200.) || !cutsAna::isRecoPhE)
     ;
 }
 //-----------------------------------------------------------------------------
