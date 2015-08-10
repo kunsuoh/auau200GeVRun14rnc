@@ -244,14 +244,12 @@ Int_t StPicoNpeAnaMaker::Make()
     if (cutsAna::isRecoPhE) {
         for (unsigned short ik = 0; ik < idxPicoTaggedEs.size(); ++ik)
         {
-            cout << "CHECK !!" << ncheck << " " << ik << endl; ncheck++;
             StPicoTrack const * electron = picoDst->track(idxPicoTaggedEs[ik]);
             // make electron pairs
             for (unsigned short ip = 0; ip < idxPicoPartnerEs.size(); ++ip)
             {
-                cout << "CHECK !!" << ncheck << " " << ip << endl; ncheck++;
                 if (idxPicoTaggedEs[ik] == idxPicoPartnerEs[ip]) continue;
-                cout << "CHECK !!" << ncheck << endl; ncheck++;
+                cout << "CHECK !!" << ncheck<< " " << ik << " " << ip <<endl; ncheck++;
                 StPicoTrack const * partner = picoDst->track(idxPicoPartnerEs[ip]);
                 StElectronPair * epair =  new StElectronPair(electron, partner, idxPicoTaggedEs[ik], idxPicoPartnerEs[ip], bField);
                 if (isGoodPair(epair))
