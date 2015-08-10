@@ -240,9 +240,6 @@ Int_t StPicoNpeAnaMaker::Make()
         
     }
     
-    mPicoNpeEvent->nElectrons(idxPicoTaggedEs.size());
-    mPicoNpeEvent->nPartners(idxPicoPartnerEs.size());
-
     for (unsigned short ik = 0; ik < idxPicoTaggedEs.size(); ++ik)
     {
         
@@ -271,7 +268,7 @@ Int_t StPicoNpeAnaMaker::Make()
         } // .. end make electron pairs
     } // .. end of tagged e loop
     
-    
+    /*
     // Photonic Electron
     TClonesArray const * aElectronPair = mPicoNpeEvent->electronPairArray();
     for (int idx = 0; idx < aElectronPair->GetEntries(); ++idx)
@@ -290,7 +287,7 @@ Int_t StPicoNpeAnaMaker::Make()
             
         }
     }
-    
+    */
     return kStOK;
 }
 //-----------------------------------------------------------------------------
