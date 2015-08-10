@@ -17,6 +17,7 @@
 #include "StPicoNpeEventMaker/StPicoNpeEvent.h"
 #include "StPicoNpeEventMaker/StPicoNpeEventMaker.h"
 #include "StPicoNpeEventMaker/StElectronPair.h"
+
 #include "StBTofUtil/tofPathLength.hh"
 #include "StLorentzVectorF.hh"
 #include "phys_constants.h"
@@ -233,7 +234,7 @@ Int_t StPicoNpeAnaMaker::Make()
             fillHistogram(3); // hadron
             
             
-            if (isElectron(track)) {
+            if (StPicoNpeEventMaker::isElectron(track)) {
                 idxPicoTaggedEs.push_back(iTrack);
                 StElectronTrack electronTrack((StPicoTrack const *)track, iTrack);
                 mPicoNpeEvent->addElectron(&electronTrack);
