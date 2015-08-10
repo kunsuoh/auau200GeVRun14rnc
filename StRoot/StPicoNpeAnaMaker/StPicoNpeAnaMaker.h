@@ -79,9 +79,7 @@ class StPicoNpeAnaMaker : public StMaker
     void setVariables(StElectronPair *);
     void fillHistogram(int);
     void fillHistogram(int,int,int);
-    void fillHistogramPID(int,int,int,int);
-    void fillHistogramPID(int);
-    void fillHistogramPID(int,int,int);
+    void fillHistogram(int,int,int,int);
     void setHistogram(int,int,int,int);
     int getPtBin(double);
     bool isBHTevent();
@@ -131,6 +129,7 @@ class StPicoNpeAnaMaker : public StMaker
     Float_t e2;
     Float_t e3;
     Float_t eoverp;
+    Float_t adc0;
     
     unsigned char neta;
     unsigned char nphi;
@@ -149,6 +148,7 @@ class StPicoNpeAnaMaker : public StMaker
     TH1F * histo[10][10][10][12];
     TH1F * histoTofMass[10];
     TH1F * histoNSigE[10][10];
+    TH2F * histo2d[10][10];
     int nptbin;
     int npid;
     int ntype;

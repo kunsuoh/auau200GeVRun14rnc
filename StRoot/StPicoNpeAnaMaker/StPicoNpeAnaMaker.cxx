@@ -82,7 +82,7 @@ Int_t StPicoNpeAnaMaker::Init()
         hRefMultWt[i]->Sumw2();
     }
 
-    setHistogram(6,6,6,12);
+    setHistogram(6,8,4,12);  // nPt, nPid, nType, nHisto
 
     return kStOK;
 }
@@ -114,13 +114,18 @@ Int_t StPicoNpeAnaMaker::Finish()
     hRefMultWt[1]->Write();
     
     for (int l=0;l<12;l++) // Histograms
-    for (int j=0;j<6;j++) // PID
+    for (int j=0;j<8;j++) // PID
     for (int i=1;i<6;i++) // PT
     for (int k=0;k<4;k++) // Particle:Type
          histo[i][j][k][l]->Write();
 
-    for (int i=1;i<6;i++) histoTofMass[i]->Write(); // tofmass
-    for (int i=1;i<6;i++) for (int j=0;j<3;j++) histoNSigE[i][j]->Write();
+    for (int j=0;j<8;j++) // PID
+    for (int i=1;i<6;i++) // PT
+        histo2d[i][j]->Write();
+    
+    
+//    for (int i=1;i<6;i++) histoTofMass[i]->Write(); // tofmass
+//    for (int i=1;i<6;i++) for (int j=0;j<3;j++) histoNSigE[i][j]->Write();
 //    for (int j=2;j<6;j++) for (int i=1;i<6;i++) histo[i][j][2][2]->Write();
 //    for (int j=0;j<6;j++) for (int i=1;i<6;i++) for (int k=0;k<2;k++) histo[i][j][k][3]->Write();
  
@@ -222,8 +227,6 @@ Int_t StPicoNpeAnaMaker::Make()
             setVariables(track);
             fillHistogram(2); // electron
             fillHistogram(3); // hadron
-            fillHistogramPID(2); // nEta, nPhi, e0/p for Inclusive E
-            fillHistogramPID(3); // nEta, nPhi, e0/p for Hadron
         }
         
     }
@@ -240,11 +243,9 @@ Int_t StPicoNpeAnaMaker::Make()
             setVariables(epair);
             if (pairCharge == 0) {                  // US
                 fillHistogram(0);
-                fillHistogramPID(0);
             }
             else {                                  // LS
                 fillHistogram(1);
-                fillHistogramPID(1);
             }
             
         }
@@ -399,6 +400,7 @@ void StPicoNpeAnaMaker::setVariables(StPicoTrack * track)
         etaTowDist = Emc->etaTowDist();
         phiTowDist = Emc->phiTowDist();
         nphieta = nphi+neta;
+        adc0 = Emc->adc0();
     }
 }
 //-----------------------------------------------------------------------------
@@ -454,6 +456,8 @@ void StPicoNpeAnaMaker::setHistogram(int nptbin,int npid,int ntype,int nhisto)
         for (int j=0;j<npid;j++) {
             histoNSigE[i][j] =  new TH1F(Form("histoNSigE_%d_%d",i,j),Form("histoNSigE_%d_%d",i,j),1301,-13,13);
             histoNSigE[i][j]->Sumw2();
+            histo2d[i][j] = new TH2F(Form("histo2D_%d_%d",i,j),Form("histo2D_%d_%d",i,j),100,0,100,100,0,20);
+            histo2d[i][j]->Sumw2();
         }
         for (int j=0;j<npid;j++)
             for (int k=0;k<ntype;k++)
@@ -490,89 +494,29 @@ int StPicoNpeAnaMaker::getPtBin(double pt) {
     
     return nPt;
 }
-//-------------------------------------------------------------------------------
-void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType){
-    histo[(const int)iPt][(const int)iPid][(const int)iType][0]->Fill(nsige,weight);
-    if (iType < 2) {
-        if (nsige > 0) {
-            histo[(const int)iPt][(const int)iPid][(const int)iType][1]->Fill(dca,weight);
-            histo[(const int)iPt][(const int)iPid][(const int)iType][3]->Fill(pairMass,weight);
-        }
-    }
-    else {
-        if (iType==2) {
-            if (fabs(nsigpion) < 2 ) {
-                histo[(const int)iPt][(const int)iPid][(const int)iType][1]->Fill(dca,weight);
-                histo[(const int)iPt][(const int)iPid][(const int)iType][3]->Fill(pairMass,weight);
-            }
-        }
-        else {
-            histo[(const int)iPt][(const int)iPid][(const int)iType][1]->Fill(dca,weight);
-            histo[(const int)iPt][(const int)iPid][(const int)iType][3]->Fill(pairMass,weight);
-        }
-    }
-    if (iType==2) {
-        float pidCutLw[2][6];
-        float pidCutHi[2][6];
-        pidCutLw[0]={0, -1.2, -1.2, -1.0, -1.0, 0};
-        pidCutHi[0]={0, 1.8, 2.5, 3.0, 3.0, 0};
-        pidCutLw[1]={0, -1.5, -1.4, -1.5, -1.1, 0};
-        pidCutHi[1]={0, 1.8, 2.5, 3.0, 3.0, 0};
-        if (iPid == 2 && nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) histo[iPt][2][2][2]->Fill(dca,weight);
-        if (iPid == 3 && nsige > pidCutLw[1][iPt] && nsige < pidCutHi[1][iPt]) histo[iPt][3][2][2]->Fill(dca,weight);
-        if (iPid == 4 && nsige > pidCutLw[1][iPt] && nsige < pidCutHi[1][iPt]) histo[iPt][4][2][2]->Fill(dca,weight);
-        if (iPid == 5 && nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) histo[iPt][5][2][2]->Fill(dca,weight);
-
-    }
-}
 
 
 //-------------------------------------------------------------------------------
 void StPicoNpeAnaMaker::fillHistogram(int iType){
 
     int iPt = getPtBin(pt);
-    
-    if (isHTEvents >> 0 & 0x1) {
-        fillHistogram(iPt, 0, iType); // PID 0 : TPC
-        if (abs(beta-1) < 0.025) fillHistogram(iPt, 1, iType); // PID 1 : TPC + TOF
-        if (e0/pt/TMath::CosH(eta) > 0.8 && e0/pt/TMath::CosH(eta) < 2) { // PID 2 : TPC + BEMC
-            fillHistogram(iPt, 2, iType);
-            if (nphi > 1 && neta > 1) fillHistogram(iPt, 4, iType); // PID 4 : TPC + BEMC + BSMD for MB
-
-        }
+    if (!isBHTevent()){
+        fillHistogram(iPt, 0, iType);
+        if (isTof())                fillHistogram(iPt, 1, iType);
+        if (isBemc())               fillHistogram(iPt, 2, iType);
+        if (isBemc() && isBsmd())   fillHistogram(iPt, 3, iType);
     }
-    if (isHTEvents >> 1 & 0x1 && e0/pt/TMath::CosH(eta) > 0.8 && e0/pt/TMath::CosH(eta) < 2) { // PID 3 TPC + BEMC + BSMC
-        if (nphi > 1 && neta > 1) fillHistogram(iPt, 3, iType); // PID 3 : TPC + BEMC + BSMD for HT
-        fillHistogram(iPt, 5, iType); // PID 5 : TPC + BEMC for HT
-    }
-    if (iType==3) {
-        histoTofMass[iPt]->Fill(tofmass,weight);
-        if (tofmass < 1 && tofmass > 0.86) histoNSigE[iPt][0]->Fill(nsige,weight); // pion
-        else if (tofmass < 0.55 && tofmass > 0.4) histoNSigE[iPt][1]->Fill(nsige,weight); // kona
-        else if (tofmass < 0.15 && tofmass > 0.12) histoNSigE[iPt][2]->Fill(nsige,weight); // proton
+    if (isBHTevent()){
+        fillHistogram(iPt, 4, iType);
+        if (isTof())               fillHistogram(iPt, 5, iType);
+        if (isBemc())              fillHistogram(iPt, 6, iType);
+        if (isBemc() && isBsmd())  fillHistogram(iPt, 7, iType);
     }
 }
-
-
-
-
-
-
 //-------------------------------------------------------------------------------
-void StPicoNpeAnaMaker::fillHistogramPID(int iType){
-    int iPt = getPtBin(pt);
-    if (!isBHTevent())                           fillHistogramPID(iPt, 0, iType);
-    if (!isBHTevent() && isTof())                fillHistogramPID(iPt, 1, iType);
-    if (!isBHTevent() && isBemc())               fillHistogramPID(iPt, 2, iType);
-    if (!isBHTevent() && isBemc() && isBsmd())   fillHistogramPID(iPt, 4, iType);
-    if (isBHTevent() && isBemc())              fillHistogramPID(iPt, 5, iType);
-    if (isBHTevent() && isBemc() && isBsmd())  fillHistogramPID(iPt, 3, iType);
-    
-}
-
-//-------------------------------------------------------------------------------
-void StPicoNpeAnaMaker::fillHistogramPID(int iPt, int iPid, int iType){
-    if (iType < 2 && nsige > 0) fillHistogramPID(iPt, iPid, iType, 0);
+void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType){
+    histo[(const int)iPt][(const int)iPid][(const int)iType][0]->Fill(nsige,weight);
+    if (iType < 2 && nsige > 0) fillHistogram(iPt, iPid, iType, 0);
     else if (iType==2) {
         float pidCutLw[2][6];
         float pidCutHi[2][6];
@@ -580,16 +524,21 @@ void StPicoNpeAnaMaker::fillHistogramPID(int iPt, int iPid, int iType){
         pidCutHi[0]={0, 1.8, 2.5, 3.0, 3.0, 0};
         pidCutLw[1]={0, -1.5, -1.4, -1.5, -1.1, 0};
         pidCutHi[1]={0, 1.8, 2.5, 3.0, 3.0, 0};
-        if (iPid == 2 && nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) fillHistogramPID(iPt, iPid, iType, 0);
-        if (iPid == 3 && nsige > pidCutLw[1][iPt] && nsige < pidCutHi[1][iPt]) fillHistogramPID(iPt, iPid, iType, 0);
-        if (iPid == 4 && nsige > pidCutLw[1][iPt] && nsige < pidCutHi[1][iPt]) fillHistogramPID(iPt, iPid, iType, 0);
-        if (iPid == 5 && nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) fillHistogramPID(iPt, iPid, iType, 0);
+        if (iPid == 2 && nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) fillHistogram(iPt, iPid, iType, 0);
+        if (iPid == 3 && nsige > pidCutLw[1][iPt] && nsige < pidCutHi[1][iPt]) fillHistogram(iPt, iPid, iType, 0);
+        if (iPid == 4 && nsige > pidCutLw[1][iPt] && nsige < pidCutHi[1][iPt]) fillHistogram(iPt, iPid, iType, 0);
+        if (iPid == 5 && nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) fillHistogram(iPt, iPid, iType, 0);
+        histo2d[iPt][iPid]->Fill(adc0,pt*TMath::CosH(eta),weight);
     }
-    else if (iType==3 && fabs(nsigpion) < 2) fillHistogramPID(iPt, iPid, iType, 0);
-    
+    else if (iType==3 && fabs(nsigpion) < 2) fillHistogram(iPt, iPid, iType, 0);
 }
 //-------------------------------------------------------------------------------
-void StPicoNpeAnaMaker::fillHistogramPID(int iPt, int iPid, int iType, int dummy){
+void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType, int dummy){
+    histo[(const int)iPt][(const int)iPid][(const int)iType][1]->Fill(nsige,weight);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][2]->Fill(dca,weight);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][3]->Fill(pairMass,weight);
+    
+    // PID QA
     histo[(const int)iPt][(const int)iPid][(const int)iType][4]->Fill(neta,weight);
     histo[(const int)iPt][(const int)iPid][(const int)iType][5]->Fill(nphi,weight);
     histo[(const int)iPt][(const int)iPid][(const int)iType][6]->Fill(e0/pt/TMath::CosH(eta),weight);
@@ -598,6 +547,7 @@ void StPicoNpeAnaMaker::fillHistogramPID(int iPt, int iPid, int iType, int dummy
     histo[(const int)iPt][(const int)iPid][(const int)iType][9]->Fill(etaTowDist,weight);
     histo[(const int)iPt][(const int)iPid][(const int)iType][10]->Fill(phiTowDist,weight);
     histo[(const int)iPt][(const int)iPid][(const int)iType][11]->Fill(nphieta,weight);
+
 }
 
 //-----------------------------------------------------------------------------------
