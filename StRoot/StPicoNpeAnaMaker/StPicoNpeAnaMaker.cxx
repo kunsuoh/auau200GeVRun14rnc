@@ -493,7 +493,7 @@ void StPicoNpeAnaMaker::setHistogram(int nptbin,int npid,int ntype,int nhisto)
         for (int j=0;j<npid;j++) {
             histoNSigE[i][j] =  new TH1F(Form("histoNSigE_%d_%d",i,j),Form("histoNSigE_%d_%d",i,j),1301,-13,13);
             histoNSigE[i][j]->Sumw2();
-            histoPosition[i][j] = new TH2F(Form("histoPosition_%d_%d",i,j),Form("histoPosition_%d_%d",i,j),4000,-200,200,4000,-200,200);
+            histoPosition[i][j] = new TH2F(Form("histoPosition_%d_%d",i,j),Form("histoPosition_%d_%d",i,j),1000,-50,50,1000,-50,50);
             histoPosition[i][j]->Sumw2();
 
         }
