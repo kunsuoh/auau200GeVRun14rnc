@@ -1,7 +1,7 @@
 
 void drawHistogram2(){
 
-    TFile * infile = new TFile("out_28.root");
+    TFile * infile = new TFile("out_33.root");
     TCanvas * cc = new TCanvas("cc","cc",500,500);
     TCanvas * cc2 = new TCanvas("cc2","cc2",500,1000);
     TCanvas * cc3 = new TCanvas("cc3","cc3",500,500);
@@ -21,17 +21,19 @@ void drawHistogram2(){
 
     cc->SetLogy();
     
-    TString pid[6] = {"TPC","TPC+TOF","TPC+BEMC","TPC+BEMC+BSMD (BHT)","TPC+BEMC+BSMD (MB)","TPC+BEMC (BHT)"};
-    double pt[6] = {1.5, 1.8, 2.5, 4.0, 6.5, 10};
+    const int nPid = 8; // 0-7
+    const int nPt = 6;  // 1-5
+
+    TString pid[nPid] = {"TPC (MB)","TPC+TOF (MB)","TPC+BEMC (MB)","TPC+BEMC+BSMD (MB)","TPC (BHT)","TPC+TOF (BHT)","TPC+BEMC (BHT)","TPC+BEMC+BSMD (BHT)"};
+    double pt[nPt] = {1.5, 1.8, 2.5, 4.0, 6.5, 10};
     double hadronNSigEShape[7][6];
     // PID #2
     //float pidCutLw[6] = {0, -1.2, -1.2, -1.0, -1.0,
     //float pidCutHi[6] = {0, 1.8, 2.5, 3.0, 3.0, 0};
     // PID # 3
-    float pidCutLw[6] = {0, -1.5, -1.4, -1.5, -1.1, 0};
-    float pidCutHi[6] = {0, 1.8, 2.5, 3.0, 3.0, 0};
+    float pidCutLw[nPt] = {0, -1.5, -1.4, -1.5, -1.1, 0};
+    float pidCutHi[nPt] = {0, 1.8, 2.5, 3.0, 3.0, 0};
 
-    const int nPid = 6;
 
     TH1F * hYield[nPid];
     TH1F * hRatio[nPid];
@@ -47,76 +49,33 @@ void drawHistogram2(){
     TH1F * hNSigEPion;
     TH1F * hNSigEKaon;
     TH1F * hNSigEProton;
-    TH1F * hEffBemc[2];
-    TH1F * hEffBsmd[2][2];
+    TH1F * hEffBemc[nPid];
+    TH1F * hEffBsmd[nPid][2];
+    
+    TF1 * fitfunHadron = new TF1("fitfunHadron","gaus",-13,13);
+    
     double effBemc[2][5];
-    
-    hEffBemc[0] = new TH1F("hEffBemc_0","hEffBemc_0",5, pt);
-    hEffBemc[1] = new TH1F("hEffBemc_1","hEffBemc_1",5, pt);
-    hEffBsmd[0][0] = new TH1F("hEffBsmd_0_0","hEffBsmd_0_0",5, pt);
-    hEffBsmd[1][0] = new TH1F("hEffBsmd_1_0","hEffBsmd_1_0",5, pt);
-    hEffBsmd[0][1] = new TH1F("hEffBsmd_0_1","hEffBsmd_0_1",5, pt);
-    hEffBsmd[1][1] = new TH1F("hEffBsmd_1_1","hEffBsmd_1_1",5, pt);
-    
+    for (int iPid=0; iPid<nPid; iPid++){
+        hEffBemc[iPid] = new TH1F(Form("hEffBemc_%d",iPid),Form("hEffBemc_%d",iPid),5, pt);
+        hEffBsmd[iPid][0] = new TH1F(Form("hEffBsmd_%d_0",iPid),Form("hEffBsmd_%d_0",iPid),5, pt);
+        hEffBsmd[iPid][1] = new TH1F(Form("hEffBsmd_%d_1",iPid),Form("hEffBsmd_%d_1",iPid),5, pt);
+    }
     TF1 * constant = new TF1("constant" ,"pol0", -0.1, 0.1);
     constant->SetParameter(0,1);
 
-    
- 
-    cout << "=========>START iPt loop ! " << endl;
-    for (int iPt=1; iPt<6; iPt++){
-        cout << "=========>=========>iPt : " << iPt << endl;
-        hNSigEPion = (TH1F*)infile->Get(Form("histoNSigE_%d_0",iPt));
-        hNSigEKaon = (TH1F*)infile->Get(Form("histoNSigE_%d_1",iPt));
-        hNSigEProton = (TH1F*)infile->Get(Form("histoNSigE_%d_2",iPt));
-        TF1 * fitfunHadron = new TF1("fitfunHadron","gaus",-13,13);
-        fitfunHadron->SetParameters(1000,-5,1);
-        
-        cc4->cd()->SetLogy();
-        // pion
-        hNSigEPion->Draw();
-        hNSigEPion->Fit(fitfunHadron,"NOR+");
-        fitfunHadron->SetLineColor(2);
-        fitfunHadron->SetLineStyle(2);
-        fitfunHadron->Draw("same");
-        cc4->SaveAs(Form("~/Desktop/hadron_PionNSigE_pt%d.pdf",iPt));
-        hadronNSigEShape[iPt][0] = fitfunHadron->GetParameter(1);
-        hadronNSigEShape[iPt][1] = fitfunHadron->GetParameter(2);
-        
-        // kaon
-        hNSigEKaon->Draw();
-        hNSigEKaon->Fit(fitfunHadron,"NOR+");
-        fitfunHadron->SetLineColor(2);
-        fitfunHadron->SetLineStyle(2);
-        fitfunHadron->Draw("same");
-        cc4->SaveAs(Form("~/Desktop/hadron_KaonNSigE_pt%d.pdf",iPt));
-        hadronNSigEShape[iPt][2] = fitfunHadron->GetParameter(1);
-        hadronNSigEShape[iPt][3] = fitfunHadron->GetParameter(2);
-        
-        // proton
-        hNSigEProton->Draw();
-        hNSigEProton->Fit(fitfunHadron,"NOR+");
-        fitfunHadron->SetLineColor(2);
-        fitfunHadron->SetLineStyle(2);
-        fitfunHadron->Draw("same");
-        cc4->SaveAs(Form("~/Desktop/hadron_ProtonNSigE_pt%d.pdf",iPt));
-        hadronNSigEShape[iPt][4] = fitfunHadron->GetParameter(1);
-        hadronNSigEShape[iPt][5] = fitfunHadron->GetParameter(2);
-        
-    } // end iPt loop
-    cout << "=========>END iPt loop !" << endl;
 
+    
     cout << "=========>START iPt loop ! " << endl;
-    for (int iPid=0; iPid<6; iPid++){
+    for (int iPid=0; iPid<nPid; iPid++){
         cout << "=========>=========>iPid : " << iPid << endl;
-        hRatio[iPid] = new TH1F(Form("hRatio_%d",iPid),Form("hRatio_%d",iPid),4,pt);
-        hYield[iPid] = new TH1F(Form("hYield_%d",iPid),Form("hYield_%d",iPid),4,pt);
-        hMean[iPid] = new TH1F(Form("hMean_%d",iPid),Form("hMean_%d",iPid),4,pt);
-        hSigma[iPid] = new TH1F(Form("hSigma_%d",iPid),Form("hSigma_%d",iPid),4,pt);
-        hRawYield[iPid] = new TH1F(Form("hRawYield_%d",iPid),Form("hRawYield_%d",iPid),4,pt);
+        hRatio[iPid] = new TH1F(Form("hRatio_%d",iPid),Form("hRatio_%d",iPid),5,pt);
+        hYield[iPid] = new TH1F(Form("hYield_%d",iPid),Form("hYield_%d",iPid),5,pt);
+        hMean[iPid] = new TH1F(Form("hMean_%d",iPid),Form("hMean_%d",iPid),5,pt);
+        hSigma[iPid] = new TH1F(Form("hSigma_%d",iPid),Form("hSigma_%d",iPid),5,pt);
+        hRawYield[iPid] = new TH1F(Form("hRawYield_%d",iPid),Form("hRawYield_%d",iPid),5,pt);
 
         cout << "START iPt loop ! " << endl;
-        for (int iPt=1; iPt<6; iPt++){
+        for (int iPt=1; iPt<nPt; iPt++){
             cout << "=========>=========>=========>iPt : " << iPt << endl;
             double dpt = pt[iPt]-pt[iPt-1];
             
@@ -192,25 +151,17 @@ void drawHistogram2(){
             fitfunE->GetParameters(&par[9]);
         
             fitfunAll->SetParameters(par);
-            
+            if (iPt==1) {
+                fitfunAll->SetParLimits(4, -10,-3);
+                fitfunAll->SetParLimits(1, -10,-3);
+
+            }
         //   fitfunAll->FixParameter(7,4.5);
         //    fitfunAll->FixParameter(8,1);
      //       fitfunAll->FixParameter(10,fitfunE->GetParameter(1));
      //       fitfunAll->FixParameter(11,fitfunE->GetParameter(2));
     //        fitfunAll->FixParameter(10, -0.303934);
     //        fitfunAll->FixParameter(11, 0.952401);
-            
-            if (iPt==1) {
-                fitfunAll->FixParameter(1, hadronNSigEShape[iPt][0]);
-                fitfunAll->FixParameter(2, hadronNSigEShape[iPt][1]);
-                
-                fitfunAll->FixParameter(4, hadronNSigEShape[iPt][2]);
-                fitfunAll->FixParameter(5, hadronNSigEShape[iPt][3]);
-                
-                fitfunAll->FixParameter(7, hadronNSigEShape[iPt][4]);
-                fitfunAll->FixParameter(8, hadronNSigEShape[iPt][5]);
-            }
-            
             
            if (iPt==4) {
                 fitfunAll->FixParameter(6, 0);
@@ -261,7 +212,7 @@ void drawHistogram2(){
             cc3->SaveAs(Form("~/Desktop/IncE_%d_%d.pdf",iPid,iPt));
             cout << iPid << " " << iPt  << " Purity (" << pidCutLw[iPt] << ", " << pidCutHi[iPt] << ") : " << fitfunE->Integral(pidCutLw[iPt],pidCutHi[iPt])/fitfunAll->Integral(pidCutLw[iPt],pidCutHi[iPt]) * 100 << "%" << endl;
             
-            if (iPt < 5) hRawYield[iPid]->SetBinContent(iPt,fitfunE->Integral(-13,13)/dpt);
+            hRawYield[iPid]->SetBinContent(iPt,fitfunE->Integral(-13,13)/dpt);
           //  hRawYield[iPid]->SetBinError(iPt,fitfunE->IntegralError(-13,13)/dpt);
 
         } // end iPt loop
@@ -312,21 +263,20 @@ void drawHistogram2(){
     } // end iPid loop
     cout << "=========>END iPid loop ! " << endl;
     
-    TCanvas * cc4 = new TCanvas("cc4","cc4",500,500);
     //cc4->SetLogy();
+    cc4->cd();
     int i = 0;
-    hRatio[i]->Divide(hYield[3],hYield[2],1,1,"B");
-    hRatio[i]->SetTitle("(BHT)TPC+BEMC+BSMD / (MB)TPC+BEMC");
+    hRatio[i]->Divide(hYield[1],hYield[0],1,1,"B");
+    hRatio[i]->SetTitle("TPC+TOF / TPC (MB)");
     hRatio[i]->SetMaximum(2);
     hRatio[i]->SetMinimum(0);
     hRatio[i]->SetMarkerStyle(20);
     hRatio[i]->Draw("p");
     cc4->SaveAs(Form("~/Desktop/Ratio_%d.pdf",i));
     
-    
     int i = 1;
     hRatio[i]->Divide(hYield[2],hYield[0],1,1,"B");
-    hRatio[i]->SetTitle("TPC+BEMC / TPC only");
+    hRatio[i]->SetTitle("TPC+BEMC / TPC (MB)");
     hRatio[i]->SetMaximum(2);
     hRatio[i]->SetMinimum(0);
     hRatio[i]->SetMarkerStyle(20);
@@ -334,17 +284,18 @@ void drawHistogram2(){
     cc4->SaveAs(Form("~/Desktop/Ratio_%d.pdf",i));
     
     int i = 2;
-    hRatio[i]->Divide(hYield[1],hYield[0],1,1,"B");
-    hRatio[i]->SetTitle("TPC+TOF / TPC only");
+    hRatio[i]->Divide(hYield[3],hYield[2],1,1,"B");
+    hRatio[i]->SetTitle("TPC+BEMC+BSMD / TPC+BEMC (MB)");
     hRatio[i]->SetMaximum(2);
     hRatio[i]->SetMinimum(0);
     hRatio[i]->SetMarkerStyle(20);
     hRatio[i]->Draw("p");
     cc4->SaveAs(Form("~/Desktop/Ratio_%d.pdf",i));
     
+    
     int i = 3;
-    hRatio[i]->Divide(hYield[3],hYield[5],1,1,"B");
-    hRatio[i]->SetTitle("(BHT)TPC+BEMC+BSMD / (BHT)TPC+BEMC");
+    hRatio[i]->Divide(hYield[5],hYield[4],1,1,"B");
+    hRatio[i]->SetTitle("TPC+TOF / TPC (BHT)");
     hRatio[i]->SetMaximum(2);
     hRatio[i]->SetMinimum(0);
     hRatio[i]->SetMarkerStyle(20);
@@ -352,16 +303,26 @@ void drawHistogram2(){
     cc4->SaveAs(Form("~/Desktop/Ratio_%d.pdf",i));
     
     int i = 4;
-    hRatio[i]->Divide(hYield[4],hYield[2],1,1,"B");
-    hRatio[i]->SetTitle("(MB)TPC+BEMC+BSMD / (MB)TPC+BEMC");
+    hRatio[i]->Divide(hYield[6],hYield[4],1,1,"B");
+    hRatio[i]->SetTitle("TPC+BEMC / TPC (BHT)");
     hRatio[i]->SetMaximum(2);
     hRatio[i]->SetMinimum(0);
     hRatio[i]->SetMarkerStyle(20);
     hRatio[i]->Draw("p");
     cc4->SaveAs(Form("~/Desktop/Ratio_%d.pdf",i));
     
+    int i = 5;
+    hRatio[i]->Divide(hYield[7],hYield[6],1,1,"B");
+    hRatio[i]->SetTitle("TPC+BEMC+BSMD / TPC+BEMC (BHT)");
+    hRatio[i]->SetMaximum(2);
+    hRatio[i]->SetMinimum(0);
+    hRatio[i]->SetMarkerStyle(20);
+    hRatio[i]->Draw("p");
+    cc4->SaveAs(Form("~/Desktop/Ratio_%d.pdf",i));
+
     
-    for (int iPid=0; iPid<6; iPid++) for (int iPt=1; iPt<6; iPt++) {
+    
+    for (int iPid=0; iPid<nPid; iPid++) for (int iPt=1; iPt<nPt; iPt++) {
         
         cc8->cd(1)->SetLogy(); // neta
         TH1I * hisQaLS = (TH1I*)infile->Get(Form("histo_%d_%d_1_4",iPt, iPid));
@@ -391,7 +352,7 @@ void drawHistogram2(){
         hisQaPE->Draw("BARsame");
         
         double err1, err2;
-        if (iPid < 2) {
+        if (iPid%4 < 2) {
             hEffBsmd[iPid][0]->SetBinContent(iPt, hisQaPE->IntegralAndError(3,10,err1)/hisQaPE->IntegralAndError(2,10,err2));
             hEffBsmd[iPid][0]->SetBinError(iPt, TMath::Sqrt(err1*err1/hisQaPE->Integral(3,10)/hisQaPE->Integral(3,10) + err2*err2/hisQaPE->Integral(2,10)/hisQaPE->Integral(2,10)));
         }
@@ -481,7 +442,8 @@ void drawHistogram2(){
         hisLS->Draw("psame");
         hisPE->Draw("BARsame");
         
-        if(iPid < 2){
+        if(iPid%4 < 2){
+            fitfunHadron->SetParameters(1,1,1);
             fitfunHadron->SetRange(0.4,1);
             hisPE->Fit(fitfunHadron,"NOR+");
             fitfunHadron->SetRange(0.,3);
@@ -629,7 +591,7 @@ void drawHistogram2(){
         
         
         cc8->SaveAs(Form("~/Desktop/QaHadronBemcBsmd_Pid%d_Pt%d.pdf",iPid,iPt));
-        if (iPid < 2) {
+        if (iPid%4 < 2) {
             
             cout << fitfunHadron->Integral(0,3)<< " " << fitfunHadron->Integral(0.8,2) /fitfunHadron->Integral(0.,3) << endl;
             cout << fitfunHadron->GetParameter(0) << " " << fitfunHadron->GetParameter(1) << " " << fitfunHadron->GetParameter(2) << endl;
@@ -650,6 +612,8 @@ void drawHistogram2(){
             hEffBemc[0]->SetTitle("BEMC PID Efficiency");
             hEffBemc[0]->Draw("");
             hEffBemc[1]->Draw("same");
+            hEffBemc[4]->Draw("same");
+            hEffBemc[5]->Draw("same");
             cc11->SaveAs("~/Desktop/EffBemc.png");
             
             hEffBsmd[0][0]->SetMaximum(1.5);
@@ -662,8 +626,13 @@ void drawHistogram2(){
 
             hEffBsmd[0][0]->Draw("");
             hEffBsmd[1][0]->Draw("same");
+            hEffBsmd[4][0]->Draw("same");
+            hEffBsmd[5][0]->Draw("same");
+            
             hEffBsmd[0][1]->Draw("same");
             hEffBsmd[1][1]->Draw("same");
+            hEffBsmd[4][1]->Draw("same");
+            hEffBsmd[5][1]->Draw("same");
             cc11->SaveAs("~/Desktop/EffBsmd.png");
         }
     }
@@ -671,18 +640,13 @@ void drawHistogram2(){
     cc6->cd();
     cc6->Divide(1,2);
     
-    for (int iPid=0; iPid<6; iPid++) for (int iPt=1; iPt<6; iPt++) {
+    for (int iPid=0; iPid<nPid; iPid++) for (int iPt=1; iPt<nPt; iPt++) {
         cc6->cd(1)->SetLogy();
         TH1F * dum = (TH1F*)infile->Get(Form("histo_%d_%d_2_1",iPt, iPid));
         TH1F * his = (TH1F*)infile->Get(Form("histo_%d_%d_2_2",iPt, iPid));
-        TH1F * hisLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_1",iPt, iPid));
-        TH1F * hisUS = (TH1F*)infile->Get(Form("histo_%d_%d_0_1",iPt, iPid));
+        TH1F * hisLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_2",iPt, iPid));
+        TH1F * hisUS = (TH1F*)infile->Get(Form("histo_%d_%d_0_2",iPt, iPid));
         TH1F * hisPE = new TH1F("hisPE","hisPE",100,-0.1,0.1);
-        dum->Sumw2();
-        his->Sumw2();
-        hisLS->Sumw2();
-        hisUS->Sumw2();
-        hisPE->Sumw2();
         
         hisPE->Add(hisUS,hisLS,1,-1);
         
@@ -709,7 +673,7 @@ void drawHistogram2(){
         cc6->cd(2);
         TH1F * hPairMassUS = (TH1F*)infile->Get(Form("histo_%d_%d_0_3",iPt, iPid));
         TH1F * hPairMassLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_3",iPt, iPid));
-        TH1F * hdum = new TH1F("hdum","hdum",100,0,0.5);
+        TH1F * hdum = new TH1F("hdum","hdum",100,0,0.2);
 
         hPairMassUS->Sumw2();
         hPairMassLS->Sumw2();

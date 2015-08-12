@@ -27,7 +27,7 @@ namespace cutsAna
     unsigned int const triggerLength = 0xFFFF;
     
     // track
-    bool const trackRequireHFT = false;
+    bool const trackRequireHFT = true;
     int const trackNHitsFit = 20;
     int const trackNhitsDedx = 15;
     float const trackEta = 0.7;
