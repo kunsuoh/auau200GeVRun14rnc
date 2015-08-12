@@ -257,7 +257,10 @@ Int_t StPicoNpeAnaMaker::Make()
                     else fillHistogram(1);                 // LS
                     //cout << "1 " << pairMass << " " << epair->pairMass() << " " <<pairDca << " " << pt << " " << eta << " " << dca << " " << nsige << " " << pairPositionX << " " << pairPositionY << " " << pairPositionZ << " " << electron->nHitsFit() << " " << electron->nHitsDedx() <<  " " << partner->nHitsFit() << " " << partner->nHitsDedx() << " " << partner->gPt() << endl;
                 }
+                partner->delete();
+                epair->delete();
             } // .. end make electron pairs
+            electron->delete();
         } // .. end of tagged e loop
     }
     else {
