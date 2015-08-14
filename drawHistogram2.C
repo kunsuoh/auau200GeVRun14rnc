@@ -6,7 +6,7 @@ void drawHistogram2(){
     TCanvas * cc2 = new TCanvas("cc2","cc2",500,1000);
     TCanvas * cc3 = new TCanvas("cc3","cc3",500,500);
     TCanvas * cc4 = new TCanvas("cc4","cc4",500,500);
-    TCanvas * cc5 = new TCanvas("cc5","cc5",500,500);
+    TCanvas * cc5 = new TCanvas("cc5","cc5",500,1000);
     TCanvas * cc6 = new TCanvas("cc6","cc6",500,1000);
     TCanvas * cc7 = new TCanvas("cc7","cc7",500,1000);
     TCanvas * cc8 = new TCanvas("cc8","cc8",1000,1000);
@@ -15,6 +15,7 @@ void drawHistogram2(){
     TCanvas * cc11 = new TCanvas("cc11","cc11",500,500);
     
     cc2->Divide(1,2);
+    cc5->Divide(1,2);
     cc6->Divide(1,2);
     cc7->Divide(1,2);
     cc8->Divide(4,4);
@@ -41,6 +42,7 @@ void drawHistogram2(){
     TH1F * hMean[nPid];
     TH1F * hSigma[nPid];
     TH1F * hRawYield[nPid];
+    TH1F * hRatio[nPid];
     TH1F * hUS;
     TH1F * hLS;
     TH1F * hSignal;
@@ -73,7 +75,7 @@ void drawHistogram2(){
         hMean[iPid] = new TH1F(Form("hMean_%d",iPid),Form("hMean_%d",iPid),5,pt);
         hSigma[iPid] = new TH1F(Form("hSigma_%d",iPid),Form("hSigma_%d",iPid),5,pt);
         hRawYield[iPid] = new TH1F(Form("hRawYield_%d",iPid),Form("hRawYield_%d",iPid),5,pt);
-
+        hRatio[iPid] = new TH1F(Form("hRatio_%d",iPid),Form("hRatio_%d",iPid),5,pt);
         cout << "START iPt loop ! " << endl;
         for (int iPt=1; iPt<nPt; iPt++){
             cout << "=========>=========>=========>iPt : " << iPt << endl;
@@ -245,15 +247,22 @@ void drawHistogram2(){
         cc2->SaveAs(Form("~/Desktop/Yield_Pid%d.pdf",iPid));
         
         // Raw Yield for Inclusive Electrons
-        cc5->cd();
-        cc5->SetLogy();
+        cc5->cd(1)->SetLogy();
         hRawYield[iPid]->SetTitle(pid[iPid]);
         hRawYield[iPid]->SetMarkerStyle(20);
         hRawYield[iPid]->SetMinimum(hYield[iPid]->GetBinContent(1)*10e-7);
         hRawYield[iPid]->SetMaximum(hYield[iPid]->GetBinContent(1)*10e2);
         hRawYield[iPid]->Draw("p");
         hYield[iPid]->Draw("psame");
-
+        
+        cc5->cd(2);
+        
+        hRatio[iPid]->Divide(hYield[iPid],hRawYield[iPid]);
+        hRatio[iPid]->SetMaximum(0.1);
+        hRatio[iPid]->SetMinimum(0.);
+        hRatio[iPid]->SetTitle("");
+        hRatio[iPid]->SetMarkerStyle(20);
+        hRatio[iPid]->Draw("p");
         cc5->SaveAs(Form("~/Desktop/RawYield_Pid%d.pdf",iPid));
         
     } // end iPid loop
@@ -605,7 +614,7 @@ void drawHistogram2(){
             cout << fitfunHadron->Integral(0,3)<< " " << fitfunHadron->Integral(0.8,2) /fitfunHadron->Integral(0.,3) << endl;
             cout << fitfunHadron->GetParameter(0) << " " << fitfunHadron->GetParameter(1) << " " << fitfunHadron->GetParameter(2) << endl;
             // end hadron
-            hEffBemc[iPid]->SetBinContent(iPt, fitfunHadron->Integral(0.33,3) /fitfunHadron->Integral(0.,3));
+            hEffBemc[iPid]->SetBinContent(iPt, fitfunHadron->Integral(0.8,2) /fitfunHadron->Integral(0.,3));
             hEffBemc[iPid]->SetBinError(iPt, TMath::Sqrt(fitfunHadron->IntegralError(0.8,2)*fitfunHadron->IntegralError(0.8,2)/fitfunHadron->Integral(0.8,2)/fitfunHadron->Integral(0.8,2) + fitfunHadron->IntegralError(0.,3)*fitfunHadron->IntegralError(0.,3)/fitfunHadron->Integral(0.,3)/fitfunHadron->Integral(0.,3)));
         }
         if (iPid == 1 && iPt == 5)    {
