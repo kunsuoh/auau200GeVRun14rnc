@@ -84,6 +84,8 @@ class StPicoNpeAnaMaker : public StMaker
     int getPtBin(double);
     bool isBHTevent();
     bool isBemc();
+    bool isBemc2();
+    bool isBemc3();
     bool isBsmd();
     bool isTof();
     
@@ -146,7 +148,7 @@ class StPicoNpeAnaMaker : public StMaker
 
     TH1F * hRefMult[5];
     TH1F * hRefMultWt[5];
-    TH1F * histo[10][10][10][12];
+    TH1F * histo[10][14][10][14];
     TH1F * histoTofMass[10];
     TH1F * histoNSigE[10][10];
     TH2F * histo2d[10];

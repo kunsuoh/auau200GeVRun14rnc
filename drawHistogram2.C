@@ -15,6 +15,7 @@ void drawHistogram2(){
     TCanvas * cc11 = new TCanvas("cc11","cc11",500,500);
     
     cc2->Divide(1,2);
+    cc6->Divide(1,2);
     cc7->Divide(1,2);
     cc8->Divide(4,4);
     cc9->Divide(4,2);
@@ -54,7 +55,6 @@ void drawHistogram2(){
     
     TF1 * fitfunHadron = new TF1("fitfunHadron","gaus",-13,13);
     
-    double effBemc[2][5];
     for (int iPid=0; iPid<nPid; iPid++){
         hEffBemc[iPid] = new TH1F(Form("hEffBemc_%d",iPid),Form("hEffBemc_%d",iPid),5, pt);
         hEffBsmd[iPid][0] = new TH1F(Form("hEffBsmd_%d_0",iPid),Form("hEffBsmd_%d_0",iPid),5, pt);
@@ -79,15 +79,18 @@ void drawHistogram2(){
             cout << "=========>=========>=========>iPt : " << iPt << endl;
             double dpt = pt[iPt]-pt[iPt-1];
             
-            hUS = (TH1F*)infile->Get(Form("histo_%d_%d_0_0",iPt,iPid));hUS->Sumw2();
-            hLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_0",iPt,iPid));hLS->Sumw2();
-            hIncE = (TH1F*)infile->Get(Form("histo_%d_%d_2_0",iPt,iPid));hIncE->Sumw2();
+            hUS = (TH1F*)infile->Get(Form("histo_%d_%d_0_0",iPt,iPid));
+            hLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_0",iPt,iPid));
+            hIncE = (TH1F*)infile->Get(Form("histo_%d_%d_2_0",iPt,iPid));
             
             hSignal = (TH1F*)hUS->Clone();
             hSignal->Add(hLS,-1);
             
-            TF1 * fitfun = new TF1("fitfun","gaus",-2,3);
+            TF1 * fitfun = new TF1("fitfun","gaus",-3,3);
             fitfun->SetParameters(hSignal->GetMaximum(),0,1);
+            fitfun->SetParLimits(1,-0.8,0.8);
+            fitfun->SetParLimits(2,0.5 ,1.5);
+
             hSignal->Fit(fitfun,"NOR+");
             
             hUS->SetTitle(Form("%s, %.1f < pT < %.1f",pid[iPid].Data(),pt[iPt-1],pt[iPt]));
@@ -125,64 +128,57 @@ void drawHistogram2(){
             cc3->cd()->SetLogy();
        //     hIncE->SetTitle(Form("%s, %.1f < pT < %.1f",pid[iPid].Data(),pt[iPt-1],pt[iPt]));
             hIncE->Draw();
-            TF1 * fitfunPion = new TF1("fitfunPion","gaus",-10,-6);
-            TF1 * fitfunKaon = new TF1("fitfunKaon","gaus",-6,-3);
-            TF1 * fitfunMerged= new TF1("fitfunMerged","gaus",4.5,8);
-            TF1 * fitfunE = new TF1("fitfunE","gaus",-1,2);
+            TF1 * fitfunPion = new TF1("fitfunPion","gaus",-6,-2.5);
+            TF1 * fitfunKaon = new TF1("fitfunKaon","gaus",-10,-6);
+            TF1 * fitfunMerged= new TF1("fitfunMerged","gaus",3,8);
+            TF1 * fitfunE = new TF1("fitfunE","gaus",-1,1);
             TF1 * fitfunAll= new TF1("fitfunAll","gaus(0)+gaus(3)+gaus(6)+gaus(9)",-13,13);
-            
-            fitfunPion->SetParameters(20000,-7,1);
-            fitfunKaon->SetParameters(20000,-3,1);
-            fitfunMerged->SetParameters(10,5,1);
-            fitfunE->SetParameters(1000,-0.297203,0.963029);
+
+            fitfunPion->SetParameters(hIncE->GetMaximum()-1,-3,1);
+            fitfunKaon->SetParameters(hIncE->GetMaximum()-1,-7,1);
+            fitfunMerged->SetParameters(hIncE->GetMaximum()/10-1,5,1);
+            fitfunE->SetParameters(hIncE->GetMaximum()-1,-0.297203,0.963029);
 
             fitfunE->FixParameter(1,fitfun->GetParameter(1));
             fitfunE->FixParameter(2,fitfun->GetParameter(2));
             
-            hIncE->Fit(fitfunPion,"NOR+");
-            hIncE->Fit(fitfunKaon,"NOR+");
-            hIncE->Fit(fitfunMerged,"NOR+");
-            hIncE->Fit(fitfunE,"NOR+");
+     //       hIncE->Fit(fitfunPion,"NOR+");
+     //       hIncE->Fit(fitfunKaon,"NOR+");
+     //       hIncE->Fit(fitfunMerged,"NOR+");
+     //       hIncE->Fit(fitfunE,"NOR+");
         
             double par[12];
             fitfunPion->GetParameters(&par[0]);
             fitfunKaon->GetParameters(&par[3]);
             fitfunMerged->GetParameters(&par[6]);
             fitfunE->GetParameters(&par[9]);
-        
-            fitfunAll->SetParameters(par);
-            if (iPt==1) {
-                fitfunAll->SetParLimits(4, -10,-3);
-                fitfunAll->SetParLimits(1, -10,-3);
 
-            }
-        //   fitfunAll->FixParameter(7,4.5);
-        //    fitfunAll->FixParameter(8,1);
-     //       fitfunAll->FixParameter(10,fitfunE->GetParameter(1));
-     //       fitfunAll->FixParameter(11,fitfunE->GetParameter(2));
-    //        fitfunAll->FixParameter(10, -0.303934);
-    //        fitfunAll->FixParameter(11, 0.952401);
-            
-           if (iPt==4) {
-                fitfunAll->FixParameter(6, 0);
-                fitfunAll->SetParLimits(4,-3.5.,-2.5);
-                fitfunAll->SetParLimits(1,-6,-5);
-            }
-            
+
+            fitfunAll->SetParameters(par);
             fitfunAll->SetParLimits(0,1,hIncE->GetMaximum());
             fitfunAll->SetParLimits(3,1,hIncE->GetMaximum());
-       //     fitfunAll->SetParLimits(6,1,1e10);
+            fitfunAll->SetParLimits(6,1,hIncE->GetMaximum()/10);
             fitfunAll->SetParLimits(9,1,hIncE->GetMaximum());
-            
-            fitfunAll->SetParLimits(8,0.5,1.5);
-            fitfunAll->SetParLimits(7,3,7);
 
-            fitfunAll->SetParLimits(11,0.5,1.5);
+            fitfunAll->SetParLimits(1,-5,-2);
+            fitfunAll->SetParLimits(2,0.5,1.5);
+            
+            fitfunAll->SetParLimits(4,-10,-4);
+            fitfunAll->SetParLimits(5,0.5,1.5);
+            
+            fitfunAll->SetParLimits(7,2.,10);
+            fitfunAll->SetParLimits(8,0.5,1.5);
+        
             fitfunAll->SetParLimits(10,-0.5,0.5);
+            fitfunAll->SetParLimits(11,0.5 ,1.5);
+            //fitfunAll->FixParameter(10,-0.297203);
+            //fitfunAll->FixParameter(11,0.963029);
+            
 
             hIncE->Fit(fitfunAll,"NOR+");
             
             fitfunAll->GetParameters(&par[0]);
+
             
             fitfunPion->SetParameters(&par[0]);
             fitfunKaon->SetParameters(&par[3]);
@@ -198,6 +194,7 @@ void drawHistogram2(){
             fitfunKaon->SetLineColor(2);
             fitfunMerged->SetLineColor(2);
             fitfunE->SetLineColor(4);
+            
             fitfunAll->SetLineWidth(4);
             fitfunAll->SetLineStyle(2);
             fitfunAll->SetLineColor(6);
@@ -250,7 +247,6 @@ void drawHistogram2(){
         // Raw Yield for Inclusive Electrons
         cc5->cd();
         cc5->SetLogy();
-        hRawYield[iPid]->Sumw2();
         hRawYield[iPid]->SetTitle(pid[iPid]);
         hRawYield[iPid]->SetMarkerStyle(20);
         hRawYield[iPid]->SetMinimum(hYield[iPid]->GetBinContent(1)*10e-7);
@@ -262,6 +258,7 @@ void drawHistogram2(){
         
     } // end iPid loop
     cout << "=========>END iPid loop ! " << endl;
+
     
     //cc4->SetLogy();
     cc4->cd();
@@ -319,9 +316,8 @@ void drawHistogram2(){
     hRatio[i]->SetMarkerStyle(20);
     hRatio[i]->Draw("p");
     cc4->SaveAs(Form("~/Desktop/Ratio_%d.pdf",i));
+    
 
-    
-    
     for (int iPid=0; iPid<nPid; iPid++) for (int iPt=1; iPt<nPt; iPt++) {
         
         cc8->cd(1)->SetLogy(); // neta
@@ -351,11 +347,14 @@ void drawHistogram2(){
         hisQaLS->Draw("psame");
         hisQaPE->Draw("BARsame");
         
+        
         double err1, err2;
         if (iPid%4 < 2) {
             hEffBsmd[iPid][0]->SetBinContent(iPt, hisQaPE->IntegralAndError(3,10,err1)/hisQaPE->IntegralAndError(2,10,err2));
             hEffBsmd[iPid][0]->SetBinError(iPt, TMath::Sqrt(err1*err1/hisQaPE->Integral(3,10)/hisQaPE->Integral(3,10) + err2*err2/hisQaPE->Integral(2,10)/hisQaPE->Integral(2,10)));
         }
+
+        
         
         cc8->cd(2)->SetLogy(); // nphi
         TH1I * hisQaLS = (TH1I*)infile->Get(Form("histo_%d_%d_1_5",iPt, iPid));
@@ -387,6 +386,8 @@ void drawHistogram2(){
             hEffBsmd[iPid][1]->SetBinContent(iPt, hisQaPE->IntegralAndError(3,10,err1)/hisQaPE->IntegralAndError(2,10,err2));
             hEffBsmd[iPid][1]->SetBinError(iPt, TMath::Sqrt(err1*err1/hisQaPE->Integral(3,10)/hisQaPE->Integral(3,10) + err2*err2/hisQaPE->Integral(2,10)/hisQaPE->Integral(2,10)));
         }
+        
+        
         cc8->cd(3)->SetLogy(); // nphieta
         TH1I * hisQaLS = (TH1I*)infile->Get(Form("histo_%d_%d_1_11",iPt, iPid));
         TH1I * hisQaUS = (TH1I*)infile->Get(Form("histo_%d_%d_0_11",iPt, iPid));
@@ -413,6 +414,7 @@ void drawHistogram2(){
         hisQaUS->Draw("p");
         hisQaLS->Draw("psame");
         hisQaPE->Draw("BARsame");
+        
         
         
         cc8->cd(4)->SetLogy(); // e0/p
@@ -443,13 +445,17 @@ void drawHistogram2(){
         hisPE->Draw("BARsame");
         
         if(iPid%4 < 2){
-            fitfunHadron->SetParameters(1,1,1);
-            fitfunHadron->SetRange(0.4,1);
+            fitfunHadron->SetParameters(hisPE->GetMaximum(),0.8,1);
+            fitfunHadron->SetRange(0.4,1.5);
             hisPE->Fit(fitfunHadron,"NOR+");
+            
             fitfunHadron->SetRange(0.,3);
-            fitfunHadron->SetLineColor(1);
+            fitfunHadron->SetLineColor(2);
+            fitfunHadron->SetLineStyle(2);
             fitfunHadron->Draw("same");
         }
+        
+        
         
         cc8->cd(5)->SetLogy(); // zDist
         TH1F * hisLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_7",iPt, iPid));
@@ -478,6 +484,7 @@ void drawHistogram2(){
         hisLS->Draw("psame");
         hisPE->Draw("BARsame");
         
+
         
         cc8->cd(6)->SetLogy(); // phiDist
         TH1F * hisLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_8",iPt, iPid));
@@ -535,6 +542,7 @@ void drawHistogram2(){
         hisLS->Draw("psame");
         hisPE->Draw("BARsame");
         
+
         cc8->cd(8)->SetLogy(); // phiTowDist
         TH1F * hisLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_10",iPt, iPid));
         TH1F * hisUS = (TH1F*)infile->Get(Form("histo_%d_%d_0_10",iPt, iPid));
@@ -562,6 +570,7 @@ void drawHistogram2(){
         hisLS->Draw("psame");
         hisPE->Draw("BARsame");
         
+
         
         
         
@@ -596,7 +605,7 @@ void drawHistogram2(){
             cout << fitfunHadron->Integral(0,3)<< " " << fitfunHadron->Integral(0.8,2) /fitfunHadron->Integral(0.,3) << endl;
             cout << fitfunHadron->GetParameter(0) << " " << fitfunHadron->GetParameter(1) << " " << fitfunHadron->GetParameter(2) << endl;
             // end hadron
-            hEffBemc[iPid]->SetBinContent(iPt, fitfunHadron->Integral(0.8,2) /fitfunHadron->Integral(0.,3));
+            hEffBemc[iPid]->SetBinContent(iPt, fitfunHadron->Integral(0.33,3) /fitfunHadron->Integral(0.,3));
             hEffBemc[iPid]->SetBinError(iPt, TMath::Sqrt(fitfunHadron->IntegralError(0.8,2)*fitfunHadron->IntegralError(0.8,2)/fitfunHadron->Integral(0.8,2)/fitfunHadron->Integral(0.8,2) + fitfunHadron->IntegralError(0.,3)*fitfunHadron->IntegralError(0.,3)/fitfunHadron->Integral(0.,3)/fitfunHadron->Integral(0.,3)));
         }
         if (iPid == 1 && iPt == 5)    {
@@ -636,9 +645,8 @@ void drawHistogram2(){
             cc11->SaveAs("~/Desktop/EffBsmd.png");
         }
     }
-    
+
     cc6->cd();
-    cc6->Divide(1,2);
     
     for (int iPid=0; iPid<nPid; iPid++) for (int iPt=1; iPt<nPt; iPt++) {
         cc6->cd(1)->SetLogy();
@@ -675,8 +683,7 @@ void drawHistogram2(){
         TH1F * hPairMassLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_3",iPt, iPid));
         TH1F * hdum = new TH1F("hdum","hdum",100,0,0.2);
 
-        hPairMassUS->Sumw2();
-        hPairMassLS->Sumw2();
+
         
         hPairMassUS->GetXaxis()->SetRangeUser(0,0.1);
         hPairMassUS->SetMinimum(-1*hPairMassUS->GetMaximum()*0.1);
@@ -742,35 +749,11 @@ void drawHistogram2(){
         
         cc7->SaveAs(Form("~/Desktop/DcaAterPid_Fit_Pid%d_Pt%d.pdf",iPid,iPt));
         
-        TObjArray *mc = new TObjArray(3);        // MC histograms are put in this array
-        hisPE->Divide(constant,glo);
-        dum->Divide(constant,glo);
-        mc->Add(hisPE);
-        mc->Add(dum);
+        delete hdum;
+        delete hisdum;
         
-        TFractionFitter* fit = new TFractionFitter(his, mc); // initialise
-        fit->Constrain(1,0.0,10.0);               // constrain fraction 1 to be between 0 and 1
-        fit->SetRangeX(1,100);                    // use only the first 15 bins in the fit
-        Int_t status = fit->Fit();               // perform the fit
-        std::cout << "fit status: " << status << std::endl;
-        if (status == 0) {                       // check on fit status
-            TH1F* result = (TH1F*) fit->GetPlot();
-            result->SetMarkerStyle(24);
-            result->SetMarkerColor(4);
-            result->SetMarkerSize(1);
-            double aPE, aHD, ePE, eHD;
-            fit->GetResult(0,aPE,ePE);
-            fit->GetResult(1,aHD,eHD);
-            
-            hisPE->Multiply(constant,aPE*glo);
-            dum->Multiply(constant,aHD*glo);
-        }
-        result->Draw("p");
-        his->DrawClone("psame");
-        dum->Draw("psame");
-        hisPE->Draw("psame");
-        
-        
+        delete line;
+ 
     }
     //return 0 ;
     

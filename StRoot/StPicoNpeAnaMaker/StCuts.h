@@ -53,13 +53,15 @@ namespace cutsAna
     float const partnerNSigElectronLow = 0;
     float const partnerNSigElectronHigh = 3;
     
-    int const emcNEta = 0;//1;
-    int const emcNPhi = 0;//1;
-    float const emcEoverPLow = 0;//0.5;
-    float const emcEoverPHigh = 10;//1.7;
-    float const emcPhiDist = 10;//0.013;
-    float const emcZDist = 100;//2;
-    float const emcAssDist = 10;//0.05;
-    float const tofBeta = 1;//0.1;
+    int const emcNEta = 1;
+    int const emcNPhi = 1;
+    float const emcEoverPLow = 0.8;
+    float const emcEoverPHigh = 2.0;
+    float const emcEoverPLow2 = 0.333;
+    float const emcEoverPHigh2 = 3;
+    float const emcPhiDist = 0.015;//0.013;
+    float const emcZDist = 3;//2;
+    float const emcAssDist = 0.06;//0.05;
+    float const tofBeta = 0.025;
 }
 #endif
