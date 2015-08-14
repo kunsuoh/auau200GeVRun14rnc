@@ -468,7 +468,7 @@ void StPicoNpeAnaMaker::setHistogram(int nptbin,int npid,int ntype,int nhisto)
     
     
     for (int j=0; j<npid; j++) {
-        histo2d[j] = new TH2F(Form("histo2D_%d",j),Form("histo2D_%d",j),100,0,20,100,0,500);
+        histo2d[j] = new TH2F(Form("histo2D_%d",j),Form("histo2D_%d",j),100,0,20,200,0,1000);
         histo2d[j]->Sumw2();
 
     }

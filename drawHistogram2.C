@@ -1,7 +1,8 @@
 
-void drawHistogram2(){
-
-    TFile * infile = new TFile("out_33.root");
+void drawHistogram2(int in = 33){
+    
+    TFile * infile = new TFile(Form("out_%d.root", in));
+    TFile * outfile = new TFile(Form("outfile_%d.root",in),"RECREATE");
     TCanvas * cc = new TCanvas("cc","cc",500,500);
     TCanvas * cc2 = new TCanvas("cc2","cc2",500,1000);
     TCanvas * cc3 = new TCanvas("cc3","cc3",500,500);
@@ -66,6 +67,8 @@ void drawHistogram2(){
     constant->SetParameter(0,1);
 
 
+    outfile->cd();
+    infile->Get("hTrigger")->Write();
     
     cout << "=========>START iPt loop ! " << endl;
     for (int iPid=0; iPid<nPid; iPid++){
@@ -116,11 +119,13 @@ void drawHistogram2(){
             
             hUS->Delete();
             hLS->Delete();
-            hSignal->Delete();
+         //   hSignal->Delete();
             
 //            cc->cd();
-            hYield[iPid]->SetBinContent(iPt,fitfun->Integral(-13,13)/dpt);
-            hYield[iPid]->SetBinError(iPt,fitfun->IntegralError(-13,13)/dpt);
+       //     hYield[iPid]->SetBinContent(iPt,fitfun->Integral(-13,13)/dpt);
+       //     hYield[iPid]->SetBinError(iPt,fitfun->IntegralError(-13,13)/dpt);
+            hYield[iPid]->SetBinContent(iPt,hSignal->Integral()/dpt);
+       //     hYield[iPid]->SetBinError(iPt,fitfun->IntegralError(-13,13)/dpt);
             
             hMean[iPid]->SetBinContent(iPt,fitfun->GetParameter(1));
             hMean[iPid]->SetBinError(iPt,fitfun->GetParError(1));
@@ -264,10 +269,12 @@ void drawHistogram2(){
         hRatio[iPid]->SetMarkerStyle(20);
         hRatio[iPid]->Draw("p");
         cc5->SaveAs(Form("~/Desktop/RawYield_Pid%d.pdf",iPid));
-        
+        outfile->cd();
+        hRawYield[iPid]->Write();
+        hYield[iPid]->Write();
     } // end iPid loop
     cout << "=========>END iPid loop ! " << endl;
-
+    outfile->Close();
     
     //cc4->SetLogy();
     cc4->cd();
