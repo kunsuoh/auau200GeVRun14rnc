@@ -121,7 +121,7 @@ Int_t StPicoNpeAnaMaker::Finish()
     for (int k=0;k<4;k++) // Particle:Type
          histo[i][j][k][l]->Write();
 
-    for (int j=0;j<8;j++) // PID
+    for (int j=0;j<16;j++) // PID
         histo2d[j]->Write();
     
  
@@ -542,18 +542,19 @@ void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType){
     else if (iType==2) {
         float pidCutLw[2][6];
         float pidCutHi[2][6];
-        pidCutLw[0]={0, -1.2, -1.2, -1.0, -1.0, 0};
-        pidCutHi[0]={0, 1.8, 2.5, 3.0, 3.0, 0};
+        pidCutLw[0]={0, -1.2, -1.2, -1.0, -1.0, -1.0};
+        pidCutHi[0]={0, 1.8, 2.5, 3.0, 3.0, 3.0};
         pidCutLw[1]={0, -1.5, -1.4, -1.5, -1.1, 0};
         pidCutHi[1]={0, 1.8, 2.5, 3.0, 3.0, 0};
 //        if (iPid == 2 && nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) fillHistogram(iPt, iPid, iType, 0);
 //        if (iPid == 3 && nsige > pidCutLw[1][iPt] && nsige < pidCutHi[1][iPt]) fillHistogram(iPt, iPid, iType, 0);
 //        if (iPid == 4 && nsige > pidCutLw[1][iPt] && nsige < pidCutHi[1][iPt]) fillHistogram(iPt, iPid, iType, 0);
 //        if (iPid == 5 && nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) fillHistogram(iPt, iPid, iType, 0);
-        if (iPid%4 < 3 && nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) fillHistogram(iPt, iPid, iType, 0);
-        if (iPid%4 ==3 && nsige > pidCutLw[1][iPt] && nsige < pidCutHi[1][iPt]) fillHistogram(iPt, iPid, iType, 0);
-        histo2d[iPid]->Fill(pt*TMath::CosH(eta),adc0,weight);
-
+//        if (iPid%4 < 3 && nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) fillHistogram(iPt, iPid, iType, 0);
+        if (nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) {
+            fillHistogram(iPt, iPid, iType, 0);
+            histo2d[iPid]->Fill(pt*TMath::CosH(eta),adc0,weight);
+        }
     }
     else if (iType==3 && fabs(nsigpion) < 2) fillHistogram(iPt, iPid, iType, 0);
 }

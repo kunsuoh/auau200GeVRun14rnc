@@ -1,6 +1,7 @@
 
-void drawHistogram2(int in = 33){
-    
+int drawHistogram2(int in = 38){
+    gSystem->Exec(Form("mkdir -p outdir_%d %d",in));
+
     TFile * infile = new TFile(Form("out_%d.root", in));
     TFile * outfile = new TFile(Form("outfile_%d.root",in),"RECREATE");
     TCanvas * cc = new TCanvas("cc","cc",500,500);
@@ -21,13 +22,14 @@ void drawHistogram2(int in = 33){
     cc7->Divide(1,2);
     cc8->Divide(4,4);
     cc9->Divide(4,2);
-
+    
     cc->SetLogy();
     
-    const int nPid = 8; // 0-7
+    const int nPid = 16; // 0-7
     const int nPt = 6;  // 1-5
+    
+    TString pid[nPid] = {"TpcMB","TpcTofMB","TpcBemcMB","TpcBemc2MB","TpcBsmdMB","TpcBemcBsmdMB","TpcBemc2BsmdMB","TpcBemc3BsmdMB","TpcBHT","TpcTofBHT","TpcBemcBHT","TpcBemc2BHT","TpcBsmdBHT","TpcBemcBsmdBHT","TpcBemc2BsmdBHT","TpcBemc3BsmdBHT"};
 
-    TString pid[nPid] = {"TPC (MB)","TPC+TOF (MB)","TPC+BEMC (MB)","TPC+BEMC+BSMD (MB)","TPC (BHT)","TPC+TOF (BHT)","TPC+BEMC (BHT)","TPC+BEMC+BSMD (BHT)"};
     double pt[nPt] = {1.5, 1.8, 2.5, 4.0, 6.5, 10};
     double hadronNSigEShape[7][6];
     // PID #2
@@ -36,8 +38,8 @@ void drawHistogram2(int in = 33){
     // PID # 3
     float pidCutLw[nPt] = {0, -1.5, -1.4, -1.5, -1.1, 0};
     float pidCutHi[nPt] = {0, 1.8, 2.5, 3.0, 3.0, 0};
-
-
+    
+    
     TH1F * hYield[nPid];
     TH1F * hRatio[nPid];
     TH1F * hMean[nPid];
@@ -47,7 +49,7 @@ void drawHistogram2(int in = 33){
     TH1F * hUS;
     TH1F * hLS;
     TH1F * hSignal;
-
+    
     TH1F * hIncE;
     
     TH1F * hNSigEPion;
@@ -65,8 +67,8 @@ void drawHistogram2(int in = 33){
     }
     TF1 * constant = new TF1("constant" ,"pol0", -0.1, 0.1);
     constant->SetParameter(0,1);
-
-
+    
+    
     outfile->cd();
     infile->Get("hTrigger")->Write();
     
@@ -95,7 +97,7 @@ void drawHistogram2(int in = 33){
             fitfun->SetParameters(hSignal->GetMaximum(),0,1);
             fitfun->SetParLimits(1,-0.8,0.8);
             fitfun->SetParLimits(2,0.5 ,1.5);
-
+            
             hSignal->Fit(fitfun,"NOR+");
             
             hUS->SetTitle(Form("%s, %.1f < pT < %.1f",pid[iPid].Data(),pt[iPt-1],pt[iPt]));
@@ -115,17 +117,15 @@ void drawHistogram2(int in = 33){
             hLS->Draw("same");
             hSignal->Draw("same");
             fitfun->Draw("same");
-            cc->SaveAs(Form("~/Desktop/PhE_Pid%d_Pt%d.pdf",iPid, iPt));
+            cc->SaveAs(Form("outdir_%d/PhE_Pid%d_Pt%d.pdf",in,iPid, iPt));
             
             hUS->Delete();
             hLS->Delete();
-         //   hSignal->Delete();
+            hSignal->Delete();
             
-//            cc->cd();
-       //     hYield[iPid]->SetBinContent(iPt,fitfun->Integral(-13,13)/dpt);
-       //     hYield[iPid]->SetBinError(iPt,fitfun->IntegralError(-13,13)/dpt);
-            hYield[iPid]->SetBinContent(iPt,hSignal->Integral()/dpt);
-       //     hYield[iPid]->SetBinError(iPt,fitfun->IntegralError(-13,13)/dpt);
+            //            cc->cd();
+            hYield[iPid]->SetBinContent(iPt,fitfun->Integral(-13,13)/dpt);
+            hYield[iPid]->SetBinError(iPt,fitfun->IntegralError(-13,13)/dpt);
             
             hMean[iPid]->SetBinContent(iPt,fitfun->GetParameter(1));
             hMean[iPid]->SetBinError(iPt,fitfun->GetParError(1));
@@ -133,40 +133,40 @@ void drawHistogram2(int in = 33){
             hSigma[iPid]->SetBinError(iPt,fitfun->GetParError(2));
             
             cc3->cd()->SetLogy();
-       //     hIncE->SetTitle(Form("%s, %.1f < pT < %.1f",pid[iPid].Data(),pt[iPt-1],pt[iPt]));
+            //     hIncE->SetTitle(Form("%s, %.1f < pT < %.1f",pid[iPid].Data(),pt[iPt-1],pt[iPt]));
             hIncE->Draw();
             TF1 * fitfunPion = new TF1("fitfunPion","gaus",-6,-2.5);
             TF1 * fitfunKaon = new TF1("fitfunKaon","gaus",-10,-6);
             TF1 * fitfunMerged= new TF1("fitfunMerged","gaus",3,8);
             TF1 * fitfunE = new TF1("fitfunE","gaus",-1,1);
             TF1 * fitfunAll= new TF1("fitfunAll","gaus(0)+gaus(3)+gaus(6)+gaus(9)",-13,13);
-
+            
             fitfunPion->SetParameters(hIncE->GetMaximum()-1,-3,1);
             fitfunKaon->SetParameters(hIncE->GetMaximum()-1,-7,1);
             fitfunMerged->SetParameters(hIncE->GetMaximum()/10-1,5,1);
             fitfunE->SetParameters(hIncE->GetMaximum()-1,-0.297203,0.963029);
-
+            
             fitfunE->FixParameter(1,fitfun->GetParameter(1));
             fitfunE->FixParameter(2,fitfun->GetParameter(2));
             
-     //       hIncE->Fit(fitfunPion,"NOR+");
-     //       hIncE->Fit(fitfunKaon,"NOR+");
-     //       hIncE->Fit(fitfunMerged,"NOR+");
-     //       hIncE->Fit(fitfunE,"NOR+");
-        
+            //       hIncE->Fit(fitfunPion,"NOR+");
+            //       hIncE->Fit(fitfunKaon,"NOR+");
+            //       hIncE->Fit(fitfunMerged,"NOR+");
+            //       hIncE->Fit(fitfunE,"NOR+");
+            
             double par[12];
             fitfunPion->GetParameters(&par[0]);
             fitfunKaon->GetParameters(&par[3]);
             fitfunMerged->GetParameters(&par[6]);
             fitfunE->GetParameters(&par[9]);
-
-
+            
+            
             fitfunAll->SetParameters(par);
             fitfunAll->SetParLimits(0,1,hIncE->GetMaximum());
             fitfunAll->SetParLimits(3,1,hIncE->GetMaximum());
             fitfunAll->SetParLimits(6,1,hIncE->GetMaximum()/10);
             fitfunAll->SetParLimits(9,1,hIncE->GetMaximum());
-
+            
             fitfunAll->SetParLimits(1,-5,-2);
             fitfunAll->SetParLimits(2,0.5,1.5);
             
@@ -175,17 +175,17 @@ void drawHistogram2(int in = 33){
             
             fitfunAll->SetParLimits(7,2.,10);
             fitfunAll->SetParLimits(8,0.5,1.5);
-        
+            
             fitfunAll->SetParLimits(10,-0.5,0.5);
             fitfunAll->SetParLimits(11,0.5 ,1.5);
             //fitfunAll->FixParameter(10,-0.297203);
             //fitfunAll->FixParameter(11,0.963029);
             
-
+            
             hIncE->Fit(fitfunAll,"NOR+");
             
             fitfunAll->GetParameters(&par[0]);
-
+            
             
             fitfunPion->SetParameters(&par[0]);
             fitfunKaon->SetParameters(&par[3]);
@@ -213,12 +213,12 @@ void drawHistogram2(int in = 33){
             
             fitfunAll->Draw("same");
             
-            cc3->SaveAs(Form("~/Desktop/IncE_%d_%d.pdf",iPid,iPt));
+            cc3->SaveAs(Form("outdir_%d/IncE_%d_%d.pdf",in,iPid,iPt));
             cout << iPid << " " << iPt  << " Purity (" << pidCutLw[iPt] << ", " << pidCutHi[iPt] << ") : " << fitfunE->Integral(pidCutLw[iPt],pidCutHi[iPt])/fitfunAll->Integral(pidCutLw[iPt],pidCutHi[iPt]) * 100 << "%" << endl;
             
             hRawYield[iPid]->SetBinContent(iPt,fitfunE->Integral(-13,13)/dpt);
-          //  hRawYield[iPid]->SetBinError(iPt,fitfunE->IntegralError(-13,13)/dpt);
-
+            //  hRawYield[iPid]->SetBinError(iPt,fitfunE->IntegralError(-13,13)/dpt);
+            
         } // end iPt loop
         cout << "=========>=========>END iPt loop ! " << endl;
         cc2->cd(1)->SetLogy();
@@ -249,7 +249,7 @@ void drawHistogram2(int in = 33){
         fitfunSigma->Draw("same");
         
         
-        cc2->SaveAs(Form("~/Desktop/Yield_Pid%d.pdf",iPid));
+        cc2->SaveAs(Form("outdir_%d/Yield_Pid%d.pdf",in,iPid));
         
         // Raw Yield for Inclusive Electrons
         cc5->cd(1)->SetLogy();
@@ -268,14 +268,12 @@ void drawHistogram2(int in = 33){
         hRatio[iPid]->SetTitle("");
         hRatio[iPid]->SetMarkerStyle(20);
         hRatio[iPid]->Draw("p");
-        cc5->SaveAs(Form("~/Desktop/RawYield_Pid%d.pdf",iPid));
+        cc5->SaveAs(Form("outdir_%d/RawYield_Pid%d.pdf",in,iPid));
         outfile->cd();
         hRawYield[iPid]->Write();
         hYield[iPid]->Write();
     } // end iPid loop
     cout << "=========>END iPid loop ! " << endl;
-    outfile->Close();
-    
     //cc4->SetLogy();
     cc4->cd();
     int i = 0;
@@ -285,7 +283,7 @@ void drawHistogram2(int in = 33){
     hRatio[i]->SetMinimum(0);
     hRatio[i]->SetMarkerStyle(20);
     hRatio[i]->Draw("p");
-    cc4->SaveAs(Form("~/Desktop/Ratio_%d.pdf",i));
+    cc4->SaveAs(Form("outdir_%d/Ratio_%d.pdf",in,i));
     
     int i = 1;
     hRatio[i]->Divide(hYield[2],hYield[0],1,1,"B");
@@ -294,7 +292,7 @@ void drawHistogram2(int in = 33){
     hRatio[i]->SetMinimum(0);
     hRatio[i]->SetMarkerStyle(20);
     hRatio[i]->Draw("p");
-    cc4->SaveAs(Form("~/Desktop/Ratio_%d.pdf",i));
+    cc4->SaveAs(Form("outdir_%d/Ratio_%d.pdf",in,i));
     
     int i = 2;
     hRatio[i]->Divide(hYield[3],hYield[2],1,1,"B");
@@ -303,7 +301,7 @@ void drawHistogram2(int in = 33){
     hRatio[i]->SetMinimum(0);
     hRatio[i]->SetMarkerStyle(20);
     hRatio[i]->Draw("p");
-    cc4->SaveAs(Form("~/Desktop/Ratio_%d.pdf",i));
+    cc4->SaveAs(Form("outdir_%d/Ratio_%d.pdf",in,i));
     
     
     int i = 3;
@@ -313,7 +311,7 @@ void drawHistogram2(int in = 33){
     hRatio[i]->SetMinimum(0);
     hRatio[i]->SetMarkerStyle(20);
     hRatio[i]->Draw("p");
-    cc4->SaveAs(Form("~/Desktop/Ratio_%d.pdf",i));
+    cc4->SaveAs(Form("outdir_%d/Ratio_%d.pdf",in,i));
     
     int i = 4;
     hRatio[i]->Divide(hYield[6],hYield[4],1,1,"B");
@@ -322,7 +320,7 @@ void drawHistogram2(int in = 33){
     hRatio[i]->SetMinimum(0);
     hRatio[i]->SetMarkerStyle(20);
     hRatio[i]->Draw("p");
-    cc4->SaveAs(Form("~/Desktop/Ratio_%d.pdf",i));
+    cc4->SaveAs(Form("outdir_%d/Ratio_%d.pdf",in,i));
     
     int i = 5;
     hRatio[i]->Divide(hYield[7],hYield[6],1,1,"B");
@@ -331,9 +329,9 @@ void drawHistogram2(int in = 33){
     hRatio[i]->SetMinimum(0);
     hRatio[i]->SetMarkerStyle(20);
     hRatio[i]->Draw("p");
-    cc4->SaveAs(Form("~/Desktop/Ratio_%d.pdf",i));
+    cc4->SaveAs(Form("outdir_%d/Ratio_%d.pdf",in,i));
     
-
+    
     for (int iPid=0; iPid<nPid; iPid++) for (int iPt=1; iPt<nPt; iPt++) {
         
         cc8->cd(1)->SetLogy(); // neta
@@ -369,7 +367,7 @@ void drawHistogram2(int in = 33){
             hEffBsmd[iPid][0]->SetBinContent(iPt, hisQaPE->IntegralAndError(3,10,err1)/hisQaPE->IntegralAndError(2,10,err2));
             hEffBsmd[iPid][0]->SetBinError(iPt, TMath::Sqrt(err1*err1/hisQaPE->Integral(3,10)/hisQaPE->Integral(3,10) + err2*err2/hisQaPE->Integral(2,10)/hisQaPE->Integral(2,10)));
         }
-
+        
         
         
         cc8->cd(2)->SetLogy(); // nphi
@@ -436,7 +434,7 @@ void drawHistogram2(int in = 33){
         cc8->cd(4)->SetLogy(); // e0/p
         TH1F * hisLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_6",iPt, iPid));
         TH1F * hisUS = (TH1F*)infile->Get(Form("histo_%d_%d_0_6",iPt, iPid));
-        TH1F * hisPE = new TH1F("hisPE","hisPE",100,0,3);
+        TH1F * hisPE = new TH1F("hisPE","hisPE",200,0,6);
         
         hisPE->Add(hisUS,hisLS,1,-1);
         
@@ -460,7 +458,7 @@ void drawHistogram2(int in = 33){
         hisLS->Draw("psame");
         hisPE->Draw("BARsame");
         
-        if(iPid%4 < 2){
+        if(iPid%8 < 2){
             fitfunHadron->SetParameters(hisPE->GetMaximum(),0.8,1);
             fitfunHadron->SetRange(0.4,1.5);
             hisPE->Fit(fitfunHadron,"NOR+");
@@ -500,7 +498,7 @@ void drawHistogram2(int in = 33){
         hisLS->Draw("psame");
         hisPE->Draw("BARsame");
         
-
+        
         
         cc8->cd(6)->SetLogy(); // phiDist
         TH1F * hisLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_8",iPt, iPid));
@@ -558,7 +556,7 @@ void drawHistogram2(int in = 33){
         hisLS->Draw("psame");
         hisPE->Draw("BARsame");
         
-
+        
         cc8->cd(8)->SetLogy(); // phiTowDist
         TH1F * hisLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_10",iPt, iPid));
         TH1F * hisUS = (TH1F*)infile->Get(Form("histo_%d_%d_0_10",iPt, iPid));
@@ -586,14 +584,14 @@ void drawHistogram2(int in = 33){
         hisLS->Draw("psame");
         hisPE->Draw("BARsame");
         
-
         
         
         
         
         
         
-   //     cc8->SaveAs(Form("~/Desktop/QaBemcBsmd_Pid%d_Pt%d.pdf",iPid,iPt));
+        
+        //     cc8->SaveAs(Form("outdir_%d/QaBemcBsmd_Pid%d_Pt%d.pdf",iPid,iPt));
         
         
         
@@ -611,12 +609,12 @@ void drawHistogram2(int in = 33){
             hisQaPE->SetLineColor(1);
             
             hisQaPE->Draw("BAR");
-
+            
         }
         
         
-        cc8->SaveAs(Form("~/Desktop/QaHadronBemcBsmd_Pid%d_Pt%d.pdf",iPid,iPt));
-        if (iPid%4 < 2) {
+        cc8->SaveAs(Form("outdir_%d/QaHadronBemcBsmd_Pid%d_Pt%d.pdf",in,iPid,iPt));
+        if (iPid%8 < 2) {
             
             cout << fitfunHadron->Integral(0,3)<< " " << fitfunHadron->Integral(0.8,2) /fitfunHadron->Integral(0.,3) << endl;
             cout << fitfunHadron->GetParameter(0) << " " << fitfunHadron->GetParameter(1) << " " << fitfunHadron->GetParameter(2) << endl;
@@ -639,7 +637,7 @@ void drawHistogram2(int in = 33){
             hEffBemc[1]->Draw("same");
             hEffBemc[4]->Draw("same");
             hEffBemc[5]->Draw("same");
-            cc11->SaveAs("~/Desktop/EffBemc.png");
+            cc11->SaveAs(Form("outdir_%d/EffBemc.png",in));
             
             hEffBsmd[0][0]->SetMaximum(1.5);
             hEffBsmd[0][0]->SetMinimum(0);
@@ -648,7 +646,7 @@ void drawHistogram2(int in = 33){
             
             hEffBsmd[0][1]->SetLineColor(7);
             hEffBsmd[1][1]->SetLineColor(3);
-
+            
             hEffBsmd[0][0]->Draw("");
             hEffBsmd[1][0]->Draw("same");
             hEffBsmd[4][0]->Draw("same");
@@ -658,15 +656,15 @@ void drawHistogram2(int in = 33){
             hEffBsmd[1][1]->Draw("same");
             hEffBsmd[4][1]->Draw("same");
             hEffBsmd[5][1]->Draw("same");
-            cc11->SaveAs("~/Desktop/EffBsmd.png");
+            cc11->SaveAs(Form("outdir_%d/EffBsmd.png",in));
         }
     }
-
+    
     cc6->cd();
     
     for (int iPid=0; iPid<nPid; iPid++) for (int iPt=1; iPt<nPt; iPt++) {
         cc6->cd(1)->SetLogy();
-        TH1F * dum = (TH1F*)infile->Get(Form("histo_%d_%d_2_1",iPt, iPid));
+        TH1F * dum = (TH1F*)infile->Get(Form("histo_%d_%d_3_2",iPt, iPid));
         TH1F * his = (TH1F*)infile->Get(Form("histo_%d_%d_2_2",iPt, iPid));
         TH1F * hisLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_2",iPt, iPid));
         TH1F * hisUS = (TH1F*)infile->Get(Form("histo_%d_%d_0_2",iPt, iPid));
@@ -698,8 +696,8 @@ void drawHistogram2(int in = 33){
         TH1F * hPairMassUS = (TH1F*)infile->Get(Form("histo_%d_%d_0_3",iPt, iPid));
         TH1F * hPairMassLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_3",iPt, iPid));
         TH1F * hdum = new TH1F("hdum","hdum",100,0,0.2);
-
-
+        
+        
         
         hPairMassUS->GetXaxis()->SetRangeUser(0,0.1);
         hPairMassUS->SetMinimum(-1*hPairMassUS->GetMaximum()*0.1);
@@ -728,7 +726,7 @@ void drawHistogram2(int in = 33){
         line->SetLineStyle(2);
         line->SetLineWidth(4);
         line->Draw("same");
-        cc6->SaveAs(Form("~/Desktop/DcaAterPid_Pid%d_Pt%d.pdf",iPid,iPt));
+        cc6->SaveAs(Form("outdir_%d/DcaAterPid_Pid%d_Pt%d.pdf",in,iPid,iPt));
         
         
         
@@ -756,33 +754,33 @@ void drawHistogram2(int in = 33){
         
         
         cc7->cd(2)->SetLogy();
-        TH1F * hisdum = new TH1F("hisdum","hisdum",100,-0.1,0.1);
+        TH1F * hisdum = (TH1F*)his->Clone();
         hisdum->Add(his,dum,1,-1);
         hisdum->SetMaximum(0.1);
         hisdum->SetMinimum(1e-6);
         hisdum->Draw("p");
         hisPE->DrawClone("psame");
         
-        cc7->SaveAs(Form("~/Desktop/DcaAterPid_Fit_Pid%d_Pt%d.pdf",iPid,iPt));
+        cc7->SaveAs(Form("outdir_%d/DcaAterPid_Fit_Pid%d_Pt%d.pdf",in,iPid,iPt));
         
         delete hdum;
         delete hisdum;
         
         delete line;
- 
+        
     }
-    //return 0 ;
     
-
+    
     cc10->cd();
     infile->Get("hTrigger")->Draw();
-    cc10->SaveAs("~/Desktop/Trigger.png");
+    cc10->SaveAs(Form("outdir_%d/Trigger.pdf",in));
+    
     cc10->cd();
     infile->Get("hTriggerWt")->Draw();
-    cc10->SaveAs("~/Desktop/TriggerWt.png");
-}
+    cc10->SaveAs(Form("outdir_%d/TriggerWt.pdf",in));
+    
+  //  outfile->Close();
+    
+  //  return 0 ;
 
-double funHF(double * x, double * par){
-    if (x[0]>0) return TMath::Exp(-1*x[0]*par[1]+par[2])*par[0];
-    else return TMath::Exp(x[0]*par[1]+par[2])*par[0];
 }
