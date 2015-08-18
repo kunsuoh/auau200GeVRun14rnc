@@ -242,8 +242,8 @@ Int_t StPicoNpeAnaMaker::Make()
             fillHistogram(3); // hadron
             
         }
-        if (cutsAna::isRecoPhE && isGoodTagged(track))  idxPicoTaggedEs.push_back(iTrack);
-        if (cutsAna::isRecoPhE && isGoodPartner(track)) idxPicoPartnerEs.push_back(iTrack);
+        if (isGoodTagged(track))  idxPicoTaggedEs.push_back(iTrack);
+        if (isGoodPartner(track)) idxPicoPartnerEs.push_back(iTrack);
         
         
     }
@@ -259,8 +259,15 @@ Int_t StPicoNpeAnaMaker::Make()
             if (isGoodPair(epair))
             {
                 setVariables(epair);
-                if (pairCharge == 0) fillHistogram(4); // US
-                else fillHistogram(5);                 // LS
+                
+                if (electron->isHFTTrack()){             // HFT
+                    if (pairCharge == 0) fillHistogram(4); // US
+                    else fillHistogram(5);                 // LS
+                }
+                else{                               // non HFT
+                    if (pairCharge == 0) fillHistogram(6); // US
+                    else fillHistogram(7);                 // LS
+                }
                 //cout << "1 " << pairMass << " " << epair->pairMass() << " " <<pairDca << " " << pt << " " << eta << " " << dca << " " << nsige << " " << pairPositionX << " " << pairPositionY << " " << pairPositionZ << " " << electron->nHitsFit() << " " << electron->nHitsDedx() <<  " " << partner->nHitsFit() << " " << partner->nHitsDedx() << " " << partner->gPt() << endl;
             }
             delete epair;
@@ -304,7 +311,7 @@ bool StPicoNpeAnaMaker::isGoodPair(StElectronPair const* const epair) const
     isGoodPartner(partner) &&
     epair->pairMass() < cutsAna::pairMass &&
     epair->pairDca() < cutsAna::pairDca &&
-    ((cutsAna::isRecoPhE && fabs(pairPositionX) < 200. && fabs(pairPositionY) < 200. && fabs(pairPositionZ) < 200.) || !cutsAna::isRecoPhE)
+    fabs(pairPositionX) < 200. && fabs(pairPositionY) < 200. && fabs(pairPositionZ) < 200.
     ;
 }
 //-----------------------------------------------------------------------------
@@ -313,7 +320,7 @@ bool StPicoNpeAnaMaker::isGoodTrack(StPicoTrack const * const trk) const
     StPhysicalHelixD eHelix = trk->dcaGeometry().helix();
     
     return
-    (!cutsAna::trackRequireHFT || trk->isHFTTrack()) &&
+  //  (!cutsAna::trackRequireHFT || trk->isHFTTrack()) &&
     trk->nHitsFit() >= cutsAna::trackNHitsFit &&
     trk->nHitsDedx() >= cutsAna::trackNhitsDedx &&
     fabs(trk->gMom(pVtx, bField).pseudoRapidity()) <= cutsAna::trackEta &&
@@ -469,7 +476,7 @@ void StPicoNpeAnaMaker::setHistogram()
         "TpcBHT","TpcTofBHT","TpcBemcBHT","TpcBemc2BHT","TpcBsmdBHT","TpcBemcBsmdBHT","TpcBemc2BsmdBHT","TpcBemc3BsmdBHT",
         "TpcBemc4MB","TpcBemc5MB","TpcBemc4BsmdMB","TpcBemc5BsmdMB",
         "TpcBemc4BHT","TpcBemc5BHT","TpcBemc4BsmdBHT","TpcBemc5BsmdBHT"};
-    TString type[nntype] = {"PhEUS","PhELS","IncE","Pion","RecoPhEUS","RecoPhELS"};
+    TString type[nntype] = {"PhEUS","PhELS","IncE","Pion","RecoHFTPhEUS","RecoHFTPhELS","RecoNonHFTPhEUS","RecoNonHFTPhELS"};
     TString histoname[nnhisto] = {"nSigE","nSigEAfterCut","dca","pairMass","nEta","nPhi","e0/p","zDist","phiDist","etaTowDist","phiTowDist","nphieta","e/p","ConvRadious","pairDca"};
     
     int binHisto[nnhisto] = {    289,    289,    100,    100,    10, 10, 200,    100,    100,    100,    100,    20  ,200    ,500    ,200};
