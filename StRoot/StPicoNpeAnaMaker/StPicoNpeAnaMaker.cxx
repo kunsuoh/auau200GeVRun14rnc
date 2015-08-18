@@ -257,7 +257,6 @@ Int_t StPicoNpeAnaMaker::Make()
             if (idxPicoTaggedEs[ik] == idxPicoPartnerEs[ip]) continue;
             StPicoTrack const * partner = picoDst->track(idxPicoPartnerEs[ip]);
             StElectronPair * epair =  new StElectronPair(electron, partner, idxPicoTaggedEs[ik], idxPicoPartnerEs[ip], bField);
-            cout << "before CHECK!" << endl;
             if (isGoodPair(epair))
             {
                 setVariables(epair);
@@ -313,8 +312,7 @@ bool StPicoNpeAnaMaker::isGoodPair(StElectronPair const* const epair) const
     isGoodTagged(electron) &&
     isGoodPartner(partner) &&
     epair->pairMass() < cutsAna::pairMass &&
-    epair->pairDca() < cutsAna::pairDca &&
-    fabs(pairPositionX) < 200. && fabs(pairPositionY) < 200. && fabs(pairPositionZ) < 200.
+    epair->pairDca() < cutsAna::pairDca //&& fabs(pairPositionX) < 200. && fabs(pairPositionY) < 200. && fabs(pairPositionZ) < 200.
     ;
 }
 //-----------------------------------------------------------------------------
