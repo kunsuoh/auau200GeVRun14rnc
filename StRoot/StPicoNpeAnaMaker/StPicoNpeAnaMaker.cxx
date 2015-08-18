@@ -307,12 +307,12 @@ bool StPicoNpeAnaMaker::isGoodPair(StElectronPair const* const epair) const
     
     StPicoTrack const* electron = mPicoDstMaker->picoDst()->track(epair->electronIdx());
     StPicoTrack const* partner = mPicoDstMaker->picoDst()->track(epair->partnerIdx());
-    
+    cout << fabs(pairPositionX) << " " << fabs(pairPositionY) << " " << fabs(pairPositionZ) << endl;
     return
     isGoodTagged(electron) &&
     isGoodPartner(partner) &&
     epair->pairMass() < cutsAna::pairMass &&
-    epair->pairDca() < cutsAna::pairDca //&& fabs(pairPositionX) < 200. && fabs(pairPositionY) < 200. && fabs(pairPositionZ) < 200.
+    epair->pairDca() < cutsAna::pairDca // && fabs(pairPositionX) < 200. && fabs(pairPositionY) < 200. && fabs(pairPositionZ) < 200.
     ;
 }
 //-----------------------------------------------------------------------------
