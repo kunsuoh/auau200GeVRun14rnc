@@ -257,6 +257,7 @@ Int_t StPicoNpeAnaMaker::Make()
             if (idxPicoTaggedEs[ik] == idxPicoPartnerEs[ip]) continue;
             StPicoTrack const * partner = picoDst->track(idxPicoPartnerEs[ip]);
             StElectronPair * epair =  new StElectronPair(electron, partner, idxPicoTaggedEs[ik], idxPicoPartnerEs[ip], bField);
+            cout << "before CHECK!" << endl;
             if (isGoodPair(epair))
             {
                 setVariables(epair);
