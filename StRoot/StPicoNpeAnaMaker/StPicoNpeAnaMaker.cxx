@@ -238,7 +238,7 @@ Int_t StPicoNpeAnaMaker::Make()
         if (!track) continue;
         if (isGoodTrack(track)) {
             setVariables(track);
-            fillHistogram(2); // electron
+            fillHistogram(2); // electron candidates
             fillHistogram(3); // hadron
             
         }
@@ -247,6 +247,7 @@ Int_t StPicoNpeAnaMaker::Make()
         
         
     }
+    
     for (unsigned short ik = 0; ik < idxPicoTaggedEs.size(); ++ik)
     {
         StPicoTrack const * electron = picoDst->track(idxPicoTaggedEs[ik]);
@@ -259,7 +260,7 @@ Int_t StPicoNpeAnaMaker::Make()
             if (isGoodPair(epair))
             {
                 setVariables(epair);
-                
+                cout << "CHECK!" << endl;
                 if (electron->isHFTTrack()){             // HFT
                     if (pairCharge == 0) fillHistogram(4); // US
                     else fillHistogram(5);                 // LS
@@ -273,6 +274,7 @@ Int_t StPicoNpeAnaMaker::Make()
             delete epair;
         } // .. end make electron pairs
     } // .. end of tagged e loop
+    
     // Photonic Electron
     TClonesArray const * aElectronPair = mPicoNpeEvent->electronPairArray();
     for (int idx = 0; idx < aElectronPair->GetEntries(); ++idx)
