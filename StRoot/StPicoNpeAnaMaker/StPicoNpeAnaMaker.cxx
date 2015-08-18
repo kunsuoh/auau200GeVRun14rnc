@@ -457,13 +457,13 @@ void StPicoNpeAnaMaker::setVariables(StElectronPair * epair)
 void StPicoNpeAnaMaker::setHistogram()
 {
     
-    double ptbin[nnpt] = {0, 1.5, 1.8, 2.5, 4.0, 6.5, 10.};
+    double ptbin[nnpt+1] = {0, 1.5, 1.8, 2.5, 4.0, 6.5, 10.};
     TString pid[nnpid] = {
         "TpcMB","TpcTofMB","TpcBemcMB","TpcBemc2MB","TpcBsmdMB","TpcBemcBsmdMB","TpcBemc2BsmdMB","TpcBemc3BsmdMB",
         "TpcBHT","TpcTofBHT","TpcBemcBHT","TpcBemc2BHT","TpcBsmdBHT","TpcBemcBsmdBHT","TpcBemc2BsmdBHT","TpcBemc3BsmdBHT",
         "TpcBemc4MB","TpcBemc5MB","TpcBemc4BsmdMB","TpcBemc5BsmdMB",
         "TpcBemc4BHT","TpcBemc5BHT","TpcBemc4BsmdBHT","TpcBemc5BsmdBHT"};
-    TString type[nntype] = {"PhEUS","PhELS","IncE","Pion","Kaon","Proton"};
+    TString type[nntype] = {"PhEUS","PhELS","IncE","Pion"};
     TString histoname[nnhisto] = {"nSigE","nSigEAfterCut","dca","pairMass","nEta","nPhi","e0/p","zDist","phiDist","etaTowDist","phiTowDist","nphieta","e/p","ConvRadious","pairDca"};
     
     int binHisto[nnhisto] = {    289,    289,    100,    100,    10, 10, 200,    100,    100,    100,    100,    20  ,200    ,500    ,200};
