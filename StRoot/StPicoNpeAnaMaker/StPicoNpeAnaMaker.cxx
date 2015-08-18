@@ -80,6 +80,8 @@ Int_t StPicoNpeAnaMaker::Init()
     for (int i=0; i<2; i++) {
         hRefMult[i] = new TH1F(Form("hRefMult_%d",i),Form("hRefMult_%d",i),1000,0,1000);
         hRefMultWt[i] = new TH1F(Form("hRefMultWt_%d",i),Form("hRefMultWt_%d",i),1000,0,1000);
+        hTriggerCheck[i] = new  TH1I(Form("hTriggerCheck_%d",i),Form("hTriggerCheck_%d",i),30,0,30);
+        hTriggerCheckWt[i] = new  TH1I(Form("hTriggerCheckWt_%d",i),Form("hTriggerCheckWt_%d",i),30,0,30);
         hRefMult[i]->Sumw2();
         hRefMultWt[i]->Sumw2();
     }
@@ -108,6 +110,10 @@ Int_t StPicoNpeAnaMaker::Finish()
     hZDCxWt->Write();
     hTrigger->Write();
     hTriggerWt->Write();
+    hTriggerCheck[0]->Write();
+    hTriggerCheckWt[0]->Write();
+    hTriggerCheck[1]->Write();
+    hTriggerCheckWt[1]->Write();
     hCheckDoubleTrigger->Write();
     
     hRefMult[0]->Write();
@@ -217,6 +223,10 @@ Int_t StPicoNpeAnaMaker::Make()
     for (int i=0; i<2; i++) if (isHTEvents >> i & 0x1) {
         hRefMult[i]->Fill(mRefMult);
         hRefMultWt[i]->Fill(mRefMult,weight);
+        for (int j=0; j<30; j++) if (picoDst->event()->triggerWord() >> j & 0x1) {
+            hTriggerCheck[i]->Fill(j);
+            hTriggerCheckWt[i]->Fill(j,weight);
+        }
     }
     
     // hadrons & inclusive electron with StPicoTrack
