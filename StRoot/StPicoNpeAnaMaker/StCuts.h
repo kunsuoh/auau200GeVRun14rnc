@@ -59,6 +59,8 @@ namespace cutsAna
     float const emcEoverPHigh = 2.0;
     float const emcEoverPLow2 = 0.333;
     float const emcEoverPHigh2 = 3;
+    float const emcEoverPLow4 = 0.5;
+    float const emcEoverPHigh4 = 1.7;
     float const emcPhiDist = 0.015;//0.013;
     float const emcZDist = 3;//2;
     float const emcAssDist = 0.06;//0.05;

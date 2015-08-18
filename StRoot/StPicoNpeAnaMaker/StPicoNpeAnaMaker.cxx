@@ -84,7 +84,7 @@ Int_t StPicoNpeAnaMaker::Init()
         hRefMultWt[i]->Sumw2();
     }
 
-    setHistogram(6,16,4,15);  // nPt, nPid, nType, nHisto
+    setHistogram(nnpt,nnpid,nntype,nnhisto);  // nPt, nPid, nType, nHisto
 
     return kStOK;
 }
@@ -116,7 +116,7 @@ Int_t StPicoNpeAnaMaker::Finish()
     hRefMultWt[1]->Write();
     
     for (int l=0;l<15;l++) // Histograms
-    for (int j=0;j<16;j++) // PID
+    for (int j=0;j<24;j++) // PID
     for (int i=1;i<6;i++) // PT
     for (int k=0;k<4;k++) // Particle:Type
          histo[i][j][k][l]->Write();
@@ -523,6 +523,10 @@ void StPicoNpeAnaMaker::fillHistogram(int iType){
         if (isBemc() && isBsmd())   fillHistogram(iPt, 5, iType);
         if (isBemc2() && isBsmd())  fillHistogram(iPt, 6, iType);
         if (isBemc3() && isBsmd())  fillHistogram(iPt, 7, iType);
+        if (isBemc4())              fillHistogram(iPt, 16, iType);
+        if (isBemc5())              fillHistogram(iPt, 17, iType);
+        if (isBemc4() && isBsmd())  fillHistogram(iPt, 18, iType);
+        if (isBemc5() && isBsmd())  fillHistogram(iPt, 19, iType);
     }
     if (isBHTevent()){
         fillHistogram(iPt, 8, iType);
@@ -533,7 +537,11 @@ void StPicoNpeAnaMaker::fillHistogram(int iType){
         if (isBemc() && isBsmd())   fillHistogram(iPt, 13, iType);
         if (isBemc2() && isBsmd())  fillHistogram(iPt, 14, iType);
         if (isBemc3() && isBsmd())  fillHistogram(iPt, 15, iType);
-    }
+        if (isBemc4())              fillHistogram(iPt, 20, iType);
+        if (isBemc5())              fillHistogram(iPt, 21, iType);
+        if (isBemc4() && isBsmd())  fillHistogram(iPt, 22, iType);
+        if (isBemc5() && isBsmd())  fillHistogram(iPt, 23, iType);
+}
 }
 //-------------------------------------------------------------------------------
 void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType){
@@ -591,7 +599,15 @@ bool StPicoNpeAnaMaker::isBemc2(){
     else return false;
 }
 bool StPicoNpeAnaMaker::isBemc3(){
-    if (eoverp > cutsAna::emcEoverPLow2 && eoverp < cutsAna::emcEoverPHigh2 && fabs(zDist) < cutsAna::emcZDist && fabs(phiDist) < cutsAna::emcPhiDist && sqrt(etaTowDist*etaTowDist + phiTowDist*phiTowDist) < cutsAna::emcAssDist ) return true;
+    if (isBemc2() && fabs(zDist) < cutsAna::emcZDist && fabs(phiDist) < cutsAna::emcPhiDist && sqrt(etaTowDist*etaTowDist + phiTowDist*phiTowDist) < cutsAna::emcAssDist ) return true;
+    else return false;
+}
+bool StPicoNpeAnaMaker::isBemc4(){
+    if (e/pt/TMath::CosH(eta) > cutsAna::emcEoverPLow4 && e/pt/TMath::CosH(eta) < cutsAna::emcEoverPHigh4) return true;
+    else return false;
+}
+bool StPicoNpeAnaMaker::isBemc5(){
+    if (isBemc42 && fabs(zDist) < cutsAna::emcZDist && fabs(phiDist) < cutsAna::emcPhiDist && sqrt(etaTowDist*etaTowDist + phiTowDist*phiTowDist) < cutsAna::emcAssDist ) return true;
     else return false;
 }
 bool StPicoNpeAnaMaker::isBsmd(){

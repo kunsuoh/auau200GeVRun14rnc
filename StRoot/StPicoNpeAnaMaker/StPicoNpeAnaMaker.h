@@ -86,6 +86,8 @@ class StPicoNpeAnaMaker : public StMaker
     bool isBemc();
     bool isBemc2();
     bool isBemc3();
+    bool isBemc4);
+    bool isBemc5();
     bool isBsmd();
     bool isTof();
     
@@ -148,7 +150,7 @@ class StPicoNpeAnaMaker : public StMaker
 
     TH1F * hRefMult[5];
     TH1F * hRefMultWt[5];
-    TH1F * histo[10][16][10][15];
+    TH1F * histo[10][24][10][15];
     TH1F * histoTofMass[10];
     TH1F * histoNSigE[10][10];
     TH2F * histo2d[10];
@@ -157,7 +159,12 @@ class StPicoNpeAnaMaker : public StMaker
     int npid;
     int ntype;
     int nhisto;
-
+    
+    int const nnpt = 6;
+    int const nnpid = 24;
+    int const nntype = 4;
+    int const nnhisto = 15;
+    
     
     ClassDef(StPicoNpeAnaMaker, 2)
 };
