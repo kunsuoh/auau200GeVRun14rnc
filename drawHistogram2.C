@@ -1,5 +1,5 @@
 
-int drawHistogram2(int in = 38){
+int drawHistogram2(int in = 39){
     gSystem->Exec(Form("mkdir -p outdir_%d %d",in));
 
     TFile * infile = new TFile(Form("out_%d.root", in));
@@ -277,60 +277,170 @@ int drawHistogram2(int in = 38){
     //cc4->SetLogy();
     cc4->cd();
     int i = 0;
-    hRatio[i]->Divide(hYield[1],hYield[0],1,1,"B");
-    hRatio[i]->SetTitle("TPC+TOF / TPC (MB)");
+    int i1= 0;
+    int i2= 1;
+    hRatio[i]->Divide(hYield[i2],hYield[i1],1,1,"B");
+    hRatio[i]->SetTitle(Form("%s / %s",pid[i2].Data(), pid[i1].Data()));
     hRatio[i]->SetMaximum(2);
     hRatio[i]->SetMinimum(0);
     hRatio[i]->SetMarkerStyle(20);
     hRatio[i]->Draw("p");
-    cc4->SaveAs(Form("outdir_%d/Ratio_%d.pdf",in,i));
+    cc4->SaveAs(Form("outdir_%d/Ratio_%d_%d.pdf",in,i2,i1));
     
-    int i = 1;
-    hRatio[i]->Divide(hYield[2],hYield[0],1,1,"B");
-    hRatio[i]->SetTitle("TPC+BEMC / TPC (MB)");
+    
+    int i = 0;
+    int i1= 0;
+    int i2= 2;
+    hRatio[i]->Divide(hYield[i2],hYield[i1],1,1,"B");
+    hRatio[i]->SetTitle(Form("%s / %s",pid[i2].Data(), pid[i1].Data()));
     hRatio[i]->SetMaximum(2);
     hRatio[i]->SetMinimum(0);
     hRatio[i]->SetMarkerStyle(20);
     hRatio[i]->Draw("p");
-    cc4->SaveAs(Form("outdir_%d/Ratio_%d.pdf",in,i));
+    cc4->SaveAs(Form("outdir_%d/Ratio_%d_%d.pdf",in,i2,i1));
     
-    int i = 2;
-    hRatio[i]->Divide(hYield[3],hYield[2],1,1,"B");
-    hRatio[i]->SetTitle("TPC+BEMC+BSMD / TPC+BEMC (MB)");
+    
+    int i = 0;
+    int i1= 0;
+    int i2= 3;
+    hRatio[i]->Divide(hYield[i2],hYield[i1],1,1,"B");
+    hRatio[i]->SetTitle(Form("%s / %s",pid[i2].Data(), pid[i1].Data()));
     hRatio[i]->SetMaximum(2);
     hRatio[i]->SetMinimum(0);
     hRatio[i]->SetMarkerStyle(20);
     hRatio[i]->Draw("p");
-    cc4->SaveAs(Form("outdir_%d/Ratio_%d.pdf",in,i));
+    cc4->SaveAs(Form("outdir_%d/Ratio_%d_%d.pdf",in,i2,i1));
     
     
-    int i = 3;
-    hRatio[i]->Divide(hYield[5],hYield[4],1,1,"B");
-    hRatio[i]->SetTitle("TPC+TOF / TPC (BHT)");
+    int i = 0;
+    int i1= 0;
+    int i2= 4;
+    hRatio[i]->Divide(hYield[i2],hYield[i1],1,1,"B");
+    hRatio[i]->SetTitle(Form("%s / %s",pid[i2].Data(), pid[i1].Data()));
     hRatio[i]->SetMaximum(2);
     hRatio[i]->SetMinimum(0);
     hRatio[i]->SetMarkerStyle(20);
     hRatio[i]->Draw("p");
-    cc4->SaveAs(Form("outdir_%d/Ratio_%d.pdf",in,i));
+    cc4->SaveAs(Form("outdir_%d/Ratio_%d_%d.pdf",in,i2,i1));
     
-    int i = 4;
-    hRatio[i]->Divide(hYield[6],hYield[4],1,1,"B");
-    hRatio[i]->SetTitle("TPC+BEMC / TPC (BHT)");
+    
+    int i = 0;
+    int i1= 4;
+    int i2= 5;
+    hRatio[i]->Divide(hYield[i2],hYield[i1],1,1,"B");
+    hRatio[i]->SetTitle(Form("%s / %s",pid[i2].Data(), pid[i1].Data()));
     hRatio[i]->SetMaximum(2);
     hRatio[i]->SetMinimum(0);
     hRatio[i]->SetMarkerStyle(20);
     hRatio[i]->Draw("p");
-    cc4->SaveAs(Form("outdir_%d/Ratio_%d.pdf",in,i));
+    cc4->SaveAs(Form("outdir_%d/Ratio_%d_%d.pdf",in,i2,i1));
     
-    int i = 5;
-    hRatio[i]->Divide(hYield[7],hYield[6],1,1,"B");
-    hRatio[i]->SetTitle("TPC+BEMC+BSMD / TPC+BEMC (BHT)");
+    
+    int i = 0;
+    int i1= 4;
+    int i2= 6;
+    hRatio[i]->Divide(hYield[i2],hYield[i1],1,1,"B");
+    hRatio[i]->SetTitle(Form("%s / %s",pid[i2].Data(), pid[i1].Data()));
     hRatio[i]->SetMaximum(2);
     hRatio[i]->SetMinimum(0);
     hRatio[i]->SetMarkerStyle(20);
     hRatio[i]->Draw("p");
-    cc4->SaveAs(Form("outdir_%d/Ratio_%d.pdf",in,i));
+    cc4->SaveAs(Form("outdir_%d/Ratio_%d_%d.pdf",in,i2,i1));
     
+    
+    int i = 0;
+    int i1= 4;
+    int i2= 7;
+    hRatio[i]->Divide(hYield[i2],hYield[i1],1,1,"B");
+    hRatio[i]->SetTitle(Form("%s / %s",pid[i2].Data(), pid[i1].Data()));
+    hRatio[i]->SetMaximum(2);
+    hRatio[i]->SetMinimum(0);
+    hRatio[i]->SetMarkerStyle(20);
+    hRatio[i]->Draw("p");
+    cc4->SaveAs(Form("outdir_%d/Ratio_%d_%d.pdf",in,i2,i1));
+    
+    
+    int i = 0;
+    int i1= 8;
+    int i2= 9;
+    hRatio[i]->Divide(hYield[i2],hYield[i1],1,1,"B");
+    hRatio[i]->SetTitle(Form("%s / %s",pid[i2].Data(), pid[i1].Data()));
+    hRatio[i]->SetMaximum(2);
+    hRatio[i]->SetMinimum(0);
+    hRatio[i]->SetMarkerStyle(20);
+    hRatio[i]->Draw("p");
+    cc4->SaveAs(Form("outdir_%d/Ratio_%d_%d.pdf",in,i2,i1));
+    
+    
+    int i = 0;
+    int i1= 8;
+    int i2= 10;
+    hRatio[i]->Divide(hYield[i2],hYield[i1],1,1,"B");
+    hRatio[i]->SetTitle(Form("%s / %s",pid[i2].Data(), pid[i1].Data()));
+    hRatio[i]->SetMaximum(2);
+    hRatio[i]->SetMinimum(0);
+    hRatio[i]->SetMarkerStyle(20);
+    hRatio[i]->Draw("p");
+    cc4->SaveAs(Form("outdir_%d/Ratio_%d_%d.pdf",in,i2,i1));
+    
+    
+    int i = 0;
+    int i1= 8;
+    int i2= 11;
+    hRatio[i]->Divide(hYield[i2],hYield[i1],1,1,"B");
+    hRatio[i]->SetTitle(Form("%s / %s",pid[i2].Data(), pid[i1].Data()));
+    hRatio[i]->SetMaximum(2);
+    hRatio[i]->SetMinimum(0);
+    hRatio[i]->SetMarkerStyle(20);
+    hRatio[i]->Draw("p");
+    cc4->SaveAs(Form("outdir_%d/Ratio_%d_%d.pdf",in,i2,i1));
+    
+    
+    int i = 0;
+    int i1= 8;
+    int i2= 12;
+    hRatio[i]->Divide(hYield[i2],hYield[i1],1,1,"B");
+    hRatio[i]->SetTitle(Form("%s / %s",pid[i2].Data(), pid[i1].Data()));
+    hRatio[i]->SetMaximum(2);
+    hRatio[i]->SetMinimum(0);
+    hRatio[i]->SetMarkerStyle(20);
+    hRatio[i]->Draw("p");
+    cc4->SaveAs(Form("outdir_%d/Ratio_%d_%d.pdf",in,i2,i1));
+    
+    int i = 0;
+    int i1= 12;
+    int i2= 13;
+    hRatio[i]->Divide(hYield[i2],hYield[i1],1,1,"B");
+    hRatio[i]->SetTitle(Form("%s / %s",pid[i2].Data(), pid[i1].Data()));
+    hRatio[i]->SetMaximum(2);
+    hRatio[i]->SetMinimum(0);
+    hRatio[i]->SetMarkerStyle(20);
+    hRatio[i]->Draw("p");
+    cc4->SaveAs(Form("outdir_%d/Ratio_%d_%d.pdf",in,i2,i1));
+
+    int i = 0;
+    int i1= 12;
+    int i2= 14;
+    hRatio[i]->Divide(hYield[i2],hYield[i1],1,1,"B");
+    hRatio[i]->SetTitle(Form("%s / %s",pid[i2].Data(), pid[i1].Data()));
+    hRatio[i]->SetMaximum(2);
+    hRatio[i]->SetMinimum(0);
+    hRatio[i]->SetMarkerStyle(20);
+    hRatio[i]->Draw("p");
+    cc4->SaveAs(Form("outdir_%d/Ratio_%d_%d.pdf",in,i2,i1));
+
+    int i = 0;
+    int i1= 12;
+    int i2= 15;
+    hRatio[i]->Divide(hYield[i2],hYield[i1],1,1,"B");
+    hRatio[i]->SetTitle(Form("%s / %s",pid[i2].Data(), pid[i1].Data()));
+    hRatio[i]->SetMaximum(2);
+    hRatio[i]->SetMinimum(0);
+    hRatio[i]->SetMarkerStyle(20);
+    hRatio[i]->Draw("p");
+    cc4->SaveAs(Form("outdir_%d/Ratio_%d_%d.pdf",in,i2,i1));
+
+
     
     for (int iPid=0; iPid<nPid; iPid++) for (int iPt=1; iPt<nPt; iPt++) {
         
