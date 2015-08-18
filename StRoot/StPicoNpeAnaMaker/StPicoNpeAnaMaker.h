@@ -33,6 +33,12 @@ class StPicoTrack;
 class StPicoDst;
 class StPicoPrescales;
 
+int const nnpt = 6;
+int const nnpid = 24;
+int const nntype = 4;
+int const nnhisto = 15;
+
+
 
 class StPicoNpeAnaMaker : public StMaker
 {
@@ -160,11 +166,6 @@ class StPicoNpeAnaMaker : public StMaker
     
     ClassDef(StPicoNpeAnaMaker, 2)
 };
-
-int const nnpt = 6;
-int const nnpid = 24;
-int const nntype = 4;
-int const nnhisto = 15;
 
 
 inline int StPicoNpeAnaMaker::getEntries() const
