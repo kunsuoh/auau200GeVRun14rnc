@@ -86,7 +86,7 @@ class StPicoNpeAnaMaker : public StMaker
     bool isBemc();
     bool isBemc2();
     bool isBemc3();
-    bool isBemc4);
+    bool isBemc4();
     bool isBemc5();
     bool isBsmd();
     bool isTof();
@@ -160,14 +160,15 @@ class StPicoNpeAnaMaker : public StMaker
     int ntype;
     int nhisto;
     
-    int const nnpt = 6;
-    int const nnpid = 24;
-    int const nntype = 4;
-    int const nnhisto = 15;
-    
     
     ClassDef(StPicoNpeAnaMaker, 2)
 };
+
+int const nnpt = 6;
+int const nnpid = 24;
+int const nntype = 4;
+int const nnhisto = 15;
+
 
 inline int StPicoNpeAnaMaker::getEntries() const
 {
