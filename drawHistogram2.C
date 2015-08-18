@@ -1,5 +1,5 @@
 
-int drawHistogram2(int in = 39){
+int drawHistogram2(int in = 36){
     gSystem->Exec(Form("mkdir -p outdir_%d %d",in));
 
     TFile * infile = new TFile(Form("out_%d.root", in));
@@ -11,7 +11,7 @@ int drawHistogram2(int in = 39){
     TCanvas * cc5 = new TCanvas("cc5","cc5",500,1000);
     TCanvas * cc6 = new TCanvas("cc6","cc6",500,1000);
     TCanvas * cc7 = new TCanvas("cc7","cc7",500,1000);
-    TCanvas * cc8 = new TCanvas("cc8","cc8",1200,1000);
+    TCanvas * cc8 = new TCanvas("cc8","cc8",1200,1500);
     TCanvas * cc9 = new TCanvas("cc9","cc9",1000,500);
     TCanvas * cc10 = new TCanvas("cc10","cc10",500,500);
     TCanvas * cc11 = new TCanvas("cc11","cc11",500,500);
@@ -20,7 +20,7 @@ int drawHistogram2(int in = 39){
     cc5->Divide(1,2);
     cc6->Divide(1,2);
     cc7->Divide(1,2);
-    cc8->Divide(5,4);
+    cc8->Divide(5,6);
     cc9->Divide(4,2);
     
     cc->SetLogy();
@@ -444,7 +444,7 @@ int drawHistogram2(int in = 39){
     
     for (int iPid=0; iPid<nPid; iPid++) for (int iPt=1; iPt<nPt; iPt++) {
         
-        cc8->cd(1)->SetLogy(); // neta
+        cc8->cd(1);//->SetLogy(); // neta
         TH1I * hisQaLS = (TH1I*)infile->Get(Form("histo_%d_%d_1_4",iPt, iPid));
         TH1I * hisQaUS = (TH1I*)infile->Get(Form("histo_%d_%d_0_4",iPt, iPid));
         TH1I * hisQaPE = new TH1I("hisQaPE","hisQaPE",10,0,10);
@@ -480,7 +480,7 @@ int drawHistogram2(int in = 39){
         
         
         
-        cc8->cd(2)->SetLogy(); // nphi
+        cc8->cd(2);//->SetLogy(); // nphi
         TH1I * hisQaLS = (TH1I*)infile->Get(Form("histo_%d_%d_1_5",iPt, iPid));
         TH1I * hisQaUS = (TH1I*)infile->Get(Form("histo_%d_%d_0_5",iPt, iPid));
         TH1I * hisQaPE = new TH1I("hisQaPE","hisQaPE",10,0,10);
@@ -512,7 +512,7 @@ int drawHistogram2(int in = 39){
         }
         
         
-        cc8->cd(3)->SetLogy(); // nphieta
+        cc8->cd(3);//->SetLogy(); // nphieta
         TH1I * hisQaLS = (TH1I*)infile->Get(Form("histo_%d_%d_1_11",iPt, iPid));
         TH1I * hisQaUS = (TH1I*)infile->Get(Form("histo_%d_%d_0_11",iPt, iPid));
         TH1I * hisQaPE = new TH1I("hisQaPE","hisQaPE",20,0,20);
@@ -541,7 +541,7 @@ int drawHistogram2(int in = 39){
         
         
         
-        cc8->cd(4)->SetLogy(); // e0/p
+        cc8->cd(4);//->SetLogy(); // e0/p
         TH1F * hisLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_6",iPt, iPid));
         TH1F * hisUS = (TH1F*)infile->Get(Form("histo_%d_%d_0_6",iPt, iPid));
         TH1F * hisPE = new TH1F("hisPE","hisPE",200,0,6);
@@ -580,7 +580,7 @@ int drawHistogram2(int in = 39){
         }
         
         
-        cc8->cd(5)->SetLogy(); // e/p
+        cc8->cd(5);//->SetLogy(); // e/p
         TH1F * hisLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_12",iPt, iPid));
         TH1F * hisUS = (TH1F*)infile->Get(Form("histo_%d_%d_0_12",iPt, iPid));
         TH1F * hisPE = new TH1F("hisPE","hisPE",200,0,6);
@@ -758,7 +758,8 @@ int drawHistogram2(int in = 39){
         // hadron
         int jj;
         for (int j=0; j<10; j++) {
-            cc8->cd(j+11)->SetLogy(); // neta
+            if (j<5) cc8->cd(j+11);//->SetLogy(); // neta
+            else cc8->cd(j+11)->SetLogy(); // neta
             jj=j;
             if (j==2) jj = 7;
             if (j==3) jj=j-1;
@@ -769,6 +770,27 @@ int drawHistogram2(int in = 39){
             
             hisQaPE->SetFillStyle(3001);
             hisQaPE->SetFillColor(2);
+            hisQaPE->SetLineColor(1);
+            
+            hisQaPE->Draw("BAR");
+            
+        }
+        
+        // electron candidates
+        int jj;
+        for (int j=0; j<10; j++) {
+            if (j<5) cc8->cd(j+21);//->SetLogy(); // neta
+            else cc8->cd(j+21)->SetLogy(); // neta
+            jj=j;
+            if (j==2) jj = 7;
+            if (j==3) jj=j-1;
+            if (j==4) jj = 8;
+            if (j > 4 && j < 9) jj=j-1;
+            if (j==9) jj = 9;
+            TH1I * hisQaPE = (TH1I*)infile->Get(Form("histo_%d_%d_2_%d",iPt, iPid, jj+4));
+            
+            hisQaPE->SetFillStyle(3001);
+            hisQaPE->SetFillColor(4);
             hisQaPE->SetLineColor(1);
             
             hisQaPE->Draw("BAR");
