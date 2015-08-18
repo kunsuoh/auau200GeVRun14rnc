@@ -86,7 +86,7 @@ class StPicoNpeAnaMaker : public StMaker
     void fillHistogram(int);
     void fillHistogram(int,int,int);
     void fillHistogram(int,int,int,int);
-    void setHistogram(int,int,int,int);
+    void setHistogram();
     int getPtBin(double);
     bool isBHTevent();
     bool isBemc();

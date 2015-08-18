@@ -84,7 +84,7 @@ Int_t StPicoNpeAnaMaker::Init()
         hRefMultWt[i]->Sumw2();
     }
 
-    setHistogram(nnpt,nnpid,nntype,nnhisto);  // nPt, nPid, nType, nHisto
+    setHistogram();  // nPt, nPid, nType, nHisto
 
     return kStOK;
 }
@@ -115,13 +115,13 @@ Int_t StPicoNpeAnaMaker::Finish()
     hRefMultWt[0]->Write();
     hRefMultWt[1]->Write();
     
-    for (int l=0;l<15;l++) // Histograms
-    for (int j=0;j<24;j++) // PID
-    for (int i=1;i<6;i++) // PT
-    for (int k=0;k<4;k++) // Particle:Type
+    for (int l=0;l<nnhisto;l++) // Histograms
+    for (int j=0;j<nnpid;j++) // PID
+    for (int i=1;i<nnpt;i++) // PT
+    for (int k=0;k<nntype;k++) // Particle:Type
          histo[i][j][k][l]->Write();
 
-    for (int j=0;j<16;j++) // PID
+    for (int j=0;j<nnpid;j++) // PID
         histo2d[j]->Write();
     
  
@@ -454,29 +454,33 @@ void StPicoNpeAnaMaker::setVariables(StElectronPair * epair)
     partner_nsige = partner->nSigmaElectron();
 }
 //-----------------------------------------------------------------------------
-void StPicoNpeAnaMaker::setHistogram(int nptbin,int npid,int ntype,int nhisto)
+void StPicoNpeAnaMaker::setHistogram()
 {
     
-    double ptbin[10] = {0, 1.5, 1.8, 2.5, 4.0, 6.5, 10.};
-    TString pid[16] = {"TpcMB","TpcTofMB","TpcBemcMB","TpcBemc2MB","TpcBsmdMB","TpcBemcBsmdMB","TpcBemc2BsmdMB","TpcBemc3BsmdMB","TpcBHT","TpcTofBHT","TpcBemcBHT","TpcBemc2BHT","TpcBsmdBHT","TpcBemcBsmdBHT","TpcBemc2BsmdBHT","TpcBemc3BsmdBHT"};
-    TString type[10] = {"PhEUS","PhELS","IncE","Pion","Kaon","Proton"};
-    TString histoname[15] = {"nSigE","nSigEAfterCut","dca","pairMass","nEta","nPhi","e0/p","zDist","phiDist","etaTowDist","phiTowDist","nphieta","e/p","ConvRadious","pairDca"};
+    double ptbin[nnpt] = {0, 1.5, 1.8, 2.5, 4.0, 6.5, 10.};
+    TString pid[nnpid] = {
+        "TpcMB","TpcTofMB","TpcBemcMB","TpcBemc2MB","TpcBsmdMB","TpcBemcBsmdMB","TpcBemc2BsmdMB","TpcBemc3BsmdMB",
+        "TpcBHT","TpcTofBHT","TpcBemcBHT","TpcBemc2BHT","TpcBsmdBHT","TpcBemcBsmdBHT","TpcBemc2BsmdBHT","TpcBemc3BsmdBHT",
+        "TpcBemc4MB","TpcBemc5MB","TpcBemc4BsmdMB","TpcBemc5BsmdMB",
+        "TpcBemc4BHT","TpcBemc5BHT","TpcBemc4BsmdBHT","TpcBemc5BsmdBHT"};
+    TString type[nntype] = {"PhEUS","PhELS","IncE","Pion","Kaon","Proton"};
+    TString histoname[nnhisto] = {"nSigE","nSigEAfterCut","dca","pairMass","nEta","nPhi","e0/p","zDist","phiDist","etaTowDist","phiTowDist","nphieta","e/p","ConvRadious","pairDca"};
     
-    int binHisto[15] = {    289,    289,    100,    100,    10, 10, 200,    100,    100,    100,    100,    20  ,200    ,500    ,200};
-    double minHisto[15] = { -13,    -13,   -0.1,    0,      0,  0,  0,      -20,    -0.1,   -0.1,   -0.1,   0   ,0      ,0      ,0};
-    double maxHisto[15] = { 13,      13,    0.1,    0.2,    10, 10, 6,      20,     0.1,    0.1,    0.1,    20  ,6      ,50     ,2};
+    int binHisto[nnhisto] = {    289,    289,    100,    100,    10, 10, 200,    100,    100,    100,    100,    20  ,200    ,500    ,200};
+    double minHisto[nnhisto] = { -13,    -13,   -0.1,    0,      0,  0,  0,      -20,    -0.1,   -0.1,   -0.1,   0   ,0      ,0      ,0};
+    double maxHisto[nnhisto] = { 13,      13,    0.1,    0.2,    10, 10, 6,      20,     0.1,    0.1,    0.1,    20  ,6      ,50     ,2};
     
     
-    for (int j=0; j<npid; j++) {
+    for (int j=0; j<nnpid; j++) {
         histo2d[j] = new TH2F(Form("histo2D_%d",j),Form("histo2D_%d",j),100,0,20,200,0,1000);
         histo2d[j]->Sumw2();
 
     }
     
-    for (int i=0;i<nptbin;i++){
-        for (int j=0;j<npid;j++)
-            for (int k=0;k<ntype;k++)
-                for (int l=0;l<nhisto;l++) {
+    for (int i=0;i<nnpt;i++){
+        for (int j=0;j<nnpid;j++)
+            for (int k=0;k<nntype;k++)
+                for (int l=0;l<nnhisto;l++) {
                     histo[i][j][k][l] = new TH1F(
                                                  Form("histo_%d_%d_%d_%d", i,j,k,l),
                                                  Form("histo_pT%.1f_%.1f_%s_%s_%s",
