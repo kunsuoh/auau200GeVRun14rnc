@@ -607,7 +607,7 @@ bool StPicoNpeAnaMaker::isBemc4(){
     else return false;
 }
 bool StPicoNpeAnaMaker::isBemc5(){
-    if (isBemc42 && fabs(zDist) < cutsAna::emcZDist && fabs(phiDist) < cutsAna::emcPhiDist && sqrt(etaTowDist*etaTowDist + phiTowDist*phiTowDist) < cutsAna::emcAssDist ) return true;
+    if (isBemc4() && fabs(zDist) < cutsAna::emcZDist && fabs(phiDist) < cutsAna::emcPhiDist && sqrt(etaTowDist*etaTowDist + phiTowDist*phiTowDist) < cutsAna::emcAssDist ) return true;
     else return false;
 }
 bool StPicoNpeAnaMaker::isBsmd(){
