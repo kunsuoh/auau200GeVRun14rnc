@@ -244,44 +244,40 @@ Int_t StPicoNpeAnaMaker::Make()
         }
         if (cutsAna::isRecoPhE && isGoodTagged(track))  idxPicoTaggedEs.push_back(iTrack);
         if (cutsAna::isRecoPhE && isGoodPartner(track)) idxPicoPartnerEs.push_back(iTrack);
-
+        
         
     }
-    if (cutsAna::isRecoPhE) {
-        for (unsigned short ik = 0; ik < idxPicoTaggedEs.size(); ++ik)
+    for (unsigned short ik = 0; ik < idxPicoTaggedEs.size(); ++ik)
+    {
+        StPicoTrack const * electron = picoDst->track(idxPicoTaggedEs[ik]);
+        // make electron pairs
+        for (unsigned short ip = 0; ip < idxPicoPartnerEs.size(); ++ip)
         {
-            StPicoTrack const * electron = picoDst->track(idxPicoTaggedEs[ik]);
-            // make electron pairs
-            for (unsigned short ip = 0; ip < idxPicoPartnerEs.size(); ++ip)
-            {
-                if (idxPicoTaggedEs[ik] == idxPicoPartnerEs[ip]) continue;
-                StPicoTrack const * partner = picoDst->track(idxPicoPartnerEs[ip]);
-                StElectronPair * epair =  new StElectronPair(electron, partner, idxPicoTaggedEs[ik], idxPicoPartnerEs[ip], bField);
-                if (isGoodPair(epair))
-                {
-                    setVariables(epair);
-                    if (pairCharge == 0) fillHistogram(0); // US
-                    else fillHistogram(1);                 // LS
-                    //cout << "1 " << pairMass << " " << epair->pairMass() << " " <<pairDca << " " << pt << " " << eta << " " << dca << " " << nsige << " " << pairPositionX << " " << pairPositionY << " " << pairPositionZ << " " << electron->nHitsFit() << " " << electron->nHitsDedx() <<  " " << partner->nHitsFit() << " " << partner->nHitsDedx() << " " << partner->gPt() << endl;
-                }
-                delete epair;
-            } // .. end make electron pairs
-        } // .. end of tagged e loop
-    }
-    else {
-        // Photonic Electron
-        TClonesArray const * aElectronPair = mPicoNpeEvent->electronPairArray();
-        for (int idx = 0; idx < aElectronPair->GetEntries(); ++idx)
-        {
-            // this is an example of how to get the ElectronPair pairs and their corresponsing tracks
-            StElectronPair * epair = (StElectronPair*)aElectronPair->At(idx);
+            if (idxPicoTaggedEs[ik] == idxPicoPartnerEs[ip]) continue;
+            StPicoTrack const * partner = picoDst->track(idxPicoPartnerEs[ip]);
+            StElectronPair * epair =  new StElectronPair(electron, partner, idxPicoTaggedEs[ik], idxPicoPartnerEs[ip], bField);
             if (isGoodPair(epair))
             {
                 setVariables(epair);
-                if (pairCharge == 0) fillHistogram(0); // US
-                else fillHistogram(1);                 // LS
-                //cout << "0 " << pairMass << " " << epair->pairMass() << " " << pairDca << " " << pt << " " << eta  << " " << dca << " " << nsige << " " << pairPositionX << " " << pairPositionY << " " << pairPositionZ << endl;
+                if (pairCharge == 0) fillHistogram(4); // US
+                else fillHistogram(5);                 // LS
+                //cout << "1 " << pairMass << " " << epair->pairMass() << " " <<pairDca << " " << pt << " " << eta << " " << dca << " " << nsige << " " << pairPositionX << " " << pairPositionY << " " << pairPositionZ << " " << electron->nHitsFit() << " " << electron->nHitsDedx() <<  " " << partner->nHitsFit() << " " << partner->nHitsDedx() << " " << partner->gPt() << endl;
             }
+            delete epair;
+        } // .. end make electron pairs
+    } // .. end of tagged e loop
+    // Photonic Electron
+    TClonesArray const * aElectronPair = mPicoNpeEvent->electronPairArray();
+    for (int idx = 0; idx < aElectronPair->GetEntries(); ++idx)
+    {
+        // this is an example of how to get the ElectronPair pairs and their corresponsing tracks
+        StElectronPair * epair = (StElectronPair*)aElectronPair->At(idx);
+        if (isGoodPair(epair))
+        {
+            setVariables(epair);
+            if (pairCharge == 0) fillHistogram(0); // US
+            else fillHistogram(1);                 // LS
+            //cout << "0 " << pairMass << " " << epair->pairMass() << " " << pairDca << " " << pt << " " << eta  << " " << dca << " " << nsige << " " << pairPositionX << " " << pairPositionY << " " << pairPositionZ << endl;
         }
     }
     
@@ -473,7 +469,7 @@ void StPicoNpeAnaMaker::setHistogram()
         "TpcBHT","TpcTofBHT","TpcBemcBHT","TpcBemc2BHT","TpcBsmdBHT","TpcBemcBsmdBHT","TpcBemc2BsmdBHT","TpcBemc3BsmdBHT",
         "TpcBemc4MB","TpcBemc5MB","TpcBemc4BsmdMB","TpcBemc5BsmdMB",
         "TpcBemc4BHT","TpcBemc5BHT","TpcBemc4BsmdBHT","TpcBemc5BsmdBHT"};
-    TString type[nntype] = {"PhEUS","PhELS","IncE","Pion"};
+    TString type[nntype] = {"PhEUS","PhELS","IncE","Pion","RecoPhEUS","RecoPhELS"};
     TString histoname[nnhisto] = {"nSigE","nSigEAfterCut","dca","pairMass","nEta","nPhi","e0/p","zDist","phiDist","etaTowDist","phiTowDist","nphieta","e/p","ConvRadious","pairDca"};
     
     int binHisto[nnhisto] = {    289,    289,    100,    100,    10, 10, 200,    100,    100,    100,    100,    20  ,200    ,500    ,200};

@@ -35,7 +35,7 @@ class StPicoPrescales;
 
 int const nnpt = 6;
 int const nnpid = 24;
-int const nntype = 4;
+int const nntype = 6;
 int const nnhisto = 15;
 
 
