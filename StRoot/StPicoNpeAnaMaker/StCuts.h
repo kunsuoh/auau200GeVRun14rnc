@@ -27,7 +27,7 @@ namespace cutsAna
     unsigned int const triggerLength = 0xFFFF;
     
     // track
-    bool const trackRequireHFT = true;
+    bool const trackRequireHFT = false;
     int const trackNHitsFit = 20;
     int const trackNhitsDedx = 15;
     float const trackEta = 0.7;
@@ -45,7 +45,7 @@ namespace cutsAna
     // electron + partner pair cuts
     bool const isRecoPhE = true;
     float const pairMass = 0.1;
-    float const pairDca = 0.5;
+    float const pairDca = 1.5; // 0.5 for HFT on
     
     
     // pid

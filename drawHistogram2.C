@@ -11,7 +11,7 @@ int drawHistogram2(int in = 39){
     TCanvas * cc5 = new TCanvas("cc5","cc5",500,1000);
     TCanvas * cc6 = new TCanvas("cc6","cc6",500,1000);
     TCanvas * cc7 = new TCanvas("cc7","cc7",500,1000);
-    TCanvas * cc8 = new TCanvas("cc8","cc8",1000,1000);
+    TCanvas * cc8 = new TCanvas("cc8","cc8",1200,1000);
     TCanvas * cc9 = new TCanvas("cc9","cc9",1000,500);
     TCanvas * cc10 = new TCanvas("cc10","cc10",500,500);
     TCanvas * cc11 = new TCanvas("cc11","cc11",500,500);
@@ -20,7 +20,7 @@ int drawHistogram2(int in = 39){
     cc5->Divide(1,2);
     cc6->Divide(1,2);
     cc7->Divide(1,2);
-    cc8->Divide(4,4);
+    cc8->Divide(5,4);
     cc9->Divide(4,2);
     
     cc->SetLogy();
@@ -580,8 +580,36 @@ int drawHistogram2(int in = 39){
         }
         
         
+        cc8->cd(5)->SetLogy(); // e/p
+        TH1F * hisLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_12",iPt, iPid));
+        TH1F * hisUS = (TH1F*)infile->Get(Form("histo_%d_%d_0_12",iPt, iPid));
+        TH1F * hisPE = new TH1F("hisPE","hisPE",200,0,6);
         
-        cc8->cd(5)->SetLogy(); // zDist
+        hisPE->Add(hisUS,hisLS,1,-1);
+        
+        
+        hisLS->SetMarkerStyle(20);
+        hisLS->SetMarkerColor(2);
+        hisLS->SetMarkerSize(0.5);
+        
+        
+        hisUS->SetMarkerStyle(20);
+        hisUS->SetMarkerColor(4);
+        hisUS->SetMarkerSize(0.5);
+        hisUS->SetMinimum(0.5);
+        
+        
+        hisPE->SetFillStyle(3001);
+        hisPE->SetFillColor(1);
+        hisPE->SetLineColor(1);
+        
+        hisUS->Draw("p");
+        hisLS->Draw("psame");
+        hisPE->Draw("BARsame");
+        
+        
+        
+        cc8->cd(6)->SetLogy(); // zDist
         TH1F * hisLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_7",iPt, iPid));
         TH1F * hisUS = (TH1F*)infile->Get(Form("histo_%d_%d_0_7",iPt, iPid));
         TH1F * hisPE = new TH1F("hisPE","hisPE",100,-20,20);
@@ -610,7 +638,7 @@ int drawHistogram2(int in = 39){
         
         
         
-        cc8->cd(6)->SetLogy(); // phiDist
+        cc8->cd(7)->SetLogy(); // phiDist
         TH1F * hisLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_8",iPt, iPid));
         TH1F * hisUS = (TH1F*)infile->Get(Form("histo_%d_%d_0_8",iPt, iPid));
         TH1F * hisPE = new TH1F("hisPE","hisPE",100,-0.1,0.1);
@@ -639,7 +667,7 @@ int drawHistogram2(int in = 39){
         
         
         
-        cc8->cd(7)->SetLogy(); // etaTowDist
+        cc8->cd(8)->SetLogy(); // etaTowDist
         TH1F * hisLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_9",iPt, iPid));
         TH1F * hisUS = (TH1F*)infile->Get(Form("histo_%d_%d_0_9",iPt, iPid));
         TH1F * hisPE = new TH1F("hisPE","hisPE",100,-0.1,0.1);
@@ -667,7 +695,7 @@ int drawHistogram2(int in = 39){
         hisPE->Draw("BARsame");
         
         
-        cc8->cd(8)->SetLogy(); // phiTowDist
+        cc8->cd(9)->SetLogy(); // phiTowDist
         TH1F * hisLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_10",iPt, iPid));
         TH1F * hisUS = (TH1F*)infile->Get(Form("histo_%d_%d_0_10",iPt, iPid));
         TH1F * hisPE = new TH1F("hisPE","hisPE",100,-0.1,0.1);
@@ -697,21 +725,46 @@ int drawHistogram2(int in = 39){
         
         
         
+        cc8->cd(10)->SetLogy(); // conversion radious
+        TH1F * hisLS = (TH1F*)infile->Get(Form("histo_%d_%d_1_13",iPt, iPid));
+        TH1F * hisUS = (TH1F*)infile->Get(Form("histo_%d_%d_0_13",iPt, iPid));
+        TH1F * hisPE = new TH1F("hisPE","hisPE",500,0,50);
+        
+        hisPE->Add(hisUS,hisLS,1,-1);
         
         
+        hisLS->SetMarkerStyle(20);
+        hisLS->SetMarkerColor(2);
+        hisLS->SetMarkerSize(0.5);
         
         
-        //     cc8->SaveAs(Form("outdir_%d/QaBemcBsmd_Pid%d_Pt%d.pdf",iPid,iPt));
+        hisUS->SetMarkerStyle(20);
+        hisUS->SetMarkerColor(4);
+        hisUS->SetMarkerSize(0.5);
+        hisUS->SetMinimum(0.5);
+        
+        
+        hisPE->SetFillStyle(3001);
+        hisPE->SetFillColor(1);
+        hisPE->SetLineColor(1);
+        
+        hisUS->Draw("p");
+        hisLS->Draw("psame");
+        hisPE->Draw("BARsame");
+        
         
         
         
         // hadron
         int jj;
-        for (int j=0; j<8; j++) {
-            cc8->cd(j+1+8)->SetLogy(); // neta
+        for (int j=0; j<10; j++) {
+            cc8->cd(j+11)->SetLogy(); // neta
             jj=j;
             if (j==2) jj = 7;
-            else if (j > 2) jj=j-1;
+            if (j==3) jj=j-1;
+            if (j==4) jj = 8;
+            if (j > 4 && j < 9) jj=j-1;
+            if (j==9) jj = 9;
             TH1I * hisQaPE = (TH1I*)infile->Get(Form("histo_%d_%d_3_%d",iPt, iPid, jj+4));
             
             hisQaPE->SetFillStyle(3001);

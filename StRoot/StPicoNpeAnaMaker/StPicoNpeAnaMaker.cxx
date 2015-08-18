@@ -84,7 +84,7 @@ Int_t StPicoNpeAnaMaker::Init()
         hRefMultWt[i]->Sumw2();
     }
 
-    setHistogram(6,16,4,14);  // nPt, nPid, nType, nHisto
+    setHistogram(6,16,4,15);  // nPt, nPid, nType, nHisto
 
     return kStOK;
 }
@@ -115,7 +115,7 @@ Int_t StPicoNpeAnaMaker::Finish()
     hRefMultWt[0]->Write();
     hRefMultWt[1]->Write();
     
-    for (int l=0;l<14;l++) // Histograms
+    for (int l=0;l<15;l++) // Histograms
     for (int j=0;j<16;j++) // PID
     for (int i=1;i<6;i++) // PT
     for (int k=0;k<4;k++) // Particle:Type
@@ -460,11 +460,11 @@ void StPicoNpeAnaMaker::setHistogram(int nptbin,int npid,int ntype,int nhisto)
     double ptbin[10] = {0, 1.5, 1.8, 2.5, 4.0, 6.5, 10.};
     TString pid[16] = {"TpcMB","TpcTofMB","TpcBemcMB","TpcBemc2MB","TpcBsmdMB","TpcBemcBsmdMB","TpcBemc2BsmdMB","TpcBemc3BsmdMB","TpcBHT","TpcTofBHT","TpcBemcBHT","TpcBemc2BHT","TpcBsmdBHT","TpcBemcBsmdBHT","TpcBemc2BsmdBHT","TpcBemc3BsmdBHT"};
     TString type[10] = {"PhEUS","PhELS","IncE","Pion","Kaon","Proton"};
-    TString histoname[14] = {"nSigE","nSigEAfterCut","dca","pairMass","nEta","nPhi","e0/p","zDist","phiDist","etaTowDist","phiTowDist","nphieta","e/p","ConvRadiou"};
+    TString histoname[15] = {"nSigE","nSigEAfterCut","dca","pairMass","nEta","nPhi","e0/p","zDist","phiDist","etaTowDist","phiTowDist","nphieta","e/p","ConvRadious","pairDca"};
     
-    int binHisto[14] = {    289,    289,    100,    100,    10, 10, 200,    100,    100,    100,    100,    20  ,200    ,500};
-    double minHisto[14] = { -13,    -13,   -0.1,    0,      0,  0,  0,      -20,    -0.1,   -0.1,   -0.1,   0   ,0      ,0};
-    double maxHisto[14] = { 13,      13,    0.1,    0.2,    10, 10, 6,      20,     0.1,    0.1,    0.1,    20  ,6      ,50};
+    int binHisto[15] = {    289,    289,    100,    100,    10, 10, 200,    100,    100,    100,    100,    20  ,200    ,500    ,200};
+    double minHisto[15] = { -13,    -13,   -0.1,    0,      0,  0,  0,      -20,    -0.1,   -0.1,   -0.1,   0   ,0      ,0      ,0};
+    double maxHisto[15] = { 13,      13,    0.1,    0.2,    10, 10, 6,      20,     0.1,    0.1,    0.1,    20  ,6      ,50     ,2};
     
     
     for (int j=0; j<npid; j++) {
@@ -575,8 +575,10 @@ void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType, int dummy){
     histo[(const int)iPt][(const int)iPid][(const int)iType][11]->Fill(nphieta,weight);
     histo[(const int)iPt][(const int)iPid][(const int)iType][12]->Fill(e/pt/TMath::CosH(eta),weight);
     
+    // pair QA
     histo[(const int)iPt][(const int)iPid][(const int)iType][13]->Fill(TMath::Sqrt((pairPositionX+0.2383) * (pairPositionX+0.2383) + (pairPositionY+0.1734) * (pairPositionY+0.1734)),weight);
-
+    histo[(const int)iPt][(const int)iPid][(const int)iType][14]->Fill(pairDca,weight);
+    
 }
 
 //-----------------------------------------------------------------------------------
