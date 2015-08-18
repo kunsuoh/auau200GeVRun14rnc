@@ -260,7 +260,7 @@ Int_t StPicoNpeAnaMaker::Make()
             if (isGoodPair(epair))
             {
                 setVariables(epair);
-                cout << "CHECK!" << endl;
+
                 if (electron->isHFTTrack()){             // HFT
                     if (pairCharge == 0) fillHistogram(4); // US
                     else fillHistogram(5);                 // LS
