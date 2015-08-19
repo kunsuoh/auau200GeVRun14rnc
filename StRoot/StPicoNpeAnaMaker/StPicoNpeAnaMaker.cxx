@@ -572,7 +572,7 @@ void StPicoNpeAnaMaker::fillHistogram(int iType){
 //-------------------------------------------------------------------------------
 void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType){
     histo[(const int)iPt][(const int)iPid][(const int)iType][0]->Fill(nsige,weight);
-    if ((iType < 2 || iType > 3) && nsige > 0) fillHistogram(iPt, iPid, iType, 0);
+    if ((iType == 0 || iType == 1 || iType == 4 || iType == 5 || iType == 6 || iType == 7) && nsige > -1) fillHistogram(iPt, iPid, iType, 0);
     if (iType==2 || iType==8) {
         float pidCutLw[2][6];
         float pidCutHi[2][6];
