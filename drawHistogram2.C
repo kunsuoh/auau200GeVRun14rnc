@@ -1,5 +1,5 @@
 
-int drawHistogram2(int in = 36){
+int drawHistogram2(int in = 43){
     gSystem->Exec(Form("mkdir -p outdir_%d %d",in));
 
     TFile * infile = new TFile(Form("out_%d.root", in));
