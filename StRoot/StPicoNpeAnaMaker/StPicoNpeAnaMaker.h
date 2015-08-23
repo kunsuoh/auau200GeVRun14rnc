@@ -100,15 +100,6 @@ class StPicoNpeAnaMaker : public StMaker
     
     
     StPicoDst * picoDst;
-
-    TH1F * hEvent;
-    TH1F * hZDCx;
-    TH1F * hZDCxWt;
-    TH1I * hTrigger;
-    TH1I * hTriggerCheck[nntrigger];
-    TH1I * hTriggerCheckWt[nntrigger];
-    TH1I * hTriggerWt;
-    TH1I * hCheckDoubleTrigger;
     
     TTree * tInc;
     TTree * tPhE;
@@ -157,8 +148,18 @@ class StPicoNpeAnaMaker : public StMaker
     UShort_t mRefMult;
     unsigned char isHTEvents;
 
-    TH1F * hRefMult[5];
-    TH1F * hRefMultWt[5];
+    
+    TH1F * hEvent;
+    TH1I * hTrigger;
+    TH1I * hTriggerWt;
+    TH1I * hCheckDoubleTrigger;
+
+    TH1I * hTriggerCheck[nntrigger];
+    TH1I * hTriggerCheckWt[nntrigger];
+    TH1F * hZDCx[nntrigger];
+    TH1F * hZDCxWt[nntrigger];
+    TH1F * hRefMult[nntrigger];
+    TH1F * hRefMultWt[nntrigger];
     TH1F * histo[nnpt][nnpid][nntype][nnhisto][nntrigger];
     TH2F * histo2d[nnpid][nntrigger];
     TH2F * histo2dDcaPt[nnpid][nntrigger];

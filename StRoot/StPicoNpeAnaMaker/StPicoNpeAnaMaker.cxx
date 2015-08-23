@@ -68,22 +68,22 @@ Int_t StPicoNpeAnaMaker::Init()
     hTrigger = new TH1I("hTrigger","hTrigger",30,0,30);
     hTriggerWt = new TH1I("hTriggerWt","hTriggerWt",30,0,30);
     hEvent = new TH1F("hEvent","hEvent",10,0,10);
-    hZDCx = new TH1F("hZDCx","hZDCx",1000,0,100000);
-    hZDCxWt = new TH1F("hZDCxWt","hZDCxWt",1000,0,100000);
     hCheckDoubleTrigger->Sumw2();
     hTrigger->Sumw2();
     hTriggerWt->Sumw2();
     hEvent->Sumw2();
-    hZDCx->Sumw2();
-    hZDCxWt->Sumw2();
     
     for (int i=0; i<nntrigger; i++) {
+        hZDCx[i] = new TH1F(Form("hZDCx_%d",i),Form("hZDCx_%d",i),1000,0,100000);
+        hZDCxWt[i] = new TH1F(Form("hZDCxWt_%d",i),Form("hZDCxWt_%d",i),1000,0,100000);
         hRefMult[i] = new TH1F(Form("hRefMult_%d",i),Form("hRefMult_%d",i),1000,0,1000);
         hRefMultWt[i] = new TH1F(Form("hRefMultWt_%d",i),Form("hRefMultWt_%d",i),1000,0,1000);
         hTriggerCheck[i] = new  TH1I(Form("hTriggerCheck_%d",i),Form("hTriggerCheck_%d",i),30,0,30);
         hTriggerCheckWt[i] = new  TH1I(Form("hTriggerCheckWt_%d",i),Form("hTriggerCheckWt_%d",i),30,0,30);
         hRefMult[i]->Sumw2();
         hRefMultWt[i]->Sumw2();
+        hZDCx[i]->Sumw2();
+        hZDCxWt[i]->Sumw2();
     }
 
     setHistogram();  // nPt, nPid, nType, nHisto, nTrigger
@@ -106,13 +106,13 @@ Int_t StPicoNpeAnaMaker::Finish()
 
     // --------------- USER HISTOGRAM WRITE --------------------
     hEvent->Write();
-    hZDCx->Write();
-    hZDCxWt->Write();
     hTrigger->Write();
     hTriggerWt->Write();
     hCheckDoubleTrigger->Write();
     
     for (int i=0;i<nntrigger;i++){
+        hZDCx[i]->Write();
+        hZDCxWt[i]->Write();
         hRefMult[i]->Write();
         hRefMultWt[i]->Write();
         hTriggerCheck[i]->Write();
@@ -518,12 +518,13 @@ void StPicoNpeAnaMaker::setHistogram()
     double maxHisto[nnhisto] = { 13,      13,    0.1,    0.2,    10, 10, 6,      20,     0.1,    0.1,    0.1,    20  ,6      ,50     ,2};
     
     
-    for (int j=0; j<nnpid; j++) {
-        histo2d[j] = new TH2F(Form("histo2D_%d",j),Form("histo2D_%d",j),100,0,20,200,0,1000);
-        histo2dDcaPt[j] = new TH2F(Form("histo2DDcaPt_%d",j),Form("histo2DDcaPt_%d",j),100,0,20,100,-0.1,0.1);
-        histo2d[j]->Sumw2();
-        histo2dDcaPt[j]->Sumw2();
-
+    for (int j=0; j<nnpid; j++)
+        for (int m=0;m<nntrigger;m++) {
+            histo2d[j][m] = new TH2F(Form("histo2D_%d",j),Form("histo2D_%d_%d",j,m),100,0,20,200,0,1000);
+            histo2dDcaPt[j][m] = new TH2F(Form("histo2DDcaPt_%d",j),Form("histo2DDcaPt_%d_%d",j,m),100,0,20,100,-0.1,0.1);
+            histo2d[j][m]->Sumw2();
+            histo2dDcaPt[j][m]->Sumw2();
+            
     }
     
     for (int i=0;i<nnpt;i++){
