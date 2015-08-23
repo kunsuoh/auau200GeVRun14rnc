@@ -77,7 +77,7 @@ Int_t StPicoNpeAnaMaker::Init()
     hZDCx->Sumw2();
     hZDCxWt->Sumw2();
     
-    for (int i=0; i<2; i++) {
+    for (int i=0; i<nntrigger; i++) {
         hRefMult[i] = new TH1F(Form("hRefMult_%d",i),Form("hRefMult_%d",i),1000,0,1000);
         hRefMultWt[i] = new TH1F(Form("hRefMultWt_%d",i),Form("hRefMultWt_%d",i),1000,0,1000);
         hTriggerCheck[i] = new  TH1I(Form("hTriggerCheck_%d",i),Form("hTriggerCheck_%d",i),30,0,30);
@@ -86,7 +86,7 @@ Int_t StPicoNpeAnaMaker::Init()
         hRefMultWt[i]->Sumw2();
     }
 
-    setHistogram();  // nPt, nPid, nType, nHisto
+    setHistogram();  // nPt, nPid, nType, nHisto, nTrigger
 
     return kStOK;
 }
@@ -110,26 +110,28 @@ Int_t StPicoNpeAnaMaker::Finish()
     hZDCxWt->Write();
     hTrigger->Write();
     hTriggerWt->Write();
-    hTriggerCheck[0]->Write();
-    hTriggerCheckWt[0]->Write();
-    hTriggerCheck[1]->Write();
-    hTriggerCheckWt[1]->Write();
     hCheckDoubleTrigger->Write();
     
-    hRefMult[0]->Write();
-    hRefMult[1]->Write();
-    hRefMultWt[0]->Write();
-    hRefMultWt[1]->Write();
+    for (int i=0;i<nntrigger;i++){
+        hRefMult[i]->Write();
+        hRefMultWt[i]->Write();
+        hTriggerCheck[i]->Write();
+        hTriggerCheckWt[i]->Write();
+    }
     
     for (int l=0;l<nnhisto;l++) // Histograms
     for (int j=0;j<nnpid;j++) // PID
     for (int i=1;i<nnpt;i++) // PT
     for (int k=0;k<nntype;k++) // Particle:Type
-         histo[i][j][k][l]->Write();
-
-    for (int j=0;j<nnpid;j++) // PID
-        histo2d[j]->Write();
+    for (int m=0;m<nntrigger;m++) // Trigger
+         histo[i][j][k][l][m]->Write();
     
+    for (int j=0;j<nnpid;j++) {// PID
+        for (int m=0;m<nntrigger;m++) { // Trigger
+            histo2d[j][m]->Write();
+            histo2dDcaPt[j][m]->Write();
+        }
+    }
  
     mOutputFile->Close();
     
@@ -192,40 +194,64 @@ Int_t StPicoNpeAnaMaker::Make()
     isHTEvents = 0;
     int checkDoubleTrigger = 0;
     int checkDoubleTrigger18 = 10;
-    weight = 1;
+    weight[0] = 1;
+    weight[1] = 1;
+    weight[2] = 1;
+    weight[3] = 1;
+
 
     for (int i=0; i<4; i++) if (picoDst->event()->triggerWord() >> i & 0x1) {
         if ( mPrescales->prescale(mPicoNpeEvent->runId(), i) > 100)cout << "Prescale (" << mPicoNpeEvent->runId() << ", " << i << ", " << mPicoNpeEvent->eventId() << ") : " << mPrescales->prescale(mPicoNpeEvent->runId(), i) << endl;
-        weight = mPrescales->prescale(mPicoNpeEvent->runId(), i);
+        weight[0] = mPrescales->prescale(mPicoNpeEvent->runId(), i);
         hTrigger->Fill(i);
-        hTriggerWt->Fill(i,weight);
+        hTriggerWt->Fill(i,weight[0]);
         checkDoubleTrigger++;
-        isHTEvents=1;
+        isHTEvents+=1;
+        hEvent->Fill(6,weight[0]);
     }
-    for (int i=19; i<20; i++) if (picoDst->event()->triggerWord() >> i & 0x1) {
+    for (int i=19; i<21; i++) if (picoDst->event()->triggerWord() >> i & 0x1) {
         if ( mPrescales->prescale(mPicoNpeEvent->runId(), i) > 100)cout << "Prescale (" << mPicoNpeEvent->runId() << ", " << i << ", " << mPicoNpeEvent->eventId() << ") : " << mPrescales->prescale(mPicoNpeEvent->runId(), i) << endl;
-        weight = mPrescales->prescale(mPicoNpeEvent->runId(), i);
+        weight[1] = mPrescales->prescale(mPicoNpeEvent->runId(), i);
         hTrigger->Fill(i);
-        hTriggerWt->Fill(i,weight);
+        hTriggerWt->Fill(i,weight[1]);
         checkDoubleTrigger18++;
-        isHTEvents=2;
+        isHTEvents+=2;
+        hEvent->Fill(7,weight[1]);
     }
+    for (int i=21; i<23; i++) if (picoDst->event()->triggerWord() >> i & 0x1) {
+        if ( mPrescales->prescale(mPicoNpeEvent->runId(), i) > 100)cout << "Prescale (" << mPicoNpeEvent->runId() << ", " << i << ", " << mPicoNpeEvent->eventId() << ") : " << mPrescales->prescale(mPicoNpeEvent->runId(), i) << endl;
+        weight[2] = mPrescales->prescale(mPicoNpeEvent->runId(), i);
+        hTrigger->Fill(i);
+        hTriggerWt->Fill(i,weight[2]);
+        checkDoubleTrigger18++;
+        isHTEvents+=4;
+        hEvent->Fill(8,weight[2]);
+    }
+    
+    for (int i=23; i<25; i++) if (picoDst->event()->triggerWord() >> i & 0x1) {
+        if ( mPrescales->prescale(mPicoNpeEvent->runId(), i) > 100)cout << "Prescale (" << mPicoNpeEvent->runId() << ", " << i << ", " << mPicoNpeEvent->eventId() << ") : " << mPrescales->prescale(mPicoNpeEvent->runId(), i) << endl;
+        weight[3] = mPrescales->prescale(mPicoNpeEvent->runId(), i);
+        hTrigger->Fill(i);
+        hTriggerWt->Fill(i,weight[3]);
+        checkDoubleTrigger18++;
+        isHTEvents+=8;
+        hEvent->Fill(9,weight[3]);
+    }
+    hEvent->Fill(5);
 
     hCheckDoubleTrigger->Fill(checkDoubleTrigger);
     hCheckDoubleTrigger->Fill(checkDoubleTrigger18);
     
-    hEvent->Fill(5);
-    hEvent->Fill(6,weight);
 
     hZDCx->Fill(mZDCx);
     hZDCxWt->Fill(mZDCx,weight);
     
-    for (int i=0; i<2; i++) if (isHTEvents >> i & 0x1) {
+    for (int i=0; i<nntrigger; i++) if (isHTEvents >> i & 0x1) {
         hRefMult[i]->Fill(mRefMult);
-        hRefMultWt[i]->Fill(mRefMult,weight);
+        hRefMultWt[i]->Fill(mRefMult,weight[i]);
         for (int j=0; j<30; j++) if (picoDst->event()->triggerWord() >> j & 0x1) {
             hTriggerCheck[i]->Fill(j);
-            hTriggerCheckWt[i]->Fill(j,weight);
+            hTriggerCheckWt[i]->Fill(j,weight[i]);
         }
     }
     
@@ -481,12 +507,11 @@ void StPicoNpeAnaMaker::setHistogram()
     
     double ptbin[nnpt+1] = {0, 1.5, 1.8, 2.5, 4.0, 6.5, 10.};
     TString pid[nnpid] = {
-        "TpcMB","TpcTofMB","TpcBemcMB","TpcBemc2MB","TpcBsmdMB","TpcBemcBsmdMB","TpcBemc2BsmdMB","TpcBemc3BsmdMB",
-        "TpcBHT","TpcTofBHT","TpcBemcBHT","TpcBemc2BHT","TpcBsmdBHT","TpcBemcBsmdBHT","TpcBemc2BsmdBHT","TpcBemc3BsmdBHT",
-        "TpcBemc4MB","TpcBemc5MB","TpcBemc4BsmdMB","TpcBemc5BsmdMB",
-        "TpcBemc4BHT","TpcBemc5BHT","TpcBemc4BsmdBHT","TpcBemc5BsmdBHT"};
+        "Tpc","TpcTof","TpcBemc","TpcBemc2","TpcBsmd","TpcBemcBsmd","TpcBemc2Bsmd","TpcBemc3Bsmd",
+        "TpcBemc4","TpcBemc5","TpcBemc4Bsmd","TpcBemc5Bsmd"};
     TString type[nntype] = {"PhEUS","PhELS","IncE","Pion","RecoHFTPhEUS","RecoHFTPhELS","RecoNonHFTPhEUS","RecoNonHFTPhELS","IncENonHFT","PionNonHFT"};
     TString histoname[nnhisto] = {"nSigE","nSigEAfterCut","dca","pairMass","nEta","nPhi","e0/p","zDist","phiDist","etaTowDist","phiTowDist","nphieta","e/p","ConvRadious","pairDca"};
+    TString trigger[nntrigger] = {"MB", "BHT1", "BHT2", "BHT3"};
     
     int binHisto[nnhisto] = {    289,    289,    100,    100,    10, 10, 200,    100,    100,    100,    100,    20  ,200    ,500    ,200};
     double minHisto[nnhisto] = { -13,    -13,   -0.1,    0,      0,  0,  0,      -20,    -0.1,   -0.1,   -0.1,   0   ,0      ,0      ,0};
@@ -495,29 +520,33 @@ void StPicoNpeAnaMaker::setHistogram()
     
     for (int j=0; j<nnpid; j++) {
         histo2d[j] = new TH2F(Form("histo2D_%d",j),Form("histo2D_%d",j),100,0,20,200,0,1000);
+        histo2dDcaPt[j] = new TH2F(Form("histo2DDcaPt_%d",j),Form("histo2DDcaPt_%d",j),100,0,20,100,-0.1,0.1);
         histo2d[j]->Sumw2();
+        histo2dDcaPt[j]->Sumw2();
 
     }
     
     for (int i=0;i<nnpt;i++){
         for (int j=0;j<nnpid;j++)
             for (int k=0;k<nntype;k++)
-                for (int l=0;l<nnhisto;l++) {
-                    histo[i][j][k][l] = new TH1F(
-                                                 Form("histo_%d_%d_%d_%d", i,j,k,l),
-                                                 Form("histo_pT%.1f_%.1f_%s_%s_%s",
-                                                      ptbin[i],
-                                                      ptbin[i+1],
-                                                      pid[j].Data(),
-                                                      type[k].Data(),
-                                                      histoname[l].Data()
-                                                      ),
-                                                 binHisto[l],
-                                                 minHisto[l],
-                                                 maxHisto[l]
-                                                 );
-                    histo[i][j][k][l]->Sumw2();
-                }
+                for (int l=0;l<nnhisto;l++)
+                    for (int m=0;m<nntrigger;m++) {
+                        histo[i][j][k][l][m] = new TH1F(
+                                                        Form("histo_%d_%d_%d_%d_%d", i,j,k,l,m),
+                                                        Form("histo_pT%.1f_%.1f_%s_%s_%s_%s",
+                                                             ptbin[i],
+                                                             ptbin[i+1],
+                                                             pid[j].Data(),
+                                                             type[k].Data(),
+                                                             histoname[l].Data(),
+                                                             trigger[m].Data()
+                                                             ),
+                                                        binHisto[l],
+                                                        minHisto[l],
+                                                        maxHisto[l]
+                                                        );
+                        histo[i][j][k][l][m]->Sumw2();
+                    }
     }
     
 }
@@ -540,7 +569,6 @@ int StPicoNpeAnaMaker::getPtBin(double pt) {
 void StPicoNpeAnaMaker::fillHistogram(int iType){
 
     int iPt = getPtBin(pt);
-    if (!isBHTevent()){
         fillHistogram(iPt, 0, iType);
         if (isTof())                fillHistogram(iPt, 1, iType);
         if (isBemc())               fillHistogram(iPt, 2, iType);
@@ -549,69 +577,62 @@ void StPicoNpeAnaMaker::fillHistogram(int iType){
         if (isBemc() && isBsmd())   fillHistogram(iPt, 5, iType);
         if (isBemc2() && isBsmd())  fillHistogram(iPt, 6, iType);
         if (isBemc3() && isBsmd())  fillHistogram(iPt, 7, iType);
-        if (isBemc4())              fillHistogram(iPt, 16, iType);
-        if (isBemc5())              fillHistogram(iPt, 17, iType);
-        if (isBemc4() && isBsmd())  fillHistogram(iPt, 18, iType);
-        if (isBemc5() && isBsmd())  fillHistogram(iPt, 19, iType);
-    }
-    if (isBHTevent()){
-        fillHistogram(iPt, 8, iType);
-        if (isTof())                fillHistogram(iPt, 9, iType);
-        if (isBemc())               fillHistogram(iPt, 10, iType);
-        if (isBemc2())              fillHistogram(iPt, 11, iType);
-        if (isBsmd())               fillHistogram(iPt, 12, iType);
-        if (isBemc() && isBsmd())   fillHistogram(iPt, 13, iType);
-        if (isBemc2() && isBsmd())  fillHistogram(iPt, 14, iType);
-        if (isBemc3() && isBsmd())  fillHistogram(iPt, 15, iType);
-        if (isBemc4())              fillHistogram(iPt, 20, iType);
-        if (isBemc5())              fillHistogram(iPt, 21, iType);
-        if (isBemc4() && isBsmd())  fillHistogram(iPt, 22, iType);
-        if (isBemc5() && isBsmd())  fillHistogram(iPt, 23, iType);
-}
+        if (isBemc4())              fillHistogram(iPt, 8, iType);
+        if (isBemc5())              fillHistogram(iPt, 9, iType);
+        if (isBemc4() && isBsmd())  fillHistogram(iPt, 10, iType);
+        if (isBemc5() && isBsmd())  fillHistogram(iPt, 11, iType);
 }
 //-------------------------------------------------------------------------------
 void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType){
-    histo[(const int)iPt][(const int)iPid][(const int)iType][0]->Fill(nsige,weight);
-    if ((iType == 0 || iType == 1 || iType == 4 || iType == 5 || iType == 6 || iType == 7) && nsige > -1) fillHistogram(iPt, iPid, iType, 0);
-    if (iType==2 || iType==8) {
-        float pidCutLw[2][6];
-        float pidCutHi[2][6];
-        pidCutLw[0]={0, -1.2, -1.2, -1.0, -1.0, -1.0};
-        pidCutHi[0]={0, 1.8, 2.5, 3.0, 3.0, 3.0};
-        pidCutLw[1]={0, -1.5, -1.4, -1.5, -1.1, 0};
-        pidCutHi[1]={0, 1.8, 2.5, 3.0, 3.0, 0};
-//        if (iPid == 2 && nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) fillHistogram(iPt, iPid, iType, 0);
-//        if (iPid == 3 && nsige > pidCutLw[1][iPt] && nsige < pidCutHi[1][iPt]) fillHistogram(iPt, iPid, iType, 0);
-//        if (iPid == 4 && nsige > pidCutLw[1][iPt] && nsige < pidCutHi[1][iPt]) fillHistogram(iPt, iPid, iType, 0);
-//        if (iPid == 5 && nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) fillHistogram(iPt, iPid, iType, 0);
-//        if (iPid%4 < 3 && nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) fillHistogram(iPt, iPid, iType, 0);
-        if (nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) {
-            fillHistogram(iPt, iPid, iType, 0);
-            histo2d[iPid]->Fill(pt*TMath::CosH(eta),adc0,weight);
+    for (int i=0; i<nntrigger; i++) {
+        if (isHTEvents >> i & 0x1 ) {
+            histo[(const int)iPt][(const int)iPid][(const int)iType][0][i]->Fill(nsige,weight);
+            if ((iType == 0 || iType == 1 || iType == 4 || iType == 5 || iType == 6 || iType == 7) && nsige > -1) {
+                fillHistogram(iPt, iPid, iType, i);
+                if (pairCharge==0) histo2dDcaPt[iPid][i]->Fill(pt,dca,weight);
+                else histo2dDcaPt[iPid][i]->Fill(pt,dca,-1*weight);
+            }
+            if (iType==2 || iType==8) {
+                float pidCutLw[2][6];
+                float pidCutHi[2][6];
+                pidCutLw[0]={0, -1.2, -1.2, -1.0, -1.0, -1.0};
+                pidCutHi[0]={0, 1.8, 2.5, 3.0, 3.0, 3.0};
+                pidCutLw[1]={0, -1.5, -1.4, -1.5, -1.1, 0};
+                pidCutHi[1]={0, 1.8, 2.5, 3.0, 3.0, 0};
+                //        if (iPid == 2 && nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) fillHistogram(iPt, iPid, iType, 0);
+                //        if (iPid == 3 && nsige > pidCutLw[1][iPt] && nsige < pidCutHi[1][iPt]) fillHistogram(iPt, iPid, iType, 0);
+                //        if (iPid == 4 && nsige > pidCutLw[1][iPt] && nsige < pidCutHi[1][iPt]) fillHistogram(iPt, iPid, iType, 0);
+                //        if (iPid == 5 && nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) fillHistogram(iPt, iPid, iType, 0);
+                //        if (iPid%4 < 3 && nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) fillHistogram(iPt, iPid, iType, 0);
+                if (nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) {
+                    fillHistogram(iPt, iPid, iType, i);
+                    histo2d[iPid][i]->Fill(pt*TMath::CosH(eta),adc0,weight);
+                }
+            }
+            if ((iType==3 || iType==9) && fabs(nsigpion) < 2) fillHistogram(iPt, iPid, iType, i);
         }
     }
-    if ((iType==3 || iType==9) && fabs(nsigpion) < 2) fillHistogram(iPt, iPid, iType, 0);
 }
 //-------------------------------------------------------------------------------
-void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType, int dummy){
-    histo[(const int)iPt][(const int)iPid][(const int)iType][1]->Fill(nsige,weight);
-    histo[(const int)iPt][(const int)iPid][(const int)iType][2]->Fill(dca,weight);
-    histo[(const int)iPt][(const int)iPid][(const int)iType][3]->Fill(pairMass,weight);
+void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType, int iTrigger){
+    histo[(const int)iPt][(const int)iPid][(const int)iType][1][iTrigger]->Fill(nsige,weight);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][2][iTrigger]->Fill(dca,weight);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][3][iTrigger]->Fill(pairMass,weight);
     
     // PID QA
-    histo[(const int)iPt][(const int)iPid][(const int)iType][4]->Fill(neta,weight);
-    histo[(const int)iPt][(const int)iPid][(const int)iType][5]->Fill(nphi,weight);
-    histo[(const int)iPt][(const int)iPid][(const int)iType][6]->Fill(eoverp,weight);
-    histo[(const int)iPt][(const int)iPid][(const int)iType][7]->Fill(zDist,weight);
-    histo[(const int)iPt][(const int)iPid][(const int)iType][8]->Fill(phiDist,weight);
-    histo[(const int)iPt][(const int)iPid][(const int)iType][9]->Fill(etaTowDist,weight);
-    histo[(const int)iPt][(const int)iPid][(const int)iType][10]->Fill(phiTowDist,weight);
-    histo[(const int)iPt][(const int)iPid][(const int)iType][11]->Fill(nphieta,weight);
-    histo[(const int)iPt][(const int)iPid][(const int)iType][12]->Fill(e/pt/TMath::CosH(eta),weight);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][4][iTrigger]->Fill(neta,weight);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][5][iTrigger]->Fill(nphi,weight);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][6][iTrigger]->Fill(eoverp,weight);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][7][iTrigger]->Fill(zDist,weight);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][8][iTrigger]->Fill(phiDist,weight);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][9][iTrigger]->Fill(etaTowDist,weight);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][10][iTrigger]->Fill(phiTowDist,weight);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][11][iTrigger]->Fill(nphieta,weight);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][12][iTrigger]->Fill(e/pt/TMath::CosH(eta),weight);
     
     // pair QA
-    histo[(const int)iPt][(const int)iPid][(const int)iType][13]->Fill(TMath::Sqrt((pairPositionX+0.2383) * (pairPositionX+0.2383) + (pairPositionY+0.1734) * (pairPositionY+0.1734)),weight);
-    histo[(const int)iPt][(const int)iPid][(const int)iType][14]->Fill(pairDca,weight);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][13][iTrigger]->Fill(TMath::Sqrt((pairPositionX+0.2383) * (pairPositionX+0.2383) + (pairPositionY+0.1734) * (pairPositionY+0.1734)),weight);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][14][iTrigger]->Fill(pairDca,weight);
     
 }
 
@@ -642,10 +663,6 @@ bool StPicoNpeAnaMaker::isBsmd(){
 }
 bool StPicoNpeAnaMaker::isTof(){
     if (fabs(beta-1) < cutsAna::tofBeta) return true;
-    else return false;
-}
-bool StPicoNpeAnaMaker::isBHTevent(){
-    if (isHTEvents >> 1 & 0x1 ) return true;
     else return false;
 }
 

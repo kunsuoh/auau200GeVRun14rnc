@@ -34,9 +34,10 @@ class StPicoDst;
 class StPicoPrescales;
 
 int const nnpt = 6;
-int const nnpid = 24;
+int const nnpid = 12;
 int const nntype = 10;
 int const nnhisto = 15;
+int const nntrigger = 4;
 
 
 
@@ -104,8 +105,8 @@ class StPicoNpeAnaMaker : public StMaker
     TH1F * hZDCx;
     TH1F * hZDCxWt;
     TH1I * hTrigger;
-    TH1I * hTriggerCheck[2];
-    TH1I * hTriggerCheckWt[2];
+    TH1I * hTriggerCheck[nntrigger];
+    TH1I * hTriggerCheckWt[nntrigger];
     TH1I * hTriggerWt;
     TH1I * hCheckDoubleTrigger;
     
@@ -158,8 +159,9 @@ class StPicoNpeAnaMaker : public StMaker
 
     TH1F * hRefMult[5];
     TH1F * hRefMultWt[5];
-    TH1F * histo[nnpt][nnpid][nntype][nnhisto];
-    TH2F * histo2d[nnpid];
+    TH1F * histo[nnpt][nnpid][nntype][nnhisto][nntrigger];
+    TH2F * histo2d[nnpid][nntrigger];
+    TH2F * histo2dDcaPt[nnpid][nntrigger];
     int nptbin;
     int npid;
     int ntype;
