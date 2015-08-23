@@ -520,8 +520,8 @@ void StPicoNpeAnaMaker::setHistogram()
     
     for (int j=0; j<nnpid; j++)
         for (int m=0;m<nntrigger;m++) {
-            histo2d[j][m] = new TH2F(Form("histo2D_%d_%d",j,m),Form("histo2D_%d_%d",j,m),100,0,20,200,0,1000);
-            histo2dDcaPt[j][m] = new TH2F(Form("histo2DDcaPt_%d_%d",j,m),Form("histo2DDcaPt_%d_%d",j,m),100,0,20,100,-0.1,0.1);
+            histo2d[j][m] = new TH2F(Form("histo2D_%d_%d",j,m),Form("histo2D_%d_%d",j,m),100,0,10,200,0,1000);
+            histo2dDcaPt[j][m] = new TH2F(Form("histo2DDcaPt_%d_%d",j,m),Form("histo2DDcaPt_%d_%d",j,m),100,0,10,100,-0.1,0.1);
             histo2d[j][m]->Sumw2();
             histo2dDcaPt[j][m]->Sumw2();
             
