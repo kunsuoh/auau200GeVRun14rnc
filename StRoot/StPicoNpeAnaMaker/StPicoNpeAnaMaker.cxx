@@ -243,10 +243,10 @@ Int_t StPicoNpeAnaMaker::Make()
     hCheckDoubleTrigger->Fill(checkDoubleTrigger18);
     
 
-    hZDCx->Fill(mZDCx);
-    hZDCxWt->Fill(mZDCx,weight);
     
     for (int i=0; i<nntrigger; i++) if (isHTEvents >> i & 0x1) {
+        hZDCx[i]->Fill(mZDCx);
+        hZDCxWt[i]->Fill(mZDCx,weight[i]);
         hRefMult[i]->Fill(mRefMult);
         hRefMultWt[i]->Fill(mRefMult,weight[i]);
         for (int j=0; j<30; j++) if (picoDst->event()->triggerWord() >> j & 0x1) {
@@ -586,11 +586,11 @@ void StPicoNpeAnaMaker::fillHistogram(int iType){
 void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType){
     for (int i=0; i<nntrigger; i++) {
         if (isHTEvents >> i & 0x1 ) {
-            histo[(const int)iPt][(const int)iPid][(const int)iType][0][i]->Fill(nsige,weight);
+            histo[(const int)iPt][(const int)iPid][(const int)iType][0][i]->Fill(nsige,weight[i]);
             if ((iType == 0 || iType == 1 || iType == 4 || iType == 5 || iType == 6 || iType == 7) && nsige > -1) {
                 fillHistogram(iPt, iPid, iType, i);
-                if (pairCharge==0) histo2dDcaPt[iPid][i]->Fill(pt,dca,weight);
-                else histo2dDcaPt[iPid][i]->Fill(pt,dca,-1*weight);
+                if (pairCharge==0) histo2dDcaPt[iPid][i]->Fill(pt,dca,weight[i]);
+                else histo2dDcaPt[iPid][i]->Fill(pt,dca,-1*weight[i]);
             }
             if (iType==2 || iType==8) {
                 float pidCutLw[2][6];
@@ -606,7 +606,7 @@ void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType){
                 //        if (iPid%4 < 3 && nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) fillHistogram(iPt, iPid, iType, 0);
                 if (nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) {
                     fillHistogram(iPt, iPid, iType, i);
-                    histo2d[iPid][i]->Fill(pt*TMath::CosH(eta),adc0,weight);
+                    histo2d[iPid][i]->Fill(pt*TMath::CosH(eta),adc0,weight[i]);
                 }
             }
             if ((iType==3 || iType==9) && fabs(nsigpion) < 2) fillHistogram(iPt, iPid, iType, i);
@@ -615,24 +615,24 @@ void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType){
 }
 //-------------------------------------------------------------------------------
 void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType, int iTrigger){
-    histo[(const int)iPt][(const int)iPid][(const int)iType][1][iTrigger]->Fill(nsige,weight);
-    histo[(const int)iPt][(const int)iPid][(const int)iType][2][iTrigger]->Fill(dca,weight);
-    histo[(const int)iPt][(const int)iPid][(const int)iType][3][iTrigger]->Fill(pairMass,weight);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][1][iTrigger]->Fill(nsige,weight[iTrigger]);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][2][iTrigger]->Fill(dca,weight[iTrigger]);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][3][iTrigger]->Fill(pairMass,weight[iTrigger]);
     
     // PID QA
-    histo[(const int)iPt][(const int)iPid][(const int)iType][4][iTrigger]->Fill(neta,weight);
-    histo[(const int)iPt][(const int)iPid][(const int)iType][5][iTrigger]->Fill(nphi,weight);
-    histo[(const int)iPt][(const int)iPid][(const int)iType][6][iTrigger]->Fill(eoverp,weight);
-    histo[(const int)iPt][(const int)iPid][(const int)iType][7][iTrigger]->Fill(zDist,weight);
-    histo[(const int)iPt][(const int)iPid][(const int)iType][8][iTrigger]->Fill(phiDist,weight);
-    histo[(const int)iPt][(const int)iPid][(const int)iType][9][iTrigger]->Fill(etaTowDist,weight);
-    histo[(const int)iPt][(const int)iPid][(const int)iType][10][iTrigger]->Fill(phiTowDist,weight);
-    histo[(const int)iPt][(const int)iPid][(const int)iType][11][iTrigger]->Fill(nphieta,weight);
-    histo[(const int)iPt][(const int)iPid][(const int)iType][12][iTrigger]->Fill(e/pt/TMath::CosH(eta),weight);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][4][iTrigger]->Fill(neta,weight[iTrigger]);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][5][iTrigger]->Fill(nphi,weight[iTrigger]);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][6][iTrigger]->Fill(eoverp,weight[iTrigger]);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][7][iTrigger]->Fill(zDist,weight[iTrigger]);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][8][iTrigger]->Fill(phiDist,weight[iTrigger]);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][9][iTrigger]->Fill(etaTowDist,weight[iTrigger]);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][10][iTrigger]->Fill(phiTowDist,weight[iTrigger]);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][11][iTrigger]->Fill(nphieta,weight[iTrigger]);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][12][iTrigger]->Fill(e/pt/TMath::CosH(eta),weight[iTrigger]);
     
     // pair QA
-    histo[(const int)iPt][(const int)iPid][(const int)iType][13][iTrigger]->Fill(TMath::Sqrt((pairPositionX+0.2383) * (pairPositionX+0.2383) + (pairPositionY+0.1734) * (pairPositionY+0.1734)),weight);
-    histo[(const int)iPt][(const int)iPid][(const int)iType][14][iTrigger]->Fill(pairDca,weight);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][13][iTrigger]->Fill(TMath::Sqrt((pairPositionX+0.2383) * (pairPositionX+0.2383) + (pairPositionY+0.1734) * (pairPositionY+0.1734)),weight[iTrigger]);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][14][iTrigger]->Fill(pairDca,weight[iTrigger]);
     
 }
 
