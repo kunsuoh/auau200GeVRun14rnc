@@ -299,7 +299,7 @@ Int_t StPicoNpeAnaMaker::Make()
                     if (pairCharge == 0) fillHistogram(4); // US
                     else fillHistogram(5);                 // LS
                 }
-                else{                               // non HFT
+                else {                               // non HFT
                     if (pairCharge == 0) fillHistogram(6); // US
                     else fillHistogram(7);                 // LS
                     
@@ -308,21 +308,21 @@ Int_t StPicoNpeAnaMaker::Make()
                         if (pairCharge == 0) fillHistogram(10); // US
                         else fillHistogram(11);                 // LS
                         
-                    }
-                    if (partner_nsige > -1){
-                        if (pairCharge == 0) fillHistogram(12); // US
-                        else fillHistogram(13);                 // LS
-                        
-                    }
-                    if (partner_nsige > 0){
-                        if (pairCharge == 0) fillHistogram(14); // US
-                        else fillHistogram(15);                 // LS
-                        
-                    }
-                    if (partner_nsige > 1){
-                        if (pairCharge == 0) fillHistogram(16); // US
-                        else fillHistogram(17);                 // LS
-                        
+                        if (partner_nsige > -1){
+                            if (pairCharge == 0) fillHistogram(12); // US
+                            else fillHistogram(13);                 // LS
+                            
+                            if (partner_nsige > 0){
+                                if (pairCharge == 0) fillHistogram(14); // US
+                                else fillHistogram(15);                 // LS
+                                if (partner_nsige > 1){
+                                    if (pairCharge == 0) fillHistogram(16); // US
+                                    else fillHistogram(17);                 // LS
+                                    
+                                }
+
+                            }
+                        }
                     }
                 }
                 
