@@ -301,7 +301,31 @@ Int_t StPicoNpeAnaMaker::Make()
                 else{                               // non HFT
                     if (pairCharge == 0) fillHistogram(6); // US
                     else fillHistogram(7);                 // LS
+                    
+                    // partner electron nsige variation
+                    if (partner_nsige > -2){
+                        if (pairCharge == 0) fillHistogram(10); // US
+                        else fillHistogram(11);                 // LS
+                        
+                    }
+                    if (partner_nsige > -1){
+                        if (pairCharge == 0) fillHistogram(12); // US
+                        else fillHistogram(13);                 // LS
+                        
+                    }
+                    if (partner_nsige > 0){
+                        if (pairCharge == 0) fillHistogram(14); // US
+                        else fillHistogram(15);                 // LS
+                        
+                    }
+                    if (partner_nsige > 1){
+                        if (pairCharge == 0) fillHistogram(16); // US
+                        else fillHistogram(17);                 // LS
+                        
+                    }
                 }
+                
+
                 //cout << "1 " << pairMass << " " << epair->pairMass() << " " <<pairDca << " " << pt << " " << eta << " " << dca << " " << nsige << " " << pairPositionX << " " << pairPositionY << " " << pairPositionZ << " " << electron->nHitsFit() << " " << electron->nHitsDedx() <<  " " << partner->nHitsFit() << " " << partner->nHitsDedx() << " " << partner->gPt() << endl;
             }
             delete epair;
@@ -588,7 +612,17 @@ void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType){
     for (int i=0; i<nntrigger; i++) {
         if (isHTEvents >> i & 0x1 ) {
             histo[(const int)iPt][(const int)iPid][(const int)iType][0][i]->Fill(nsige,weight[i]);
-            if ((iType == 0 || iType == 1 || iType == 4 || iType == 5 || iType == 6 || iType == 7) && nsige > -1) {
+            if ((
+                 iType == 0 || iType == 1 ||    // PhE from NPE tree
+                 iType == 4 || iType == 5 ||    // PhE w/ HFT recon.
+                 iType == 6 || iType == 7 ||    // PhE w/o HFT recon.
+                 iType == 10 || iType == 11 ||  // PhE w/ HFT recon. nSigE_Part > -2
+                 iType == 12 || iType == 13 ||  // PhE w/ HFT recon. nSigE_Part > -1
+                 iType == 14 || iType == 15 ||  // PhE w/ HFT recon. nSigE_Part >  0
+                 iType == 16 || iType == 17     // PhE w/ HFT recon. nSigE_Part >  1
+                 ) &&
+                nsige > -1)
+            {
                 fillHistogram(iPt, iPid, iType, i);
                 if (iType==0) histo2dDcaPt[iPid][i]->Fill(pt,dca,weight[i]);
                 if (iType==1) histo2dDcaPt[iPid][i]->Fill(pt,dca,-1*weight[i]);
