@@ -590,8 +590,8 @@ void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType){
             histo[(const int)iPt][(const int)iPid][(const int)iType][0][i]->Fill(nsige,weight[i]);
             if ((iType == 0 || iType == 1 || iType == 4 || iType == 5 || iType == 6 || iType == 7) && nsige > -1) {
                 fillHistogram(iPt, iPid, iType, i);
-                if (pairCharge==0) histo2dDcaPt[iPid][i]->Fill(pt,dca,weight[i]);
-                else histo2dDcaPt[iPid][i]->Fill(pt,dca,-1*weight[i]);
+                if (iType==0) histo2dDcaPt[iPid][i]->Fill(pt,dca,weight[i]);
+                if (iType==1) histo2dDcaPt[iPid][i]->Fill(pt,dca,-1*weight[i]);
             }
             if (iType==2 || iType==8) {
                 float pidCutLw[2][6];
