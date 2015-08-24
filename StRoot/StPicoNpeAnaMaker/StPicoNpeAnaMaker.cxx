@@ -198,6 +198,7 @@ Int_t StPicoNpeAnaMaker::Make()
     weight[1] = 1;
     weight[2] = 1;
     weight[3] = 1;
+    
 
 
     for (int i=0; i<4; i++) if (picoDst->event()->triggerWord() >> i & 0x1) {
