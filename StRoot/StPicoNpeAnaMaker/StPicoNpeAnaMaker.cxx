@@ -129,7 +129,7 @@ Int_t StPicoNpeAnaMaker::Finish()
     for (int j=0;j<nnpid;j++) {// PID
         for (int m=0;m<nntrigger;m++) { // Trigger
             histo2d[j][m]->Write();
-            histo2dDcaPt[j][m]->Write();
+      //      histo2dDcaPt[j][m]->Write();
         }
     }
  
@@ -546,9 +546,9 @@ void StPicoNpeAnaMaker::setHistogram()
     for (int j=0; j<nnpid; j++)
         for (int m=0;m<nntrigger;m++) {
             histo2d[j][m] = new TH2F(Form("histo2D_%d_%d",j,m),Form("histo2D_%d_%d",j,m),100,0,10,200,0,1000);
-            histo2dDcaPt[j][m] = new TH2F(Form("histo2DDcaPt_%d_%d",j,m),Form("histo2DDcaPt_%d_%d",j,m),100,0,10,100,-0.1,0.1);
+       //     histo2dDcaPt[j][m] = new TH2F(Form("histo2DDcaPt_%d_%d",j,m),Form("histo2DDcaPt_%d_%d",j,m),100,0,10,100,-0.1,0.1);
             histo2d[j][m]->Sumw2();
-            histo2dDcaPt[j][m]->Sumw2();
+       //     histo2dDcaPt[j][m]->Sumw2();
             
     }
     
@@ -625,8 +625,8 @@ void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType){
                 nsige > -1)
             {
                 fillHistogram(iPt, iPid, iType, i);
-                if (iType==0) histo2dDcaPt[iPid][i]->Fill(pt,dca,weight[i]);
-                if (iType==1) histo2dDcaPt[iPid][i]->Fill(pt,dca,-1*weight[i]);
+          //      if (iType==0) histo2dDcaPt[iPid][i]->Fill(pt,dca,weight[i]);
+          //      if (iType==1) histo2dDcaPt[iPid][i]->Fill(pt,dca,-1*weight[i]);
             }
             if (iType==2 || iType==8) {
                 float pidCutLw[2][6];
