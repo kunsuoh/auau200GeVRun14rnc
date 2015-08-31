@@ -684,9 +684,9 @@ void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType, int iTrigger
     
 }
 void StPicoNpeAnaMaker::fillHistogram(TString check){
-    if (check ==  "PureE" && pairMass<0.01){
+    histoPureE[getPtBin(pt)][1]->Fill(pairMass);
+    if (check ==  "PureE" && pairMass < 0.01 && nsige > -1){
         histoPureE[getPtBin(pt)][0]->Fill(pairConvRadious);
-        histoPureE[getPtBin(pt)][1]->Fill(pairMass);
         histoPureE[getPtBin(pt)][2]->Fill(pairMass);
         histoPureE[getPtBin(pt)][3]->Fill(pairAnglePhi);
         histoPureE[getPtBin(pt)][4]->Fill(pairDca);
