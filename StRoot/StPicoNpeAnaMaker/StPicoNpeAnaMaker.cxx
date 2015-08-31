@@ -535,7 +535,7 @@ void StPicoNpeAnaMaker::setHistogram()
     TString pid[nnpid] = {
         "Tpc","TpcTof","TpcBemc","TpcBemc2","TpcBsmd","TpcBemcBsmd","TpcBemc2Bsmd","TpcBemc3Bsmd",
         "TpcBemc4","TpcBemc5","TpcBemc4Bsmd","TpcBemc5Bsmd"};
-    TString type[nntype] = {"PhEUS","PhELS","IncE","Pion","RecoHFTPhEUS","RecoHFTPhELS","RecoNonHFTPhEUS","RecoNonHFTPhELS","IncENonHFT","PionNonHFT"};
+    TString type[nntype+20] = {"PhEUS","PhELS","IncE","Pion","RecoHFTPhEUS","RecoHFTPhELS","RecoNonHFTPhEUS","RecoNonHFTPhELS","IncENonHFT","PionNonHFT"};
     TString histoname[nnhisto] = {"nSigE","nSigEAfterCut","dca","pairMass","nEta","nPhi","e0/p","zDist","phiDist","etaTowDist","phiTowDist","nphieta","e/p","ConvRadious","pairDca","dcaCharge"};
     TString trigger[nntrigger] = {"MB", "BHT1", "BHT2", "BHT3"};
     
