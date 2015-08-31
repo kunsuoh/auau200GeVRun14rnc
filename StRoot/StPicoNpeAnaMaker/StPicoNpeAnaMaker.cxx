@@ -281,7 +281,7 @@ Int_t StPicoNpeAnaMaker::Make()
         
         
     }
-    
+    /*
     for (unsigned short ik = 0; ik < idxPicoTaggedEs.size(); ++ik)
     {
         StPicoTrack const * electron = picoDst->track(idxPicoTaggedEs[ik]);
@@ -332,7 +332,7 @@ Int_t StPicoNpeAnaMaker::Make()
             delete epair;
         } // .. end make electron pairs
     } // .. end of tagged e loop
-    
+    */
     // Photonic Electron
     TClonesArray const * aElectronPair = mPicoNpeEvent->electronPairArray();
     for (int idx = 0; idx < aElectronPair->GetEntries(); ++idx)
@@ -451,6 +451,7 @@ void StPicoNpeAnaMaker::setVariables(StPicoTrack * track)
     
     // Track
     dca = eHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
+    dcaCharge = dca*track->charge();
     pt = track->gPt();
     eta = track->gMom(pVtx, bField).pseudoRapidity();
     
@@ -535,12 +536,12 @@ void StPicoNpeAnaMaker::setHistogram()
         "Tpc","TpcTof","TpcBemc","TpcBemc2","TpcBsmd","TpcBemcBsmd","TpcBemc2Bsmd","TpcBemc3Bsmd",
         "TpcBemc4","TpcBemc5","TpcBemc4Bsmd","TpcBemc5Bsmd"};
     TString type[nntype] = {"PhEUS","PhELS","IncE","Pion","RecoHFTPhEUS","RecoHFTPhELS","RecoNonHFTPhEUS","RecoNonHFTPhELS","IncENonHFT","PionNonHFT"};
-    TString histoname[nnhisto] = {"nSigE","nSigEAfterCut","dca","pairMass","nEta","nPhi","e0/p","zDist","phiDist","etaTowDist","phiTowDist","nphieta","e/p","ConvRadious","pairDca"};
+    TString histoname[nnhisto] = {"nSigE","nSigEAfterCut","dca","pairMass","nEta","nPhi","e0/p","zDist","phiDist","etaTowDist","phiTowDist","nphieta","e/p","ConvRadious","pairDca","dcaCharge"};
     TString trigger[nntrigger] = {"MB", "BHT1", "BHT2", "BHT3"};
     
-    int binHisto[nnhisto] = {    289,    289,    100,    100,    10, 10, 200,    100,    100,    100,    100,    20  ,200    ,500    ,200};
-    double minHisto[nnhisto] = { -13,    -13,   -0.1,    0,      0,  0,  0,      -20,    -0.1,   -0.1,   -0.1,   0   ,0      ,0      ,0};
-    double maxHisto[nnhisto] = { 13,      13,    0.1,    0.2,    10, 10, 6,      20,     0.1,    0.1,    0.1,    20  ,6      ,50     ,2};
+    int binHisto[nnhisto] = {    289,    289,    100,    100,    10, 10, 200,    100,    100,    100,    100,    20  ,200    ,500    ,200   ,100};
+    double minHisto[nnhisto] = { -13,    -13,   -0.1,    0,      0,  0,  0,      -20,    -0.1,   -0.1,   -0.1,   0   ,0      ,0      ,0     ,-0.1};
+    double maxHisto[nnhisto] = { 13,      13,    0.1,    0.2,    10, 10, 6,      20,     0.1,    0.1,    0.1,    20  ,6      ,50     ,2     ,0.1};
     
     
     for (int j=0; j<nnpid; j++)
@@ -654,7 +655,8 @@ void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType, int iTrigger
     histo[(const int)iPt][(const int)iPid][(const int)iType][1][iTrigger]->Fill(nsige,weight[iTrigger]);
     histo[(const int)iPt][(const int)iPid][(const int)iType][2][iTrigger]->Fill(dca,weight[iTrigger]);
     histo[(const int)iPt][(const int)iPid][(const int)iType][3][iTrigger]->Fill(pairMass,weight[iTrigger]);
-    
+    histo[(const int)iPt][(const int)iPid][(const int)iType][15][iTrigger]->Fill(dcaCharge,weight[iTrigger]);
+
     // PID QA
     histo[(const int)iPt][(const int)iPid][(const int)iType][4][iTrigger]->Fill(neta,weight[iTrigger]);
     histo[(const int)iPt][(const int)iPid][(const int)iType][5][iTrigger]->Fill(nphi,weight[iTrigger]);

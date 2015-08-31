@@ -36,7 +36,7 @@ class StPicoPrescales;
 int const nnpt = 6;
 int const nnpid = 12;
 int const nntype = 10+8;
-int const nnhisto = 15;
+int const nnhisto = 16;
 int const nntrigger = 4;
 
 
@@ -120,6 +120,7 @@ class StPicoNpeAnaMaker : public StMaker
     
     
     Float_t dca;
+    Float_t dcaCharge;
     Float_t pt;
     Float_t partner_pt;
     Float_t eta;
