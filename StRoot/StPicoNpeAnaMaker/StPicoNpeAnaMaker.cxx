@@ -132,7 +132,9 @@ Int_t StPicoNpeAnaMaker::Finish()
       //      histo2dDcaPt[j][m]->Write();
         }
     }
- 
+    for (int i=1;i<nnpt;i++) // PT
+    for (int j=0;j<5;j++)
+        histoPureE[i][j]->Write();
     mOutputFile->Close();
     
     return kStOK;
@@ -341,7 +343,10 @@ Int_t StPicoNpeAnaMaker::Make()
         if (isGoodPair(epair))
         {
             setVariables(epair);
-            if (pairCharge == 0) fillHistogram(0); // US
+            if (pairCharge == 0) {
+                fillHistogram(0); // US
+                fillHistogram("PureE");
+            }
             else fillHistogram(1);                 // LS
             //cout << "0 " << pairMass << " " << epair->pairMass() << " " << pairDca << " " << pt << " " << eta  << " " << dca << " " << nsige << " " << pairPositionX << " " << pairPositionY << " " << pairPositionZ << endl;
         }
@@ -522,6 +527,7 @@ void StPicoNpeAnaMaker::setVariables(StElectronPair * epair)
     pairPositionX = epair->positionX();
     pairPositionY = epair->positionY();
     pairPositionZ = epair->positionZ();
+    pairConvRadious = TMath::Sqrt((pairPositionX+0.2383) * (pairPositionX+0.2383) + (pairPositionY+0.1734) * (pairPositionY+0.1734));
     
     partner_pt = partner->gPt();
     partner_nsige = partner->nSigmaElectron();
@@ -553,6 +559,11 @@ void StPicoNpeAnaMaker::setHistogram()
     }
     
     for (int i=0;i<nnpt;i++){
+        histoPureE[i][0] = new TH1F(Form("histoPureE_%d_%d",i,0),Form("histoPureE_%d_%d",i,0),100,0,10);
+        histoPureE[i][1] = new TH1F(Form("histoPureE_%d_%d",i,1),Form("histoPureE_%d_%d",i,1),100,0,0.05);
+        histoPureE[i][2] = new TH1F(Form("histoPureE_%d_%d",i,2),Form("histoPureE_%d_%d",i,2),100,0,0.01);
+        histoPureE[i][3] = new TH1F(Form("histoPureE_%d_%d",i,3),Form("histoPureE_%d_%d",i,3),100,0,1);
+        histoPureE[i][4] = new TH1F(Form("histoPureE_%d_%d",i,4),Form("histoPureE_%d_%d",i,4),100,0,1);
         for (int j=0;j<nnpid;j++)
             for (int k=0;k<nntype;k++)
                 for (int l=0;l<nnhisto;l++)
@@ -668,10 +679,20 @@ void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType, int iTrigger
     histo[(const int)iPt][(const int)iPid][(const int)iType][12][iTrigger]->Fill(e/pt/TMath::CosH(eta),weight[iTrigger]);
     
     // pair QA
-    histo[(const int)iPt][(const int)iPid][(const int)iType][13][iTrigger]->Fill(TMath::Sqrt((pairPositionX+0.2383) * (pairPositionX+0.2383) + (pairPositionY+0.1734) * (pairPositionY+0.1734)),weight[iTrigger]);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][13][iTrigger]->Fill(pairConvRadious,weight[iTrigger]);
     histo[(const int)iPt][(const int)iPid][(const int)iType][14][iTrigger]->Fill(pairDca,weight[iTrigger]);
     
 }
+void StPicoNpeAnaMaker::fillHistogram(TString check){
+    if (check ==  "pureE"){
+        histoPureE[getPtBin(pt)][0]->Fill(pairConvRadious);
+        histoPureE[getPtBin(pt)][1]->Fill(pairMass);
+        histoPureE[getPtBin(pt)][2]->Fill(pairMass);
+        histoPureE[getPtBin(pt)][3]->Fill(pairAnglePhi);
+        histoPureE[getPtBin(pt)][4]->Fill(pairDca);
+    }
+}
+
 
 //-----------------------------------------------------------------------------------
 bool StPicoNpeAnaMaker::isBemc(){
