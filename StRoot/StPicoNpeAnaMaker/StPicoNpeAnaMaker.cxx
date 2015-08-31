@@ -269,11 +269,10 @@ Int_t StPicoNpeAnaMaker::Make()
                 fillHistogram(2);               // electron candidates
                 fillHistogram(3);               // hadron
             }
-            else {
-                fillHistogram(8);               // electron candidates
-                fillHistogram(9);               // hadron
-
-            }
+  //          else {
+  //              fillHistogram(8);               // electron candidates
+  //              fillHistogram(9);               // hadron
+  //          }
             
         }
         if (isGoodTagged(track))  idxPicoTaggedEs.push_back(iTrack);
