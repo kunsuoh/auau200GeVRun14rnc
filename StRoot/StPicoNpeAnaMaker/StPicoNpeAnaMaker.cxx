@@ -275,8 +275,8 @@ Int_t StPicoNpeAnaMaker::Make()
   //          }
             
         }
-        if (isGoodTagged(track))  idxPicoTaggedEs.push_back(iTrack);
-        if (isGoodPartner(track)) idxPicoPartnerEs.push_back(iTrack);
+  //      if (isGoodTagged(track))  idxPicoTaggedEs.push_back(iTrack);
+  //      if (isGoodPartner(track)) idxPicoPartnerEs.push_back(iTrack);
         
         
     }
