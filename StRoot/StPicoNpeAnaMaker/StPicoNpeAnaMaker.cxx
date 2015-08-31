@@ -561,7 +561,7 @@ void StPicoNpeAnaMaker::setHistogram()
     for (int i=0;i<nnpt;i++){
         histoPureE[i][0] = new TH1F(Form("histoPureE_%d_%d",i,0),Form("histoPureE_%d_%d",i,0),100,0,10);
         histoPureE[i][1] = new TH1F(Form("histoPureE_%d_%d",i,1),Form("histoPureE_%d_%d",i,1),100,0,0.05);
-        histoPureE[i][2] = new TH1F(Form("histoPureE_%d_%d",i,2),Form("histoPureE_%d_%d",i,2),100,0,0.01);
+        histoPureE[i][2] = new TH1F(Form("histoPureE_%d_%d",i,2),Form("histoPureE_%d_%d",i,2),100,0,0.003);
         histoPureE[i][3] = new TH1F(Form("histoPureE_%d_%d",i,3),Form("histoPureE_%d_%d",i,3),100,0,1);
         histoPureE[i][4] = new TH1F(Form("histoPureE_%d_%d",i,4),Form("histoPureE_%d_%d",i,4),100,0,1);
         for (int j=0;j<nnpid;j++)
@@ -684,7 +684,7 @@ void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType, int iTrigger
     
 }
 void StPicoNpeAnaMaker::fillHistogram(TString check){
-    if (check ==  "PureE"){
+    if (check ==  "PureE" && pairMass<0.003){
         histoPureE[getPtBin(pt)][0]->Fill(pairConvRadious);
         histoPureE[getPtBin(pt)][1]->Fill(pairMass);
         histoPureE[getPtBin(pt)][2]->Fill(pairMass);
