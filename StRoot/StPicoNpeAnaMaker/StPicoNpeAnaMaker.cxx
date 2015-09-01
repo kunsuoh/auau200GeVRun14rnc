@@ -455,7 +455,7 @@ void StPicoNpeAnaMaker::setVariables(StPicoTrack * track)
     
     // Track
     dca = eHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
-    int trackCharge = (eHelix.curvature()-sqrt((eHelix.xcenter()-pVtx.x())**2 + (eHelix.ycenter()-pVtx.y())**2)) < 0 ? -1 : 1;
+    double trackCharge = (eHelix.curvature()-sqrt((eHelix.xcenter()-pVtx.x())*(eHelix.xcenter()-pVtx.x()) + (eHelix.ycenter()-pVtx.y())*(eHelix.ycenter()-pVtx.y()))) < 0 ? -1 : 1;
     dcaCharge = fabs(dca)*trackCharge;
     pt = track->gPt();
     eta = track->gMom(pVtx, bField).pseudoRapidity();
