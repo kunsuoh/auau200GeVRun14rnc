@@ -133,7 +133,7 @@ Int_t StPicoNpeAnaMaker::Finish()
         }
     }
     for (int i=1;i<nnpt;i++) // PT
-    for (int j=0;j<5;j++)
+    for (int j=0;j<6;j++)
         histoPureE[i][j]->Write();
     mOutputFile->Close();
     
@@ -564,6 +564,7 @@ void StPicoNpeAnaMaker::setHistogram()
         histoPureE[i][2] = new TH1F(Form("histoPureE_%d_%d",i,2),Form("histoPureE_%d_%d",i,2),100,0,0.01);
         histoPureE[i][3] = new TH1F(Form("histoPureE_%d_%d",i,3),Form("histoPureE_%d_%d",i,3),100,0,1);
         histoPureE[i][4] = new TH1F(Form("histoPureE_%d_%d",i,4),Form("histoPureE_%d_%d",i,4),100,0,1);
+        histoPureE[i][5] = new TH1F(Form("histoPureE_%d_%d",i,4),Form("histoPureE_%d_%d",i,4),100,-0.1,0.1);
         for (int j=0;j<nnpid;j++)
             for (int k=0;k<nntype;k++)
                 for (int l=0;l<nnhisto;l++)
@@ -690,6 +691,7 @@ void StPicoNpeAnaMaker::fillHistogram(TString check){
         histoPureE[getPtBin(pt)][2]->Fill(pairMass);
         histoPureE[getPtBin(pt)][3]->Fill(pairAnglePhi);
         histoPureE[getPtBin(pt)][4]->Fill(pairDca);
+        histoPureE[getPtBin(pt)][5]->Fill(dca);
     }
 }
 
