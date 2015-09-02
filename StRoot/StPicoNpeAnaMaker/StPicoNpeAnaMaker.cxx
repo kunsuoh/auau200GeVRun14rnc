@@ -538,7 +538,7 @@ void StPicoNpeAnaMaker::setHistogram()
     
     double ptbin[nnpt+1] = {0, 1.5, 1.8, 2.5, 4.0, 6.5, 10.};
     TString pid[nnpid+20] = {
-        "Tpc", "TpcBemc3Bsmd", "TpcNoBemc3NoBsmd0", "TpcNoBemc3NoBsmd1", "Dalitz", "Conversion"};
+        "Tpc", "TpcBemc3Bsmd", "TpcNoBemc3NoBsmd0", "TpcNoBemc3NoBsmd1", "TpcDalitz", "TpcConversion", "TpcBemc3BsmdDalitz", "TpcBemc3BsmdConversion"};
       //  "Tpc","TpcTof","TpcBemc","TpcBemc2","TpcBsmd","TpcBemcBsmd","TpcBemc2Bsmd","TpcBemc3Bsmd",
       //  "TpcBemc4","TpcBemc5","TpcBemc4Bsmd","TpcBemc5Bsmd"};
     TString type[nntype+20] = {"PhEUS","PhELS","IncE","Pion","RecoHFTPhEUS","RecoHFTPhELS","RecoNonHFTPhEUS","RecoNonHFTPhELS","IncENonHFT","PionNonHFT"};
@@ -612,8 +612,10 @@ void StPicoNpeAnaMaker::fillHistogram(int iType){
     if (isBemc3() && isBsmd())  fillHistogram(iPt, 1, iType);
     if (!isBemc3() && !isBsmd())fillHistogram(iPt, 2, iType);
     if (!isBemc3() || !isBsmd())fillHistogram(iPt, 3, iType);
-    if (isBemc3() && isBsmd() && pairConvRadious < 2. )                         fillHistogram(iPt, 4, iType);
-    if (isBemc3() && isBsmd() && pairConvRadious > 2. && pairConvRadious < 4.)  fillHistogram(iPt, 5, iType);
+    if (pairConvRadious < 2. )                         fillHistogram(iPt, 4, iType);
+    if (pairConvRadious > 2. && pairConvRadious < 4.)  fillHistogram(iPt, 5, iType);
+    if (isBemc3() && isBsmd() && pairConvRadious < 2. )                         fillHistogram(iPt, 6, iType);
+    if (isBemc3() && isBsmd() && pairConvRadious > 2. && pairConvRadious < 4.)  fillHistogram(iPt, 7, iType);
     
     /*
      if (isTof())                fillHistogram(iPt, 1, iType);
@@ -636,8 +638,8 @@ void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType){
             histo[(const int)iPt][(const int)iPid][(const int)iType][0][i]->Fill(nsige,weight[i]);
             if ((
                  iType == 0 || iType == 1 ||    // PhE from NPE tree
-                 iType == 4 || iType == 5 ||    // PhE w/ HFT recon.
-                 iType == 6 || iType == 7 ||    // PhE w/o HFT recon.
+                 iType == 4 || iType == 5 ||    //  " and mass < 0.1 //PhE w/ HFT recon.
+                 iType == 6 || iType == 7 ||    //  " and mass < 0.01 //PhE w/o HFT recon.
                  iType == 10 || iType == 11 ||  // PhE w/ HFT recon. nSigE_Part > -2
                  iType == 12 || iType == 13 ||  // PhE w/ HFT recon. nSigE_Part > -1
                  iType == 14 || iType == 15 ||  // PhE w/ HFT recon. nSigE_Part >  0
@@ -645,6 +647,9 @@ void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType){
                  ) &&
                 nsige > -1)
             {
+                fillHistogram(iPt, iPid, iType, i);
+                if ((iType == 4 || iType == 5) && pairMass < 0.1)  fillHistogram(iPt, iPid, iType, i);
+                if ((iType == 6 || iType == 7) && pairMass < 0.01) fillHistogram(iPt, iPid, iType, i);
                 fillHistogram(iPt, iPid, iType, i);
           //      if (iType==0) histo2dDcaPt[iPid][i]->Fill(pt,dca,weight[i]);
           //      if (iType==1) histo2dDcaPt[iPid][i]->Fill(pt,dca,-1*weight[i]);
