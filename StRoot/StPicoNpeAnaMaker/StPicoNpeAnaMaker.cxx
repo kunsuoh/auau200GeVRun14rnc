@@ -345,14 +345,18 @@ Int_t StPicoNpeAnaMaker::Make()
             setVariables(epair);
             if (pairCharge == 0) {
                 fillHistogram(0); // US
-                if (pairMass < 0.1) fillHistogram(4); // US
-                if (pairMass < 0.01) fillHistogram(6); // US
+                if (pairMass < 0.1) {
+                    fillHistogram(4); // US
+                    if (pairMass < 0.01) fillHistogram(6); // US
+                }
                 fillHistogram("PureE");
             }
             else {
                 fillHistogram(1);                 // LS
-                if (pairMass < 0.1) fillHistogram(5); // US
-                if (pairMass < 0.01) fillHistogram(7); // US
+                if (pairMass < 0.1) {
+                    fillHistogram(5); // LS
+                    if (pairMass < 0.01) fillHistogram(7); // LS
+                }
 
             }
             //cout << "0 " << pairMass << " " << epair->pairMass() << " " << pairDca << " " << pt << " " << eta  << " " << dca << " " << nsige << " " << pairPositionX << " " << pairPositionY << " " << pairPositionZ << endl;
