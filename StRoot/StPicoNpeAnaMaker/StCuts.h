@@ -44,7 +44,7 @@ namespace cutsAna
     
     // electron + partner pair cuts
  //   bool const isRecoPhE = true;
-    float const pairMass = 0.1;
+    float const pairMass = 0.2;
     float const pairDca = 1.5; // 0.5 for HFT on
     
     

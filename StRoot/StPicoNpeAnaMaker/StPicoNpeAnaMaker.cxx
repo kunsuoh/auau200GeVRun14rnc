@@ -345,9 +345,16 @@ Int_t StPicoNpeAnaMaker::Make()
             setVariables(epair);
             if (pairCharge == 0) {
                 fillHistogram(0); // US
+                if (pairMass < 0.1) fillHistogram(4); // US
+                if (pairMass < 0.01) fillHistogram(6); // US
                 fillHistogram("PureE");
             }
-            else fillHistogram(1);                 // LS
+            else {
+                fillHistogram(1);                 // LS
+                if (pairMass < 0.1) fillHistogram(5); // US
+                if (pairMass < 0.01) fillHistogram(6); // US
+
+            }
             //cout << "0 " << pairMass << " " << epair->pairMass() << " " << pairDca << " " << pt << " " << eta  << " " << dca << " " << nsige << " " << pairPositionX << " " << pairPositionY << " " << pairPositionZ << endl;
         }
     }
@@ -650,9 +657,7 @@ void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType){
                 nsige > -1)
             {
                 fillHistogram(iPt, iPid, iType, i);
-                if ((iType == 4 || iType == 5) && pairMass < 0.1)  fillHistogram(iPt, iPid, iType, i);
-                if ((iType == 6 || iType == 7) && pairMass < 0.01) fillHistogram(iPt, iPid, iType, i);
-                fillHistogram(iPt, iPid, iType, i);
+
           //      if (iType==0) histo2dDcaPt[iPid][i]->Fill(pt,dca,weight[i]);
           //      if (iType==1) histo2dDcaPt[iPid][i]->Fill(pt,dca,-1*weight[i]);
             }
