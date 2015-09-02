@@ -113,6 +113,7 @@ class StPicoNpeAnaMaker : public StMaker
     Float_t pairAnglePhi;
     Float_t pairAngleTheta;
     Float_t pairMass;
+    Float_t pairMassP;
     char pairCharge;
     Float_t pairDca;
     Float_t pairPositionX;
