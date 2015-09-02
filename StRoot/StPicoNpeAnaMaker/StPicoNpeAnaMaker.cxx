@@ -535,7 +535,6 @@ void StPicoNpeAnaMaker::setVariables(StElectronPair * epair)
     
     pairMass = epairFourMom.m();
     pairMassP = epairFourMomP.m();
-    cout << pairMass << " " << pairMassP << endl;
     pairAngle3d = electronMomAtDca.angle(partnerMomAtDca);
     pairAnglePhi = fabs(electronMomAtDca.phi() - partnerMomAtDca.phi());
     pairAngleTheta = fabs(electronMomAtDca.theta() - partnerMomAtDca.theta());
@@ -560,12 +559,12 @@ void StPicoNpeAnaMaker::setHistogram()
     TString type[nntype+20] = {
         "PhEUS","PhELS","IncE","Pion","PhEUS_Mass100","PhELS_Mass100","PhEUS_Mass10","PhELS_Mass10"};
         //"PhEUS","PhELS","IncE","Pion","RecoHFTPhEUS","RecoHFTPhELS","RecoNonHFTPhEUS","RecoNonHFTPhELS","IncENonHFT","PionNonHFT"};
-    TString histoname[nnhisto] = {"nSigE","nSigEAfterCut","dca","pairMass","nEta","nPhi","e0/p","zDist","phiDist","etaTowDist","phiTowDist","nphieta","e/p","ConvRadious","pairDca","dcaCharge"};
+    TString histoname[nnhisto] = {"nSigE","nSigEAfterCut","dca","pairMass","nEta","nPhi","e0/p","zDist","phiDist","etaTowDist","phiTowDist","nphieta","e/p","ConvRadious","pairDca","dcaCharge","pairMassPrimary"};
     TString trigger[nntrigger] = {"MB", "BHT1", "BHT2", "BHT3"};
     
-    int binHisto[nnhisto] = {    289,    289,    100,    100,    10, 10, 200,    100,    100,    100,    100,    20  ,200    ,500    ,200   ,100};
-    double minHisto[nnhisto] = { -13,    -13,   -0.1,    0,      0,  0,  0,      -20,    -0.1,   -0.1,   -0.1,   0   ,0      ,0      ,0     ,-0.1};
-    double maxHisto[nnhisto] = { 13,      13,    0.1,    0.2,    10, 10, 6,      20,     0.1,    0.1,    0.1,    20  ,6      ,50     ,2     ,0.1};
+    int binHisto[nnhisto] = {    289,    289,    100,    100,    10, 10, 200,    100,    100,  100,  100,  20  ,200 ,500 ,200,100,  100};
+    double minHisto[nnhisto] = { -13,    -13,   -0.1,    0,      0,  0,  0,      -20,    -0.1, -0.1, -0.1, 0   ,0   ,0   ,0  ,-0.1, 0};
+    double maxHisto[nnhisto] = { 13,      13,    0.1,    0.2,    10, 10, 6,      20,     0.1,  0.1,  0.1,  20  ,6   ,50  ,2  ,0.1,  0.2};
     
     
     for (int j=0; j<nnpid; j++)
