@@ -520,7 +520,7 @@ void StPicoNpeAnaMaker::setVariables(StElectronPair * epair)
     StPhysicalHelixD partnerHelix = partner->dcaGeometry().helix();
     pair<double,double> ss = electronHelix.pathLengths(partnerHelix);
     StThreeVectorF const electronMomAtDca = electronHelix.momentumAt(ss.first, bField * kilogauss);
-    cout << ss.first << " " << pt <<  " " << electron.pMom().perp() << endl;
+    cout << ss.first << " " << pt <<  " " << electron->pMom().perp() << endl;
     StThreeVectorF const partnerMomAtDca = partnerHelix.momentumAt(ss.second, bField * kilogauss);
     StLorentzVectorF const electronFourMom(electronMomAtDca, electronMomAtDca.massHypothesis(M_ELECTRON));
     StLorentzVectorF const partnerFourMom(partnerMomAtDca, partnerMomAtDca.massHypothesis(M_ELECTRON));
