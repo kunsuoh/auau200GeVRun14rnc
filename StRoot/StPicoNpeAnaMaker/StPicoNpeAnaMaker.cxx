@@ -517,17 +517,25 @@ void StPicoNpeAnaMaker::setVariables(StElectronPair * epair)
     
     // calculate Lorentz vector of electron-partner pair
     StPhysicalHelixD electronHelix = electron->dcaGeometry().helix();
+    StPhysicalHelixD electronHelixP(electron->pMom(),electron->origin(),bField,charge);
     StPhysicalHelixD partnerHelix = partner->dcaGeometry().helix();
     pair<double,double> ss = electronHelix.pathLengths(partnerHelix);
+    pair<double,double> ssP = electronHelixP.pathLengths(partnerHelix);
     StThreeVectorF const electronMomAtDca = electronHelix.momentumAt(ss.first, bField * kilogauss);
-    cout << electronHelix.momentum(bField).perp() << " " << electronMomAtDca.perp() << " " << pt <<  " " << electron->pMom().perp() << endl;
+    StThreeVectorF const electronMomAtDcaP = electronHelix.momentumAt(ssP.first, bField * kilogauss);
     StThreeVectorF const partnerMomAtDca = partnerHelix.momentumAt(ss.second, bField * kilogauss);
+    StThreeVectorF const partnerMomAtDcaP = partnerHelix.momentumAt(ssP.second, bField * kilogauss);
     StLorentzVectorF const electronFourMom(electronMomAtDca, electronMomAtDca.massHypothesis(M_ELECTRON));
+    StLorentzVectorF const electronFourMomP(electronMomAtDcaP, electronMomAtDcaP.massHypothesis(M_ELECTRON));
     StLorentzVectorF const partnerFourMom(partnerMomAtDca, partnerMomAtDca.massHypothesis(M_ELECTRON));
+    StLorentzVectorF const partnerFourMomP(partnerMomAtDcaP, partnerMomAtDcaP.massHypothesis(M_ELECTRON));
     StLorentzVectorF const epairFourMom = electronFourMom + partnerFourMom;
-    StPhysicalHelixD eHelix = electron->dcaGeometry().helix();
+    StLorentzVectorF const epairFourMomP = electronFourMomP + partnerFourMomP;
+//    StPhysicalHelixD eHelix = electron->dcaGeometry().helix();
     
     pairMass = epairFourMom.m();
+    pairMassP = epairFourMomP.m();
+    cout << pairMass << " " << pairMassP << endl;
     pairAngle3d = electronMomAtDca.angle(partnerMomAtDca);
     pairAnglePhi = fabs(electronMomAtDca.phi() - partnerMomAtDca.phi());
     pairAngleTheta = fabs(electronMomAtDca.theta() - partnerMomAtDca.theta());
