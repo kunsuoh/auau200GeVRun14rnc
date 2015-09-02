@@ -517,7 +517,7 @@ void StPicoNpeAnaMaker::setVariables(StElectronPair * epair)
     
     // calculate Lorentz vector of electron-partner pair
     StPhysicalHelixD electronHelix = electron->dcaGeometry().helix();
-    StPhysicalHelixD electronHelixP(electron->pMom(),electron->origin(),bField,electron->charge());
+    StPhysicalHelixD electronHelixP(electron->pMom(),electron->dcaGeometry().helix().origin(),bField,electron->charge());
     StPhysicalHelixD partnerHelix = partner->dcaGeometry().helix();
     pair<double,double> ss = electronHelix.pathLengths(partnerHelix);
     pair<double,double> ssP = electronHelixP.pathLengths(partnerHelix);
