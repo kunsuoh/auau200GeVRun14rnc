@@ -352,7 +352,7 @@ Int_t StPicoNpeAnaMaker::Make()
             else {
                 fillHistogram(1);                 // LS
                 if (pairMass < 0.1) fillHistogram(5); // US
-                if (pairMass < 0.01) fillHistogram(6); // US
+                if (pairMass < 0.01) fillHistogram(7); // US
 
             }
             //cout << "0 " << pairMass << " " << epair->pairMass() << " " << pairDca << " " << pt << " " << eta  << " " << dca << " " << nsige << " " << pairPositionX << " " << pairPositionY << " " << pairPositionZ << endl;
@@ -520,6 +520,7 @@ void StPicoNpeAnaMaker::setVariables(StElectronPair * epair)
     StPhysicalHelixD partnerHelix = partner->dcaGeometry().helix();
     pair<double,double> ss = electronHelix.pathLengths(partnerHelix);
     StThreeVectorF const electronMomAtDca = electronHelix.momentumAt(ss.first, bField * kilogauss);
+    cout << ss.first << " " << pt <<  " " << electron.pMom().perp() << endl;
     StThreeVectorF const partnerMomAtDca = partnerHelix.momentumAt(ss.second, bField * kilogauss);
     StLorentzVectorF const electronFourMom(electronMomAtDca, electronMomAtDca.massHypothesis(M_ELECTRON));
     StLorentzVectorF const partnerFourMom(partnerMomAtDca, partnerMomAtDca.massHypothesis(M_ELECTRON));
