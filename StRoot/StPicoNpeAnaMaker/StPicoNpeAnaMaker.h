@@ -37,6 +37,7 @@ int const nnpt = 6;
 int const nnpid = 8;
 int const nntype = 8;//+8;
 int const nnhisto = 17;
+int const nnhistophe = 8;
 int const nntrigger = 4;
 
 
@@ -165,7 +166,7 @@ class StPicoNpeAnaMaker : public StMaker
     TH1F * hRefMult[nntrigger];
     TH1F * hRefMultWt[nntrigger];
     TH1F * histo[nnpt][nnpid][nntype][nnhisto][nntrigger];
-    TH1F * histoPureE[nnpt][6];
+    TH1F * histoPureE[nnpt][nnhistophe];
     TH2F * histo2d[nnpid][nntrigger];
     TH2F * histo2dDcaPt[nnpid][nntrigger];
     int nptbin;

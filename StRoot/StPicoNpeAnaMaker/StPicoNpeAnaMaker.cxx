@@ -133,7 +133,7 @@ Int_t StPicoNpeAnaMaker::Finish()
         }
     }
     for (int i=1;i<nnpt;i++) // PT
-    for (int j=0;j<6;j++)
+    for (int j=0;j<nnhistophe;j++)
         histoPureE[i][j]->Write();
     mOutputFile->Close();
     
@@ -587,6 +587,9 @@ void StPicoNpeAnaMaker::setHistogram()
         histoPureE[i][3] = new TH1F(Form("histoPureE_%d_%d",i,3),Form("histoPureE_%d_%d",i,3),100,0,1);
         histoPureE[i][4] = new TH1F(Form("histoPureE_%d_%d",i,4),Form("histoPureE_%d_%d",i,4),100,0,1);
         histoPureE[i][5] = new TH1F(Form("histoPureE_%d_%d",i,5),Form("histoPureE_%d_%d",i,5),100,-0.1,0.1);
+        histoPureE[i][6] = new TH1F(Form("histoPureE_%d_%d",i,6),Form("histoPureE_%d_%d",i,6),100,0,0.05);
+        histoPureE[i][7] = new TH1F(Form("histoPureE_%d_%d",i,7),Form("histoPureE_%d_%d",i,7),100,0,0.01);
+
         for (int j=0;j<nnpid;j++)
             for (int k=0;k<nntype;k++)
                 for (int l=0;l<nnhisto;l++)
@@ -699,6 +702,7 @@ void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType, int iTrigger
     histo[(const int)iPt][(const int)iPid][(const int)iType][1][iTrigger]->Fill(nsige,weight[iTrigger]);
     histo[(const int)iPt][(const int)iPid][(const int)iType][2][iTrigger]->Fill(dca,weight[iTrigger]);
     histo[(const int)iPt][(const int)iPid][(const int)iType][3][iTrigger]->Fill(pairMass,weight[iTrigger]);
+    histo[(const int)iPt][(const int)iPid][(const int)iType][16][iTrigger]->Fill(pairMassP,weight[iTrigger]);
     histo[(const int)iPt][(const int)iPid][(const int)iType][15][iTrigger]->Fill(dcaCharge,weight[iTrigger]);
 
     // PID QA
@@ -719,12 +723,14 @@ void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType, int iTrigger
 }
 void StPicoNpeAnaMaker::fillHistogram(TString check){
     histoPureE[getPtBin(pt)][1]->Fill(pairMass);
+    histoPureE[getPtBin(pt)][6]->Fill(pairMassP);
     if (check ==  "PureE" && pairMass < 0.01 && nsige > -1){
         histoPureE[getPtBin(pt)][0]->Fill(pairConvRadious);
         histoPureE[getPtBin(pt)][2]->Fill(pairMass);
         histoPureE[getPtBin(pt)][3]->Fill(pairAnglePhi);
         histoPureE[getPtBin(pt)][4]->Fill(pairDca);
         histoPureE[getPtBin(pt)][5]->Fill(dca);
+        histoPureE[getPtBin(pt)][7]->Fill(pairMassP);
     }
 }
 
