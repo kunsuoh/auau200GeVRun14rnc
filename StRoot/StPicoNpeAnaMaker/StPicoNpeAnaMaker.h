@@ -164,7 +164,7 @@ class StPicoNpeAnaMaker : public StMaker
     TH1F * hRefMult[nntrigger];
     TH1F * hRefMultWt[nntrigger];
     TH1F * histo[nnpt][nnpid][nntype][nnhisto][nntrigger];
-    TH1F * histoPureE[nnpt][5];
+    TH1F * histoPureE[nnpt][6];
     TH2F * histo2d[nnpid][nntrigger];
     TH2F * histo2dDcaPt[nnpid][nntrigger];
     int nptbin;
