@@ -564,7 +564,7 @@ void StPicoNpeAnaMaker::setHistogram()
         histoPureE[i][2] = new TH1F(Form("histoPureE_%d_%d",i,2),Form("histoPureE_%d_%d",i,2),100,0,0.01);
         histoPureE[i][3] = new TH1F(Form("histoPureE_%d_%d",i,3),Form("histoPureE_%d_%d",i,3),100,0,1);
         histoPureE[i][4] = new TH1F(Form("histoPureE_%d_%d",i,4),Form("histoPureE_%d_%d",i,4),100,0,1);
-        histoPureE[i][5] = new TH1F(Form("histoPureE_%d_%d",i,4),Form("histoPureE_%d_%d",i,4),100,-0.1,0.1);
+        histoPureE[i][5] = new TH1F(Form("histoPureE_%d_%d",i,5),Form("histoPureE_%d_%d",i,5),100,-0.1,0.1);
         for (int j=0;j<nnpid;j++)
             for (int k=0;k<nntype;k++)
                 for (int l=0;l<nnhisto;l++)
@@ -605,20 +605,28 @@ int StPicoNpeAnaMaker::getPtBin(double pt) {
 
 //-------------------------------------------------------------------------------
 void StPicoNpeAnaMaker::fillHistogram(int iType){
-
+    
     int iPt = getPtBin(pt);
-        fillHistogram(iPt, 0, iType);
-        if (isTof())                fillHistogram(iPt, 1, iType);
-        if (isBemc())               fillHistogram(iPt, 2, iType);
-        if (isBemc2())              fillHistogram(iPt, 3, iType);
-        if (isBsmd())               fillHistogram(iPt, 4, iType);
-        if (isBemc() && isBsmd())   fillHistogram(iPt, 5, iType);
-        if (isBemc2() && isBsmd())  fillHistogram(iPt, 6, iType);
-        if (isBemc3() && isBsmd())  fillHistogram(iPt, 7, iType);
-        if (isBemc4())              fillHistogram(iPt, 8, iType);
-        if (isBemc5())              fillHistogram(iPt, 9, iType);
-        if (isBemc4() && isBsmd())  fillHistogram(iPt, 10, iType);
-        if (isBemc5() && isBsmd())  fillHistogram(iPt, 11, iType);
+    fillHistogram(iPt, 0, iType);
+    if (isBemc3() && isBsmd())  fillHistogram(iPt, 1, iType);
+    if (!isBemc3() && !isBsmd())fillHistogram(iPt, 2, iType);
+    if (!isBemc3() || !isBsmd())fillHistogram(iPt, 3, iType);
+    if (isBemc3() && isBsmd() && pairConvRadious < 2. )                         fillHistogram(iPt, 4, iType);
+    if (isBemc3() && isBsmd() && pairConvRadious > 2. && pairConvRadious < 4.)  fillHistogram(iPt, 5, iType);
+    
+    /*
+     if (isTof())                fillHistogram(iPt, 1, iType);
+     if (isBemc())               fillHistogram(iPt, 2, iType);
+     if (isBemc2())              fillHistogram(iPt, 3, iType);
+     if (isBsmd())               fillHistogram(iPt, 4, iType);
+     if (isBemc() && isBsmd())   fillHistogram(iPt, 5, iType);
+     if (isBemc2() && isBsmd())  fillHistogram(iPt, 6, iType);
+     if (isBemc3() && isBsmd())  fillHistogram(iPt, 7, iType);
+     if (isBemc4())              fillHistogram(iPt, 8, iType);
+     if (isBemc5())              fillHistogram(iPt, 9, iType);
+     if (isBemc4() && isBsmd())  fillHistogram(iPt, 10, iType);
+     if (isBemc5() && isBsmd())  fillHistogram(iPt, 11, iType);
+     */
 }
 //-------------------------------------------------------------------------------
 void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType){
