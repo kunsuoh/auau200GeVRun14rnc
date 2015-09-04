@@ -568,7 +568,7 @@ void StPicoNpeAnaMaker::setHistogram()
     
     int binHisto[nnhisto] = {    289,    289,    100,    100,    10, 10, 200,    100,    100,  100,  100,  20  ,200 ,500 ,200,100,  100};
     double minHisto[nnhisto] = { -13,    -13,   -0.1,    0,      0,  0,  0,      -20,    -0.1, -0.1, -0.1, 0   ,0   ,0   ,0  ,-0.1, 0};
-    double maxHisto[nnhisto] = { 13,      13,    0.1,    0.2,    10, 10, 6,      20,     0.1,  0.1,  0.1,  20  ,6   ,50  ,2  ,0.1,  0.2};
+    double maxHisto[nnhisto] = { 13,      13,    0.1,    0.2,    10, 10, 6,      20,     0.1,  0.1,  0.1,  20  ,6   ,50  ,2  ,0.1,  0.05};
     
     
     for (int j=0; j<nnpid; j++)
