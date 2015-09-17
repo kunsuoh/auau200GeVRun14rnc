@@ -34,7 +34,7 @@ class StPicoDst;
 class StPicoPrescales;
 
 int const nnpt = 6;
-int const nnpid = 8;
+int const nnpid = 9;
 int const nntype = 8;//+8;
 int const nnhisto = 17;
 int const nnhistophe = 8;

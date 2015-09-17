@@ -640,6 +640,7 @@ void StPicoNpeAnaMaker::fillHistogram(int iType){
     if (pairConvRadious > 2. && pairConvRadious < 4.)  fillHistogram(iPt, 5, iType);
     if (isBemc3() && isBsmd() && pairConvRadious < 2. )                         fillHistogram(iPt, 6, iType);
     if (isBemc3() && isBsmd() && pairConvRadious > 2. && pairConvRadious < 4.)  fillHistogram(iPt, 7, iType);
+    if (isBemc())  fillHistogram(iPt, 8, iType);
     
     /*
      if (isTof())                fillHistogram(iPt, 1, iType);
@@ -676,23 +677,31 @@ void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType){
           //      if (iType==0) histo2dDcaPt[iPid][i]->Fill(pt,dca,weight[i]);
           //      if (iType==1) histo2dDcaPt[iPid][i]->Fill(pt,dca,-1*weight[i]);
             }
+            
+            // electron candidates
             if (iType==2 || iType==8) {
                 float pidCutLw[2][6];
                 float pidCutHi[2][6];
                 pidCutLw[0]={0, -1.2, -1.2, -1.0, -1.0, -1.0};
                 pidCutHi[0]={0, 1.8, 2.5, 3.0, 3.0, 3.0};
-                pidCutLw[1]={0, -1.5, -1.4, -1.5, -1.1, 0};
-                pidCutHi[1]={0, 1.8, 2.5, 3.0, 3.0, 0};
+                pidCutLw[1] = {0,     0,     0,   .0,   .0,   1.5};
+                pidCutHi[1] = {0,     1.8,      2.5,    3.0,    3.0,    3.0};
+                
                 //        if (iPid == 2 && nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) fillHistogram(iPt, iPid, iType, 0);
                 //        if (iPid == 3 && nsige > pidCutLw[1][iPt] && nsige < pidCutHi[1][iPt]) fillHistogram(iPt, iPid, iType, 0);
                 //        if (iPid == 4 && nsige > pidCutLw[1][iPt] && nsige < pidCutHi[1][iPt]) fillHistogram(iPt, iPid, iType, 0);
                 //        if (iPid == 5 && nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) fillHistogram(iPt, iPid, iType, 0);
                 //        if (iPid%4 < 3 && nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) fillHistogram(iPt, iPid, iType, 0);
-                if (nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) {
+                if (iPid!=8 && (nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt])) {
+                    fillHistogram(iPt, iPid, iType, i);
+                    histo2d[iPid][i]->Fill(pt*TMath::CosH(eta),adc0,weight[i]);
+                }
+                if (iPid==8 && nsige > pidCutLw[1][iPt] && nsige < pidCutHi[1][iPt]) {
                     fillHistogram(iPt, iPid, iType, i);
                     histo2d[iPid][i]->Fill(pt*TMath::CosH(eta),adc0,weight[i]);
                 }
             }
+            // hadrons
             if ((iType==3 || iType==9) && fabs(nsigpion) < 2) fillHistogram(iPt, iPid, iType, i);
         }
     }
