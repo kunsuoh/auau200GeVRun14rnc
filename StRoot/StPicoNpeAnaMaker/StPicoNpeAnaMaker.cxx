@@ -617,11 +617,11 @@ void StPicoNpeAnaMaker::setHistogram()
 int StPicoNpeAnaMaker::getPtBin(double pt) {
     int nPt = 0;
     if (pt < 1.5) nPt = 0;
-    else if (pt < 1.8) nPt = 1;
-    else if (pt < 2.5) nPt = 2;
-    else if (pt < 4.0) nPt = 3;
-    else if (pt < 6.5) nPt = 4;
-    else if (pt < 10.) nPt = 5;
+    else if (pt < 2.0) nPt = 1;
+    else if (pt < 4.0) nPt = 2;
+    else if (pt < 6.0) nPt = 3;
+    else if (pt < 8.0) nPt = 4;
+    else if (pt < 20.) nPt = 5;
     else nPt = 0;
     
     return nPt;
