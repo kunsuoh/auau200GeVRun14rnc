@@ -638,8 +638,8 @@ void StPicoNpeAnaMaker::fillHistogram(int iType){
     if (!isBemc3() || !isBsmd())fillHistogram(iPt, 3, iType);
     if (pairConvRadious < 2. )                         fillHistogram(iPt, 4, iType);
     if (pairConvRadious > 2. && pairConvRadious < 4.)  fillHistogram(iPt, 5, iType);
-    if (isBemc3() && isBsmd() && pairConvRadious < 2. )                         fillHistogram(iPt, 6, iType);
-    if (isBemc3() && isBsmd() && pairConvRadious > 2. && pairConvRadious < 4.)  fillHistogram(iPt, 7, iType);
+    if (isBemc() && pairConvRadious < 2. )                         fillHistogram(iPt, 6, iType);
+    if (isBemc() && pairConvRadious > 2. && pairConvRadious < 4.)  fillHistogram(iPt, 7, iType);
     if (isBemc())  fillHistogram(iPt, 8, iType);
     
     /*
