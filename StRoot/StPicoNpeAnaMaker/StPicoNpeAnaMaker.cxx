@@ -684,21 +684,23 @@ void StPicoNpeAnaMaker::fillHistogram(int iPt, int iPid, int iType){
             if (iType==2 || iType==8) {
                 float pidCutLw[2][6];
                 float pidCutHi[2][6];
-                pidCutLw[0]={0, -1.2, -1.2, -1.0, -1.0, -1.0};
-                pidCutHi[0]={0, 1.8, 2.5, 3.0, 3.0, 3.0};
-                pidCutLw[1] = {0,     0,     0,   .0,   .0,   1.5};
-                pidCutHi[1] = {0,     1.8,      2.5,    3.0,    3.0,    3.0};
+                //pidCutLw[0]={0, -1.2, -1.2, -1.0, -1.0, -1.0};
+                //pidCutHi[0]={0, 1.8, 2.5, 3.0, 3.0, 3.0};
+                pidCutLw[0]={0, -0.2, 0, 0.5, 1, 1};
+                pidCutHi[0]={0, 1.5, 2.5, 3.0, 3.0, 3.0};
+                pidCutLw[1] = {0,     -1,     -1,     -1,     -0,     -0};
+                pidCutHi[1] = {0,     2.5,      3,    3.0,    3.0,    3.0};
                 
                 //        if (iPid == 2 && nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) fillHistogram(iPt, iPid, iType, 0);
                 //        if (iPid == 3 && nsige > pidCutLw[1][iPt] && nsige < pidCutHi[1][iPt]) fillHistogram(iPt, iPid, iType, 0);
                 //        if (iPid == 4 && nsige > pidCutLw[1][iPt] && nsige < pidCutHi[1][iPt]) fillHistogram(iPt, iPid, iType, 0);
                 //        if (iPid == 5 && nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) fillHistogram(iPt, iPid, iType, 0);
                 //        if (iPid%4 < 3 && nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt]) fillHistogram(iPt, iPid, iType, 0);
-                if (iPid!=8 && (nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt])) {
+                if (i==0 && (nsige > pidCutLw[0][iPt] && nsige < pidCutHi[0][iPt])) {
                     fillHistogram(iPt, iPid, iType, i);
                     histo2d[iPid][i]->Fill(pt*TMath::CosH(eta),adc0,weight[i]);
                 }
-                if (iPid==8 && nsige > pidCutLw[1][iPt] && nsige < pidCutHi[1][iPt]) {
+                if (i!=0 && nsige > pidCutLw[1][iPt] && nsige < pidCutHi[1][iPt]) {
                     fillHistogram(iPt, iPid, iType, i);
                     histo2d[iPid][i]->Fill(pt*TMath::CosH(eta),adc0,weight[i]);
                 }
