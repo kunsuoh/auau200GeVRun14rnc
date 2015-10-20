@@ -1,8 +1,8 @@
 #ifndef StPicoHFMaker_h
 #define StPicoHFMaker_h
 
-#include "StMaker.h"
-#include "StLorentzVectorF.hh"
+#include "StChain/StMaker.h"
+#include "StarClassLibrary/StLorentzVectorF.hh"
 
 /* **************************************************
  *  Base class for HF analysis
@@ -78,8 +78,13 @@ class StPicoHFMaker : public StMaker
     virtual Int_t FinishHF()                { return kStOK; }
 
     void setHFBaseCuts(StHFCuts* cuts);
+
+    void setTreeName(const char* tName);
+
     void setMakerMode(unsigned short us);
     void setDecayMode(unsigned short us);
+    void setMcMode(bool b);
+
 
     // -- different modes to use the StPicoHFMaker class
     //    - kAnalyze - don't write candidate trees, just fill histograms
@@ -106,9 +111,10 @@ class StPicoHFMaker : public StMaker
     void  createTertiaryK0Shorts();
     void  createTertiaryLambdas();
 
-    unsigned int isDecayMode();
-    unsigned int isMakerMode();
-
+    unsigned int isDecayMode() const;
+    unsigned int isMakerMode() const;
+    bool         isMcMode() const;
+    
     // -- protected members ------------------------
 
     StPicoDst      *mPicoDst;
@@ -136,34 +142,42 @@ class StPicoHFMaker : public StMaker
 
     // -- private members ------------------------
 
-    unsigned int    mDecayMode;         // use enum of StPicoHFEvent::eHFEventMode
-    unsigned int    mMakerMode;         // use enum of StPicoEventMaker::eMakerMode
+    unsigned int    mDecayMode;          // use enum of StPicoHFEvent::eHFEventMode
+    unsigned int    mMakerMode;          // use enum of StPicoEventMaker::eMakerMode
 
-    TString         mOuputFileBaseName; // base name for output files
-                                        //   for tree     -> <mOuputFileBaseName>.picoHFtree.root
-                                        //   for histList -> <mOuputFileBaseName>.GetName().root
+    bool            mMcMode;             // use MC mode
 
-    TString         mInputFileName;     // filename of input list of HF trees (needs to be in the 
-                                        // same order as the picoDstList
+    TString         mOutputTreeName;     // name for output trees
 
-    StPicoDstMaker* mPicoDstMaker;      // ptr to picoDst maker
+    TString         mOutputFileBaseName; // base name for output files
+                                         //   for tree     -> <mOutputFileBaseName>.<mOutputTreeName>.root
+                                         //   for histList -> <mOutputFileBaseName>.GetName().root
 
-    StPicoEvent*    mPicoEvent;         // ptr to picoDstEvent
+    TString         mInputFileName;      // filename of input list of HF trees (needs to be in the 
+                                         // same order as the picoDstList
 
-    TTree*          mTree;              // tree holding "mPicoHFEvent" for writing only
+    StPicoDstMaker* mPicoDstMaker;       // ptr to picoDst maker
 
-    TChain*         mHFChain;           // chain to read in HF tree
-    int             mEventCounter;      // n Processed events in chain
+    StPicoEvent*    mPicoEvent;          // ptr to picoDstEvent
 
-    TFile*          mOutputFileTree;    // ptr to file saving the HFtree
-    TFile*          mOutputFileList;    // ptr to file saving the list of histograms
-    ClassDef(StPicoHFMaker, 1)
+    TTree*          mTree;               // tree holding "mPicoHFEvent" for writing only
+
+    TChain*         mHFChain;            // chain to read in HF tree
+    int             mEventCounter;       // n Processed events in chain
+
+    TFile*          mOutputFileTree;     // ptr to file saving the HFtree
+    TFile*          mOutputFileList;     // ptr to file saving the list of histograms
+    ClassDef(StPicoHFMaker, 0)
 };
 
 inline void StPicoHFMaker::setHFBaseCuts(StHFCuts* cuts)   { mHFCuts = cuts; }
+inline void StPicoHFMaker::setTreeName(const char* tName)  { mOutputTreeName = tName; }
+
 inline void StPicoHFMaker::setMakerMode(unsigned short us) { mMakerMode = us; }
 inline void StPicoHFMaker::setDecayMode(unsigned short us) { mDecayMode = us; }
+inline void StPicoHFMaker::setMcMode(bool b)               { mMcMode = b; }
 
-inline unsigned int StPicoHFMaker::isDecayMode()           { return mDecayMode; }
-inline unsigned int StPicoHFMaker::isMakerMode()           { return mMakerMode; }
+inline unsigned int StPicoHFMaker::isDecayMode() const     { return mDecayMode; }
+inline unsigned int StPicoHFMaker::isMakerMode() const     { return mMakerMode; }
+inline bool StPicoHFMaker::isMcMode() const                { return mMcMode; }
 #endif

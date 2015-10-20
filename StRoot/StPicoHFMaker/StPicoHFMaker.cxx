@@ -4,8 +4,8 @@
 #include "TFile.h"
 #include "TChain.h"
 
-#include "StThreeVectorF.hh"
-#include "StLorentzVectorF.hh"
+#include "StarClassLibrary/StThreeVectorF.hh"
+#include "StarClassLibrary/StLorentzVectorF.hh"
 #include "StPicoDstMaker/StPicoDst.h"
 #include "StPicoDstMaker/StPicoDstMaker.h"
 #include "StPicoDstMaker/StPicoEvent.h"
@@ -26,8 +26,8 @@ ClassImp(StPicoHFMaker)
 StPicoHFMaker::StPicoHFMaker(char const* name, StPicoDstMaker* picoMaker, 
 			     char const* outputBaseFileName,  char const* inputHFListHFtree = "") :
   StMaker(name), mPicoDst(NULL), mHFCuts(NULL), mHFHists(NULL), mPicoHFEvent(NULL), mBField(0.), mOutList(NULL),
-  mDecayMode(StPicoHFEvent::kTwoParticleDecay), mMakerMode(StPicoHFMaker::kAnalyze), 
-  mOuputFileBaseName(outputBaseFileName), mInputFileName(inputHFListHFtree),
+  mDecayMode(StPicoHFEvent::kTwoParticleDecay), mMakerMode(StPicoHFMaker::kAnalyze), mMcMode(false),
+  mOutputTreeName("picoHFtree"), mOutputFileBaseName(outputBaseFileName), mInputFileName(inputHFListHFtree),
   mPicoDstMaker(picoMaker), mPicoEvent(NULL), mTree(NULL), mHFChain(NULL), mEventCounter(0), 
   mOutputFileTree(NULL), mOutputFileList(NULL) {
   // -- constructor
@@ -83,11 +83,11 @@ Int_t StPicoHFMaker::Init() {
   }
   
   // -- file which holds list of histograms
-  mOutputFileList = new TFile(Form("%s.%s.root", mOuputFileBaseName.Data(), GetName()), "RECREATE");
+  mOutputFileList = new TFile(Form("%s.%s.root", mOutputFileBaseName.Data(), GetName()), "RECREATE");
   mOutputFileList->SetCompressionLevel(1);
 
   if (mMakerMode == StPicoHFMaker::kWrite) {
-    mOutputFileTree = new TFile(Form("%s.picoHFtree.root", mOuputFileBaseName.Data()), "RECREATE");
+    mOutputFileTree = new TFile(Form("%s.%s.root", mOutputFileBaseName.Data(), mOutputTreeName.Data()), "RECREATE");
     mOutputFileTree->SetCompressionLevel(1);
     mOutputFileTree->cd();
 
@@ -141,10 +141,10 @@ Int_t StPicoHFMaker::Finish() {
 
   mOutputFileList->cd();
   mOutList->Write(mOutList->GetName(), TObject::kSingleKey);
-
+  
   // -- call method of daughter class
   FinishHF();
-
+  
   mOutputFileList->Close();
 
   return kStOK;
@@ -206,6 +206,11 @@ Int_t StPicoHFMaker::Make() {
   
   Int_t iReturn = kStOK;
 
+  // cout << " nTracks   " <<  mPicoDst->numberOfTracks() << endl;
+  // if (mMcMode) {
+  //   cout << " nMcTracks " <<  mPicoDst->numberOfMcTracks() << endl;
+  // }
+  
   if (setupEvent()) {
     UInt_t nTracks = mPicoDst->numberOfTracks();
 
@@ -213,7 +218,7 @@ Int_t StPicoHFMaker::Make() {
     if (mMakerMode == StPicoHFMaker::kWrite || mMakerMode == StPicoHFMaker::kAnalyze) {
       for (unsigned short iTrack = 0; iTrack < nTracks; ++iTrack) {
 	StPicoTrack* trk = mPicoDst->track(iTrack);
-	
+
 	if (!trk || !mHFCuts->isGoodTrack(trk)) continue;
 
 	if (isPion(trk))   mIdxPicoPions.push_back(iTrack);   // isPion method to be implemented by daughter class
@@ -260,7 +265,7 @@ void StPicoHFMaker::createTertiaryK0Shorts() {
       StHFPair candidateK0Short(pion1, pion2, 
 				mHFCuts->getHypotheticalMass(StHFCuts::kPion), mHFCuts->getHypotheticalMass(StHFCuts::kPion),
 				mIdxPicoPions[idxPion1], mIdxPicoPions[idxPion2], 
-				mPrimVtx, mBField);
+				mPrimVtx, mBField, false);
 
       if (!mHFCuts->isGoodTertiaryVertexPair(candidateK0Short)) 
 	continue;
@@ -289,7 +294,7 @@ void StPicoHFMaker::createTertiaryLambdas() {
       StHFPair lambda(proton, pion, 
 		      mHFCuts->getHypotheticalMass(StHFCuts::kProton), mHFCuts->getHypotheticalMass(StHFCuts::kPion),
 		      mIdxPicoProtons[idxProton], mIdxPicoPions[idxPion], 
-		      mPrimVtx, mBField);
+		      mPrimVtx, mBField, false);
 
       if (!mHFCuts->isGoodTertiaryVertexPair(lambda)) 
 	continue;
@@ -326,7 +331,7 @@ bool StPicoHFMaker::setupEvent() {
 void StPicoHFMaker::initializeEventStats() {
   // -- Initialize event statistics histograms
   
-  const char *aEventCutNames[]   = {"all", "good run", "trigger", "#it{v}_{z}", "#it{v}_{z}-#it{v}^{VPD}_{z}", "accepted", ""};
+  const char *aEventCutNames[]   = {"all", "good run", "trigger", "#it{v}_{z}", "#it{v}_{z}-#it{v}^{VPD}_{z}", "accepted"};
 
   mOutList->Add(new TH1F("hEventStat0","Event cut statistics 0;Event Cuts;Events", mHFCuts->eventStatMax(), -0.5, mHFCuts->eventStatMax()-0.5));
   TH1F *hEventStat0 = static_cast<TH1F*>(mOutList->Last());

@@ -29,6 +29,9 @@ klog -principal YOURRCFUSERNAME
 # For pico production II
 cvs co -r Run14_AuAu200_physics2 offline/users/dongx/pico/source/StPicoDstMaker
 
+# Clone StRefMultCorr
+git clone git@github.com:GuannanXie/Run14AuAu200GeV_StRefMultCorr.git
+
 # Link all needed code under one StRoot directory:
 mkdir StRoot
 ln -s `pwd`/auau200GeVRun14/StRoot/StPicoD0AnaMaker StRoot
@@ -36,7 +39,9 @@ ln -s `pwd`/auau200GeVRun14/StRoot/StPicoD0EventMaker StRoot
 ln -s `pwd`/auau200GeVRun14/StRoot/StPicoKFVertexFitter StRoot
 ln -s `pwd`/auau200GeVRun14/StRoot/StPicoPrescales StRoot
 ln -s `pwd`/auau200GeVRun14/StRoot/StPicoHFMaker StRoot
+ln -s `pwd`/auau200GeVRun14/StRoot/StPicoCutsBase StRoot
 ln -s `pwd`/offline/users/dongx/pico/source/StPicoDstMaker StRoot
+ln -s `pwd`/Run14AuAu200GeV_StRefMultCorr/VPDMB5/StRefMultCorr StRoot
 cp -r -p auau200GeVRun14/run14AuAu200GeVPrescales/ .
 
 # Compile
@@ -47,7 +52,7 @@ cons
 ###How to get a list of files:  
 ```bash
 # Clone the file list repo:
-git clone git@github.com:rnc-lbl/fileLists.git
+git clone https://github.com/rnc-lbl/fileLists.git
 
 # The list of daily D0 production will be under:
 ls fileLists/Run14/AuAu/200GeV/physics2/picoD0Lists/daily
