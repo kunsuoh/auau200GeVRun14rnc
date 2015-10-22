@@ -63,9 +63,6 @@ Int_t StPicoNpeAnaMaker::Init()
     
 
     // -------------- USER VARIABLES -------------------------
-    // check if good event (including bad run)
-    if(!mNpeCuts->isGoodEvent(const_cast<const StPicoDst*>(picoDst), NULL))
-        return kStOk;
     
     
     return kStOK;
@@ -116,6 +113,11 @@ Int_t StPicoNpeAnaMaker::Make()
         exit(1);
     }
     
+    // -------------- USER ANALYSIS -------------------------
+    
+    // check if good event (including bad run)
+    if(!mHFCuts->isGoodEvent(const_cast<const StPicoDst*>(picoDst), NULL))
+        return kStOk;
     
     TClonesArray const * aElectronPair = mPicoNpeEvent->electronPairArray();
     for (int idx = 0; idx < aElectronPair->GetEntries(); ++idx)
@@ -127,7 +129,7 @@ Int_t StPicoNpeAnaMaker::Make()
         StPicoTrack const* electron = picoDst->track(epair->electronIdx());
         StPicoTrack const* partner = picoDst->track(epair->partnerIdx());
         
-        // -------------- USER ANALYSIS -------------------------
+        
         
     }
     
