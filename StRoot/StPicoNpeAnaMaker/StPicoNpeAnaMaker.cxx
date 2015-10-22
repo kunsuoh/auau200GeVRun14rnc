@@ -20,7 +20,7 @@
 #include "SystemOfUnits.h"
 
 #include "StPicoNpeAnaMaker.h"
-#include "StCuts.h"
+#include "StNpeCuts.h"
 
 
 ClassImp(StPicoNpeAnaMaker)
@@ -28,7 +28,7 @@ ClassImp(StPicoNpeAnaMaker)
 StPicoNpeAnaMaker::StPicoNpeAnaMaker(char const * name,char const * inputFilesList,
                                      char const * outName, StPicoDstMaker* picoDstMaker):
 StMaker(name),mPicoDstMaker(picoDstMaker),mPicoNpeEvent(NULL), mOutFileName(outName), mInputFileList(inputFilesList),
-mOutputFile(NULL), mChain(NULL), mEventCounter(0)
+mOutputFile(NULL), mChain(NULL), mEventCounter(0), mNpeCuts(NULL)
 {}
 
 Int_t StPicoNpeAnaMaker::Init()
@@ -57,10 +57,15 @@ Int_t StPicoNpeAnaMaker::Init()
     mOutputFile = new TFile(mOutFileName.Data(), "RECREATE");
     mOutputFile->cd();
     
-    // -------------- USER VARIABLES -------------------------
+    if (!mNpeCuts)
+        mNpeCuts = new StNpeCuts;
+    mNpeCuts->init();
+    
 
-    
-    
+    // -------------- USER VARIABLES -------------------------
+    // check if good event (including bad run)
+    if(!mNpeCuts->isGoodEvent(const_cast<const StPicoDst*>(picoDst), NULL))
+        return kStOk;
     
     
     return kStOK;
@@ -136,8 +141,10 @@ bool StPicoNpeAnaMaker::isGoodPair(StElectronPair const* const epair) const
     StPicoTrack const* electron = mPicoDstMaker->picoDst()->track(epair->electronIdx());
     StPicoTrack const* partner = mPicoDstMaker->picoDst()->track(epair->partnerIdx());
     
-    return epair->pairMass() < anaCuts::pairMass &&
-    epair->pairDca() < anaCuts::pairDca
-    ;
+    bool pairCuts = epair->m() > mNpeCuts->cutSecondaryPairMassMin() &&
+    epair->m() < mNpeCuts->cutSecondaryPairMassMax() &&
+    epair->dcaDaughters() < mNpeCuts->cutSecondaryPairDcaDaughtersMax();
+    
+    return (mNpeCuts->isGoodTrack(electron) && mNpeCuts->isGoodTrack(partner) && pairCuts);
 }
 
