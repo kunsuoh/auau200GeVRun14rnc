@@ -39,7 +39,8 @@ public:
     // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
     // -- SETTER for CUTS
     // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-    
+    void setCutSecondaryPair(float dcaDaughtersMax, float massMin, float massMax);
+
     
     // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
     // -- GETTER for single CUTS
