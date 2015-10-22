@@ -48,7 +48,7 @@ void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunList
     StPicoDstMaker* picoDstMaker = new StPicoDstMaker(0, "correspondingPico.list", "picoDstMaker");
     StPicoNpeAnaMaker*  picoNpeAnaMaker = new StPicoNpeAnaMaker("picoNpeAnaMaker", npeList, outFileName.Data(), picoDstMaker);
     
-    StHFCuts* npeCuts = new StNpeCuts("npeCuts");
+    StNpeCuts* npeCuts = new StNpeCuts("npeCuts");
     picoNpeAnaMaker->setNpeCuts(npeCuts);
 
     // -------------- USER variables -------------------------
