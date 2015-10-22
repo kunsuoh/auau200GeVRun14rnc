@@ -65,7 +65,7 @@ void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunList
     float dcaDaughtersMax = 0.5;  // maximum
     float minMass         = 0;
     float maxMass         = 0.1;
-    npeCuts->setCutSecondaryPair(dcaDaughtersMax, decayLengthMin, decayLengthMax, cosThetaMin, minMass, maxMass);
+    npeCuts->setCutSecondaryPair(dcaDaughtersMax, minMass, maxMass);
 
 
     npeChain->Init();
