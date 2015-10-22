@@ -34,9 +34,9 @@ void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunList
     gSystem->Load("StBTofUtil");
     gSystem->Load("StPicoDstMaker");
     gSystem->Load("StPicoPrescales");
+    gSystem->Load("StPicoCutsBase");
     gSystem->Load("StPicoNpeEventMaker");
     gSystem->Load("StPicoNpeAnaMaker");
-    gSystem->Load("StPicoCutsBase");
 
     npeChain = new StChain();
     
