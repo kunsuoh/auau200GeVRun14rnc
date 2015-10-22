@@ -85,7 +85,7 @@ inline void StPicoNpeAnaMaker::readNextEvent()
 {
   mChain->GetEntry(mEventCounter++);
 }
-inline void StPicoNpeAnaMaker::setNpeCutsCuts(StNpeCuts* cuts)
+inline void StPicoNpeAnaMaker::setNpeCuts(StNpeCuts* cuts)
 {
     mNpeCuts = cuts;
 }
