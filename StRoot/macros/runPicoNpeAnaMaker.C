@@ -48,9 +48,26 @@ void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunList
     StPicoDstMaker* picoDstMaker = new StPicoDstMaker(0, "correspondingPico.list", "picoDstMaker");
     StPicoNpeAnaMaker*  picoNpeAnaMaker = new StPicoNpeAnaMaker("picoNpeAnaMaker", npeList, outFileName.Data(), picoDstMaker);
     
+    StHFCuts* npeCuts = new StNpeCuts("npeCuts");
+    picoNpeAnaMaker->setNpeCuts(npeCuts);
+
     // -------------- USER variables -------------------------
     
+    // -- File name of bad run list
+    npeCuts->setBadRunListFileName(badRunListFileName);
+
     // add your cuts here.
+
+    // tracking
+    npeCuts->setCutNHitsFitMax(20);
+    
+    // Electron pair cuts
+    float dcaDaughtersMax = 0.5;  // maximum
+    float minMass         = 0;
+    float maxMass         = 0.1;
+    npeCuts->setCutSecondaryPair(dcaDaughtersMax, decayLengthMin, decayLengthMax, cosThetaMin, minMass, maxMass);
+
+
     npeChain->Init();
     int nEntries = picoNpeAnaMaker->getEntries();
     cout << " Total entries = " << nEntries << endl;
