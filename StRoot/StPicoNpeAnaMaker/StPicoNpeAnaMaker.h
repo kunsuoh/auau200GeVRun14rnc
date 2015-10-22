@@ -45,7 +45,7 @@ class StPicoNpeAnaMaker : public StMaker
 
     int getEntries() const;
 
-    void setNpeCutsCuts(StNpeCuts* cuts);
+    void setNpeCuts(StNpeCuts* cuts);
 
     
   private:
