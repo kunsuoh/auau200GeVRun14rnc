@@ -25,7 +25,7 @@
 #include "StPicoDstMaker/StPicoEmcPidTraits.h"
 #include "StThreeVectorF.hh"
 
-class StNpeCuts : public StPicoCutsBase
+class StNpeCuts : private StPicoCutsBase
 {
 public:
     
