@@ -64,8 +64,8 @@ void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunList
     npeCuts->setCutTriggerWord(0x1F);
 
     // Tagged electron cuts
-    npeCuts->setCutNHitsFitMax(20);
-    npeCuts->setCutNHitsdEdxMax(15);
+    npeCuts->setCutElectronNHitsFitMax(20);
+    npeCuts->setCutElectronNHitsdEdxMax(15);
     npeCuts->setCutPt(1.5, 20);
     npeCuts->setCutEta(-0.7, 0.7);
     npeCuts->setCutDca(0.1);
@@ -73,7 +73,7 @@ void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunList
     npeCuts->setCutTPCNSigmaElectron(-3.0, 3.0);
     
     // Partner electron cuts
-    npeCuts->setCutPartnerNHitsFitMax(15);
+    npeCuts->setCutPartnerElectronNHitsFitMax(15);
     npeCuts->setCutPartnerPt(0.2, 20);
     npeCuts->setCutPartnerEta(-1., 1.);
     npeCuts->setCutPartnerTPCNSigmaElectron(-3.0, 3.0);
