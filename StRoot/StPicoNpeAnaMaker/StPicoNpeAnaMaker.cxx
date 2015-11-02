@@ -141,8 +141,8 @@ Int_t StPicoNpeAnaMaker::Make()
         if (mNpeCuts->isGoodTrack(track)) {
             b++;
             if (mNpeCuts->isTPCElectron(track)){
-                c++
-                if(mNpeCuts->isBEMCElectron(track)) d++
+                c++;
+                if(mNpeCuts->isBEMCElectron(track)) d++;
             }
         }
     }
