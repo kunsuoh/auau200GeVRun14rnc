@@ -147,12 +147,15 @@ Int_t StPicoNpeAnaMaker::Make()
         StPicoTrack* track = picoDst->track(iTrack);
         if (!track) continue;
         if (mNpeCuts->isGoodInclusiveElectron(track)) {
-            
+            cout << "Check1" << endl;
             StPhysicalHelixD eHelix = track->dcaGeometry().helix();
+            cout << "Check2" << endl;
             float dca = eHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
+            cout << "Check3" << endl;
             float pt = track->gPt();
-            
+            cout << "Check4" << endl;
             h2dDcaVsPt->Fill(pt, dca);
+            cout << "Check5" << endl;
         }
     }
 
