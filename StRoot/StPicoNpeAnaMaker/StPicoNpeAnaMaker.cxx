@@ -65,7 +65,8 @@ Int_t StPicoNpeAnaMaker::Init()
     
 
     // -------------- USER VARIABLES -------------------------
-    h2dDcaVsPt = new TH2F("h2dDcaVsPt","h2dDcaVsPt",200,0,20, 100,-0.1,0.1);
+    h2dDcaVsPt = new TH2F("h2dDcaVsPt","2D Dca vs pT",200,0,20, 100,-0.1,0.1);
+    h2dNSigEVsPt = new TH2F("h2dNSigEVsPt","2D nSigE vs pT",200,0,20, 289,-13,13);
     
     
     
@@ -83,6 +84,7 @@ Int_t StPicoNpeAnaMaker::Finish()
     mOutputFile->cd();
     // --------------- USER HISTOGRAM WRITE --------------------
     h2dDcaVsPt->Write();
+    h2dNSigEVsPt->Write();
     
     
 
@@ -147,15 +149,13 @@ Int_t StPicoNpeAnaMaker::Make()
         StPicoTrack* track = picoDst->track(iTrack);
         if (!track) continue;
         if (mNpeCuts->isGoodInclusiveElectron(track)) {
-            cout << "Check1" << endl;
             StPhysicalHelixD eHelix = track->dcaGeometry().helix();
-            cout << "Check2" << endl;
             float dca = eHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
-            cout << "Check3" << endl;
             float pt = track->gPt();
-            cout << "Check4" << endl;
+            float nSigE = track->nSigmaElectron();
+            
             h2dDcaVsPt->Fill(pt, dca);
-            cout << "Check5" << endl;
+            h2dNSigEVsPt->Fill(pt, nSigE);
         }
     }
 

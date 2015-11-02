@@ -78,6 +78,7 @@ class StPicoNpeAnaMaker : public StMaker
     // Remember that ntuples size can be really big, use histograms where appropriate
     
     TH2F * h2dDcaVsPt;
+    TH2F * h2dNSigEVsPt;
     
     
     
