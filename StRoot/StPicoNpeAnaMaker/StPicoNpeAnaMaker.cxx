@@ -147,8 +147,8 @@ Int_t StPicoNpeAnaMaker::Make()
         if (mNpeCuts->isGoodInclusiveElectron(track)) {
             
             StPhysicalHelixD eHelix = track->dcaGeometry().helix();
-            dca = eHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
-            pt = track->gPt();
+            float dca = eHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
+            float pt = track->gPt();
             
             h2dDcaVsPt->Fill(pt, dca);
         }
