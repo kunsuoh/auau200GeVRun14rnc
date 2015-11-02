@@ -115,8 +115,8 @@ bool StNpeCuts::isGoodElectronPair(StElectronPair const* epair) const {
 // _________________________________________________________
 bool StNpeCuts::isGoodTaggedElectron(StPicoTrack const *trk) const {
     // -- check for good tagged electron for electron pairs
-    setCutRequireHFT(mElectronRequireHFT);
-    setCutNHitsFitMax(mElectronNHitsFitMax);
+ //   setCutRequireHFT(mElectronRequireHFT);
+ //   setCutNHitsFitMax(mElectronNHitsFitMax);
     
     bool taggedElectronCut =
     isGoodTrack(trk) &&
@@ -130,8 +130,8 @@ bool StNpeCuts::isGoodTaggedElectron(StPicoTrack const *trk) const {
 // _________________________________________________________
 bool StNpeCuts::isGoodPartnerElectron(StPicoTrack const *trk) const {
     // -- check for good partner electron for electron pairs
-    setCutRequireHFT(mPartnerElectronRequireHFT);
-    setCutNHitsFitMax(mPartnerElectronNHitsFitMax);
+ //   setCutRequireHFT(mPartnerElectronRequireHFT);
+ //   setCutNHitsFitMax(mPartnerElectronNHitsFitMax);
 
     bool partnerElectronCut =
     isGoodTrack(trk) &&
