@@ -106,6 +106,8 @@ private:
     float mElectronEtaMin;
     float mElectronEtaMax;
     float mElectronDca;
+    int mElectronBsmdNEta;
+    int mElectronBsmdNPhi;
     bool mElectronRequireHFT;
     float mElectronTPCNSigmaElectronMin;
     float mElectronTPCNSigmaElectronMax;
@@ -114,8 +116,6 @@ private:
     float mElectronBemcPhiDistMax;
     float mElectronBemcZDistMax;
     float mElectronBemcAssDistMax;
-    int mElectronBsmdNEta;
-    int mElectronBsmdNPhi;
 
     // ------------------------------------------
     // -- Track cuts for partner electron
