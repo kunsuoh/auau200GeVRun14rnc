@@ -124,31 +124,18 @@ Int_t StPicoNpeAnaMaker::Make()
     TClonesArray const * aElectronPair = mPicoNpeEvent->electronPairArray();
     for (int idx = 0; idx < aElectronPair->GetEntries(); ++idx)
     {
+        cout << "CHECK !!!!!!!!!!!!!!!!!!!!!!!!! Pair" << endl;
         // this is an example of how to get the ElectronPair pairs and their corresponsing tracks
         StElectronPair const* epair = (StElectronPair*)aElectronPair->At(idx);
-        if(!isGoodPair(epair)) continue;
-        
+        if(!mNpeCuts->isGoodElectronPair(epair)) continue;
+        cout << "CHECK !!!!!!!!!!!!!!!!!!!!!!!!! Pair cut passed" << endl;
+
         StPicoTrack const* electron = picoDst->track(epair->electronIdx());
         StPicoTrack const* partner = picoDst->track(epair->partnerIdx());
         
-        cout << "CHECK !!!!!!!!!!!!!!!!!!!!!!!!! Pair" << endl;
         
     }
     
     return kStOK;
 }
 //-----------------------------------------------------------------------------
-bool StPicoNpeAnaMaker::isGoodPair(StElectronPair const* const epair) const
-{
-    if(!epair) return false;
-    
-    StPicoTrack const* electron = mPicoDstMaker->picoDst()->track(epair->electronIdx());
-    StPicoTrack const* partner = mPicoDstMaker->picoDst()->track(epair->partnerIdx());
-    
-    bool pairCuts = epair->pairMass() > mNpeCuts->cutElectronPairMassMin() &&
-    epair->pairMass() < mNpeCuts->cutElectronPairMassMax() &&
-    epair->pairDca() < mNpeCuts->cutElectronPairDcaDaughtersMax();
-    
-    return (mNpeCuts->isGoodTaggedElectron(electron) && mNpeCuts->isGoodPartnerElectron(partner) && pairCuts);
-}
-
