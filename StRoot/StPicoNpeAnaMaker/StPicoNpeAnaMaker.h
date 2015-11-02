@@ -73,6 +73,7 @@ class StPicoNpeAnaMaker : public StMaker
     // add your member variables here. 
     // Remember that ntuples size can be really big, use histograms where appropriate
     
+    TH2F * h2dDcaVsPt;
     
     
     

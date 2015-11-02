@@ -63,7 +63,7 @@ Int_t StPicoNpeAnaMaker::Init()
     
 
     // -------------- USER VARIABLES -------------------------
-    TH2D * h2dDcaVsPt = new TH2D("h2dDcaVsPt","DCA distribution vs pT",200,0,20,100,-0.1,0.1);
+    TH2F * h2dDcaVsPt = new TH2F("h2dDcaVsPt","DCA distribution vs pT",200,0,20,100,-0.1,0.1);
     
     
     
