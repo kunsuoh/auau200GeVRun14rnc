@@ -23,7 +23,7 @@
 ClassImp(StNpeCuts)
 
 // _________________________________________________________
-StNpeCuts::StNpeCuts() : StPicoCutsBase("NpeCutsBase"),
+StNpeCuts::StNpeCuts() : StPicoCutsBase("NpeCutsBase"), mPicoDst2(NULL),
 mElectronPairDcaDaughtersMax(std::numeric_limits<float>::max()),
 mElectronPairDecayLengthMin(std::numeric_limits<float>::min()), mElectronPairDecayLengthMax(std::numeric_limits<float>::max()),
 mElectronPairCosThetaMin(std::numeric_limits<float>::min()),
@@ -59,7 +59,7 @@ mPartnerTPCNSigmaElectronMax(std::numeric_limits<float>::max()) {
 }
 
 // _________________________________________________________
-StNpeCuts::StNpeCuts(const Char_t *name) : StPicoCutsBase(name),
+StNpeCuts::StNpeCuts(const Char_t *name) : StPicoCutsBase(name), mPicoDst2(NULL),
 mElectronPairDcaDaughtersMax(std::numeric_limits<float>::max()),
 mElectronPairDecayLengthMin(std::numeric_limits<float>::min()), mElectronPairDecayLengthMax(std::numeric_limits<float>::max()),
 mElectronPairCosThetaMin(std::numeric_limits<float>::min()),
