@@ -63,6 +63,8 @@ Int_t StPicoNpeAnaMaker::Init()
     
 
     // -------------- USER VARIABLES -------------------------
+    TH2D * h2dDcaVsPt = new TH2D("h2dDcaVsPt","DCA distribution vs pT",200,0,20,100,-0.1,0.1);
+    
     
     
     return kStOK;
@@ -78,7 +80,7 @@ Int_t StPicoNpeAnaMaker::Finish()
     LOG_INFO << " StPicoNpeAnaMaker - writing data and closing output file " <<endm;
     mOutputFile->cd();
     // --------------- USER HISTOGRAM WRITE --------------------
-    
+    h2dDcaVsPt->Write();
     
     
 
@@ -129,27 +131,27 @@ Int_t StPicoNpeAnaMaker::Make()
 
         StPicoTrack const* electron = picoDst->track(epair->electronIdx());
         StPicoTrack const* partner = picoDst->track(epair->partnerIdx());
+        
+        
+        
+        
     }
     
+    
     // inclusive electron
-    int a=0, b=0, c=0, d=0, e=0;
     UInt_t nTracks = picoDst->numberOfTracks();
     for (unsigned short iTrack = 0; iTrack < nTracks; ++iTrack) {
         StPicoTrack* track = picoDst->track(iTrack);
         if (!track) continue;
-        a++;
-        if (mNpeCuts->isGoodInclusiveElectron(track)) {
-            b++;
-            if (mNpeCuts->isTPCElectron(track,-3,3)){
-                c++;
-                if(mNpeCuts->isBEMCElectron(track)) {
-                    d++;
-                    if(mNpeCuts->isBSMDElectron(track)) e++;
-                }
-            }
+        if (mNpeCuts->isGoodInclusiveElectron(track){
+            StPhysicalHelixD eHelix = track->dcaGeometry().helix();
+            dca = eHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
+            pt = track->gPt();
+            
+            h2dDcaVsPt->Fill(pt, dca);
         }
     }
-    cout << a << " " << b << " " << c << " " << d << " " << e << endl;
+
     return kStOK;
 }
 //-----------------------------------------------------------------------------
