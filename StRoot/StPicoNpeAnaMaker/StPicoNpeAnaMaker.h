@@ -34,6 +34,9 @@ class StElectronTrack;
 class StElectronPair;
 class StPicoDstMaker;
 class StPicoTrack;
+class StPicoDst;
+class StPicoPrescales;
+
 class StNpeCuts;
 
 class StPicoNpeAnaMaker : public StMaker
