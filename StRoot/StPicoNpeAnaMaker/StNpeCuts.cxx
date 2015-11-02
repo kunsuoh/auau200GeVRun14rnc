@@ -126,8 +126,8 @@ bool StNpeCuts::isGoodTaggedElectron(StPicoTrack const *trk) const {
     
     return taggedElectronCut
 //    && isTPCElectron(trk, mElectronTPCNSigmaElectronMin, mElectronTPCNSigmaElectronMax)
-//    && isBEMCElectron(trk)
-    && isBSMDElectron(trk)
+    && isBEMCElectron(trk)
+//    && isBSMDElectron(trk)
     ;
 }
 // _________________________________________________________
