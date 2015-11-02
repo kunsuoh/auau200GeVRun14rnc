@@ -125,7 +125,11 @@ bool StNpeCuts::isGoodTaggedElectron(StPicoTrack const *trk) const {
     getDca(trk) < mElectronDca &&
     (!mElectronRequireHFT || trk->isHFTTrack());
     
-    return taggedElectronCut && isTPCElectron(trk, mElectronTPCNSigmaElectronMin, mElectronTPCNSigmaElectronMax) && isBEMCElectron(trk) && isBSMDElectron(trk) ;
+    return taggedElectronCut &&
+    isTPCElectron(trk, mElectronTPCNSigmaElectronMin, mElectronTPCNSigmaElectronMax) &&
+  //  isBEMCElectron(trk) &&
+  //  isBSMDElectron(trk)
+    ;
 }
 // _________________________________________________________
 bool StNpeCuts::isGoodPartnerElectron(StPicoTrack const *trk) const {
