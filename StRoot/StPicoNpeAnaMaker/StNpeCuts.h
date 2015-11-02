@@ -53,7 +53,7 @@ public:
     void setCutTPCNSigmaElectron(float fmin, float fmax);
     void setCutPartnerTPCNSigmaElectron(float fmin, float fmax);
     void setCutBemcPid(float epmin, float epmax, float phi, float z, float ass);
-    void setCutBsmdPid(int eta, int phi)
+    void setCutBsmdPid(int eta, int phi);
 
     // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
     // -- GETTER for single CUTS
@@ -97,33 +97,33 @@ private:
     // ------------------------------------------
     // -- Track cuts for tagged electron
     // ------------------------------------------
-    int mElectronNHitdEdxMax
-    float mElectronPtMin
-    float mElectronPtMax
-    float mElectronEtaMin
-    float mElectronEtaMax
-    float mElectronDca
-    bool mElectronRequireHFT
-    float mElectronTPCNSigmaElectronMin
-    float mElectronTPCNSigmaElectronMax
-    float mElectronBemcEoverPMin
-    float mElectronBemcEoverPMax
-    float mElectronBemcPhiDistMax
-    float mElectronBemcZDistMax
-    float mElectronBemcAssDistMax
-    int mElectronBsmdNEta
-    int mElectronBsmdNPhi
+    int mElectronNHitdEdxMax;
+    float mElectronPtMin;
+    float mElectronPtMax;
+    float mElectronEtaMin;
+    float mElectronEtaMax;
+    float mElectronDca;
+    bool mElectronRequireHFT;
+    float mElectronTPCNSigmaElectronMin;
+    float mElectronTPCNSigmaElectronMax;
+    float mElectronBemcEoverPMin;
+    float mElectronBemcEoverPMax;
+    float mElectronBemcPhiDistMax;
+    float mElectronBemcZDistMax;
+    float mElectronBemcAssDistMax;
+    int mElectronBsmdNEta;
+    int mElectronBsmdNPhi;
 
     // ------------------------------------------
     // -- Track cuts for partner electron
     // ------------------------------------------
-    int mPartnerElectronNHitsdEdxMax
-    float mPartnerElectronPtMin
-    float mPartnerElectronPtMax
-    float mPartnerElectronEtaMin
-    float mPartnerElectronEtaMax
-    float mPartnerTPCNSigmaElectronMin
-    float mPartnerTPCNSigmaElectronMax
+    int mPartnerElectronNHitsdEdxMax;
+    float mPartnerElectronPtMin;
+    float mPartnerElectronPtMax;
+    float mPartnerElectronEtaMin;
+    float mPartnerElectronEtaMax;
+    float mPartnerTPCNSigmaElectronMin;
+    float mPartnerTPCNSigmaElectronMax;
     
     
     ClassDef(StNpeCuts,1)
