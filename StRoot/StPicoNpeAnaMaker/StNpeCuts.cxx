@@ -104,7 +104,6 @@ StNpeCuts::~StNpeCuts() {
 // _________________________________________________________
 bool StNpeCuts::isGoodElectronPair(StElectronPair const* epair) const {
     // -- check for good electron pairs
-    cout << "Check isGoodElectronPair" << endl;
     StPicoTrack const* electron = mPicoDst2->track(epair->electronIdx());
     StPicoTrack const* partner = mPicoDst2->track(epair->partnerIdx());
     
@@ -127,8 +126,8 @@ bool StNpeCuts::isGoodTaggedElectron(StPicoTrack const *trk) const {
     
     return taggedElectronCut
 //    && isTPCElectron(trk, mElectronTPCNSigmaElectronMin, mElectronTPCNSigmaElectronMax)
-    && isBEMCElectron(trk)
-    && isBSMDElectron(trk)
+//    && isBEMCElectron(trk)
+//    && isBSMDElectron(trk)
     ;
 }
 // _________________________________________________________

@@ -116,15 +116,12 @@ Int_t StPicoNpeAnaMaker::Make()
     // -------------- USER ANALYSIS -------------------------
     
     // check if good event (including bad run)
-    cout << "CHECK !!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
     if(!mNpeCuts->isGoodNpeEvent(const_cast<const StPicoDst*>(picoDst), NULL))
         return kStOk;
-    cout << "CHECK !!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
     
     TClonesArray const * aElectronPair = mPicoNpeEvent->electronPairArray();
     for (int idx = 0; idx < aElectronPair->GetEntries(); ++idx)
     {
-        cout << "CHECK !!!!!!!!!!!!!!!!!!!!!!!!! Pair" << endl;
         // this is an example of how to get the ElectronPair pairs and their corresponsing tracks
         StElectronPair const* epair = (StElectronPair*)aElectronPair->At(idx);
         if(!mNpeCuts->isGoodElectronPair(epair)) continue;
