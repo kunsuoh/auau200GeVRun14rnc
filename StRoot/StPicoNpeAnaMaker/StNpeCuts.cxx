@@ -158,29 +158,29 @@ bool StNpeCuts::isTPCElectron(StPicoTrack const *trk, float min, float max) cons
 // _________________________________________________________
 bool StNpeCuts::isBEMCElectron(StPicoTrack const *trk) const {
     // -- check for good BEMC electrons
+    if (!mElectronBemcPid) return true;
     if (trk->emcPidTraitsIndex() < 0) return false;
     StPicoEmcPidTraits * Emc =  mPicoDst2->emcPidTraits(trk->emcPidTraitsIndex());
     float eoverp = Emc->e0()/trk->gPt()/TMath::CosH(getEta(trk));
     float phiDist = Emc->phiDist();
     float zDist = Emc->zDist();
-    bool pid = eoverp > mElectronBemcEoverPMin && eoverp < mElectronBemcEoverPMax &&
+    
+    return eoverp > mElectronBemcEoverPMin && eoverp < mElectronBemcEoverPMax &&
     phiDist < mElectronBemcPhiDistMax && zDist < mElectronBemcZDistMax &&
     TMath::Sqrt(phiDist*phiDist + zDist*zDist) < mElectronBemcAssDistMax
     ;
-    
-    return (!mElectronBemcPid || pid);
 }
      
 // _________________________________________________________
 bool StNpeCuts::isBSMDElectron(StPicoTrack const *trk) const {
     // -- check for good BSMD electrons
+    if (!mElectronBsmdPid) return true;
     if (trk->emcPidTraitsIndex() < 0) return false;
     StPicoEmcPidTraits * Emc =  mPicoDst2->emcPidTraits(trk->emcPidTraitsIndex());
     int nphi = Emc->nPhi();
     int neta = Emc->nEta();
-    bool pid = neta > mElectronBsmdNEta && nphi > mElectronBsmdNPhi ;
 
-    return (!mElectronBsmdPid || pid);
+    return neta > mElectronBsmdNEta && nphi > mElectronBsmdNPhi ;
 }
      
 // _________________________________________________________
