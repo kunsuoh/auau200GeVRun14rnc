@@ -81,7 +81,7 @@ void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunList
     // Electron pair cuts
     float dcaDaughtersMax = 0.5;  // maximum
     float minMass         = 0;
-    float maxMass         = 0.2;
+    float maxMass         = 0.4;
     npeCuts->setCutElectronPair(dcaDaughtersMax, minMass, maxMass);
 
     // BEMC PID
