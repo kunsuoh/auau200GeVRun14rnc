@@ -69,7 +69,7 @@ void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunList
     npeCuts->setCutPt(1.5, 20);
     npeCuts->setCutEta(-0.7, 0.7);
     npeCuts->setCutDca(0.1);
-    npeCuts->setCutRequireHFT(true);
+    npeCuts->setCutElectronRequireHFT(true);
     npeCuts->setCutTPCNSigmaElectron(-3.0, 3.0);
     
     // Partner electron cuts
