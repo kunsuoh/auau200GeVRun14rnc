@@ -78,7 +78,7 @@ StNpeCuts::~StNpeCuts() {
 
 
 // _________________________________________________________
-bool StNpeCuts::isGoodElectronPair(StElectronPair const* const epair) const {
+bool StNpeCuts::isGoodElectronPair(StElectronPair const* epair) const {
     // -- check for good electron pairs
     StPicoTrack const* electron = mPicoDstMaker->picoDst()->track(epair->electronIdx());
     StPicoTrack const* partner = mPicoDstMaker->picoDst()->track(epair->partnerIdx());
