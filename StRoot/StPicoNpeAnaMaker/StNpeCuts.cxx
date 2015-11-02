@@ -13,9 +13,9 @@ mElectronPairMassMin(std::numeric_limits<float>::min()), mElectronPairMassMax(st
 mElectronNHitdEdxMax(std::numeric_limits<int>::max()),
 mElectronBsmdNEta(std::numeric_limits<int>::min()),
 mElectronBsmdNPhi(std::numeric_limits<int>::min()),
-mElectronRequireHFT(false),
 mElectronPtMin(std::numeric_limits<float>::min()),
 mElectronPtMax(std::numeric_limits<float>::max()),
+mElectronRequireHFT(false),
 mElectronEtaMin(std::numeric_limits<float>::min()),
 mElectronEtaMax(std::numeric_limits<float>::max()),
 mElectronDca(std::numeric_limits<float>::max()),
@@ -47,9 +47,9 @@ mElectronPairMassMin(std::numeric_limits<float>::min()), mElectronPairMassMax(st
 mElectronNHitdEdxMax(std::numeric_limits<int>::max()),
 mElectronBsmdNEta(std::numeric_limits<int>::min()),
 mElectronBsmdNPhi(std::numeric_limits<int>::min()),
-mElectronRequireHFT(false),
 mElectronPtMin(std::numeric_limits<float>::min()),
 mElectronPtMax(std::numeric_limits<float>::max()),
+mElectronRequireHFT(false),
 mElectronEtaMin(std::numeric_limits<float>::min()),
 mElectronEtaMax(std::numeric_limits<float>::max()),
 mElectronDca(std::numeric_limits<float>::max()),
@@ -88,9 +88,9 @@ StNpeCuts::isGoodElectronPair(StElectronPair const* const epair) {
     return
     isGoodTaggedElectron(electron) && isGoodPartnerElectron(partner) &&
     epair->pairMass() > mElectronPairMassMin && epair->pairMass() < mElectronPairMassMax &&
-    epair->pairDca() < mElectronPairDcaDaughtersMax
-    ;
-}// _________________________________________________________
+    epair->pairDca() < mElectronPairDcaDaughtersMax ;
+}
+// _________________________________________________________
 StNpeCuts::isGoodTaggedElectron(StPicoTrack const *trk) {
     // -- check for good tagged electron for electron pairs
 
