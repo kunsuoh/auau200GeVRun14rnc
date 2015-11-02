@@ -83,6 +83,7 @@ public:
     const float&    cutElectronPairMassMax()               const;
 
     
+    
 private:
     
     StNpeCuts(StNpeCuts const &);
