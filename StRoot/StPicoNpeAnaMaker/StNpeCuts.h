@@ -63,8 +63,8 @@ public:
 
     void setCutTPCNSigmaElectron(float fmin, float fmax);
     void setCutPartnerTPCNSigmaElectron(float fmin, float fmax);
-    void setCutBemcPid(float epmin, float epmax, float phi, float z, float ass);
-    void setCutBsmdPid(int eta, int phi);
+    void setCutBemcPid(bool pid, float epmin, float epmax, float phi, float z, float ass);
+    void setCutBsmdPid(bool pid, int eta, int phi);
     
     // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
     // -- GETTER for single CUTS
@@ -131,7 +131,8 @@ private:
     float mElectronBemcPhiDistMax;
     float mElectronBemcZDistMax;
     float mElectronBemcAssDistMax;
-
+    bool mElectronBemcPid;
+    bool mElectronBsmdPid;
     // ------------------------------------------
     // -- Track cuts for partner electron
     // ------------------------------------------
@@ -203,7 +204,8 @@ inline void StNpeCuts::setCutPartnerTPCNSigmaElectron(float fmin, float fmax)  {
     mPartnerTPCNSigmaElectronMax = fmax;
 
 }
-inline void StNpeCuts::setCutBemcPid(float epmin, float epmax, float phi, float z, float ass)  {
+inline void StNpeCuts::setCutBemcPid(bool pid, float epmin, float epmax, float phi, float z, float ass)  {
+    mElectronBemcPid = pid;
     mElectronBemcEoverPMin = epmin;
     mElectronBemcEoverPMax = epmax;
     mElectronBemcPhiDistMax = phi;
@@ -211,7 +213,8 @@ inline void StNpeCuts::setCutBemcPid(float epmin, float epmax, float phi, float 
     mElectronBemcAssDistMax = ass;
     
 }
-inline void StNpeCuts::setCutBsmdPid(int eta, int phi)  {
+inline void StNpeCuts::setCutBsmdPid(bool pid, int eta, int phi)  {
+    mElectronBsmdPid = pid;
     mElectronBsmdNEta = eta;
     mElectronBsmdNPhi = phi;
 }

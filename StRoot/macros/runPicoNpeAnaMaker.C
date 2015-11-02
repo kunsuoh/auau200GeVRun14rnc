@@ -85,17 +85,19 @@ void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunList
     npeCuts->setCutElectronPair(dcaDaughtersMax, minMass, maxMass);
 
     // BEMC PID
-    float const minEoverP   = 0;//0.8;
-    float const maxEoverP   = 10;//2.0;
-    float const phiDist     = 100;//0.015;
-    float const zDist       = 100;//3;
-    float const assDist     = 100;//0.06;
-    npeCuts->setCutBemcPid(minEoverP, maxEoverP, phiDist, zDist, assDist);
+    bool const bemc = false;
+    float const minEoverP   = 0.8;
+    float const maxEoverP   = 2.0;
+    float const phiDist     = 0.015;
+    float const zDist       = 3;
+    float const assDist     = 0.06;
+    npeCuts->setCutBemcPid(bemc, minEoverP, maxEoverP, phiDist, zDist, assDist);
 
     // BSMD PID
+    bool const bsmd = false;
     int const nEta     = -1;
     int const nPhi     = -1;
-    npeCuts->setCutBsmdPid(nEta, nPhi);
+    npeCuts->setCutBsmdPid(bsmd, nEta, nPhi);
 
     npeChain->Init();
     int nEntries = picoNpeAnaMaker->getEntries();

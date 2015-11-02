@@ -53,7 +53,8 @@ mPartnerElectronEtaMin(std::numeric_limits<float>::min()),
 mPartnerElectronEtaMax(std::numeric_limits<float>::max()),
 mPartnerElectronRequireHFT(false),
 mPartnerTPCNSigmaElectronMin(std::numeric_limits<float>::min()),
-mPartnerTPCNSigmaElectronMax(std::numeric_limits<float>::max()) {
+mPartnerTPCNSigmaElectronMax(std::numeric_limits<float>::max()),
+mElectronBemcPid(false),mElectronBsmdPid(false){
     
     // -- default constructor
 }
@@ -89,7 +90,9 @@ mPartnerElectronEtaMin(std::numeric_limits<float>::min()),
 mPartnerElectronEtaMax(std::numeric_limits<float>::max()),
 mPartnerElectronRequireHFT(false),
 mPartnerTPCNSigmaElectronMin(std::numeric_limits<float>::min()),
-mPartnerTPCNSigmaElectronMax(std::numeric_limits<float>::max()) {
+mPartnerTPCNSigmaElectronMax(std::numeric_limits<float>::max()),
+mElectronBemcPid(false),mElectronBsmdPid(false){
+
     
     // -- constructor
 }
@@ -126,8 +129,8 @@ bool StNpeCuts::isGoodTaggedElectron(StPicoTrack const *trk) const {
     
     return taggedElectronCut
     && isTPCElectron(trk, mElectronTPCNSigmaElectronMin, mElectronTPCNSigmaElectronMax)
-    && isBEMCElectron(trk)
-    && isBSMDElectron(trk)
+    && (!mElectronBemcPid || isBEMCElectron(trk))
+    && (!mElectronBsmdPid || isBSMDElectron(trk))
     ;
 }
 // _________________________________________________________
@@ -155,6 +158,7 @@ bool StNpeCuts::isTPCElectron(StPicoTrack const *trk, float min, float max) cons
 // _________________________________________________________
 bool StNpeCuts::isBEMCElectron(StPicoTrack const *trk) const {
     // -- check for good BEMC electrons
+    cout << " BEMC " << endl;
     if (trk->emcPidTraitsIndex() < 0) return false;
     StPicoEmcPidTraits * Emc =  mPicoDst2->emcPidTraits(trk->emcPidTraitsIndex());
     float eoverp = Emc->e0()/trk->gPt()/TMath::CosH(getEta(trk));
