@@ -70,7 +70,7 @@ public:
     bool isGoodPartnerElectron(StPicoTrack const *trk) const;
     float getEta(StPicoTrack const *trk)         const;
     float getDca(StPicoTrack const *trk)         const;
-    StThreeVectorF&    getpVtx()                     const;
+    StThreeVectorF getpVtx()                     const;
     
     const float&    cutElectronPairDcaDaughtersMax()       const;
     const float&    cutElectronPairDecayLengthMin()        const;
