@@ -46,6 +46,7 @@ public:
     void setCutPt(float fmin, float fmax);
     void setCutEta(float fmin, float fmax);
     void setCutDca(float f);
+    void setCutRequireHFT(bool b);
     
     void setCutPartnerNHitsdEdxMax(int i);
     void setCutPartnerPt(float fmin, float fmax);
@@ -55,7 +56,7 @@ public:
     void setCutPartnerTPCNSigmaElectron(float fmin, float fmax);
     void setCutBemcPid(float epmin, float epmax, float phi, float z, float ass);
     void setCutBsmdPid(int eta, int phi);
-
+    
     // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
     // -- GETTER for single CUTS
     // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
@@ -194,5 +195,5 @@ inline const float&    StNpeCuts::cutElectronPairDecayLengthMax()        const {
 inline const float&    StNpeCuts::cutElectronPairCosThetaMin()           const { return mElectronPairCosThetaMin; }
 inline const float&    StNpeCuts::cutElectronPairMassMin()               const { return mElectronPairMassMin; }
 inline const float&    StNpeCuts::cutElectronPairMassMax()               const { return mElectronPairMassMax; }
-inline const StThreeVectorF&    StNpeCuts::getpVtx()                     const { return mPicoDst->event()->primaryVertex(); }
+inline const StThreeVectorF&    StNpeCuts::getpVtx()                     const { return mPicoDst.event()->primaryVertex(); }
 #endif
