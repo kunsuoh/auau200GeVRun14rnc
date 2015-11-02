@@ -117,9 +117,10 @@ bool StNpeCuts::isGoodTaggedElectron(StPicoTrack const *trk) const {
     // -- check for good tagged electron for electron pairs
     setCutRequireHFT(mElectronRequireHFT);
     setCutNHitsFitMax(mElectronNHitsFitMax);
+    
     bool taggedElectronCut =
     isGoodTrack(trk) &&
-    trk->nHitsDedx() >= mElectronNHitdEdxMax &&
+    trk->nHitsDedx() >= mElectronNHitsdEdxMax &&
     trk->gPt() >= mElectronPtMin && trk->gPt() < mElectronPtMax &&
     getEta(trk) > mElectronEtaMin && getEta(trk) < mElectronEtaMax &&
     getDca(trk) < mElectronDca ;
@@ -186,6 +187,6 @@ StThreeVectorF StNpeCuts::getpVtx() const {
 // __________________________________________________________
 bool StNpeCuts::isGoodNpeEvent(StPicoDst const * const picoDst, int *aEventCuts) const {
     mPicoDst = picoDst;
-    return mNpeCuts->isGoodEvent(picoDst,aEventCuts);
+    return isGoodEvent(picoDst,aEventCuts);
 }
 

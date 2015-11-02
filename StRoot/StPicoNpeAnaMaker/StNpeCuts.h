@@ -98,7 +98,7 @@ private:
     StNpeCuts(StNpeCuts const &);
     StNpeCuts& operator=(StNpeCuts const &);
 
-    const StPicoDst*  mPicoDst;   //! ptr to picoDst
+    StPicoDst*  mPicoDst;   //! ptr to picoDst
     
     // ------------------------------------------
     // -- Pair cuts for electron pair
