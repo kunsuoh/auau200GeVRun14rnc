@@ -153,3 +153,8 @@ StNpeCuts::getEta(StPicoTrack const *trk) {
 StNpeCuts::getDca(StPicoTrack const *trk) {
     return trk->dcaGeometry().helix().curvatureSignedDistance(getpVtx().x(),getpVtx().y());
 }
+// _________________________________________________________
+StNpeCuts::getpVtx()  {
+    return mPicoDst->event()->primaryVertex();
+}
+

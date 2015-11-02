@@ -195,5 +195,4 @@ inline const float&    StNpeCuts::cutElectronPairDecayLengthMax()        const {
 inline const float&    StNpeCuts::cutElectronPairCosThetaMin()           const { return mElectronPairCosThetaMin; }
 inline const float&    StNpeCuts::cutElectronPairMassMin()               const { return mElectronPairMassMin; }
 inline const float&    StNpeCuts::cutElectronPairMassMax()               const { return mElectronPairMassMax; }
-inline const StThreeVectorF&    StNpeCuts::getpVtx()                     const { return mPicoDst.event()->primaryVertex(); }
 #endif
