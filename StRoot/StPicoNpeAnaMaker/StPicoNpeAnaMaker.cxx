@@ -124,7 +124,7 @@ Int_t StPicoNpeAnaMaker::Make()
         return kStOk;
     StThreeVectorF pVtx = picoDst->event()->primaryVertex();
 
-    // electron pair
+    cout << " electron pair " << endl;
     TClonesArray const * aElectronPair = mPicoNpeEvent->electronPairArray();
     for (int idx = 0; idx < aElectronPair->GetEntries(); ++idx)
     {
@@ -141,7 +141,7 @@ Int_t StPicoNpeAnaMaker::Make()
     }
     
     
-    // inclusive electron
+    cout << " inclusive electron " << endl;
     UInt_t nTracks = picoDst->numberOfTracks();
     for (unsigned short iTrack = 0; iTrack < nTracks; ++iTrack) {
         StPicoTrack* track = picoDst->track(iTrack);
