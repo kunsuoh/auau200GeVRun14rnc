@@ -20,6 +20,7 @@
  * **************************************************
  */
 
+#include "StPicoNpeEventMaker/StElectronPair.h"
 #include "StPicoCutsBase/StPicoCutsBase.h"
 #include "StPicoDstMaker/StPicoEmcPidTraits.h"
 #include "StThreeVectorF.hh"
