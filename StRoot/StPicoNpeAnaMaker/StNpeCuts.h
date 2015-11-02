@@ -67,7 +67,7 @@ public:
     bool isBEMCElectron(StPicoTrack const *trk) const;
     bool isBSMDElectron(StPicoTrack const *trk) const;
     
-    bool isGoodTaggedElectron(StPicoTrack const *trk) const;
+    bool isGoodTaggedElectron(StPicoTrack const *trk);
     bool isGoodPartnerElectron(StPicoTrack const *trk) const;
     float getEta(StPicoTrack const *trk)         const;
     float getDca(StPicoTrack const *trk)         const;
