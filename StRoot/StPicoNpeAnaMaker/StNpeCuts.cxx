@@ -109,23 +109,25 @@ bool StNpeCuts::isGoodElectronPair(StElectronPair const* epair) const {
 // _________________________________________________________
 bool StNpeCuts::isGoodTaggedElectron(StPicoTrack const *trk) const {
     // -- check for good tagged electron for electron pairs
-    
+    setCutRequireHFT(mElectronRequireHFT);
+    setCutNHitsFitMax(mElectronNHitFitMax);
     bool taggedElectronCut =
-    trk->nHitsFit() >= mNHitsFitMax &&
+    isGoodTrack(trk) &&
     trk->nHitsDedx() >= mElectronNHitdEdxMax &&
     trk->gPt() >= mElectronPtMin && trk->gPt() < mElectronPtMax &&
     getEta(trk) > mElectronEtaMin && getEta(trk) < mElectronEtaMax &&
-    getDca(trk) < mElectronDca &&
-    (!mElectronRequireHFT || trk->isHFTTrack());
+    getDca(trk) < mElectronDca ;
     
     return taggedElectronCut && isTPCElectron(trk, mElectronTPCNSigmaElectronMin, mElectronTPCNSigmaElectronMax) && isBEMCElectron(trk) && isBSMDElectron(trk) ;
 }
 // _________________________________________________________
 bool StNpeCuts::isGoodPartnerElectron(StPicoTrack const *trk) const {
     // -- check for good partner electron for electron pairs
-    
+    setCutRequireHFT(mPartnerElectronRequireHFT);
+    setCutNHitsFitMax(mPartnerElectronNHitFitMax);
+
     bool partnerElectronCut =
-    trk->nHitsFit() >= mNHitsFitMax &&
+    isGoodTrack(trk) &&
     trk->gPt() >= mPartnerElectronPtMin && trk->gPt() < mPartnerElectronPtMax &&
     getEta(trk) > mPartnerElectronEtaMin && getEta(trk) < mPartnerElectronEtaMax ;
     

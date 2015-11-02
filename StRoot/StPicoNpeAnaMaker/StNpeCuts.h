@@ -48,15 +48,18 @@ public:
     // -- SETTER for CUTS
     // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
     void setCutElectronPair(float dcaDaughtersMax, float massMin, float massMax);
-    void setCutNHitsdEdxMax(int i);
+    void setCutElectronNHitsFitMax(int i);
+    void setCutElectronNHitsdEdxMax(int i);
     void setCutPt(float fmin, float fmax);
     void setCutEta(float fmin, float fmax);
     void setCutDca(float f);
-    void setCutRequireHFT(bool b);
+    void setCutElectronRequireHFT(bool b);
     
-    void setCutPartnerNHitsdEdxMax(int i);
+    void setCutPartnerElectronNHitsFitMax(int i);
+    void setCutPartnerElectronNHitsdEdxMax(int i);
     void setCutPartnerPt(float fmin, float fmax);
     void setCutPartnerEta(float fmin, float fmax);
+    void setCutPartnerElectronRequireHFT(bool b);
 
     void setCutTPCNSigmaElectron(float fmin, float fmax);
     void setCutPartnerTPCNSigmaElectron(float fmin, float fmax);
@@ -111,7 +114,8 @@ private:
     // ------------------------------------------
     // -- Track cuts for tagged electron
     // ------------------------------------------
-    int mElectronNHitdEdxMax;
+    int mElectronNHitsdEdxMax;
+    int mElectronNHitsFitMax;
     float mElectronPtMin;
     float mElectronPtMax;
     float mElectronEtaMin;
@@ -132,13 +136,15 @@ private:
     // -- Track cuts for partner electron
     // ------------------------------------------
     int mPartnerElectronNHitsdEdxMax;
+    int mPartnerElectronNHitsFitMax;
     float mPartnerElectronPtMin;
     float mPartnerElectronPtMax;
     float mPartnerElectronEtaMin;
     float mPartnerElectronEtaMax;
     float mPartnerTPCNSigmaElectronMin;
     float mPartnerTPCNSigmaElectronMax;
-    
+    bool mPartnerElectronRequireHFT;
+
     
     ClassDef(StNpeCuts,1)
 };
@@ -148,8 +154,11 @@ inline void StNpeCuts::setCutElectronPair(float dcaDaughtersMax, float massMin, 
     mElectronPairMassMin = massMin;
     mElectronPairMassMax = massMax;
 }
-inline void StNpeCuts::setCutNHitsdEdxMax(int i)  {
-    mElectronNHitdEdxMax = i;
+inline void StNpeCuts::setCutElectronNHitsdEdxMax(int i)  {
+    mElectronNHitsdEdxMax = i;
+}
+inline void StNpeCuts::setCutElectronNHitsFitMax(int i)  {
+    mElectronNHitsFitMax = i;
 }
 inline void StNpeCuts::setCutPt(float fmin, float fmax)  {
     mElectronPtMin = fmin;
@@ -162,11 +171,14 @@ inline void StNpeCuts::setCutEta(float fmin, float fmax)  {
 inline void StNpeCuts::setCutDca(float f)  {
     mElectronDca = f;
 }
-inline void StNpeCuts::setCutRequireHFT(bool b)  {
+inline void StNpeCuts::setCutElectronRequireHFT(bool b)  {
     mElectronRequireHFT = b;
 }
-inline void StNpeCuts::setCutPartnerNHitsdEdxMax(int i)  {
+inline void StNpeCuts::setCutPartnerElectronNHitsdEdxMax(int i)  {
     mPartnerElectronNHitsdEdxMax = i;
+}
+inline void StNpeCuts::setCutPartnerElectronNHitsFitMax(int i)  {
+    mPartnerElectronNHitsFitMax = i;
 }
 inline void StNpeCuts::setCutPartnerPt(float fmin, float fmax)  {
     mPartnerElectronPtMin = fmin;
@@ -178,6 +190,10 @@ inline void StNpeCuts::setCutPartnerEta(float fmin, float fmax)  {
     mPartnerElectronEtaMax = fmax;
 
 }
+inline void StNpeCuts::setCutPartnerElectronRequireHFT(bool b)  {
+    mPartnerElectronRequireHFT = b;
+}
+
 inline void StNpeCuts::setCutTPCNSigmaElectron(float fmin, float fmax)  {
     mElectronTPCNSigmaElectronMin = fmin;
     mElectronTPCNSigmaElectronMax = fmax;
