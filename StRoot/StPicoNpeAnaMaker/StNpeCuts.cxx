@@ -117,7 +117,7 @@ StNpeCuts::isGoodPartnerElectron(StPicoTrack const *trk) {
     ;
 }
 // _________________________________________________________
-StNpeCuts::isTPCElectron(StPicoTrack const *trk, min, max) {
+StNpeCuts::isTPCElectron(StPicoTrack const *trk, float min, float max) {
     // -- check for good TPC electrons
     float nSigma = trk->nSigmaElectron();
 
