@@ -109,8 +109,8 @@ bool StNpeCuts::isGoodElectronPair(StElectronPair const* epair) const {
     StPicoTrack const* partner = mPicoDst2->track(epair->partnerIdx());
     
     return
-    isGoodTaggedElectron(electron) && isGoodPartnerElectron(partner) &&
-    epair->pairMass() > mElectronPairMassMin && epair->pairMass() < mElectronPairMassMax &&
+  //  isGoodTaggedElectron(electron) && isGoodPartnerElectron(partner) &&
+  //  epair->pairMass() > mElectronPairMassMin && epair->pairMass() < mElectronPairMassMax &&
     epair->pairDca() < mElectronPairDcaDaughtersMax ;
 }
 // _________________________________________________________
