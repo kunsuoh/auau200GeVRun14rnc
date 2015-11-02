@@ -131,7 +131,7 @@ Int_t StPicoNpeAnaMaker::Make()
         StPicoTrack const* electron = picoDst->track(epair->electronIdx());
         StPicoTrack const* partner = picoDst->track(epair->partnerIdx());
         
-        
+        cout << "CHECK !!!!!!!!!!!!!!!!!!!!!!!!! Pair" << endl;
         
     }
     
