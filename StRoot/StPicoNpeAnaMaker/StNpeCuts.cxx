@@ -158,7 +158,6 @@ bool StNpeCuts::isTPCElectron(StPicoTrack const *trk, float min, float max) cons
 // _________________________________________________________
 bool StNpeCuts::isBEMCElectron(StPicoTrack const *trk) const {
     // -- check for good BEMC electrons
-    cout << " BEMC " << endl;
     if (trk->emcPidTraitsIndex() < 0) return false;
     StPicoEmcPidTraits * Emc =  mPicoDst2->emcPidTraits(trk->emcPidTraitsIndex());
     float eoverp = Emc->e0()/trk->gPt()/TMath::CosH(getEta(trk));

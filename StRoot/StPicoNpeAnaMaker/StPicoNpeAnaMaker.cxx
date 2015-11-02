@@ -119,20 +119,34 @@ Int_t StPicoNpeAnaMaker::Make()
     if(!mNpeCuts->isGoodNpeEvent(const_cast<const StPicoDst*>(picoDst), NULL))
         return kStOk;
     
+    // electron pair
     TClonesArray const * aElectronPair = mPicoNpeEvent->electronPairArray();
     for (int idx = 0; idx < aElectronPair->GetEntries(); ++idx)
     {
         // this is an example of how to get the ElectronPair pairs and their corresponsing tracks
         StElectronPair const* epair = (StElectronPair*)aElectronPair->At(idx);
         if(!mNpeCuts->isGoodElectronPair(epair)) continue;
-        cout << "CHECK !!!!!!!!!!!!!!!!!!!!!!!!! Pair cut passed" << endl;
 
         StPicoTrack const* electron = picoDst->track(epair->electronIdx());
         StPicoTrack const* partner = picoDst->track(epair->partnerIdx());
-        
-        
     }
     
+    // inclusive electron
+    int a=0, b=0, c=0, d=0;
+    UInt_t nTracks = picoDst->numberOfTracks();
+    for (unsigned short iTrack = 0; iTrack < nTracks; ++iTrack) {
+        StPicoTrack* track = picoDst->track(iTrack);
+        if (!track) continue;
+        a++;
+        if (mNpeCuts->isGoodTrack(track)) {
+            b++;
+            if (mNpeCuts->isTPCElectron(track)){
+                c++
+                if(mNpeCuts->isBEMCElectron(track)) d++
+            }
+        }
+    }
+    cout << a << " " << b << " " << c << " " << d << endl;
     return kStOK;
 }
 //-----------------------------------------------------------------------------
