@@ -56,17 +56,46 @@ void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunList
     // -- File name of bad run list
     npeCuts->setBadRunListFileName(badRunListFileName);
 
-    // add your cuts here.
-
-    // tracking
-    npeCuts->setCutNHitsFitMax(20);
+    // Add your cuts here.
     
+    // Event cuts
+    npeCuts->setCutVzMax(6);
+    npeCuts->setCutVzVpdVzMax(3);
+    npeCuts->setCutTriggerWord(0x1F);
+
+    // Tagged electron cuts
+    npeCuts->setCutNHitsFitMax(20);
+    npeCuts->setCutNHitsdEdxMax(15);
+    npeCuts->setCutPt(1.5, 20);
+    npeCuts->setCutEta(-0.7, 0.7);
+    npeCuts->setCutDca(0.1);
+    npeCuts->setCutRequireHFT(true);
+    npeCuts->setCutTPCNSigmaElectron(-3.0, 3.0);
+    
+    // Partner electron cuts
+    npeCuts->setCutPartnerNHitsFitMax(15);
+    npeCuts->setCutPartnerPt(0.2, 20);
+    npeCuts->setCutPartnerEta(-1., 1.);
+    npeCuts->setCutPartnerTPCNSigmaElectron(-3.0, 3.0);
+
     // Electron pair cuts
     float dcaDaughtersMax = 0.5;  // maximum
     float minMass         = 0;
-    float maxMass         = 0.1;
-    npeCuts->setCutSecondaryPair(dcaDaughtersMax, minMass, maxMass);
+    float maxMass         = 0.2;
+    npeCuts->setCutElectronPair(dcaDaughtersMax, minMass, maxMass);
 
+    // BEMC PID
+    float const minEoverP   = 0.8;
+    float const maxEoverP   = 2.0;
+    float const phiDist     = 0.015;
+    float const zDist       = 3;
+    float const assDist     = 0.06;
+    npeCuts->setCutBemcPid(minEoverP, maxEoverP, phiDist, zDist, assDist);
+
+    // BSMD PID
+    int const nEta     = 1;
+    int const nPhi     = 1;
+    npeCuts->setCutBsmdPid(nEta, nPhi);
 
     npeChain->Init();
     int nEntries = picoNpeAnaMaker->getEntries();

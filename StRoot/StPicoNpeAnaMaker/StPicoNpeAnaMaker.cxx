@@ -147,6 +147,6 @@ bool StPicoNpeAnaMaker::isGoodPair(StElectronPair const* const epair) const
     epair->pairMass() < mNpeCuts->cutSecondaryPairMassMax() &&
     epair->pairDca() < mNpeCuts->cutSecondaryPairDcaDaughtersMax();
     
-    return (mNpeCuts->isGoodTrack(electron) && mNpeCuts->isGoodTrack(partner) && pairCuts);
+    return (mNpeCuts->isGoodTaggedElectron(electron) && mNpeCuts->isGoodPartnerElectron(partner) && pairCuts);
 }
 
