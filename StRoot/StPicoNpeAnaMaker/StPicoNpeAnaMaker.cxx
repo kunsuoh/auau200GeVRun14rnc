@@ -116,8 +116,10 @@ Int_t StPicoNpeAnaMaker::Make()
     // -------------- USER ANALYSIS -------------------------
     
     // check if good event (including bad run)
+    cout << "CHECK !!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
     if(!mNpeCuts->isGoodNpeEvent(const_cast<const StPicoDst*>(picoDst), NULL))
         return kStOk;
+    cout << "CHECK !!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
     
     TClonesArray const * aElectronPair = mPicoNpeEvent->electronPairArray();
     for (int idx = 0; idx < aElectronPair->GetEntries(); ++idx)
