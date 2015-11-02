@@ -21,6 +21,7 @@
  */
 
 #include "StPicoCutsBase/StPicoCutsBase.h"
+#include "StPicoDstMaker/StPicoEmcPidTraits.h"
 
 class StNpeCuts : public StPicoCutsBase
 {
@@ -58,7 +59,7 @@ public:
     // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
     // -- GETTER for single CUTS
     // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-    StPicoBEmcPidTraits* hasEmcPid(StPicoTrack const * const trk) const;
+    StPicoEmcPidTraits * hasEmcPid(StPicoTrack const * const trk) const;
     
     bool isTPCElectron(StPicoTrack const *trk) const;
     bool isBEMCElectron(StPicoTrack const *trk) const;
