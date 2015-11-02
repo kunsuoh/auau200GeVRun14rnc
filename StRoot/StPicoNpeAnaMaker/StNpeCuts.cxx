@@ -32,8 +32,7 @@ mPartnerElectronPtMax(std::numeric_limits<float>::max()),
 mPartnerElectronEtaMin(std::numeric_limits<float>::min()),
 mPartnerElectronEtaMax(std::numeric_limits<float>::max()),
 mPartnerTPCNSigmaElectronMin(std::numeric_limits<float>::min()),
-mPartnerTPCNSigmaElectronMax(std::numeric_limits<float>::max())
-{
+mPartnerTPCNSigmaElectronMax(std::numeric_limits<float>::max()) {
     
     // -- default constructor
 }
@@ -66,8 +65,7 @@ mPartnerElectronPtMax(std::numeric_limits<float>::max()),
 mPartnerElectronEtaMin(std::numeric_limits<float>::min()),
 mPartnerElectronEtaMax(std::numeric_limits<float>::max()),
 mPartnerTPCNSigmaElectronMin(std::numeric_limits<float>::min()),
-mPartnerTPCNSigmaElectronMax(std::numeric_limits<float>::max())
-{
+mPartnerTPCNSigmaElectronMax(std::numeric_limits<float>::max()) {
     
     // -- constructor
 }
@@ -80,7 +78,7 @@ StNpeCuts::~StNpeCuts() {
 
 
 // _________________________________________________________
-bool StNpeCuts::isGoodElectronPair(StElectronPair const* const epair) {
+bool StNpeCuts::isGoodElectronPair(StElectronPair const* const epair) const {
     // -- check for good electron pairs
     StPicoTrack const* electron = mPicoDstMaker->picoDst()->track(epair->electronIdx());
     StPicoTrack const* partner = mPicoDstMaker->picoDst()->track(epair->partnerIdx());
@@ -91,7 +89,7 @@ bool StNpeCuts::isGoodElectronPair(StElectronPair const* const epair) {
     epair->pairDca() < mElectronPairDcaDaughtersMax ;
 }
 // _________________________________________________________
-bool StNpeCuts::isGoodTaggedElectron(StPicoTrack const *trk) {
+bool StNpeCuts::isGoodTaggedElectron(StPicoTrack const *trk) const {
     // -- check for good tagged electron for electron pairs
     
     bool taggedElectronCut =
@@ -105,7 +103,7 @@ bool StNpeCuts::isGoodTaggedElectron(StPicoTrack const *trk) {
     return taggedElectronCut && isTPCElectron(trk, mElectronTPCNSigmaElectronMin, mElectronTPCNSigmaElectronMax) && isBEMCElectron(trk) && isBSMDElectron(trk) ;
 }
 // _________________________________________________________
-bool StNpeCuts::isGoodPartnerElectron(StPicoTrack const *trk) {
+bool StNpeCuts::isGoodPartnerElectron(StPicoTrack const *trk) const {
     // -- check for good partner electron for electron pairs
     
     bool partnerElectronCut =
@@ -117,7 +115,7 @@ bool StNpeCuts::isGoodPartnerElectron(StPicoTrack const *trk) {
     ;
 }
 // _________________________________________________________
-bool StNpeCuts::isTPCElectron(StPicoTrack const *trk, float min, float max) {
+bool StNpeCuts::isTPCElectron(StPicoTrack const *trk, float min, float max) const {
     // -- check for good TPC electrons
     float nSigma = trk->nSigmaElectron();
     
@@ -125,7 +123,7 @@ bool StNpeCuts::isTPCElectron(StPicoTrack const *trk, float min, float max) {
     nSigma > min && nSigma < max;
 }
 // _________________________________________________________
-bool StNpeCuts::isBEMCElectron(StPicoTrack const *trk) {
+bool StNpeCuts::isBEMCElectron(StPicoTrack const *trk) const {
     // -- check for good BEMC electrons
     StPicoEmcPidTraits * Emc =  mPicoDst->emcPidTraits(trk->emcPidTraitsIndex());
     float eoverp = Emc->e0()/trk->gPt()/TMath::CosH(getEta(trk));
@@ -138,7 +136,7 @@ bool StNpeCuts::isBEMCElectron(StPicoTrack const *trk) {
     ;
 }
 // _________________________________________________________
-bool StNpeCuts::isBSMDElectron(StPicoTrack const *trk) {
+bool StNpeCuts::isBSMDElectron(StPicoTrack const *trk) const {
     // -- check for good BSMD electrons
     StPicoEmcPidTraits * Emc =  mPicoDst->emcPidTraits(trk->emcPidTraitsIndex());
     int nphi = Emc->nPhi();
@@ -147,15 +145,15 @@ bool StNpeCuts::isBSMDElectron(StPicoTrack const *trk) {
     return neta > mElectronBsmdNEta && nphi > mElectronBsmdNPhi ;
 }
 // _________________________________________________________
-float StNpeCuts::getEta(StPicoTrack const *trk) {
+float StNpeCuts::getEta(StPicoTrack const *trk) const {
     return trk->gMom(getpVtx(), mPicoDst->event()->bField()).pseudoRapidity();
 }
 // _________________________________________________________
-float StNpeCuts::getDca(StPicoTrack const *trk) {
+float StNpeCuts::getDca(StPicoTrack const *trk) const {
     return trk->dcaGeometry().helix().curvatureSignedDistance(getpVtx().x(),getpVtx().y());
 }
 // _________________________________________________________
-StThreeVectorF StNpeCuts::getpVtx() {
+StThreeVectorF StNpeCuts::getpVtx() const {
     return mPicoDst->event()->primaryVertex();
 }
 
