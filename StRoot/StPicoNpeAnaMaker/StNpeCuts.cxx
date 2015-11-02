@@ -115,28 +115,25 @@ bool StNpeCuts::isGoodElectronPair(StElectronPair const* epair) const {
 // _________________________________________________________
 bool StNpeCuts::isGoodTaggedElectron(StPicoTrack const *trk) const {
     // -- check for good tagged electron for electron pairs
- //   setCutRequireHFT(mElectronRequireHFT);
- //   setCutNHitsFitMax(mElectronNHitsFitMax);
-    
     bool taggedElectronCut =
-    isGoodTrack(trk) &&
+    trk->nHitsFit() >= mElectronNHitsFitMax &&
     trk->nHitsDedx() >= mElectronNHitsdEdxMax &&
     trk->gPt() >= mElectronPtMin && trk->gPt() < mElectronPtMax &&
     getEta(trk) > mElectronEtaMin && getEta(trk) < mElectronEtaMax &&
-    getDca(trk) < mElectronDca ;
+    getDca(trk) < mElectronDca &&
+    ((!mElectronRequireHFT || trk->isHFTTrack());
     
     return taggedElectronCut && isTPCElectron(trk, mElectronTPCNSigmaElectronMin, mElectronTPCNSigmaElectronMax) && isBEMCElectron(trk) && isBSMDElectron(trk) ;
 }
 // _________________________________________________________
 bool StNpeCuts::isGoodPartnerElectron(StPicoTrack const *trk) const {
     // -- check for good partner electron for electron pairs
- //   setCutRequireHFT(mPartnerElectronRequireHFT);
- //   setCutNHitsFitMax(mPartnerElectronNHitsFitMax);
 
     bool partnerElectronCut =
-    isGoodTrack(trk) &&
+    trk->nHitsFit() >= mPartnerElectronNHitsFitMax &&
     trk->gPt() >= mPartnerElectronPtMin && trk->gPt() < mPartnerElectronPtMax &&
-    getEta(trk) > mPartnerElectronEtaMin && getEta(trk) < mPartnerElectronEtaMax ;
+    getEta(trk) > mPartnerElectronEtaMin && getEta(trk) < mPartnerElectronEtaMax &&
+    ((!mPartnerElectronRequireHFT || trk->isHFTTrack());
     
     return partnerElectronCut && isTPCElectron(trk, mPartnerTPCNSigmaElectronMin, mPartnerTPCNSigmaElectronMax)
     ;
@@ -162,6 +159,7 @@ bool StNpeCuts::isBEMCElectron(StPicoTrack const *trk) const {
     TMath::Sqrt(phiDist*phiDist + zDist*zDist) < mElectronBemcAssDistMax
     ;
 }
+     
 // _________________________________________________________
 bool StNpeCuts::isBSMDElectron(StPicoTrack const *trk) const {
     // -- check for good BSMD electrons
@@ -171,14 +169,17 @@ bool StNpeCuts::isBSMDElectron(StPicoTrack const *trk) const {
     
     return neta > mElectronBsmdNEta && nphi > mElectronBsmdNPhi ;
 }
+     
 // _________________________________________________________
 float StNpeCuts::getEta(StPicoTrack const *trk) const {
     return trk->gMom(getpVtx(), mPicoDst->event()->bField()).pseudoRapidity();
 }
+     
 // _________________________________________________________
 float StNpeCuts::getDca(StPicoTrack const *trk) const {
     return trk->dcaGeometry().helix().curvatureSignedDistance(getpVtx().x(),getpVtx().y());
 }
+     
 // _________________________________________________________
 StThreeVectorF StNpeCuts::getpVtx() const {
     return mPicoDst->event()->primaryVertex();
@@ -187,6 +188,6 @@ StThreeVectorF StNpeCuts::getpVtx() const {
 // __________________________________________________________
 bool StNpeCuts::isGoodNpeEvent(StPicoDst const * const picoDst, int *aEventCuts) const {
     mPicoDst = picoDst;
-    return StNpeCuts::isGoodEvent(picoDst,aEventCuts);
+    return isGoodEvent(picoDst,aEventCuts);
 }
 
