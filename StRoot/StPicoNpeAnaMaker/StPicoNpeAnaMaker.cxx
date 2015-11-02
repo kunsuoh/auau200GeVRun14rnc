@@ -143,9 +143,9 @@ bool StPicoNpeAnaMaker::isGoodPair(StElectronPair const* const epair) const
     StPicoTrack const* electron = mPicoDstMaker->picoDst()->track(epair->electronIdx());
     StPicoTrack const* partner = mPicoDstMaker->picoDst()->track(epair->partnerIdx());
     
-    bool pairCuts = epair->pairMass() > mNpeCuts->cutSecondaryPairMassMin() &&
-    epair->pairMass() < mNpeCuts->cutSecondaryPairMassMax() &&
-    epair->pairDca() < mNpeCuts->cutSecondaryPairDcaDaughtersMax();
+    bool pairCuts = epair->pairMass() > mNpeCuts->cutElectronPairMassMin() &&
+    epair->pairMass() < mNpeCuts->cutElectronPairMassMax() &&
+    epair->pairDca() < mNpeCuts->cutElectronPairDcaDaughtersMax();
     
     return (mNpeCuts->isGoodTaggedElectron(electron) && mNpeCuts->isGoodPartnerElectron(partner) && pairCuts);
 }
