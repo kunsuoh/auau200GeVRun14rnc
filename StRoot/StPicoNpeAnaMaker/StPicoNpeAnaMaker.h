@@ -22,8 +22,9 @@
 
 #include "TChain.h"
 #include "StMaker.h"
-#include "THnSparse.h"
 #include "TH2F.h"
+#include "StThreeVectorF.hh"
+#include "THnSparse.h"
 
 class TString;
 class TFile;
