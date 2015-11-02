@@ -120,7 +120,8 @@ Int_t StPicoNpeAnaMaker::Make()
     // check if good event (including bad run)
     if(!mNpeCuts->isGoodNpeEvent(const_cast<const StPicoDst*>(picoDst), NULL))
         return kStOk;
-    
+    StThreeVectorF pVtx = picoDst->event()->primaryVertex();
+
     // electron pair
     TClonesArray const * aElectronPair = mPicoNpeEvent->electronPairArray();
     for (int idx = 0; idx < aElectronPair->GetEntries(); ++idx)
@@ -144,6 +145,7 @@ Int_t StPicoNpeAnaMaker::Make()
         StPicoTrack* track = picoDst->track(iTrack);
         if (!track) continue;
         if (mNpeCuts->isGoodInclusiveElectron(track)) {
+            
             StPhysicalHelixD eHelix = track->dcaGeometry().helix();
             dca = eHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
             pt = track->gPt();
