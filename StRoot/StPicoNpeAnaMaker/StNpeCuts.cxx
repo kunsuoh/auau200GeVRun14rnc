@@ -117,7 +117,7 @@ bool StNpeCuts::isGoodElectronPair(StElectronPair const* epair) const {
     epair->pairDca() < mElectronPairDcaDaughtersMax ;
 }
 // _________________________________________________________
-bool StNpeCuts::isGoodTaggedElectron(StPicoTrack const *trk) const {
+bool StNpeCuts::isGoodInclusiveElectron(StPicoTrack const *trk) const {
     // -- check for good tagged electron for electron pairs
     bool taggedElectronCut =
     trk->nHitsFit() >= mElectronNHitsFitMax &&
@@ -128,9 +128,16 @@ bool StNpeCuts::isGoodTaggedElectron(StPicoTrack const *trk) const {
     (!mElectronRequireHFT || trk->isHFTTrack());
     
     return taggedElectronCut
-    && isTPCElectron(trk, mElectronTPCNSigmaElectronMin, mElectronTPCNSigmaElectronMax)
+    && isTPCElectron(trk, -13, 13)
     && isBEMCElectron(trk)
     && isBSMDElectron(trk)
+    ;
+}
+// _________________________________________________________
+bool StNpeCuts::isGoodTaggedElectron(StPicoTrack const *trk) const {
+    // -- check for good tagged electron for electron pairs
+    return isGoodInclusiveElectron(track)
+    && isTPCElectron(trk, mElectronTPCNSigmaElectronMin, mElectronTPCNSigmaElectronMax)
     ;
 }
 // _________________________________________________________
