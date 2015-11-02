@@ -110,7 +110,7 @@ bool StNpeCuts::isGoodElectronPair(StElectronPair const* epair) const {
     
     return
   //  isGoodTaggedElectron(electron) && isGoodPartnerElectron(partner) &&
-  //  epair->pairMass() > mElectronPairMassMin && epair->pairMass() < mElectronPairMassMax &&
+    epair->pairMass() > mElectronPairMassMin && epair->pairMass() < mElectronPairMassMax &&
     epair->pairDca() < mElectronPairDcaDaughtersMax ;
 }
 // _________________________________________________________
