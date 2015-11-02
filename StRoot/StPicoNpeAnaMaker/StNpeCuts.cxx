@@ -134,7 +134,7 @@ bool StNpeCuts::isGoodInclusiveElectron(StPicoTrack const *trk) const {
 // _________________________________________________________
 bool StNpeCuts::isGoodTaggedElectron(StPicoTrack const *trk) const {
     // -- check for good tagged electron for electron pairs
-    return isGoodInclusiveElectron(track)
+    return isGoodInclusiveElectron(trk)
     && isTPCElectron(trk, mElectronTPCNSigmaElectronMin, mElectronTPCNSigmaElectronMax)
     && isBEMCElectron(trk)
     && isBSMDElectron(trk)
