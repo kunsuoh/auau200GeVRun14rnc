@@ -25,7 +25,11 @@
 #include "StPicoDstMaker/StPicoEmcPidTraits.h"
 #include "StThreeVectorF.hh"
 
-class StNpeCuts : private StPicoCutsBase
+class StPicoTrack;
+class StPicoEvent;
+class StPicoDst;
+
+class StNpeCuts : public StPicoCutsBase
 {
 public:
     
@@ -59,6 +63,7 @@ public:
     void setCutBemcPid(float epmin, float epmax, float phi, float z, float ass);
     void setCutBsmdPid(int eta, int phi);
     
+    bool isGoodNpeEvent(StPicoDst const * const picoDst, int *aEventCuts);
     // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
     // -- GETTER for single CUTS
     // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
@@ -85,7 +90,9 @@ public:
     
     
 private:
-    
+
+    const StPicoDst*  mPicoDst;   //! ptr to picoDst
+
     StNpeCuts(StNpeCuts const &);
     StNpeCuts& operator=(StNpeCuts const &);
     

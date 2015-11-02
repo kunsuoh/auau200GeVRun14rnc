@@ -116,7 +116,7 @@ Int_t StPicoNpeAnaMaker::Make()
     // -------------- USER ANALYSIS -------------------------
     
     // check if good event (including bad run)
-    if(!mNpeCuts->isGoodEvent(const_cast<const StPicoDst*>(picoDst), NULL))
+    if(!mNpeCuts->isGoodNpeEvent(const_cast<const StPicoDst*>(picoDst), NULL))
         return kStOk;
     
     TClonesArray const * aElectronPair = mPicoNpeEvent->electronPairArray();
