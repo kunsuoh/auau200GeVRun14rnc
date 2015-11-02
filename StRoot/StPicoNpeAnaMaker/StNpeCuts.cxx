@@ -186,7 +186,7 @@ StThreeVectorF StNpeCuts::getpVtx() const {
 }
 
 // __________________________________________________________
-bool StNpeCuts::isGoodNpeEvent(StPicoDst const * const picoDst, int *aEventCuts) const {
+bool StNpeCuts::isGoodNpeEvent(StPicoDst const * const picoDst, int *aEventCuts) {
     mPicoDst2 = picoDst;
     return isGoodEvent(picoDst,aEventCuts);
 }
