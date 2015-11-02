@@ -148,7 +148,7 @@ Int_t StPicoNpeAnaMaker::Make()
     for (unsigned short iTrack = 0; iTrack < nTracks; ++iTrack) {
         StPicoTrack* track = picoDst->track(iTrack);
         if (!track) continue;
-        if (mNpeCuts->isGoodInclusiveElectron(track)) {
+        if (mNpeCuts->isGoodInclusiveElectron(track) && mNpeCuts->isBEMCElectron(track)) {
             StPhysicalHelixD eHelix = track->dcaGeometry().helix();
             float dca = eHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
             float pt = track->gPt();
