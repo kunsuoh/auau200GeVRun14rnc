@@ -138,7 +138,7 @@ Int_t StPicoNpeAnaMaker::Make()
         StPicoTrack* track = picoDst->track(iTrack);
         if (!track) continue;
         a++;
-        if (mNpeCuts->isGoodTrack(track)) {
+        if (mNpeCuts->isGoodInclusiveElectron(track)) {
             b++;
             if (mNpeCuts->isTPCElectron(track,-3,3)){
                 c++;
