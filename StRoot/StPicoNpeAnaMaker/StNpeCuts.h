@@ -71,7 +71,7 @@ public:
     // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
     StPicoEmcPidTraits * hasEmcPid(StPicoTrack const * const trk) const;
     
-    bool isGoodNpeEvent(StPicoDst const * const picoDst, int *aEventCuts) const;
+    bool isGoodNpeEvent(StPicoDst const * const picoDst, int *aEventCuts);
     bool isTPCElectron(StPicoTrack const *trk, float min, float max) const;
     bool isBEMCElectron(StPicoTrack const *trk) const;
     bool isBSMDElectron(StPicoTrack const *trk) const;
