@@ -1,6 +1,24 @@
+
 #include <limits>
+#include <cmath>
+#include <algorithm>
+#include <fstream>
+#include <string>
 
 #include "StNpeCuts.h"
+
+#include "StLorentzVectorF.hh"
+#include "StThreeVectorF.hh"
+#include "StPhysicalHelixD.hh"
+#include "phys_constants.h"
+#include "SystemOfUnits.h"
+#include "StBTofUtil/tofPathLength.hh"
+
+#include "StPicoDstMaker/StPicoDst.h"
+#include "StPicoDstMaker/StPicoTrack.h"
+#include "StPicoDstMaker/StPicoEvent.h"
+#include "StPicoDstMaker/StPicoBTofPidTraits.h"
+
 
 ClassImp(StNpeCuts)
 
@@ -158,7 +176,7 @@ StThreeVectorF StNpeCuts::getpVtx() const {
 }
 
 // __________________________________________________________
-bool StNpeCuts::isGoodNpeEvent(StPicoDst const * const picoDst, int *aEventCuts) {
+bool StNpeCuts::isGoodNpeEvent(StPicoDst const * const picoDst, int *aEventCuts) const {
     mPicoDst = picoDst;
     return mNpeCuts->isGoodEvent(picoDst,aEventCuts);
 }

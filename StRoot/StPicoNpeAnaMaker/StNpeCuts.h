@@ -63,12 +63,12 @@ public:
     void setCutBemcPid(float epmin, float epmax, float phi, float z, float ass);
     void setCutBsmdPid(int eta, int phi);
     
-    bool isGoodNpeEvent(StPicoDst const * const picoDst, int *aEventCuts);
     // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
     // -- GETTER for single CUTS
     // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
     StPicoEmcPidTraits * hasEmcPid(StPicoTrack const * const trk) const;
     
+    bool isGoodNpeEvent(StPicoDst const * const picoDst, int *aEventCuts) const;
     bool isTPCElectron(StPicoTrack const *trk, float min, float max) const;
     bool isBEMCElectron(StPicoTrack const *trk) const;
     bool isBSMDElectron(StPicoTrack const *trk) const;
