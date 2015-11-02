@@ -132,7 +132,7 @@ Int_t StPicoNpeAnaMaker::Make()
     }
     
     // inclusive electron
-    int a=0, b=0, c=0, d=0;
+    int a=0, b=0, c=0, d=0, e=0;
     UInt_t nTracks = picoDst->numberOfTracks();
     for (unsigned short iTrack = 0; iTrack < nTracks; ++iTrack) {
         StPicoTrack* track = picoDst->track(iTrack);
@@ -142,11 +142,14 @@ Int_t StPicoNpeAnaMaker::Make()
             b++;
             if (mNpeCuts->isTPCElectron(track,-3,3)){
                 c++;
-                if(mNpeCuts->isBEMCElectron(track)) d++;
+                if(mNpeCuts->isBEMCElectron(track)) {
+                    d++;
+                    if(mNpeCuts->isBSMDElectron(track)) e++;
+                }
             }
         }
     }
-    cout << a << " " << b << " " << c << " " << d << endl;
+    cout << a << " " << b << " " << c << " " << d << " " << e << endl;
     return kStOK;
 }
 //-----------------------------------------------------------------------------
