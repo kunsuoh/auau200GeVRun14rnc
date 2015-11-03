@@ -154,7 +154,8 @@ Int_t StPicoNpeAnaMaker::Make()
     }
     
     
-    // inclusive electron     UInt_t nTracks = picoDst->numberOfTracks();
+    // inclusive electron
+    UInt_t nTracks = picoDst->numberOfTracks();
     for (unsigned short iTrack = 0; iTrack < nTracks; ++iTrack) {
         StPicoTrack* track = picoDst->track(iTrack);
         if (!track) continue;
