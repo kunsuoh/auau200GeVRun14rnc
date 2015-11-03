@@ -147,7 +147,7 @@ Int_t StPicoNpeAnaMaker::Make()
         float nSigE = electron->nSigmaElectron();
 
         h2dPhEDcaVsPt->Fill(pt, dca);
-        h2dPhEENSigEVsPt->Fill(pt, nSigE);
+        h2dPhENSigEVsPt->Fill(pt, nSigE);
 
         
         
