@@ -65,8 +65,10 @@ Int_t StPicoNpeAnaMaker::Init()
     
 
     // -------------- USER VARIABLES -------------------------
-    h2dDcaVsPt = new TH2F("h2dDcaVsPt","2D Dca vs pT",200,0,20, 100,-0.1,0.1);
-    h2dNSigEVsPt = new TH2F("h2dNSigEVsPt","2D nSigE vs pT",200,0,20, 289,-13,13);
+    h2dIncEDcaVsPt = new TH2F("h2dIncEDcaVsPt","2D Dca vs pT Inclusive E",200,0,20, 100,-0.1,0.1);
+    h2dIncENSigEVsPt = new TH2F("h2dIncENSigEVsPt","2D nSigE vs pT Inclusive E",200,0,20, 289,-13,13);
+    h2dPhEDcaVsPt = new TH2F("h2dPhEDcaVsPt","2D Dca vs pT Photonic E",200,0,20, 100,-0.1,0.1);
+    h2dPhENSigEVsPt = new TH2F("h2dPhENSigEVsPt","2D nSigE vs pT Photonic E",200,0,20, 289,-13,13);
     
     
     
@@ -83,8 +85,10 @@ Int_t StPicoNpeAnaMaker::Finish()
     LOG_INFO << " StPicoNpeAnaMaker - writing data and closing output file " <<endm;
     mOutputFile->cd();
     // --------------- USER HISTOGRAM WRITE --------------------
-    h2dDcaVsPt->Write();
-    h2dNSigEVsPt->Write();
+    h2dIncEDcaVsPt->Write();
+    h2dIncENSigEVsPt->Write();
+    h2dPhEDcaVsPt->Write();
+    h2dPhENSigEVsPt->Write();
     
     
 
@@ -126,7 +130,7 @@ Int_t StPicoNpeAnaMaker::Make()
         return kStOk;
     StThreeVectorF pVtx = picoDst->event()->primaryVertex();
 
-    cout << " electron pair " << endl;
+    // electron pair
     TClonesArray const * aElectronPair = mPicoNpeEvent->electronPairArray();
     for (int idx = 0; idx < aElectronPair->GetEntries(); ++idx)
     {
@@ -137,14 +141,20 @@ Int_t StPicoNpeAnaMaker::Make()
         StPicoTrack const* electron = picoDst->track(epair->electronIdx());
         StPicoTrack const* partner = picoDst->track(epair->partnerIdx());
         
-        
+        StPhysicalHelixD eHelix = electron->dcaGeometry().helix();
+        float dca = eHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
+        float pt = electron->gPt();
+        float nSigE = electron->nSigmaElectron();
+
+        h2dPhEDcaVsPt->Fill(pt, dca);
+        h2dPhEENSigEVsPt->Fill(pt, nSigE);
+
         
         
     }
     
     
-    cout << " inclusive electron " << endl;
-    UInt_t nTracks = picoDst->numberOfTracks();
+    // inclusive electron     UInt_t nTracks = picoDst->numberOfTracks();
     for (unsigned short iTrack = 0; iTrack < nTracks; ++iTrack) {
         StPicoTrack* track = picoDst->track(iTrack);
         if (!track) continue;
@@ -154,8 +164,8 @@ Int_t StPicoNpeAnaMaker::Make()
             float pt = track->gPt();
             float nSigE = track->nSigmaElectron();
             
-            h2dDcaVsPt->Fill(pt, dca);
-            h2dNSigEVsPt->Fill(pt, nSigE);
+            h2dIncEDcaVsPt->Fill(pt, dca);
+            h2dIncENSigEVsPt->Fill(pt, nSigE);
         }
     }
 
