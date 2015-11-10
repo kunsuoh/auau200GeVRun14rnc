@@ -95,7 +95,7 @@ void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunList
     npeCuts->setCutBemcPid(bemc, minEoverP, maxEoverP, phiDist, zDist, assDist);
 
     // BSMD PID
-    bool const bsmd = true;
+    bool const bsmd = false;
     int const nEta     = 1;
     int const nPhi     = 1;
     npeCuts->setCutBsmdPid(bsmd, nEta, nPhi);

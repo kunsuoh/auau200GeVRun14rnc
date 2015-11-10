@@ -79,10 +79,18 @@ class StPicoNpeAnaMaker : public StMaker
     
     TH2F * h2dIncEDcaVsPt;
     TH2F * h2dIncENSigEVsPt;
+    TH2F * h2dIncEDcaVsPtCut;
+    TH2F * h2dIncENSigEVsPtCut;
+    TH2F * h2dIncEDcaVsPtCut2;
+    TH2F * h2dIncENSigEVsPtCut2;
 
     TH2F * h2dPhEDcaVsPt;
     TH2F * h2dPhENSigEVsPt;
     TH2F * h2dPhEConvRVsPt;
+    
+    TH2F * h2dPhELDcaVsPt;
+    TH2F * h2dPhELNSigEVsPt;
+    TH2F * h2dPhELConvRVsPt;
     
     
     

@@ -65,12 +65,22 @@ Int_t StPicoNpeAnaMaker::Init()
     
 
     // -------------- USER VARIABLES -------------------------
-    h2dIncEDcaVsPt = new TH2F("h2dIncEDcaVsPt","2D Dca vs pT Inclusive E",200,0,20, 100,-0.1,0.1);
-    h2dIncENSigEVsPt = new TH2F("h2dIncENSigEVsPt","2D nSigE vs pT Inclusive E",200,0,20, 289,-13,13);
-    
-    h2dPhEDcaVsPt = new TH2F("h2dPhEDcaVsPt","2D Dca vs pT Photonic E",200,0,20, 100,-0.1,0.1);
-    h2dPhENSigEVsPt = new TH2F("h2dPhENSigEVsPt","2D nSigE vs pT Photonic E",200,0,20, 289,-13,13);
-    h2dPhEConvRVsPt = new TH2F("h2dPhEConvRVsPt","2D Conversion Radius vs pT Photonic E",200,0,20, 100,0.,20);
+    h2dIncEDcaVsPt =    new TH2F("h2dIncEDcaVsPt",      "2D Dca vs pT Inclusive E",             200,0,20, 100,-0.1,0.1);
+    h2dIncENSigEVsPt =  new TH2F("h2dIncENSigEVsPt",    "2D nSigE vs pT Inclusive E",           200,0,20, 289,-13,13);
+ 
+    h2dIncEDcaVsPtCut =    new TH2F("h2dIncEDcaVsPtCut",      "2D Dca vs pT Inclusive E Cut",             200,0,20, 100,-0.1,0.1);
+    h2dIncENSigEVsPtCut =  new TH2F("h2dIncENSigEVsPtCut",    "2D nSigE vs pT Inclusive E Cut",           200,0,20, 289,-13,13);
+
+    h2dIncEDcaVsPtCut2 =    new TH2F("h2dIncEDcaVsPtCut2",      "2D Dca vs pT Inclusive E Cut2",             200,0,20, 100,-0.1,0.1);
+    h2dIncENSigEVsPtCut2 =  new TH2F("h2dIncENSigEVsPtCut2",    "2D nSigE vs pT Inclusive E Cut2",           200,0,20, 289,-13,13);
+
+    h2dPhEDcaVsPt =     new TH2F("h2dPhEDcaVsPt",       "2D Dca vs pT Photonic E",              200,0,20, 100,-0.1,0.1);
+    h2dPhENSigEVsPt =   new TH2F("h2dPhENSigEVsPt",     "2D nSigE vs pT Photonic E",            200,0,20, 289,-13,13);
+    h2dPhEConvRVsPt =   new TH2F("h2dPhEConvRVsPt",     "2D Conversion Radius vs pT Photonic E",200,0,20, 100,0.,20);
+   
+    h2dPhELDcaVsPt =     new TH2F("h2dPhELDcaVsPt",       "2D Dca vs pT Photonic E Like",              200,0,20, 100,-0.1,0.1);
+    h2dPhELNSigEVsPt =   new TH2F("h2dPhELNSigEVsPt",     "2D nSigE vs pT Photonic E Like",            200,0,20, 289,-13,13);
+    h2dPhELConvRVsPt =   new TH2F("h2dPhELConvRVsPt",     "2D Conversion Radius vs pT Photonic E Like",200,0,20, 100,0.,20);
     
     
     
@@ -89,9 +99,18 @@ Int_t StPicoNpeAnaMaker::Finish()
     // --------------- USER HISTOGRAM WRITE --------------------
     h2dIncEDcaVsPt->Write();
     h2dIncENSigEVsPt->Write();
+    h2dIncEDcaVsPtCut->Write();
+    h2dIncENSigEVsPtCut->Write();
+    h2dIncEDcaVsPtCut2->Write();
+    h2dIncENSigEVsPtCut2->Write();
+    
     h2dPhEDcaVsPt->Write();
     h2dPhENSigEVsPt->Write();
     h2dPhEConvRVsPt->Write();
+    
+    h2dPhELDcaVsPt->Write();
+    h2dPhELNSigEVsPt->Write();
+    h2dPhELConvRVsPt->Write();
     
 
     mOutputFile->Close();
@@ -150,11 +169,18 @@ Int_t StPicoNpeAnaMaker::Make()
         float pairPositionX = epair->positionX();
         float pairPositionY = epair->positionY();
         float convR = TMath::Sqrt((pairPositionX+0.2383) * (pairPositionX+0.2383) + (pairPositionY+0.1734) * (pairPositionY+0.1734));
-        
-        h2dPhEDcaVsPt->Fill(pt, dca);
-        h2dPhENSigEVsPt->Fill(pt, nSigE);
-        h2dPhEConvRVsPt->Fill(pt, convR);
-        
+        int pairCharge = electron->charge()+partner->charge();
+
+        if (pairCharge==0) {
+            h2dPhEDcaVsPt->Fill(pt, dca);
+            h2dPhENSigEVsPt->Fill(pt, nSigE);
+            h2dPhEConvRVsPt->Fill(pt, convR);
+        }
+        else {
+            h2dPhELDcaVsPt->Fill(pt, dca);
+            h2dPhELNSigEVsPt->Fill(pt, nSigE);
+            h2dPhELConvRVsPt->Fill(pt, convR);
+        }
         
         
     }
@@ -173,6 +199,15 @@ Int_t StPicoNpeAnaMaker::Make()
             
             h2dIncEDcaVsPt->Fill(pt, dca);
             h2dIncENSigEVsPt->Fill(pt, nSigE);
+
+            if (mNpeCuts->isTPCElectron(track, 0, 3)){
+                h2dIncEDcaVsPtCut->Fill(pt, dca);
+                h2dIncENSigEVsPtCut->Fill(pt, nSigE);
+            }
+            if (mNpeCuts->isTPCElectron(track, 0, 3) && mNpeCuts->isBEMCElectron(track)){
+                h2dIncEDcaVsPtCut2->Fill(pt, dca);
+                h2dIncENSigEVsPtCut2->Fill(pt, nSigE);
+            }
         }
     }
 
