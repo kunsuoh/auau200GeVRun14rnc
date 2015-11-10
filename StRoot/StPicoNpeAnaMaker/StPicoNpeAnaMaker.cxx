@@ -67,8 +67,10 @@ Int_t StPicoNpeAnaMaker::Init()
     // -------------- USER VARIABLES -------------------------
     h2dIncEDcaVsPt = new TH2F("h2dIncEDcaVsPt","2D Dca vs pT Inclusive E",200,0,20, 100,-0.1,0.1);
     h2dIncENSigEVsPt = new TH2F("h2dIncENSigEVsPt","2D nSigE vs pT Inclusive E",200,0,20, 289,-13,13);
+    
     h2dPhEDcaVsPt = new TH2F("h2dPhEDcaVsPt","2D Dca vs pT Photonic E",200,0,20, 100,-0.1,0.1);
     h2dPhENSigEVsPt = new TH2F("h2dPhENSigEVsPt","2D nSigE vs pT Photonic E",200,0,20, 289,-13,13);
+    h2dPhEConvRVsPt = new TH2F("h2dPhEConvRVsPt","2D Conversion Radius vs pT Photonic E",200,0,20, 100,0.,20);
     
     
     
@@ -89,7 +91,7 @@ Int_t StPicoNpeAnaMaker::Finish()
     h2dIncENSigEVsPt->Write();
     h2dPhEDcaVsPt->Write();
     h2dPhENSigEVsPt->Write();
-    
+    h2dPhEConvRVsPt->Write();
     
 
     mOutputFile->Close();
@@ -145,10 +147,14 @@ Int_t StPicoNpeAnaMaker::Make()
         float dca = eHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
         float pt = electron->gPt();
         float nSigE = electron->nSigmaElectron();
-
+        float pairPositionX = epair->positionX();
+        float pairPositionY = epair->positionY();
+        float convR = TMath::Sqrt((pairPositionX+0.2383) * (pairPositionX+0.2383) + (pairPositionY+0.1734) * (pairPositionY+0.1734));
+        
         h2dPhEDcaVsPt->Fill(pt, dca);
         h2dPhENSigEVsPt->Fill(pt, nSigE);
-
+        h2dPhEConvRVsPt->Fill(pt, convR);
+        
         
         
     }
