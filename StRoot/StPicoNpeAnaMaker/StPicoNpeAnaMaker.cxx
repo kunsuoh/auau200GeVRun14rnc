@@ -96,6 +96,13 @@ Int_t StPicoNpeAnaMaker::Init()
     h2dPhELNSigEVsPt =   new TH2F("h2dPhELNSigEVsPt",     "2D nSigE vs pT Photonic E Like",            200,0,20, 289,-13,13);
     h2dPhELConvRVsPt =   new TH2F("h2dPhELConvRVsPt",     "2D Conversion Radius vs pT Photonic E Like",200,0,20, 100,0.,20);
     
+    hQaPt = new TH1F("hQaPt","hQaPt",200,0,20);
+    hQaEta= new TH1F("hQaEta","hQaEta",100,-2,2);
+    hQaDca= new TH1F("hQaDca","hQaDca",100,0,5);
+    hQaNHitFit = new TH1F("hQaNHitFit","hQaNHitFit",100,0,100);
+    hQaNHitDedx = new TH1F("hQaNHitDedx","hQaNHitDedx",100,0,100);
+    
+    
     
     
     return kStOK;
@@ -138,6 +145,11 @@ Int_t StPicoNpeAnaMaker::Finish()
     h2dPhELNSigEVsPt->Write();
     h2dPhELConvRVsPt->Write();
     
+    hQaPt->Write();
+    hQaEta->Write();
+    hQaDca->Write();
+    hQaNHitFit->Write();
+    hQaNHitDedx->Write();
 
     mOutputFile->Close();
     
@@ -233,6 +245,11 @@ Int_t StPicoNpeAnaMaker::Make()
         h1dTrack->Fill(jTrack);jTrack++;
         if (!track) continue;
         h1dTrack->Fill(jTrack);jTrack++;
+        hQaPt->Fill(track->gPt());
+        hQaEta->Fill(track->gMom(getpVtx(), picoDst->event()->bField()).pseudoRapidity());
+        hQaDca->Fill(track->dcaGeometry().helix().curvatureSignedDistance(picoDst->event()->primaryVertex().x(),picoDst->event()->primaryVertex().y()));
+        hQaNHitFit->Fill(track->nHitsFit());
+        hQaNHitDedx->Fill(track->nHitsDedx());
         if (mNpeCuts->isGoodInclusiveElectron(track)) {
             h1dTrack->Fill(jTrack);jTrack++;
             if (mNpeCuts->isBEMCElectron(track)) {

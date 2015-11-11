@@ -111,7 +111,6 @@ private:
     float mElectronPairMassMin;
     float mElectronPairMassMax;
     
-    
     // ------------------------------------------
     // -- Track cuts for tagged electron
     // ------------------------------------------
@@ -134,6 +133,7 @@ private:
     float mElectronBemcAssDistMax;
     bool mElectronBemcPid;
     bool mElectronBsmdPid;
+    
     // ------------------------------------------
     // -- Track cuts for partner electron
     // ------------------------------------------

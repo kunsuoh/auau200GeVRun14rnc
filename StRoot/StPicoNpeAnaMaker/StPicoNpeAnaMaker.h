@@ -105,7 +105,11 @@ class StPicoNpeAnaMaker : public StMaker
     TH2F * h2dPhELNSigEVsPt;
     TH2F * h2dPhELConvRVsPt;
     
-    
+    TH1F * hQaPt;
+    TH1F * hQaEta;
+    TH1F * hQaDca;
+    TH1F * hQaNHitFit;
+    TH1F * hQaNHitDedx;
     
     ClassDef(StPicoNpeAnaMaker, 0)
 };
