@@ -207,7 +207,8 @@ Int_t StPicoNpeAnaMaker::Make()
     h1dEventRefMult->Fill(mRefMult);
     for (int i=0; i<25; i++) if (picoDst->event()->triggerWord() >> i & 0x1) h1dEventTrigger->Fill(i);
 
-    if(!mNpeCuts->isGoodNpeEvent(const_cast<const StPicoDst*>(picoDst), NULL))
+    mNpeCuts->setPicoDst(const_cast<const StPicoDst*>(picoDst));
+    if(!mNpeCuts->isGoodEvent(const_cast<const StPicoDst*>(picoDst), NULL))
         return kStOk;
     
     h1dEvent->Fill(1);

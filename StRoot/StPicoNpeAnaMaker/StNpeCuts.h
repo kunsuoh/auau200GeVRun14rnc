@@ -71,7 +71,7 @@ public:
     // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
     StPicoEmcPidTraits * hasEmcPid(StPicoTrack const * const trk) const;
     
-    bool isGoodNpeEvent(StPicoDst const * const picoDst, int *aEventCuts);
+    void setPicoDst(StPicoDst const * picoDst);
     bool isTPCElectron(StPicoTrack const *trk, float min, float max) const;
     bool isBEMCElectron(StPicoTrack const *trk) const;
     bool isBSMDElectron(StPicoTrack const *trk) const;
@@ -218,6 +218,9 @@ inline void StNpeCuts::setCutBsmdPid(bool pid, int eta, int phi)  {
     mElectronBsmdPid = pid;
     mElectronBsmdNEta = eta;
     mElectronBsmdNPhi = phi;
+}
+inline void StNpeCuts::setPicoDst(StPicoDst const * picoDst)  {
+    mPicoDst2=picoDst;
 }
 
 

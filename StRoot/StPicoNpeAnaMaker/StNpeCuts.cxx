@@ -205,9 +205,4 @@ StThreeVectorF StNpeCuts::getpVtx() const {
     return mPicoDst2->event()->primaryVertex();
 }
 
-// __________________________________________________________
-bool StNpeCuts::isGoodNpeEvent(StPicoDst const * const picoDst, int *aEventCuts) {
-    mPicoDst2 = picoDst;
-    return isGoodEvent(picoDst,aEventCuts);
-}
 
