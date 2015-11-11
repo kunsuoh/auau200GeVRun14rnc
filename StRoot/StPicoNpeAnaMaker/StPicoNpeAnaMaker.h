@@ -85,6 +85,8 @@ class StPicoNpeAnaMaker : public StMaker
     TH1I * h1dEventRefMultCut;
     TH1I * h1dEventTriggerCut;
     
+    TH1I * h1dTrack;
+    
     TH2F * h2dIncEDcaVsPt;
     TH2F * h2dIncENSigEVsPt;
     TH2F * h2dIncEDcaVsPtCut;

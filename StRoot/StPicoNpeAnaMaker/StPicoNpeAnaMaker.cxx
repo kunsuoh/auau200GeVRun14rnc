@@ -74,6 +74,8 @@ Int_t StPicoNpeAnaMaker::Init()
     h1dEventTriggerCut = new TH1I("h1dEventTriggerCut", "Trigger distribution Cut", 30, 0, 30);
     
     
+    h1dTrack = new TH1I("h1dTrack", "Number of Track", 10, 0, 10);
+    
     h2dIncEDcaVsPt =    new TH2F("h2dIncEDcaVsPt",      "2D Dca vs pT Inclusive E",             200,0,20, 100,-0.1,0.1);
     h2dIncENSigEVsPt =  new TH2F("h2dIncENSigEVsPt",    "2D nSigE vs pT Inclusive E",           200,0,20, 289,-13,13);
     h2dIncEBsmdNEtaPt =  new TH2F("h2dIncEBsmdNEtaPt",    "2D nEta vs pT Inclusive E Cut2",           200,0,20, 10,-0.5,9.5);
@@ -117,6 +119,7 @@ Int_t StPicoNpeAnaMaker::Finish()
     h1dEventRefMultCut->Write();
     h1dEventTriggerCut->Write();
 
+    h1dTrack->Write();
     h2dIncEDcaVsPt->Write();
     h2dIncENSigEVsPt->Write();
     h2dIncEDcaVsPtCut->Write();
@@ -226,8 +229,12 @@ Int_t StPicoNpeAnaMaker::Make()
     UInt_t nTracks = picoDst->numberOfTracks();
     for (unsigned short iTrack = 0; iTrack < nTracks; ++iTrack) {
         StPicoTrack* track = picoDst->track(iTrack);
+        int jTrack=0;
+        h1dTrack->Fill(jTrack);jTrack++;
         if (!track) continue;
+        h1dTrack->Fill(jTrack);jTrack++;
         if (mNpeCuts->isGoodInclusiveElectron(track) && mNpeCuts->isBEMCElectron(track)) {
+            h1dTrack->Fill(jTrack);jTrack++;
             StPhysicalHelixD eHelix = track->dcaGeometry().helix();
             float dca = eHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
             float pt = track->gPt();
@@ -243,10 +250,12 @@ Int_t StPicoNpeAnaMaker::Make()
             h2dIncEBsmdNPhiPt->Fill(pt,nPhi);
             
             if (mNpeCuts->isTPCElectron(track, 0, 3)){
+                h1dTrack->Fill(jTrack);jTrack++;
                 h2dIncEDcaVsPtCut->Fill(pt, dca);
                 h2dIncENSigEVsPtCut->Fill(pt, nSigE);
             }
             if (mNpeCuts->isTPCElectron(track, 0, 3) && mNpeCuts->isBSMDElectron(track)){
+                h1dTrack->Fill(jTrack);jTrack++;
                 h2dIncEDcaVsPtCut2->Fill(pt, dca);
                 h2dIncENSigEVsPtCut2->Fill(pt, nSigE);
             }
