@@ -236,7 +236,7 @@ Int_t StPicoNpeAnaMaker::Make()
             h2dIncEDcaVsPt->Fill(pt, dca);
             h2dIncENSigEVsPt->Fill(pt, nSigE);
             
-            StPicoEmcPidTraits * Emc =  mPicoDst2->emcPidTraits(trk->emcPidTraitsIndex());
+            StPicoEmcPidTraits * Emc =  picoDst->emcPidTraits(track->emcPidTraitsIndex());
             int nPhi = Emc->nPhi();
             int nEta = Emc->nEta();
             h2dIncEBsmdNEtaPt->Fill(pt,nEta);
