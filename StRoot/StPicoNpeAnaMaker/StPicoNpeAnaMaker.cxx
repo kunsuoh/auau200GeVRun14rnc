@@ -65,6 +65,15 @@ Int_t StPicoNpeAnaMaker::Init()
     
 
     // -------------- USER VARIABLES -------------------------
+    h1dEvent = new TH1I("h1dEvent", "Number of Events", 10, 0, 10);
+    h1dEventVz = new TH1F("h1dEventVz", "Vz distribution", 100, -10, 10);
+    h1dEventRefMult = new TH1I("h1dEventRefMult", "RefMult distribution", 1000, 0, 1000);
+    h1dEventTrigger = new TH1I("h1dEventTrigger", "Trigger distribution", 30, 0, 30);
+    h1dEventVzCut = new TH1F("h1dEventVzCut", "Vz distribution Cut", 100, -10, 10);
+    h1dEventRefMultCut = new TH1I("h1dEventRefMultCut", "RefMult distribution Cut", 1000, 0, 1000);
+    h1dEventTriggerCut = new TH1I("h1dEventTriggerCut", "Trigger distribution Cut", 30, 0, 30);
+    
+    
     h2dIncEDcaVsPt =    new TH2F("h2dIncEDcaVsPt",      "2D Dca vs pT Inclusive E",             200,0,20, 100,-0.1,0.1);
     h2dIncENSigEVsPt =  new TH2F("h2dIncENSigEVsPt",    "2D nSigE vs pT Inclusive E",           200,0,20, 289,-13,13);
  
@@ -97,6 +106,14 @@ Int_t StPicoNpeAnaMaker::Finish()
     LOG_INFO << " StPicoNpeAnaMaker - writing data and closing output file " <<endm;
     mOutputFile->cd();
     // --------------- USER HISTOGRAM WRITE --------------------
+    h1dEvent->Write();
+    h1dEventVz->Write();
+    h1dEventRefMult->Write();
+    h1dEventTrigger->Write();
+    h1dEventVzCut->Write();
+    h1dEventRefMultCut->Write();
+    h1dEventTriggerCut->Write();
+
     h2dIncEDcaVsPt->Write();
     h2dIncENSigEVsPt->Write();
     h2dIncEDcaVsPtCut->Write();
@@ -147,9 +164,22 @@ Int_t StPicoNpeAnaMaker::Make()
     // -------------- USER ANALYSIS -------------------------
     
     // check if good event (including bad run)
+    StThreeVectorF pVtx = picoDst->event()->primaryVertex();
+    int mRefMult = picoDst->event()->refMult();
+    float mZDCx = picoDst->event()->ZDCx();
+
+    h1dEvent->Fill(0);
+    h1dEventVz->Fill(mZDCx);
+    h1dEventRefMult->Fill(mRefMult);
+    for (int i=0; i<25; i++) if (picoDst->event()->triggerWord() >> i & 0x1) h1dEventTrigger->Fill(i);
+
     if(!mNpeCuts->isGoodNpeEvent(const_cast<const StPicoDst*>(picoDst), NULL))
         return kStOk;
-    StThreeVectorF pVtx = picoDst->event()->primaryVertex();
+    
+    h1dEvent->Fill(1);
+    h1dEventVzCut->Fill(mZDCx);
+    h1dEventRefMultCut->Fill(mRefMult);
+    for (int i=0; i<25; i++) if (picoDst->event()->triggerWord() >> i & 0x1) h1dEventTriggerCut->Fill(i);
 
     // electron pair
     TClonesArray const * aElectronPair = mPicoNpeEvent->electronPairArray();
