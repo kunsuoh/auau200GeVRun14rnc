@@ -124,7 +124,7 @@ bool StNpeCuts::isGoodInclusiveElectron(StPicoTrack const *trk) const {
     trk->nHitsDedx() >= mElectronNHitsdEdxMax &&
     trk->gPt() >= mElectronPtMin && trk->gPt() < mElectronPtMax &&
     getEta(trk) > mElectronEtaMin && getEta(trk) < mElectronEtaMax &&
-    getDca(trk) < mElectronDca &&
+    fabs(getDca(trk)) < mElectronDca &&
     (!mElectronRequireHFT || trk->isHFTTrack());
     
     return taggedElectronCut
