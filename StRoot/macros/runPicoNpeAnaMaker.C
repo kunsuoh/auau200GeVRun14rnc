@@ -86,7 +86,7 @@ void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunList
 
     
     // BEMC PID
-    bool const bemc = true;
+    bool const bemc = false;
     float const minEoverP   = 0.8;
     float const maxEoverP   = 2.0;
     float const phiDist     = 0.015;
