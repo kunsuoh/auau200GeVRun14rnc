@@ -246,7 +246,7 @@ Int_t StPicoNpeAnaMaker::Make()
         if (!track) continue;
         h1dTrack->Fill(jTrack);jTrack++;
         hQaPt->Fill(track->gPt());
-        hQaEta->Fill(track->gMom(getpVtx(), picoDst->event()->bField()).pseudoRapidity());
+        hQaEta->Fill(track->gMom(picoDst->event()->primaryVertex(), picoDst->event()->bField()).pseudoRapidity());
         hQaDca->Fill(track->dcaGeometry().helix().curvatureSignedDistance(picoDst->event()->primaryVertex().x(),picoDst->event()->primaryVertex().y()));
         hQaNHitFit->Fill(track->nHitsFit());
         hQaNHitDedx->Fill(track->nHitsDedx());
