@@ -111,6 +111,12 @@ class StPicoNpeAnaMaker : public StMaker
     TH1F * hQaNHitFit;
     TH1F * hQaNHitDedx;
     
+    TH1F * hQaPtCut;
+    TH1F * hQaEtaCut;
+    TH1F * hQaDcaCut;
+    TH1F * hQaNHitFitCut;
+    TH1F * hQaNHitDedxCut;
+    
     ClassDef(StPicoNpeAnaMaker, 0)
 };
 

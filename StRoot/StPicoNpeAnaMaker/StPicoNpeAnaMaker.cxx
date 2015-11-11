@@ -98,9 +98,15 @@ Int_t StPicoNpeAnaMaker::Init()
     
     hQaPt = new TH1F("hQaPt","hQaPt",200,0,20);
     hQaEta= new TH1F("hQaEta","hQaEta",100,-2,2);
-    hQaDca= new TH1F("hQaDca","hQaDca",100,0,5);
+    hQaDca= new TH1F("hQaDca","hQaDca",100,-5,5);
     hQaNHitFit = new TH1F("hQaNHitFit","hQaNHitFit",100,0,100);
     hQaNHitDedx = new TH1F("hQaNHitDedx","hQaNHitDedx",100,0,100);
+    
+    hQaPtCut = new TH1F("hQaPtCut","hQaPtCut",200,0,20);
+    hQaEtaCut= new TH1F("hQaEtaCut","hQaEtaCut",100,-2,2);
+    hQaDcaCut= new TH1F("hQaDcaCut","hQaDcaCut",100,-5,5);
+    hQaNHitFitCut = new TH1F("hQaNHitFitCut","hQaNHitFitCut",100,0,100);
+    hQaNHitDedxCut = new TH1F("hQaNHitDedxCut","hQaNHitDedxCut",100,0,100);
     
     
     
@@ -145,11 +151,18 @@ Int_t StPicoNpeAnaMaker::Finish()
     h2dPhELNSigEVsPt->Write();
     h2dPhELConvRVsPt->Write();
     
+    
     hQaPt->Write();
     hQaEta->Write();
     hQaDca->Write();
     hQaNHitFit->Write();
     hQaNHitDedx->Write();
+    
+    hQaPtCut->Write();
+    hQaEtaCut->Write();
+    hQaDcaCut->Write();
+    hQaNHitFitCut->Write();
+    hQaNHitDedxCut->Write();
 
     mOutputFile->Close();
     
@@ -251,6 +264,12 @@ Int_t StPicoNpeAnaMaker::Make()
         hQaNHitFit->Fill(track->nHitsFit());
         hQaNHitDedx->Fill(track->nHitsDedx());
         if (mNpeCuts->isGoodInclusiveElectron(track)) {
+            hQaPtCut->Fill(track->gPt());
+            hQaEtaCut->Fill(track->gMom(picoDst->event()->primaryVertex(), picoDst->event()->bField()).pseudoRapidity());
+            hQaDcaCut->Fill(track->dcaGeometry().helix().curvatureSignedDistance(picoDst->event()->primaryVertex().x(),picoDst->event()->primaryVertex().y()));
+            hQaNHitFitCut->Fill(track->nHitsFit());
+            hQaNHitDedxCut->Fill(track->nHitsDedx());
+
             h1dTrack->Fill(jTrack);jTrack++;
             if (mNpeCuts->isBEMCElectron(track)) {
                 h1dTrack->Fill(jTrack);jTrack++;
