@@ -233,31 +233,34 @@ Int_t StPicoNpeAnaMaker::Make()
         h1dTrack->Fill(jTrack);jTrack++;
         if (!track) continue;
         h1dTrack->Fill(jTrack);jTrack++;
-        if (mNpeCuts->isGoodInclusiveElectron(track) && mNpeCuts->isBEMCElectron(track)) {
+        if (mNpeCuts->isGoodInclusiveElectron(track)) {
             h1dTrack->Fill(jTrack);jTrack++;
-            StPhysicalHelixD eHelix = track->dcaGeometry().helix();
-            float dca = eHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
-            float pt = track->gPt();
-            float nSigE = track->nSigmaElectron();
-            
-            h2dIncEDcaVsPt->Fill(pt, dca);
-            h2dIncENSigEVsPt->Fill(pt, nSigE);
-            
-            StPicoEmcPidTraits * Emc =  picoDst->emcPidTraits(track->emcPidTraitsIndex());
-            int nPhi = Emc->nPhi();
-            int nEta = Emc->nEta();
-            h2dIncEBsmdNEtaPt->Fill(pt,nEta);
-            h2dIncEBsmdNPhiPt->Fill(pt,nPhi);
-            
-            if (mNpeCuts->isTPCElectron(track, 0, 3)){
+            if (mNpeCuts->isBEMCElectron(track)) {
                 h1dTrack->Fill(jTrack);jTrack++;
-                h2dIncEDcaVsPtCut->Fill(pt, dca);
-                h2dIncENSigEVsPtCut->Fill(pt, nSigE);
-            }
-            if (mNpeCuts->isTPCElectron(track, 0, 3) && mNpeCuts->isBSMDElectron(track)){
-                h1dTrack->Fill(jTrack);jTrack++;
-                h2dIncEDcaVsPtCut2->Fill(pt, dca);
-                h2dIncENSigEVsPtCut2->Fill(pt, nSigE);
+                StPhysicalHelixD eHelix = track->dcaGeometry().helix();
+                float dca = eHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
+                float pt = track->gPt();
+                float nSigE = track->nSigmaElectron();
+                
+                h2dIncEDcaVsPt->Fill(pt, dca);
+                h2dIncENSigEVsPt->Fill(pt, nSigE);
+                
+                StPicoEmcPidTraits * Emc =  picoDst->emcPidTraits(track->emcPidTraitsIndex());
+                int nPhi = Emc->nPhi();
+                int nEta = Emc->nEta();
+                h2dIncEBsmdNEtaPt->Fill(pt,nEta);
+                h2dIncEBsmdNPhiPt->Fill(pt,nPhi);
+                
+                if (mNpeCuts->isTPCElectron(track, 0, 3)){
+                    h1dTrack->Fill(jTrack);jTrack++;
+                    h2dIncEDcaVsPtCut->Fill(pt, dca);
+                    h2dIncENSigEVsPtCut->Fill(pt, nSigE);
+                }
+                if (mNpeCuts->isTPCElectron(track, 0, 3) && mNpeCuts->isBSMDElectron(track)){
+                    h1dTrack->Fill(jTrack);jTrack++;
+                    h2dIncEDcaVsPtCut2->Fill(pt, dca);
+                    h2dIncENSigEVsPtCut2->Fill(pt, nSigE);
+                }
             }
         }
     }
