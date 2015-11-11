@@ -78,10 +78,10 @@ class StPicoNpeAnaMaker : public StMaker
     // Remember that ntuples size can be really big, use histograms where appropriate
     
     TH1I * h1dEvent;
-    TH1F * h1dEventVz;
+    TH1F * h1dEventZDCx;
     TH1I * h1dEventRefMult;
     TH1I * h1dEventTrigger;
-    TH1F * h1dEventVzCut;
+    TH1F * h1dEventZDCxCut;
     TH1I * h1dEventRefMultCut;
     TH1I * h1dEventTriggerCut;
     
@@ -91,6 +91,9 @@ class StPicoNpeAnaMaker : public StMaker
     TH2F * h2dIncENSigEVsPtCut;
     TH2F * h2dIncEDcaVsPtCut2;
     TH2F * h2dIncENSigEVsPtCut2;
+    
+    TH2F * h2dIncEBsmdNEtaPt;
+    TH2F * h2dIncEBsmdNPhiPt;
 
     TH2F * h2dPhEDcaVsPt;
     TH2F * h2dPhENSigEVsPt;

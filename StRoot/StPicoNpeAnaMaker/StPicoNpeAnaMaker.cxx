@@ -66,22 +66,25 @@ Int_t StPicoNpeAnaMaker::Init()
 
     // -------------- USER VARIABLES -------------------------
     h1dEvent = new TH1I("h1dEvent", "Number of Events", 10, 0, 10);
-    h1dEventVz = new TH1F("h1dEventVz", "Vz distribution", 100, -10, 10);
+    h1dEventZDCx = new TH1F("h1dEventZDCx", "ZDCx distribution", 1000, 0, 100000);
     h1dEventRefMult = new TH1I("h1dEventRefMult", "RefMult distribution", 1000, 0, 1000);
     h1dEventTrigger = new TH1I("h1dEventTrigger", "Trigger distribution", 30, 0, 30);
-    h1dEventVzCut = new TH1F("h1dEventVzCut", "Vz distribution Cut", 100, -10, 10);
+    h1dEventZDCxCut = new TH1F("h1dEventZDCxCut", "ZDCx distribution Cut", 1000, 0, 100000);
     h1dEventRefMultCut = new TH1I("h1dEventRefMultCut", "RefMult distribution Cut", 1000, 0, 1000);
     h1dEventTriggerCut = new TH1I("h1dEventTriggerCut", "Trigger distribution Cut", 30, 0, 30);
     
     
     h2dIncEDcaVsPt =    new TH2F("h2dIncEDcaVsPt",      "2D Dca vs pT Inclusive E",             200,0,20, 100,-0.1,0.1);
     h2dIncENSigEVsPt =  new TH2F("h2dIncENSigEVsPt",    "2D nSigE vs pT Inclusive E",           200,0,20, 289,-13,13);
+    h2dIncEBsmdNEtaPt =  new TH2F("h2dIncEBsmdNEtaPt",    "2D nEta vs pT Inclusive E Cut2",           200,0,20, 10,-0.5,9.5);
+    h2dIncEBsmdNPhiPt =  new TH2F("h2dIncEBsmdNPhiPt",    "2D nPhi vs pT Inclusive E Cut2",           200,0,20, 10,-0.5,9.5);
  
     h2dIncEDcaVsPtCut =    new TH2F("h2dIncEDcaVsPtCut",      "2D Dca vs pT Inclusive E Cut",             200,0,20, 100,-0.1,0.1);
     h2dIncENSigEVsPtCut =  new TH2F("h2dIncENSigEVsPtCut",    "2D nSigE vs pT Inclusive E Cut",           200,0,20, 289,-13,13);
 
     h2dIncEDcaVsPtCut2 =    new TH2F("h2dIncEDcaVsPtCut2",      "2D Dca vs pT Inclusive E Cut2",             200,0,20, 100,-0.1,0.1);
     h2dIncENSigEVsPtCut2 =  new TH2F("h2dIncENSigEVsPtCut2",    "2D nSigE vs pT Inclusive E Cut2",           200,0,20, 289,-13,13);
+
 
     h2dPhEDcaVsPt =     new TH2F("h2dPhEDcaVsPt",       "2D Dca vs pT Photonic E",              200,0,20, 100,-0.1,0.1);
     h2dPhENSigEVsPt =   new TH2F("h2dPhENSigEVsPt",     "2D nSigE vs pT Photonic E",            200,0,20, 289,-13,13);
@@ -107,10 +110,10 @@ Int_t StPicoNpeAnaMaker::Finish()
     mOutputFile->cd();
     // --------------- USER HISTOGRAM WRITE --------------------
     h1dEvent->Write();
-    h1dEventVz->Write();
+    h1dEventZDCx->Write();
     h1dEventRefMult->Write();
     h1dEventTrigger->Write();
-    h1dEventVzCut->Write();
+    h1dEventZDCxCut->Write();
     h1dEventRefMultCut->Write();
     h1dEventTriggerCut->Write();
 
@@ -120,6 +123,9 @@ Int_t StPicoNpeAnaMaker::Finish()
     h2dIncENSigEVsPtCut->Write();
     h2dIncEDcaVsPtCut2->Write();
     h2dIncENSigEVsPtCut2->Write();
+    
+    h2dIncEBsmdNEtaPt->Write();
+    h2dIncEBsmdNPhiPt->Write();
     
     h2dPhEDcaVsPt->Write();
     h2dPhENSigEVsPt->Write();
@@ -169,7 +175,7 @@ Int_t StPicoNpeAnaMaker::Make()
     float mZDCx = picoDst->event()->ZDCx();
 
     h1dEvent->Fill(0);
-    h1dEventVz->Fill(mZDCx);
+    h1dEventZDCx->Fill(mZDCx);
     h1dEventRefMult->Fill(mRefMult);
     for (int i=0; i<25; i++) if (picoDst->event()->triggerWord() >> i & 0x1) h1dEventTrigger->Fill(i);
 
@@ -177,7 +183,7 @@ Int_t StPicoNpeAnaMaker::Make()
         return kStOk;
     
     h1dEvent->Fill(1);
-    h1dEventVzCut->Fill(mZDCx);
+    h1dEventZDCxCut->Fill(mZDCx);
     h1dEventRefMultCut->Fill(mRefMult);
     for (int i=0; i<25; i++) if (picoDst->event()->triggerWord() >> i & 0x1) h1dEventTriggerCut->Fill(i);
 
@@ -229,12 +235,18 @@ Int_t StPicoNpeAnaMaker::Make()
             
             h2dIncEDcaVsPt->Fill(pt, dca);
             h2dIncENSigEVsPt->Fill(pt, nSigE);
-
+            
+            StPicoEmcPidTraits * Emc =  mPicoDst2->emcPidTraits(trk->emcPidTraitsIndex());
+            int nPhi = Emc->nPhi();
+            int nEta = Emc->nEta();
+            h2dIncEBsmdNEtaPt->Fill(pt,nEta);
+            h2dIncEBsmdNPhiPt->Fill(pt,nPhi);
+            
             if (mNpeCuts->isTPCElectron(track, 0, 3)){
                 h2dIncEDcaVsPtCut->Fill(pt, dca);
                 h2dIncENSigEVsPtCut->Fill(pt, nSigE);
             }
-            if (mNpeCuts->isTPCElectron(track, 0, 3) && mNpeCuts->isBEMCElectron(track)){
+            if (mNpeCuts->isTPCElectron(track, 0, 3) && mNpeCuts->isBSMDElectron(track)){
                 h2dIncEDcaVsPtCut2->Fill(pt, dca);
                 h2dIncENSigEVsPtCut2->Fill(pt, nSigE);
             }
