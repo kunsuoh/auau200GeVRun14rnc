@@ -87,11 +87,11 @@ void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunList
     
     // BEMC PID
     bool const bemc = true;
-    float const minEoverP   = 0.8;
-    float const maxEoverP   = 2.0;
-    float const phiDist     = 0.015;
-    float const zDist       = 3;
-    float const assDist     = 0.06;
+    float const minEoverP   = 0;//0.8;
+    float const maxEoverP   = 10;//2.0;
+    float const phiDist     = 10;//0.015;
+    float const zDist       = 50;//3;
+    float const assDist     = 1;//0.06;
     npeCuts->setCutBemcPid(bemc, minEoverP, maxEoverP, phiDist, zDist, assDist);
 
     // BSMD PID
