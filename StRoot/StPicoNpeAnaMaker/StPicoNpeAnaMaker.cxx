@@ -283,11 +283,33 @@ Int_t StPicoNpeAnaMaker::Make()
                 h2dIncENSigEVsPt->Fill(pt, nSigE);
                 
                 
-                if (mNpeCuts->isTPCElectron(track, 0, 3)){
+                if (pt < 2 && mNpeCuts->isTPCElectron(track, 0, 1.5)){
                     h1dTrack->Fill(jTrack);jTrack++;
                     h2dIncEDcaVsPtCut->Fill(pt, dca);
                     h2dIncENSigEVsPtCut->Fill(pt, nSigE);
-                    
+                }
+                else if (pt > 2 && pt < 4 && mNpeCuts->isTPCElectron(track, 0, 2.5)){
+                    h1dTrack->Fill(jTrack);jTrack++;
+                    h2dIncEDcaVsPtCut->Fill(pt, dca);
+                    h2dIncENSigEVsPtCut->Fill(pt, nSigE);
+                }
+                else if (pt > 4 && pt < 6 && mNpeCuts->isTPCElectron(track, 0.5, 3)){
+                    h1dTrack->Fill(jTrack);jTrack++;
+                    h2dIncEDcaVsPtCut->Fill(pt, dca);
+                    h2dIncENSigEVsPtCut->Fill(pt, nSigE);
+                }
+                else if (pt > 6 && pt < 8 && mNpeCuts->isTPCElectron(track, 1, 3)){
+                    h1dTrack->Fill(jTrack);jTrack++;
+                    h2dIncEDcaVsPtCut->Fill(pt, dca);
+                    h2dIncENSigEVsPtCut->Fill(pt, nSigE);
+                }
+                else if (pt > 8 && pt < 20 && mNpeCuts->isTPCElectron(track, 0, 3)){
+                    h1dTrack->Fill(jTrack);jTrack++;
+                    h2dIncEDcaVsPtCut->Fill(pt, dca);
+                    h2dIncENSigEVsPtCut->Fill(pt, nSigE);
+                }
+
+  /*
                     if(track->emcPidTraitsIndex() > 0){
                         h1dTrack->Fill(jTrack);jTrack++;
                         StPicoEmcPidTraits * Emc =  picoDst->emcPidTraits(track->emcPidTraitsIndex());
@@ -302,7 +324,7 @@ Int_t StPicoNpeAnaMaker::Make()
                             h2dIncENSigEVsPtCut2->Fill(pt, nSigE);
                         }
                     }
-                }
+   */
             }
         }
     }
