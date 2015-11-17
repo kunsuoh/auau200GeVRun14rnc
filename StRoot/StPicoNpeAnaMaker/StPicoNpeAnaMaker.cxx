@@ -271,16 +271,17 @@ Int_t StPicoNpeAnaMaker::Make()
             hQaNHitFitCut->Fill(track->nHitsFit());
             hQaNHitDedxCut->Fill(track->nHitsDedx());
             
+            StPhysicalHelixD eHelix = track->dcaGeometry().helix();
+            float dca = eHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
+            float pt = track->gPt();
+            float nSigE = track->nSigmaElectron();
+
             h2dIncEDcaVsPt->Fill(pt, dca);
             h2dIncENSigEVsPt->Fill(pt, nSigE);
 
             h1dTrack->Fill(jTrack);jTrack++;
             if (mNpeCuts->isBEMCElectron(track)) {
                 h1dTrack->Fill(jTrack);jTrack++;
-                StPhysicalHelixD eHelix = track->dcaGeometry().helix();
-                float dca = eHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
-                float pt = track->gPt();
-                float nSigE = track->nSigmaElectron();
                 
                 h2dIncEDcaVsPtCut->Fill(pt, dca);
                 h2dIncENSigEVsPtCut->Fill(pt, nSigE);
