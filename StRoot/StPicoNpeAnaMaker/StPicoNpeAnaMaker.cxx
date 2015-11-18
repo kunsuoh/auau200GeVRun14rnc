@@ -117,7 +117,17 @@ Int_t StPicoNpeAnaMaker::Init()
     h2dPhELConvRVsZ = new TH2D("h2dPhELConvRVsZ","h2dPhELConvRVsZ",100,-20,20, 1000, 0, 100);
     h2dPhELConvXYZ = new TH3D("h2dPhELConvXYZ","h2dPhELConvXYZ",100,-50,50, 100,-50,50, 40,-20,20);
     h2dPhELInvMassvsZ = new TH2D("h2dPhELInvMassvsZ","h2dPhELInvMassvsZ",100,-20,20, 100, 0, 0.5);
+
+    h2dPhENSigEVsZ_HFT = new TH2D("h2dPhENSigEVsZ_HFT","h2dPhENSigEVsZ_HFT",100,-20,20, 289, -13, 13);
+    h2dPhEConvRVsZ_HFT = new TH2D("h2dPhEConvRVsZ_HFT","h2dPhEConvRVsZ_HFT",100,-20,20, 1000, 0, 100);
+    h2dPhEConvXYZ_HFT = new TH3D("h2dPhEConvXYZ_HFT","h2dPhEConvXYZ_HFT",100,-50,50, 100,-50,50, 40,-20,20);
+    h2dPhEInvMassvsZ_HFT = new TH2D("h2dPhEInvMassvsZ_HFT","h2dPhEInvMassvsZ_HFT",100,-20,20, 100, 0, 0.5);
     
+    h2dPhELNSigEVsZ_HFT = new TH2D("h2dPhELNSigEVsZ_HFT","h2dPhELNSigEVsZ_HFT",100,-20,20, 289, -13, 13);
+    h2dPhELConvRVsZ_HFT = new TH2D("h2dPhELConvRVsZ_HFT","h2dPhELConvRVsZ_HFT",100,-20,20, 1000, 0, 100);
+    h2dPhELConvXYZ_HFT = new TH3D("h2dPhELConvXYZ_HFT","h2dPhELConvXYZ_HFT",100,-50,50, 100,-50,50, 40,-20,20);
+    h2dPhELInvMassvsZ_HFT = new TH2D("h2dPhELInvMassvsZ_HFT","h2dPhELInvMassvsZ_HFT",100,-20,20, 100, 0, 0.5);
+
 
     
     
@@ -144,6 +154,17 @@ Int_t StPicoNpeAnaMaker::Finish()
     h2dPhELConvRVsZ->Write();
     h2dPhELConvXYZ->Write();
     h2dPhELInvMassvsZ->Write();
+    
+    
+    h2dPhENSigEVsZ_HFT->Write();
+    h2dPhEConvRVsZ_HFT->Write();
+    h2dPhEConvXYZ_HFT->Write();
+    h2dPhEInvMassvsZ_HFT->Write();
+    
+    h2dPhELNSigEVsZ_HFT->Write();
+    h2dPhELConvRVsZ_HFT->Write();
+    h2dPhELConvXYZ_HFT->Write();
+    h2dPhELInvMassvsZ_HFT->Write();
     
     h1dEvent->Write();
     h1dEventZDCx->Write();
@@ -298,13 +319,27 @@ Int_t StPicoNpeAnaMaker::Make()
             h2dPhEConvRVsZ->Fill(pairPositionZ, convR);
             h2dPhEConvXYZ->Fill(pairPositionX,pairPositionY,pairPositionZ);
             h2dPhEInvMassvsZ->Fill(pairPositionZ,invMass);
+            if (electron->isHFTTrack()) {
+                h2dPhENSigEVsZ_HFT->Fill(pairPositionZ, nSigE);
+                h2dPhEConvRVsZ_HFT->Fill(pairPositionZ, convR);
+                h2dPhEConvXYZ_HFT->Fill(pairPositionX,pairPositionY,pairPositionZ);
+                h2dPhEInvMassvsZ_HFT->Fill(pairPositionZ,invMass);
+
+            }
         }
         else {
             h2dPhELNSigEVsZ->Fill(pairPositionZ, nSigE);
             h2dPhELConvRVsZ->Fill(pairPositionZ, convR);
             h2dPhELConvXYZ->Fill(pairPositionX,pairPositionY,pairPositionZ);
             h2dPhELInvMassvsZ->Fill(pairPositionZ,invMass);
-        }
+            if (electron->isHFTTrack()) {
+                h2dPhELNSigEVsZ_HFT->Fill(pairPositionZ, nSigE);
+                h2dPhELConvRVsZ_HFT->Fill(pairPositionZ, convR);
+                h2dPhELConvXYZ_HFT->Fill(pairPositionX,pairPositionY,pairPositionZ);
+                h2dPhELInvMassvsZ_HFT->Fill(pairPositionZ,invMass);
+                
+            }
+}
         
         
     }

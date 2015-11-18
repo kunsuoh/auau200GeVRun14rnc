@@ -128,6 +128,15 @@ class StPicoNpeAnaMaker : public StMaker
     TH3D * h2dPhELConvXYZ;
     TH2D * h2dPhELInvMassvsZ;
     
+    TH2D * h2dPhENSigEVsZ_HFT;
+    TH2D * h2dPhEConvRVsZ_HFT;
+    TH3D * h2dPhEConvXYZ_HFT;
+    TH2D * h2dPhEInvMassvsZ_HFT;
+    TH2D * h2dPhELNSigEVsZ_HFT;
+    TH2D * h2dPhELConvRVsZ_HFT;
+    TH3D * h2dPhELConvXYZ_HFT;
+    TH2D * h2dPhELInvMassvsZ_HFT;
+    
     
     ClassDef(StPicoNpeAnaMaker, 0)
 };
