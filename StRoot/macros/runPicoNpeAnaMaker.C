@@ -59,8 +59,8 @@ void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunList
     // Add your cuts here.
     
     // Event cuts
-    npeCuts->setCutVzMax(50);
-    npeCuts->setCutVzVpdVzMax(6);
+    npeCuts->setCutVzMax(6);
+    npeCuts->setCutVzVpdVzMax(3);
     npeCuts->setCutTriggerWord(0xFFFFFFF);
 
     // Tagged electron cuts
