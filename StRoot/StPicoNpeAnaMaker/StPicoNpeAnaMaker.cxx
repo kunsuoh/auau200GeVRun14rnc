@@ -228,15 +228,15 @@ Int_t StPicoNpeAnaMaker::Make()
         StPicoTrack const* electron = picoDst->track(epair->electronIdx());
         StPicoTrack const* partner = picoDst->track(epair->partnerIdx());
         
-        StPicoBTofPidTraits *tofPid = hasTofPid(electron);
+        StPicoBTofPidTraits *tofPid = mNpeCuts->hasTofPid(electron);
         
         float beta;
         if (tofPid) {
             beta = tofPid->btofBeta();
             if (beta < 1e-4) {
                 StThreeVectorF const btofHitPos = tofPid->btofHitPos();
-                StPhysicalHelixD helix = trk->helix();
-                float pathLength = tofPathLength(&mPrimVtx, &btofHitPos, helix.curvature());
+                StPhysicalHelixD helix = electron->helix();
+                float pathLength = tofPathLength(&pVtx, &btofHitPos, helix.curvature());
                 float tof = tofPid->btof();
                 beta = (tof > 0) ? pathLength / (tof * (C_C_LIGHT / 1.e9)) : std::numeric_limits<float>::quiet_NaN();
             }
@@ -244,15 +244,15 @@ Int_t StPicoNpeAnaMaker::Make()
         else beta=999;
         
         if (fabs(1/beta -1) > 0.025) continue;
-        StPicoBTofPidTraits *tofPid = hasTofPid(partner);
+        StPicoBTofPidTraits *tofPid = mNpeCuts->hasTofPid(partner);
         
         float beta;
         if (tofPid) {
             beta = tofPid->btofBeta();
             if (beta < 1e-4) {
                 StThreeVectorF const btofHitPos = tofPid->btofHitPos();
-                StPhysicalHelixD helix = trk->helix();
-                float pathLength = tofPathLength(&mPrimVtx, &btofHitPos, helix.curvature());
+                StPhysicalHelixD helix = partner->helix();
+                float pathLength = tofPathLength(&pVtx, &btofHitPos, helix.curvature());
                 float tof = tofPid->btof();
                 beta = (tof > 0) ? pathLength / (tof * (C_C_LIGHT / 1.e9)) : std::numeric_limits<float>::quiet_NaN();
             }
