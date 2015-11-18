@@ -220,12 +220,46 @@ Int_t StPicoNpeAnaMaker::Make()
     TClonesArray const * aElectronPair = mPicoNpeEvent->electronPairArray();
     for (int idx = 0; idx < aElectronPair->GetEntries(); ++idx)
     {
+        
         // this is an example of how to get the ElectronPair pairs and their corresponsing tracks
         StElectronPair const* epair = (StElectronPair*)aElectronPair->At(idx);
         if(!mNpeCuts->isGoodElectronPair(epair)) continue;
 
         StPicoTrack const* electron = picoDst->track(epair->electronIdx());
         StPicoTrack const* partner = picoDst->track(epair->partnerIdx());
+        
+        StPicoBTofPidTraits *tofPid = hasTofPid(electron);
+        
+        float beta;
+        if (tofPid) {
+            beta = tofPid->btofBeta();
+            if (beta < 1e-4) {
+                StThreeVectorF const btofHitPos = tofPid->btofHitPos();
+                StPhysicalHelixD helix = trk->helix();
+                float pathLength = tofPathLength(&mPrimVtx, &btofHitPos, helix.curvature());
+                float tof = tofPid->btof();
+                beta = (tof > 0) ? pathLength / (tof * (C_C_LIGHT / 1.e9)) : std::numeric_limits<float>::quiet_NaN();
+            }
+        }
+        else beta=999;
+        
+        if (fabs(1/beta -1) > 0.025) continue;
+        StPicoBTofPidTraits *tofPid = hasTofPid(partner);
+        
+        float beta;
+        if (tofPid) {
+            beta = tofPid->btofBeta();
+            if (beta < 1e-4) {
+                StThreeVectorF const btofHitPos = tofPid->btofHitPos();
+                StPhysicalHelixD helix = trk->helix();
+                float pathLength = tofPathLength(&mPrimVtx, &btofHitPos, helix.curvature());
+                float tof = tofPid->btof();
+                beta = (tof > 0) ? pathLength / (tof * (C_C_LIGHT / 1.e9)) : std::numeric_limits<float>::quiet_NaN();
+            }
+        }
+        else beta=999;
+        
+        if (fabs(1/beta -1) > 0.025) continue;
         
         StPhysicalHelixD eHelix = electron->dcaGeometry().helix();
         float dca = eHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
