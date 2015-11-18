@@ -110,13 +110,13 @@ Int_t StPicoNpeAnaMaker::Init()
     
     h2dPhENSigEVsZ = new TH2D("h2dPhENSigEVsZ","h2dPhENSigEVsZ",100,-20,20, 289, -13, 13);
     h2dPhEConvRVsZ = new TH2D("h2dPhEConvRVsZ","h2dPhEConvRVsZ",100,-20,20, 1000, 0, 100);
-    h2dPhEConvXYZ = new TH3D("h2dPhEConvXYZ","h2dPhEConvXYZ",100,0,100, 100,0,100, 40,-20,20);
-    h2dPhEInvMassvsZ = new TH2D("h2dPhEInvMassvsZ","h2dPhEInvMassvsZ",100,-20,20, 100, 0, 0.1);
+    h2dPhEConvXYZ = new TH3D("h2dPhEConvXYZ","h2dPhEConvXYZ",100,-50,50, 100,-50,50, 40,-20,20);
+    h2dPhEInvMassvsZ = new TH2D("h2dPhEInvMassvsZ","h2dPhEInvMassvsZ",100,-20,20, 100, 0, 0.5);
     
     h2dPhELNSigEVsZ = new TH2D("h2dPhELNSigEVsZ","h2dPhELNSigEVsZ",100,-20,20, 289, -13, 13);
     h2dPhELConvRVsZ = new TH2D("h2dPhELConvRVsZ","h2dPhELConvRVsZ",100,-20,20, 1000, 0, 100);
-    h2dPhELConvXYZ = new TH3D("h2dPhELConvXYZ","h2dPhELConvXYZ",100,0,100, 100,0,100, 40,-20,20);
-    h2dPhELInvMassvsZ = new TH2D("h2dPhELInvMassvsZ","h2dPhELInvMassvsZ",100,-20,20, 100, 0, 0.1);
+    h2dPhELConvXYZ = new TH3D("h2dPhELConvXYZ","h2dPhELConvXYZ",100,-50,50, 100,-50,50, 40,-20,20);
+    h2dPhELInvMassvsZ = new TH2D("h2dPhELInvMassvsZ","h2dPhELInvMassvsZ",100,-20,20, 100, 0, 0.5);
     
 
     
