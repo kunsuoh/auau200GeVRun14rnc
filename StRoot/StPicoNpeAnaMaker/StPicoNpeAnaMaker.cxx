@@ -289,6 +289,7 @@ Int_t StPicoNpeAnaMaker::Make()
         float pairPositionX = epair->positionX();
         float pairPositionY = epair->positionY();
         float pairPositionZ = epair->positionZ();
+        float invMass = epair->pairMass();
         float convR = TMath::Sqrt((pairPositionX+0.2383) * (pairPositionX+0.2383) + (pairPositionY+0.1734) * (pairPositionY+0.1734));
         int pairCharge = electron->charge()+partner->charge();
 
