@@ -105,7 +105,7 @@ void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunList
     cout << " Total entries = " << nEntries << endl;
     for (int iEvent = 0; iEvent < nEntries; ++iEvent)
     {
-        cout << iEvent << endl;
+        if (iEvent%100==0) cout << iEvent << endl;
         npeChain->Clear();
         int iret = npeChain->Make();
         if (iret)

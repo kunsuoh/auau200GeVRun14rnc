@@ -23,6 +23,8 @@
 #include "TChain.h"
 #include "StMaker.h"
 #include "TH2F.h"
+#include "TH2D.h"
+#include "TH3D.h"
 #include "StThreeVectorF.hh"
 #include "THnSparse.h"
 
@@ -116,6 +118,16 @@ class StPicoNpeAnaMaker : public StMaker
     TH1F * hQaDcaCut;
     TH1F * hQaNHitFitCut;
     TH1F * hQaNHitDedxCut;
+    
+    TH2F * h2dPhENSigEVsZ;
+    TH2F * h2dPhEConvRVsZ;
+    TH3F * h2dPhEConvXYZ;
+    TH2F * h2dPhEInvMassvsZ;
+    TH2F * h2dPhELNSigEVsZ;
+    TH2F * h2dPhELConvRVsZ;
+    TH3F * h2dPhELConvXYZ;
+    TH2F * h2dPhELInvMassvsZ;
+    
     
     ClassDef(StPicoNpeAnaMaker, 0)
 };

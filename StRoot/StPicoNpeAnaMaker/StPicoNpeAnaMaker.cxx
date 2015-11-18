@@ -108,7 +108,17 @@ Int_t StPicoNpeAnaMaker::Init()
     hQaNHitFitCut = new TH1F("hQaNHitFitCut","hQaNHitFitCut",100,0,100);
     hQaNHitDedxCut = new TH1F("hQaNHitDedxCut","hQaNHitDedxCut",100,0,100);
     
+    h2dPhENSigEVsZ = new TH2D("h2dPhENSigEVsZ","h2dPhENSigEVsZ",100,-50,50, 289, -13, 13);
+    h2dPhEConvRVsZ = new TH2D("h2dPhEConvRVsZ","h2dPhEConvRVsZ",100,-50,50, 300, 0, 300);
+    h2dPhEConvXYZ = new TH3D("h2dPhEConvXYZ","h2dPhEConvXYZ",300,0,300, 300,0,300, 600,-300,300);
+    h2dPhEInvMassvsZ = new TH2D("h2dPhEInvMassvsZ","h2dPhEInvMassvsZ",100,-50,50, 100, 0, 1);
     
+    h2dPhELNSigEVsZ = new TH2D("h2dPhELNSigEVsZ","h2dPhELNSigEVsZ",100,-50,50, 289, -13, 13);
+    h2dPhELConvRVsZ = new TH2D("h2dPhELConvRVsZ","h2dPhELConvRVsZ",100,-50,50, 300, 0, 300);
+    h2dPhELConvXYZ = new TH3D("h2dPhELConvXYZ","h2dPhELConvXYZ",300,0,300, 300,0,300, 600,-300,300);
+    h2dPhELInvMassvsZ = new TH2D("h2dPhELInvMassvsZ","h2dPhELInvMassvsZ",100,-50,50, 100, 0, 1);
+    
+
     
     
     return kStOK;
@@ -124,6 +134,17 @@ Int_t StPicoNpeAnaMaker::Finish()
     LOG_INFO << " StPicoNpeAnaMaker - writing data and closing output file " <<endm;
     mOutputFile->cd();
     // --------------- USER HISTOGRAM WRITE --------------------
+    
+    h2dPhENSigEVsZ->Write();
+    h2dPhEConvRVsZ->Write();
+    h2dPhEConvXYZ->Write();
+    h2dPhEInvMassvsZ->Write();
+    
+    h2dPhELNSigEVsZ->Write();
+    h2dPhELConvRVsZ->Write();
+    h2dPhELConvXYZ->Write();
+    h2dPhELInvMassvsZ->Write();
+    
     h1dEvent->Write();
     h1dEventZDCx->Write();
     h1dEventRefMult->Write();
@@ -267,18 +288,21 @@ Int_t StPicoNpeAnaMaker::Make()
         float nSigE = electron->nSigmaElectron();
         float pairPositionX = epair->positionX();
         float pairPositionY = epair->positionY();
+        float pairPositionZ = epair->positionZ();
         float convR = TMath::Sqrt((pairPositionX+0.2383) * (pairPositionX+0.2383) + (pairPositionY+0.1734) * (pairPositionY+0.1734));
         int pairCharge = electron->charge()+partner->charge();
 
         if (pairCharge==0) {
-            h2dPhEDcaVsPt->Fill(pt, dca);
-            h2dPhENSigEVsPt->Fill(pt, nSigE);
-            h2dPhEConvRVsPt->Fill(pt, convR);
+            h2dPhENSigEVsZ->Fill(pairPositionZ, nSigE);
+            h2dPhEConvRVsZ->Fill(pairPositionZ, convR);
+            h2dPhEConvXYZ->Fill(pairPositionX,pairPositionY,pairPositionZ);
+            h2dPhEInvMassvsZ->Fill(pairPositionZ,invMass);
         }
         else {
-            h2dPhELDcaVsPt->Fill(pt, dca);
-            h2dPhELNSigEVsPt->Fill(pt, nSigE);
-            h2dPhELConvRVsPt->Fill(pt, convR);
+            h2dPhELNSigEVsZ->Fill(pairPositionZ, nSigE);
+            h2dPhELConvRVsZ->Fill(pairPositionZ, convR);
+            h2dPhELConvXYZ->Fill(pairPositionX,pairPositionY,pairPositionZ);
+            h2dPhELInvMassvsZ->Fill(pairPositionZ,invMass);
         }
         
         
