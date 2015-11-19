@@ -168,7 +168,7 @@ bool StNpeCuts::isTPCElectron(StPicoTrack const *trk, float min, float max) cons
 }
 // _________________________________________________________
 bool StNpeCuts::isTOFElectron(StPicoTrack const *trk) const {
-    // -- check for good BSMD electrons
+    // -- check for good TOF electrons
     if (!mElectronTofPid) return true;
     StPicoBTofPidTraits *tofPid = hasTofPid(trk);
     

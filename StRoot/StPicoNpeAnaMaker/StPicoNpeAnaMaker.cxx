@@ -416,6 +416,7 @@ Int_t StPicoNpeAnaMaker::Make()
     }
 
     
+    cout << idxPicoTaggedEs.size() << " " << idxPicoPartnerEs.size() << endl;
     // photonic electron reconstruction directly
     for (unsigned short ik = 0; ik < idxPicoTaggedEs.size(); ++ik)
     {
