@@ -428,39 +428,6 @@ Int_t StPicoNpeAnaMaker::Make()
             StElectronPair * epair =  new StElectronPair(electron, partner, idxPicoTaggedEs[ik], idxPicoPartnerEs[ip], picoDst->event()->bField());
             if(!mNpeCuts->isGoodElectronPair(epair)) continue;
             
-            StPicoBTofPidTraits *tofPid = mNpeCuts->hasTofPid(electron);
-            
-            float beta;
-            if (tofPid) {
-                beta = tofPid->btofBeta();
-                if (beta < 1e-4) {
-                    StThreeVectorF const btofHitPos = tofPid->btofHitPos();
-                    StPhysicalHelixD helix = electron->helix();
-                    float pathLength = tofPathLength(&pVtx, &btofHitPos, helix.curvature());
-                    float tof = tofPid->btof();
-                    beta = (tof > 0) ? pathLength / (tof * (C_C_LIGHT / 1.e9)) : std::numeric_limits<float>::quiet_NaN();
-                }
-            }
-            else beta=999;
-            
-            if (fabs(1/beta -1) > 0.025) continue;
-            StPicoBTofPidTraits *tofPid2 = mNpeCuts->hasTofPid(partner);
-            
-            
-            if (tofPid2) {
-                beta = tofPid2->btofBeta();
-                if (beta < 1e-4) {
-                    StThreeVectorF const btofHitPos = tofPid2->btofHitPos();
-                    StPhysicalHelixD helix = partner->helix();
-                    float pathLength = tofPathLength(&pVtx, &btofHitPos, helix.curvature());
-                    float tof = tofPid2->btof();
-                    beta = (tof > 0) ? pathLength / (tof * (C_C_LIGHT / 1.e9)) : std::numeric_limits<float>::quiet_NaN();
-                }
-            }
-            else beta=999;
-            
-            if (fabs(1/beta -1) > 0.025) continue;
-            
             StPhysicalHelixD eHelix = electron->dcaGeometry().helix();
             float dca = eHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
             float pt = electron->gPt();

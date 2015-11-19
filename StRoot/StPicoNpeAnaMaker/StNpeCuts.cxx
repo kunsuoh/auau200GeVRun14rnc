@@ -33,6 +33,7 @@ mElectronNHitsdEdxMax(std::numeric_limits<int>::max()),
 mElectronBsmdNEta(std::numeric_limits<int>::min()),
 mElectronPtMin(std::numeric_limits<float>::min()),
 mElectronBsmdNPhi(std::numeric_limits<int>::min()),
+mElectronTofBeta(std::numeric_limits<float>::max()),
 mElectronPtMax(std::numeric_limits<float>::max()),
 mElectronEtaMin(std::numeric_limits<float>::min()),
 mElectronRequireHFT(false),
@@ -54,7 +55,7 @@ mPartnerElectronEtaMax(std::numeric_limits<float>::max()),
 mPartnerElectronRequireHFT(false),
 mPartnerTPCNSigmaElectronMin(std::numeric_limits<float>::min()),
 mPartnerTPCNSigmaElectronMax(std::numeric_limits<float>::max()),
-mElectronBemcPid(false),mElectronBsmdPid(false){
+mElectronBemcPid(false),mElectronBsmdPid(false),mElectronTofPid(false){
     
     // -- default constructor
 }
@@ -70,6 +71,7 @@ mElectronNHitsdEdxMax(std::numeric_limits<int>::max()),
 mElectronBsmdNEta(std::numeric_limits<int>::min()),
 mElectronPtMin(std::numeric_limits<float>::min()),
 mElectronBsmdNPhi(std::numeric_limits<int>::min()),
+mElectronTofBeta(std::numeric_limits<float>::max()),
 mElectronPtMax(std::numeric_limits<float>::max()),
 mElectronEtaMin(std::numeric_limits<float>::min()),
 mElectronRequireHFT(false),
@@ -91,7 +93,7 @@ mPartnerElectronEtaMax(std::numeric_limits<float>::max()),
 mPartnerElectronRequireHFT(false),
 mPartnerTPCNSigmaElectronMin(std::numeric_limits<float>::min()),
 mPartnerTPCNSigmaElectronMax(std::numeric_limits<float>::max()),
-mElectronBemcPid(false),mElectronBsmdPid(false){
+mElectronBemcPid(false),mElectronBsmdPid(false),mElectronTofPid(false){
 
     
     // -- constructor
@@ -138,6 +140,7 @@ bool StNpeCuts::isGoodTaggedElectron(StPicoTrack const *trk) const {
     && isTPCElectron(trk, mElectronTPCNSigmaElectronMin, mElectronTPCNSigmaElectronMax)
     && isBEMCElectron(trk)
     && isBSMDElectron(trk)
+    && isTOFElectron(trk)
     ;
 }
 // _________________________________________________________
@@ -152,7 +155,8 @@ bool StNpeCuts::isGoodPartnerElectron(StPicoTrack const *trk) const {
     
     return partnerElectronCut
     && isTPCElectron(trk, mPartnerTPCNSigmaElectronMin, mPartnerTPCNSigmaElectronMax)
-    ;
+    && isTOFElectron(trk)
+;
 }
 // _________________________________________________________
 bool StNpeCuts::isTPCElectron(StPicoTrack const *trk, float min, float max) const {
@@ -162,6 +166,29 @@ bool StNpeCuts::isTPCElectron(StPicoTrack const *trk, float min, float max) cons
     return
     nSigma > min && nSigma < max;
 }
+// _________________________________________________________
+bool StNpeCuts::isTOFElectron(StPicoTrack const *trk) const {
+    // -- check for good BSMD electrons
+    if (!mElectronTofPid) return true;
+    StPicoBTofPidTraits *tofPid = hasTofPid(trk);
+    
+    float beta;
+    if (tofPid) {
+        beta = tofPid->btofBeta();
+        if (beta < 1e-4) {
+            StThreeVectorF const btofHitPos = tofPid->btofHitPos();
+            StPhysicalHelixD helix = trk->helix();
+            float pathLength = tofPathLength(&getpVtx(), &btofHitPos, helix.curvature());
+            float tof = tofPid->btof();
+            beta = (tof > 0) ? pathLength / (tof * (C_C_LIGHT / 1.e9)) : std::numeric_limits<float>::quiet_NaN();
+        }
+    }
+    else beta=999;
+    
+    if (fabs(1/beta -1) > mElectronTofBeta) return true;
+    else return false;
+}
+
 // _________________________________________________________
 bool StNpeCuts::isBEMCElectron(StPicoTrack const *trk) const {
     // -- check for good BEMC electrons
@@ -177,8 +204,7 @@ bool StNpeCuts::isBEMCElectron(StPicoTrack const *trk) const {
     TMath::Sqrt(phiDist*phiDist + zDist*zDist) < mElectronBemcAssDistMax
     ;
 }
-     
-// _________________________________________________________
+
 bool StNpeCuts::isBSMDElectron(StPicoTrack const *trk) const {
     // -- check for good BSMD electrons
     if (!mElectronBsmdPid) return true;
@@ -186,7 +212,7 @@ bool StNpeCuts::isBSMDElectron(StPicoTrack const *trk) const {
     StPicoEmcPidTraits * Emc =  mPicoDst2->emcPidTraits(trk->emcPidTraitsIndex());
     int nphi = Emc->nPhi();
     int neta = Emc->nEta();
-
+    
     return neta > mElectronBsmdNEta && nphi > mElectronBsmdNPhi ;
 }
      

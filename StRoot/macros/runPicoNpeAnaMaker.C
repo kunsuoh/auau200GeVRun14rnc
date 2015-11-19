@@ -99,7 +99,12 @@ void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunList
     int const nEta     = 1;
     int const nPhi     = 1;
     npeCuts->setCutBsmdPid(bsmd, nEta, nPhi);
-
+    
+    // TOF PID
+    bool const tof = true;
+    float const tofBeta     = 0.025;
+    npeCuts->setCutTofPid(tof, tofBeta);
+    
     npeChain->Init();
     int nEntries = picoNpeAnaMaker->getEntries();
     cout << " Total entries = " << nEntries << endl;
