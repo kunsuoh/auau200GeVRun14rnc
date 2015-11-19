@@ -344,6 +344,78 @@ Int_t StPicoNpeAnaMaker::Make()
     }
     */
     
+    std::vector<unsigned short> idxPicoTaggedEs;
+    std::vector<unsigned short> idxPicoPartnerEs;
+    
+    // inclusive electron
+    UInt_t nTracks = picoDst->numberOfTracks();
+    for (unsigned short iTrack = 0; iTrack < nTracks; ++iTrack) {
+        StPicoTrack* track = picoDst->track(iTrack);
+        if (mNpeCuts->isGoodTaggedElectron(track))  idxPicoTaggedEs.push_back(iTrack);
+        if (mNpeCuts->isGoodPartnerElectron(track)) idxPicoPartnerEs.push_back(iTrack);
+
+        int jTrack=0;
+        h1dTrack->Fill(jTrack);jTrack++;
+        if (!track) continue;
+        h1dTrack->Fill(jTrack);jTrack++;
+        hQaPt->Fill(track->gPt());
+        hQaEta->Fill(track->gMom(picoDst->event()->primaryVertex(), picoDst->event()->bField()).pseudoRapidity());
+        hQaDca->Fill(track->dcaGeometry().helix().curvatureSignedDistance(picoDst->event()->primaryVertex().x(),picoDst->event()->primaryVertex().y()));
+        hQaNHitFit->Fill(track->nHitsFit());
+        hQaNHitDedx->Fill(track->nHitsDedx());
+        if (mNpeCuts->isGoodInclusiveElectron(track)) {
+            hQaPtCut->Fill(track->gPt());
+            hQaEtaCut->Fill(track->gMom(picoDst->event()->primaryVertex(), picoDst->event()->bField()).pseudoRapidity());
+            hQaDcaCut->Fill(track->dcaGeometry().helix().curvatureSignedDistance(picoDst->event()->primaryVertex().x(),picoDst->event()->primaryVertex().y()));
+            hQaNHitFitCut->Fill(track->nHitsFit());
+            hQaNHitDedxCut->Fill(track->nHitsDedx());
+            
+            StPhysicalHelixD eHelix = track->dcaGeometry().helix();
+            float dca = eHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
+            float pt = track->gPt();
+            float nSigE = track->nSigmaElectron();
+            
+            h2dIncEDcaVsPt->Fill(pt, dca);
+            h2dIncENSigEVsPt->Fill(pt, nSigE);
+            
+            h1dTrack->Fill(jTrack);jTrack++;
+            if (mNpeCuts->isBEMCElectron(track)) {
+                h1dTrack->Fill(jTrack);jTrack++;
+                
+                h2dIncEDcaVsPtCut->Fill(pt, dca);
+                h2dIncENSigEVsPtCut->Fill(pt, nSigE);
+                
+                
+                if (pt < 2 && mNpeCuts->isTPCElectron(track, 0, 1.5)){
+                    h1dTrack->Fill(jTrack);jTrack++;
+                    h2dIncEDcaVsPtCut2->Fill(pt, dca);
+                    h2dIncENSigEVsPtCut2->Fill(pt, nSigE);
+                }
+                else if (pt > 2 && pt < 4 && mNpeCuts->isTPCElectron(track, 0, 2.5)){
+                    h1dTrack->Fill(jTrack);jTrack++;
+                    h2dIncEDcaVsPtCut2->Fill(pt, dca);
+                    h2dIncENSigEVsPtCut2->Fill(pt, nSigE);
+                }
+                else if (pt > 4 && pt < 6 && mNpeCuts->isTPCElectron(track, 0.5, 3)){
+                    h1dTrack->Fill(jTrack);jTrack++;
+                    h2dIncEDcaVsPtCut2->Fill(pt, dca);
+                    h2dIncENSigEVsPtCut2->Fill(pt, nSigE);
+                }
+                else if (pt > 6 && pt < 8 && mNpeCuts->isTPCElectron(track, 1, 3)){
+                    h1dTrack->Fill(jTrack);jTrack++;
+                    h2dIncEDcaVsPtCut2->Fill(pt, dca);
+                    h2dIncENSigEVsPtCut2->Fill(pt, nSigE);
+                }
+                else if (pt > 8 && pt < 20 && mNpeCuts->isTPCElectron(track, 0, 3)){
+                    h1dTrack->Fill(jTrack);jTrack++;
+                    h2dIncEDcaVsPtCut2->Fill(pt, dca);
+                    h2dIncENSigEVsPtCut2->Fill(pt, nSigE);
+                }
+            }
+        }
+    }
+
+    
     // photonic electron reconstruction directly
     for (unsigned short ik = 0; ik < idxPicoTaggedEs.size(); ++ik)
     {
@@ -432,70 +504,6 @@ Int_t StPicoNpeAnaMaker::Make()
     } // .. end of tagged e loop
     
     
-    // inclusive electron
-    UInt_t nTracks = picoDst->numberOfTracks();
-    for (unsigned short iTrack = 0; iTrack < nTracks; ++iTrack) {
-        StPicoTrack* track = picoDst->track(iTrack);
-        int jTrack=0;
-        h1dTrack->Fill(jTrack);jTrack++;
-        if (!track) continue;
-        h1dTrack->Fill(jTrack);jTrack++;
-        hQaPt->Fill(track->gPt());
-        hQaEta->Fill(track->gMom(picoDst->event()->primaryVertex(), picoDst->event()->bField()).pseudoRapidity());
-        hQaDca->Fill(track->dcaGeometry().helix().curvatureSignedDistance(picoDst->event()->primaryVertex().x(),picoDst->event()->primaryVertex().y()));
-        hQaNHitFit->Fill(track->nHitsFit());
-        hQaNHitDedx->Fill(track->nHitsDedx());
-        if (mNpeCuts->isGoodInclusiveElectron(track)) {
-            hQaPtCut->Fill(track->gPt());
-            hQaEtaCut->Fill(track->gMom(picoDst->event()->primaryVertex(), picoDst->event()->bField()).pseudoRapidity());
-            hQaDcaCut->Fill(track->dcaGeometry().helix().curvatureSignedDistance(picoDst->event()->primaryVertex().x(),picoDst->event()->primaryVertex().y()));
-            hQaNHitFitCut->Fill(track->nHitsFit());
-            hQaNHitDedxCut->Fill(track->nHitsDedx());
-            
-            StPhysicalHelixD eHelix = track->dcaGeometry().helix();
-            float dca = eHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
-            float pt = track->gPt();
-            float nSigE = track->nSigmaElectron();
-
-            h2dIncEDcaVsPt->Fill(pt, dca);
-            h2dIncENSigEVsPt->Fill(pt, nSigE);
-
-            h1dTrack->Fill(jTrack);jTrack++;
-            if (mNpeCuts->isBEMCElectron(track)) {
-                h1dTrack->Fill(jTrack);jTrack++;
-                
-                h2dIncEDcaVsPtCut->Fill(pt, dca);
-                h2dIncENSigEVsPtCut->Fill(pt, nSigE);
-                
-                
-                if (pt < 2 && mNpeCuts->isTPCElectron(track, 0, 1.5)){
-                    h1dTrack->Fill(jTrack);jTrack++;
-                    h2dIncEDcaVsPtCut2->Fill(pt, dca);
-                    h2dIncENSigEVsPtCut2->Fill(pt, nSigE);
-                }
-                else if (pt > 2 && pt < 4 && mNpeCuts->isTPCElectron(track, 0, 2.5)){
-                    h1dTrack->Fill(jTrack);jTrack++;
-                    h2dIncEDcaVsPtCut2->Fill(pt, dca);
-                    h2dIncENSigEVsPtCut2->Fill(pt, nSigE);
-                }
-                else if (pt > 4 && pt < 6 && mNpeCuts->isTPCElectron(track, 0.5, 3)){
-                    h1dTrack->Fill(jTrack);jTrack++;
-                    h2dIncEDcaVsPtCut2->Fill(pt, dca);
-                    h2dIncENSigEVsPtCut2->Fill(pt, nSigE);
-                }
-                else if (pt > 6 && pt < 8 && mNpeCuts->isTPCElectron(track, 1, 3)){
-                    h1dTrack->Fill(jTrack);jTrack++;
-                    h2dIncEDcaVsPtCut2->Fill(pt, dca);
-                    h2dIncENSigEVsPtCut2->Fill(pt, nSigE);
-                }
-                else if (pt > 8 && pt < 20 && mNpeCuts->isTPCElectron(track, 0, 3)){
-                    h1dTrack->Fill(jTrack);jTrack++;
-                    h2dIncEDcaVsPtCut2->Fill(pt, dca);
-                    h2dIncENSigEVsPtCut2->Fill(pt, nSigE);
-                }
-            }
-        }
-    }
 
     return kStOK;
 }
