@@ -353,7 +353,7 @@ Int_t StPicoNpeAnaMaker::Make()
         {
             if (idxPicoTaggedEs[ik] == idxPicoPartnerEs[ip]) continue;
             StPicoTrack const * partner = picoDst->track(idxPicoPartnerEs[ip]);
-            StElectronPair * epair =  new StElectronPair(electron, partner, idxPicoTaggedEs[ik], idxPicoPartnerEs[ip], bField);
+            StElectronPair * epair =  new StElectronPair(electron, partner, idxPicoTaggedEs[ik], idxPicoPartnerEs[ip], picoDst->event()->bField());
             if(!mNpeCuts->isGoodElectronPair(epair)) continue;
             
             StPicoBTofPidTraits *tofPid = mNpeCuts->hasTofPid(electron);
