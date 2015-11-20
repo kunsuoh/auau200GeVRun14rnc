@@ -25,6 +25,7 @@
 #include "TH2F.h"
 #include "TH2D.h"
 #include "TH3D.h"
+#include "TNtuple.h"
 #include "StThreeVectorF.hh"
 #include "THnSparse.h"
 

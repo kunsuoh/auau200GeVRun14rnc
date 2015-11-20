@@ -6,6 +6,7 @@
 #include "TFile.h"
 #include "TClonesArray.h"
 #include "TTree.h"
+#include "TNtuple.h"
 
 #include "StPicoDstMaker/StPicoDstMaker.h"
 #include "StPicoDstMaker/StPicoDst.h"
