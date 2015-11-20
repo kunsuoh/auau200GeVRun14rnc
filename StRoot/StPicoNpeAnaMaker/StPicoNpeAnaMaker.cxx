@@ -423,7 +423,7 @@ Int_t StPicoNpeAnaMaker::Make()
         // make electron pairs
         for (unsigned short ip = 0; ip < idxPicoPartnerEs.size(); ++ip)
         {
-            if (idxPicoTaggedEs[ik] >= idxPicoPartnerEs[ip]) continue;
+            if (idxPicoTaggedEs[ik] == idxPicoPartnerEs[ip]) continue;
             StPicoTrack const * partner = picoDst->track(idxPicoPartnerEs[ip]);
             StElectronPair * epair =  new StElectronPair(electron, partner, idxPicoTaggedEs[ik], idxPicoPartnerEs[ip], picoDst->event()->bField());
             if(!mNpeCuts->isGoodElectronPair(epair)) continue;
