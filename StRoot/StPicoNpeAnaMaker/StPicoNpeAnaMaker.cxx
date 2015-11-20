@@ -131,10 +131,10 @@ Int_t StPicoNpeAnaMaker::Init()
 
     nt = new TNtuple("nt","electron pair ntuple","pt1:pt2:theta:v0x:v0y:v0z:phi:eta:mass");
     
-    h2dPhEMassVsPt = new TH2D("h2dPhEMassVsPt","h2dPhEMassVsPt",100,0,20,100,0,0.5);
-    h2dPhELMassVsPt = new TH2D("h2dPhELMassVsPt","h2dPhELMassVsPt",100,0,20,100,0,0.5);
-    h2dPhEPairDcaVsPt = new TH2D("h2dPhEPairDcaVsPt","h2dPhEPairDcaVsPt",100,0,20,100,0,0.5);
-    h2dPhELPairDcaVsPt = new TH2D("h2dPhELPairDcaVsPt","h2dPhELPairDcaVsPt",100,0,20,100,0,0.5);
+    h2dPhEMassVsPt = new TH2D("h2dPhEMassVsPt","h2dPhEMassVsPt",100,0,0.5,100,0,20);
+    h2dPhELMassVsPt = new TH2D("h2dPhELMassVsPt","h2dPhELMassVsPt",100,0,0.5,100,0,20);
+    h2dPhEPairDcaVsPt = new TH2D("h2dPhEPairDcaVsPt","h2dPhEPairDcaVsPt",100,0,0.5,100,0,20);
+    h2dPhELPairDcaVsPt = new TH2D("h2dPhELPairDcaVsPt","h2dPhELPairDcaVsPt",100,0,0.5,100,0,20);
     
     return kStOK;
 }
