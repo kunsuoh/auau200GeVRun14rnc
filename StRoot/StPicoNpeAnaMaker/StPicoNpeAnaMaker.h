@@ -143,7 +143,7 @@ class StPicoNpeAnaMaker : public StMaker
     TH2D * h2dPhEMassVsPt;
     TH2D * h2dPhELMassVsPt;
     TH2D * h2dPhEPairDcaVsPt;
-    TH2D * h2dPhELDcaVsPt;
+    TH2D * h2dPhELPairDcaVsPt;
     
     ClassDef(StPicoNpeAnaMaker, 0)
 };
