@@ -296,8 +296,8 @@ Int_t StPicoNpeAnaMaker::Make()
         float v0y = epair->positionY();
         float v0z = epair->positionZ();
         float mass = epair->pairMass();
-        
-        nt->Fill();
+
+        nt->Fill(pt1,pt2,theta,v0x,v0y,v0z,phi,eta,mass);
     }
     
     std::vector<unsigned short> idxPicoTaggedEs;
