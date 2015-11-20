@@ -131,6 +131,10 @@ Int_t StPicoNpeAnaMaker::Init()
 
     nt = new TNtuple("nt","electron pair ntuple","pt1:pt2:theta:v0x:v0y:v0z:phi:eta:mass");
     
+    h2dPhEMassVsPt = new TH2D("h2dPhEMassVsPt","h2dPhEMassVsPt",100,0,20,100,0,0.5);
+    h2dPhELMassVsPt = new TH2D("h2dPhELMassVsPt","h2dPhELMassVsPt",100,0,20,100,0,0.5);
+    h2dPhEDcaVsPt = new TH2D("h2dPhEDcaVsPt","h2dPhEDcaVsPt",100,0,20,100,0,0.5);
+    h2dPhELDcaVsPt = new TH2D("h2dPhELDcaVsPt","h2dPhELDcaVsPt",100,0,20,100,0,0.5);
     
     return kStOK;
 }
@@ -147,6 +151,11 @@ Int_t StPicoNpeAnaMaker::Finish()
     // --------------- USER HISTOGRAM WRITE --------------------
     
     nt->Write();
+    h2dPhEMassVsPt->Write();
+    h2dPhELMassVsPt->Write();
+    h2dPhEDcaVsPt->Write();
+    h2dPhELDcaVsPt->Write();
+    
     
     h2dPhENSigEVsZ->Write();
     h2dPhEConvRVsZ->Write();
@@ -268,10 +277,21 @@ Int_t StPicoNpeAnaMaker::Make()
         
         // this is an example of how to get the ElectronPair pairs and their corresponsing tracks
         StElectronPair const* epair = (StElectronPair*)aElectronPair->At(idx);
-        if(!mNpeCuts->isGoodElectronPair(epair)) continue;
-
         StPicoTrack const* electron = picoDst->track(epair->electronIdx());
         StPicoTrack const* partner = picoDst->track(epair->partnerIdx());
+
+        if (!mNpeCuts->isGoodTaggedElectron(electron) || !mNpeCuts->isGoodPartnerElectron(partner)) continue;
+        
+        if (electron->charge()+partner->charge() == 0){
+            h2dPhEMassVsPt->Fill(epair->pairMass(),electron->gPt());
+            h2dPhEDcaVsPt->Fill(epair->pairMass(),electron->gPt());
+        }
+        else {
+            h2dPhELMassVsPt->Fill(epair->pairMass(),electron->gPt());
+            h2dPhELDcaVsPt->Fill(epair->pairMass(),electron->gPt());
+        }
+        if(!mNpeCuts->isGoodElectronPair(epair)) continue;
+
         
         StPhysicalHelixD electronHelix = electron->dcaGeometry().helix();
         StPhysicalHelixD partnerHelix = partner->dcaGeometry().helix();
@@ -295,10 +315,15 @@ Int_t StPicoNpeAnaMaker::Make()
         float v0x = epair->positionX();
         float v0y = epair->positionY();
         float v0z = epair->positionZ();
-        float mass = epair->pairMass();
+        float mass = epairFourMom.m();
 
         nt->Fill(pt1,pt2,theta,v0x,v0y,v0z,phi,eta,mass);
     }
+
+    
+    
+    
+    
     
     std::vector<unsigned short> idxPicoTaggedEs;
     std::vector<unsigned short> idxPicoPartnerEs;

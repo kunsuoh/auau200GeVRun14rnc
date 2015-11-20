@@ -140,6 +140,11 @@ class StPicoNpeAnaMaker : public StMaker
     
     TNtuple * nt;
     
+    TH2D * h2dPhEMassVsPt;
+    TH2D * h2dPhELMassVsPt;
+    TH2D * h2dPhEDcaVsPt;
+    TH2D * h2dPhELDcaVsPt;
+    
     ClassDef(StPicoNpeAnaMaker, 0)
 };
 
