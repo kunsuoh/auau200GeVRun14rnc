@@ -156,6 +156,7 @@ bool StNpeCuts::isGoodPartnerElectron(StPicoTrack const *trk) const {
     return partnerElectronCut
     && isTPCElectron(trk, mPartnerTPCNSigmaElectronMin, mPartnerTPCNSigmaElectronMax)
     && isTOFElectron(trk)
+    && isBEMCElectron(trk)
 ;
 }
 // _________________________________________________________

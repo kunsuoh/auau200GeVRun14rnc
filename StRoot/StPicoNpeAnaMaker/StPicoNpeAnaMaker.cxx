@@ -154,7 +154,7 @@ Int_t StPicoNpeAnaMaker::Finish()
     h2dPhEMassVsPt->Write();
     h2dPhELMassVsPt->Write();
     h2dPhEPairDcaVsPt->Write();
-    h2dPhELDcaVsPt->Write();
+    h2dPhELPairDcaVsPt->Write();
     
     
     h2dPhENSigEVsZ->Write();
@@ -284,11 +284,11 @@ Int_t StPicoNpeAnaMaker::Make()
         
         if (electron->charge()+partner->charge() == 0){
             h2dPhEMassVsPt->Fill(epair->pairMass(),electron->gPt());
-            h2dPhEPairDcaVsPt->Fill(epair->pairMass(),electron->gPt());
+            h2dPhEPairDcaVsPt->Fill(epair->pairDca(),electron->gPt());
         }
         else {
             h2dPhELMassVsPt->Fill(epair->pairMass(),electron->gPt());
-            h2dPhELPairDcaVsPt->Fill(epair->pairMass(),electron->gPt());
+            h2dPhELPairDcaVsPt->Fill(epair->pairDca(),electron->gPt());
         }
         if(!mNpeCuts->isGoodElectronPair(epair)) continue;
 
