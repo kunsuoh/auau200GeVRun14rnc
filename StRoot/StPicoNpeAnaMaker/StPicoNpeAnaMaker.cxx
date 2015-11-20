@@ -133,8 +133,8 @@ Int_t StPicoNpeAnaMaker::Init()
     
     h2dPhEMassVsPt = new TH2D("h2dPhEMassVsPt","h2dPhEMassVsPt",100,0,20,100,0,0.5);
     h2dPhELMassVsPt = new TH2D("h2dPhELMassVsPt","h2dPhELMassVsPt",100,0,20,100,0,0.5);
-    h2dPhEDcaVsPt = new TH2D("h2dPhEDcaVsPt","h2dPhEDcaVsPt",100,0,20,100,0,0.5);
-    h2dPhELDcaVsPt = new TH2D("h2dPhELDcaVsPt","h2dPhELDcaVsPt",100,0,20,100,0,0.5);
+    h2dPhEPairDcaVsPt = new TH2D("h2dPhEPairDcaVsPt","h2dPhEPairDcaVsPt",100,0,20,100,0,0.5);
+    h2dPhELPairDcaVsPt = new TH2D("h2dPhELPairDcaVsPt","h2dPhELPairDcaVsPt",100,0,20,100,0,0.5);
     
     return kStOK;
 }
@@ -153,7 +153,7 @@ Int_t StPicoNpeAnaMaker::Finish()
     nt->Write();
     h2dPhEMassVsPt->Write();
     h2dPhELMassVsPt->Write();
-    h2dPhEDcaVsPt->Write();
+    h2dPhEPairDcaVsPt->Write();
     h2dPhELDcaVsPt->Write();
     
     
@@ -284,11 +284,11 @@ Int_t StPicoNpeAnaMaker::Make()
         
         if (electron->charge()+partner->charge() == 0){
             h2dPhEMassVsPt->Fill(epair->pairMass(),electron->gPt());
-            h2dPhEDcaVsPt->Fill(epair->pairMass(),electron->gPt());
+            h2dPhEPairDcaVsPt->Fill(epair->pairMass(),electron->gPt());
         }
         else {
             h2dPhELMassVsPt->Fill(epair->pairMass(),electron->gPt());
-            h2dPhELDcaVsPt->Fill(epair->pairMass(),electron->gPt());
+            h2dPhELPairDcaVsPt->Fill(epair->pairMass(),electron->gPt());
         }
         if(!mNpeCuts->isGoodElectronPair(epair)) continue;
 
