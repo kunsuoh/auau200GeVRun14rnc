@@ -80,9 +80,9 @@ void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunList
     npeCuts->setCutPartnerElectronRequireHFT(true);
     
     // Electron pair cuts
-    float dcaDaughtersMax = 0.05;  // maximum
+    float dcaDaughtersMax = 0.01;  // maximum
     float minMass         = 0;
-    float maxMass         = 0.05;
+    float maxMass         = 0.2;
     npeCuts->setCutElectronPair(dcaDaughtersMax, minMass, maxMass);
 
     
