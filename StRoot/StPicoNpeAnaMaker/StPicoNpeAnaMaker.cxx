@@ -128,7 +128,7 @@ Int_t StPicoNpeAnaMaker::Init()
     h2dPhELConvXYZ_HFT = new TH3D("h2dPhELConvXYZ_HFT","h2dPhELConvXYZ_HFT",100,-50,50, 100,-50,50, 40,-20,20);
     h2dPhELInvMassvsZ_HFT = new TH2D("h2dPhELInvMassvsZ_HFT","h2dPhELInvMassvsZ_HFT",100,-20,20, 100, 0, 0.5);
 
-
+    nt = new TNtuple("nt","electron pair ntuple","pt1:pt2:theta:v0x:v0y:v0z:phi:eta:mass");
     
     
     return kStOK;
@@ -144,6 +144,8 @@ Int_t StPicoNpeAnaMaker::Finish()
     LOG_INFO << " StPicoNpeAnaMaker - writing data and closing output file " <<endm;
     mOutputFile->cd();
     // --------------- USER HISTOGRAM WRITE --------------------
+    
+    nt->Write();
     
     h2dPhENSigEVsZ->Write();
     h2dPhEConvRVsZ->Write();
@@ -258,7 +260,6 @@ Int_t StPicoNpeAnaMaker::Make()
     h1dEventRefMultCut->Fill(mRefMult);
     for (int i=0; i<25; i++) if (picoDst->event()->triggerWord() >> i & 0x1) h1dEventTriggerCut->Fill(i);
 
-    /*
     // electron pair
     TClonesArray const * aElectronPair = mPicoNpeEvent->electronPairArray();
     for (int idx = 0; idx < aElectronPair->GetEntries(); ++idx)
@@ -271,78 +272,32 @@ Int_t StPicoNpeAnaMaker::Make()
         StPicoTrack const* electron = picoDst->track(epair->electronIdx());
         StPicoTrack const* partner = picoDst->track(epair->partnerIdx());
         
-        StPicoBTofPidTraits *tofPid = mNpeCuts->hasTofPid(electron);
-        
-        float beta;
-        if (tofPid) {
-            beta = tofPid->btofBeta();
-            if (beta < 1e-4) {
-                StThreeVectorF const btofHitPos = tofPid->btofHitPos();
-                StPhysicalHelixD helix = electron->helix();
-                float pathLength = tofPathLength(&pVtx, &btofHitPos, helix.curvature());
-                float tof = tofPid->btof();
-                beta = (tof > 0) ? pathLength / (tof * (C_C_LIGHT / 1.e9)) : std::numeric_limits<float>::quiet_NaN();
-            }
-        }
-        else beta=999;
-        
-        if (fabs(1/beta -1) > 0.025) continue;
-        StPicoBTofPidTraits *tofPid2 = mNpeCuts->hasTofPid(partner);
-        
+        StPhysicalHelixD electronHelix = electron->dcaGeometry().helix();
+        StPhysicalHelixD partnerHelix = partner->dcaGeometry().helix();
 
-        if (tofPid2) {
-            beta = tofPid2->btofBeta();
-            if (beta < 1e-4) {
-                StThreeVectorF const btofHitPos = tofPid2->btofHitPos();
-                StPhysicalHelixD helix = partner->helix();
-                float pathLength = tofPathLength(&pVtx, &btofHitPos, helix.curvature());
-                float tof = tofPid2->btof();
-                beta = (tof > 0) ? pathLength / (tof * (C_C_LIGHT / 1.e9)) : std::numeric_limits<float>::quiet_NaN();
-            }
-        }
-        else beta=999;
-        
-        if (fabs(1/beta -1) > 0.025) continue;
-        
-        StPhysicalHelixD eHelix = electron->dcaGeometry().helix();
-        float dca = eHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
-        float pt = electron->gPt();
-        float nSigE = electron->nSigmaElectron();
-        float pairPositionX = epair->positionX();
-        float pairPositionY = epair->positionY();
-        float pairPositionZ = epair->positionZ();
-        float invMass = epair->pairMass();
-        float convR = TMath::Sqrt((pairPositionX+0.2383) * (pairPositionX+0.2383) + (pairPositionY+0.1734) * (pairPositionY+0.1734));
-        int pairCharge = electron->charge()+partner->charge();
+        pair<double,double> ss = electronHelix.pathLengths(partnerHelix);
+        StThreeVectorD kAtDcaToPartner = electronHelix.at(ss.first);
+        StThreeVectorD pAtDcaToElectron = partnerHelix.at(ss.second);
 
-        if (pairCharge==0) {
-            h2dPhENSigEVsZ->Fill(pairPositionZ, nSigE);
-            h2dPhEConvRVsZ->Fill(pairPositionZ, convR);
-            h2dPhEConvXYZ->Fill(pairPositionX,pairPositionY,pairPositionZ);
-            h2dPhEInvMassvsZ->Fill(pairPositionZ,invMass);
-            if (electron->isHFTTrack()) {
-                h2dPhENSigEVsZ_HFT->Fill(pairPositionZ, nSigE);
-                h2dPhEConvRVsZ_HFT->Fill(pairPositionZ, convR);
-                h2dPhEConvXYZ_HFT->Fill(pairPositionX,pairPositionY,pairPositionZ);
-                h2dPhEInvMassvsZ_HFT->Fill(pairPositionZ,invMass);
+        StThreeVectorF const electronMomAtDca = electronHelix.momentumAt(ss.first, picoDst->event()->bField() * kilogauss);
+        StThreeVectorF const partnerMomAtDca = partnerHelix.momentumAt(ss.second, picoDst->event()->bField() * kilogauss);
+        
+        StLorentzVectorF const electronFourMom(electronMomAtDca, electronMomAtDca.massHypothesis(M_ELECTRON));
+        StLorentzVectorF const partnerFourMom(partnerMomAtDca, partnerMomAtDca.massHypothesis(M_ELECTRON));
+        StLorentzVectorF const epairFourMom = electronFourMom + partnerFourMom;
 
-            }
-        }
-        else {
-            h2dPhELNSigEVsZ->Fill(pairPositionZ, nSigE);
-            h2dPhELConvRVsZ->Fill(pairPositionZ, convR);
-            h2dPhELConvXYZ->Fill(pairPositionX,pairPositionY,pairPositionZ);
-            h2dPhELInvMassvsZ->Fill(pairPositionZ,invMass);
-            if (electron->isHFTTrack()) {
-                h2dPhELNSigEVsZ_HFT->Fill(pairPositionZ, nSigE);
-                h2dPhELConvRVsZ_HFT->Fill(pairPositionZ, convR);
-                h2dPhELConvXYZ_HFT->Fill(pairPositionX,pairPositionY,pairPositionZ);
-                h2dPhELInvMassvsZ_HFT->Fill(pairPositionZ,invMass);
-                
-            }
-        }
+        float pt1 = electron->gPt() * electron->charge();
+        float pt2 = partner->gPt() * partner->charge();
+        float theta = epairFourMom.theta();
+        float eta = epairFourMom.pseudoRapidity();
+        float phi = epairFourMom.phi();
+        float v0x = epair->positionX();
+        float v0y = epair->positionY();
+        float v0z = epair->positionZ();
+        float mass = epair->pairMass();
+        
+        nt->Fill();
     }
-    */
     
     std::vector<unsigned short> idxPicoTaggedEs;
     std::vector<unsigned short> idxPicoPartnerEs;
@@ -415,7 +370,7 @@ Int_t StPicoNpeAnaMaker::Make()
         }
     }
 
-    
+    /*
     // photonic electron reconstruction directly
     for (unsigned short ik = 0; ik < idxPicoTaggedEs.size(); ++ik)
     {
@@ -470,7 +425,7 @@ Int_t StPicoNpeAnaMaker::Make()
         } // .. end make electron pairs
     } // .. end of tagged e loop
     
-    
+    */
 
     return kStOK;
 }

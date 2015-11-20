@@ -66,10 +66,10 @@ void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunList
     // Tagged electron cuts
     npeCuts->setCutElectronNHitsFitMax(15);
     npeCuts->setCutElectronNHitsdEdxMax(0);
-    npeCuts->setCutPt(0.8, 20);
+    npeCuts->setCutPt(0.2, 20);
     npeCuts->setCutEta(-1., 1.);
     npeCuts->setCutDca(100);
-    npeCuts->setCutElectronRequireHFT(false);
+    npeCuts->setCutElectronRequireHFT(true);
     npeCuts->setCutTPCNSigmaElectron(-3.0, 3.0);
     
     // Partner electron cuts
@@ -77,16 +77,17 @@ void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunList
     npeCuts->setCutPartnerPt(0.2, 20);
     npeCuts->setCutPartnerEta(-1.5, 1.5);
     npeCuts->setCutPartnerTPCNSigmaElectron(-3.0, 3.0);
-
+    npeCuts->setCutPartnerElectronRequireHFT(true);
+    
     // Electron pair cuts
-    float dcaDaughtersMax = 0.1;  // maximum
+    float dcaDaughtersMax = 0.05;  // maximum
     float minMass         = 0;
-    float maxMass         = 0.02;
+    float maxMass         = 0.05;
     npeCuts->setCutElectronPair(dcaDaughtersMax, minMass, maxMass);
 
     
     // BEMC PID
-    bool const bemc = false;
+    bool const bemc = true;
     float const minEoverP   = 0.8;
     float const maxEoverP   = 2.0;
     float const phiDist     = 0.015;

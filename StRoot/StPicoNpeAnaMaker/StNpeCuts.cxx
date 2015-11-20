@@ -169,7 +169,7 @@ bool StNpeCuts::isTPCElectron(StPicoTrack const *trk, float min, float max) cons
 // _________________________________________________________
 bool StNpeCuts::isTOFElectron(StPicoTrack const *trk) const {
     // -- check for good TOF electrons
-    if (!mElectronTofPid) return true;
+    if (!mElectronTofPid || trk->gPt() >= 2.) return true;
     StPicoBTofPidTraits *tofPid = hasTofPid(trk);
     
     float beta;
@@ -192,7 +192,7 @@ bool StNpeCuts::isTOFElectron(StPicoTrack const *trk) const {
 // _________________________________________________________
 bool StNpeCuts::isBEMCElectron(StPicoTrack const *trk) const {
     // -- check for good BEMC electrons
-    if (!mElectronBemcPid) return true;
+    if (!mElectronBemcPid || trk->gPt() < 2.) return true;
     if (trk->emcPidTraitsIndex() < 0) return false;
     StPicoEmcPidTraits * Emc =  mPicoDst2->emcPidTraits(trk->emcPidTraitsIndex());
     float eoverp = Emc->e0()/trk->gPt()/TMath::CosH(getEta(trk));
