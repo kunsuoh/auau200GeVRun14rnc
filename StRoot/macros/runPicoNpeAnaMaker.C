@@ -64,8 +64,8 @@ void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunList
     npeCuts->setCutTriggerWord(0xFFFFFFF);
 
     // Tagged electron cuts
-    npeCuts->setCutElectronNHitsFitMax(15);
-    npeCuts->setCutElectronNHitsdEdxMax(0);
+    npeCuts->setCutElectronNHitsFitMax(20);
+    npeCuts->setCutElectronNHitsdEdxMax(15);
     npeCuts->setCutPt(0.2, 20);
     npeCuts->setCutEta(-1., 1.);
     npeCuts->setCutDca(100);
@@ -80,9 +80,9 @@ void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunList
     npeCuts->setCutPartnerElectronRequireHFT(true);
     
     // Electron pair cuts
-    float dcaDaughtersMax = 0.01;  // maximum
+    float dcaDaughtersMax = 0.1;  // maximum
     float minMass         = 0;
-    float maxMass         = 0.2;
+    float maxMass         = 0.4;
     npeCuts->setCutElectronPair(dcaDaughtersMax, minMass, maxMass);
 
     
