@@ -290,6 +290,7 @@ Int_t StPicoNpeAnaMaker::Make()
             h2dPhELMassVsPt->Fill(epair->pairMass(),electron->gPt());
             h2dPhELPairDcaVsPt->Fill(epair->pairDca(),electron->gPt());
         }
+        
         if(!mNpeCuts->isGoodElectronPair(epair)) continue;
 
         
@@ -309,7 +310,7 @@ Int_t StPicoNpeAnaMaker::Make()
 
         float pt1 = electron->gPt() * electron->charge();
         float pt2 = partner->gPt() * partner->charge();
-        float theta = epairFourMom.theta();
+        float theta = electronFourMom.Angle(partnerFourMom);
         float eta = epairFourMom.pseudoRapidity();
         float phi = epairFourMom.phi();
         float v0x = epair->positionX();
