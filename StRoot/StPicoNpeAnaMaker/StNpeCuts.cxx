@@ -199,10 +199,12 @@ bool StNpeCuts::isBEMCElectron(StPicoTrack const *trk) const {
     float eoverp = Emc->e0()/trk->gPt()/TMath::CosH(getEta(trk));
     float phiDist = Emc->phiDist();
     float zDist = Emc->zDist();
+    float phiTowDist = Emc->phiTowDist();
+    float etaTowDist = Emc->etaTowDist();
     
     return eoverp > mElectronBemcEoverPMin && eoverp < mElectronBemcEoverPMax &&
     phiDist < mElectronBemcPhiDistMax && zDist < mElectronBemcZDistMax &&
-    TMath::Sqrt(phiDist*phiDist + zDist*zDist) < mElectronBemcAssDistMax
+    TMath::Sqrt(phiTowDist*phiTowDist + etaTowDist*etaTowDist) < mElectronBemcAssDistMax
     ;
 }
 
