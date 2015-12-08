@@ -151,6 +151,7 @@ Int_t StPicoNpeAnaMaker::Finish()
     // --------------- USER HISTOGRAM WRITE --------------------
     
     nt->Write();
+    
     h2dPhEMassVsPt->Write();
     h2dPhELMassVsPt->Write();
     h2dPhEPairDcaVsPt->Write();
