@@ -129,7 +129,7 @@ Int_t StPicoNpeAnaMaker::Init()
     h2dPhELConvXYZ_HFT = new TH3D("h2dPhELConvXYZ_HFT","h2dPhELConvXYZ_HFT",100,-50,50, 100,-50,50, 40,-20,20);
     h2dPhELInvMassvsZ_HFT = new TH2D("h2dPhELInvMassvsZ_HFT","h2dPhELInvMassvsZ_HFT",100,-20,20, 100, 0, 0.5);
 
-    nt = new TNtuple("nt","electron pair ntuple","pt1:pt2:phiV:openangle,v0x:v0y:v0z:phi:eta:mass:pairDca:nsige1:nsige2");
+    nt = new TNtuple("nt","electron pair ntuple","pt1:pt2:phiV:openangle:v0x:v0y:v0z:phi:eta:mass:pairDca:nsige1:nsige2");
     
     h2dPhEMassVsPt = new TH2D("h2dPhEMassVsPt","h2dPhEMassVsPt",100,0,0.5,100,0,20);
     h2dPhELMassVsPt = new TH2D("h2dPhELMassVsPt","h2dPhELMassVsPt",100,0,0.5,100,0,20);
