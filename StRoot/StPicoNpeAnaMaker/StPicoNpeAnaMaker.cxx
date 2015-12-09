@@ -310,11 +310,13 @@ Int_t StPicoNpeAnaMaker::Make()
         StLorentzVectorF const epairFourMom = electronFourMom + partnerFourMom;
 
         StThreeVectorF pairMomAtDca = electronMomAtDca + partnerMomAtDca;
-        StThreeVectorF pairCross = electronMomAtDca.cross(partnerMomAtDca);
+        StThreeVectorF pairUnit = pairMomAtDca.unit();                          // u
+        StThreeVectorF pairCross = electronMomAtDca.cross(partnerMomAtDca);     // v
+        StThreeVectorF uvCross = pairUnit.cross(pairCross);                     // w
+        StThreeVectorF zUnit(0,0,1);                                            // z
+        StThreeVectorF uzCross = pairUnit.cross(zUnit);                         // wc
         
-        StThreeVectorF pairUnit = pairMomAtDca.unit();
-        StThreeVectorF zUnit(0,0,1);
-        float phiV = TMath::ACos(pairUnit.cross(pairCross).dot(pairUnit.cross(zUnit)));
+        float phiV = TMath::ACos(uvCross.dot(uzCross));
 
         
         float pt1 = electron->gPt() * electron->charge();
