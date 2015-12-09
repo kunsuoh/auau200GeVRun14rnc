@@ -309,8 +309,8 @@ Int_t StPicoNpeAnaMaker::Make()
         StLorentzVectorF const partnerFourMom(partnerMomAtDca, partnerMomAtDca.massHypothesis(M_ELECTRON));
         StLorentzVectorF const epairFourMom = electronFourMom + partnerFourMom;
 
-        float phiV = 0;
-        phiCalculation(electronFourMom,partnerFourMom,picoDst->event()->bField() > 0 ? 1 : -1,phiV);
+        double phiV = 0;
+        phiCalculation(electronFourMom,partnerFourMom,picoDst->event()->bField() > 0 ? 1. : -1.,phiV);
 
         
         float pt1 = electron->gPt() * electron->charge();
