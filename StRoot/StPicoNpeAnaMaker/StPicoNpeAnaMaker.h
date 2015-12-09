@@ -29,6 +29,7 @@
 #include "StThreeVectorF.hh"
 #include "THnSparse.h"
 #include "TLorentzVector.h"
+#include "StLorentzVectorF.h"
 
 class TString;
 class TFile;
@@ -57,7 +58,7 @@ class StPicoNpeAnaMaker : public StMaker
     int getEntries() const;
 
     void setNpeCuts(StNpeCuts* cuts);
-    void phiCalculation(TLorentzVectorF ,TLorentzVectorF , double , double &);
+    void phiCalculation(StLorentzVectorF ,StLorentzVectorF , double , double &);
 
     
   private:
