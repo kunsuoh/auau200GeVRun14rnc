@@ -29,7 +29,7 @@
 #include "StThreeVectorF.hh"
 #include "THnSparse.h"
 #include "TLorentzVector.h"
-#include "StLorentzVectorF.h"
+#include "StLorentzVectorF.hh"
 
 class TString;
 class TFile;

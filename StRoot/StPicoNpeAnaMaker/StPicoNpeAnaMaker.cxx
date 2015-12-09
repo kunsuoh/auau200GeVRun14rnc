@@ -466,8 +466,8 @@ Int_t StPicoNpeAnaMaker::Make()
 //-----------------------------------------------------------------------------
 void StPicoNpeAnaMaker::phiCalculation(StLorentzVectorF positron,StLorentzVectorF electron, double mN, double &phiV)
 {
-    StThreeVector<double> ppp(positron.Px(),positron.Py(),positron.Pz());
-    StThreeVector<double> eee(electron.Px(),electron.Py(),electron.Pz());
+    StThreeVector<double> ppp(positron.px(),positron.py(),positron.pz());
+    StThreeVector<double> eee(electron.px(),electron.py(),electron.pz());
     StThreeVector<double> u=ppp+eee;
     StThreeVector<double> v=eee.cross(ppp);
     StThreeVector<double> w=u.cross(v);
