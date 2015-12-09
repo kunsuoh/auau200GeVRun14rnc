@@ -310,7 +310,7 @@ Int_t StPicoNpeAnaMaker::Make()
         StLorentzVectorF const epairFourMom = electronFourMom + partnerFourMom;
 
         float phiV = 0;
-        phiCalculation(electronFourMom,partnerFourMom,phiV);
+        phiCalculation(electronFourMom,partnerFourMom,picoDst->event()->bField() > 0 ? 1 : -1,phiV);
 
         
         float pt1 = electron->gPt() * electron->charge();
@@ -464,7 +464,7 @@ Int_t StPicoNpeAnaMaker::Make()
     return kStOK;
 }
 //-----------------------------------------------------------------------------
-void StPicoNpeAnaMaker::phiCalculation(TLorentzVector positron,TLorentzVector electron, double &phiV)
+void StPicoNpeAnaMaker::phiCalculation(TLorentzVector positron,TLorentzVector electron, double mN, double &phiV)
 {
     StThreeVector<double> ppp(positron.Px(),positron.Py(),positron.Pz());
     StThreeVector<double> eee(electron.Px(),electron.Py(),electron.Pz());
