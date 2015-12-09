@@ -464,7 +464,7 @@ Int_t StPicoNpeAnaMaker::Make()
     return kStOK;
 }
 //-----------------------------------------------------------------------------
-void StPicoNpeAnaMaker::phiCalculation(TLorentzVector positron,TLorentzVector electron, double mN, double &phiV)
+void StPicoNpeAnaMaker::phiCalculation(TLorentzVectorF positron,TLorentzVectorF electron, double mN, double &phiV)
 {
     StThreeVector<double> ppp(positron.Px(),positron.Py(),positron.Pz());
     StThreeVector<double> eee(electron.Px(),electron.Py(),electron.Pz());
