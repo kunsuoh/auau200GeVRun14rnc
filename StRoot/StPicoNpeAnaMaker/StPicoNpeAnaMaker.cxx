@@ -129,7 +129,7 @@ Int_t StPicoNpeAnaMaker::Init()
     h2dPhELConvXYZ_HFT = new TH3D("h2dPhELConvXYZ_HFT","h2dPhELConvXYZ_HFT",100,-50,50, 100,-50,50, 40,-20,20);
     h2dPhELInvMassvsZ_HFT = new TH2D("h2dPhELInvMassvsZ_HFT","h2dPhELInvMassvsZ_HFT",100,-20,20, 100, 0, 0.5);
 
-    nt = new TNtuple("nt","electron pair ntuple","pt1:pt2:theta:v0x:v0y:v0z:phi:eta:mass:pairDca:nsige1:nsige2");
+    nt = new TNtuple("nt","electron pair ntuple","pt1:pt2:phiV:v0x:v0y:v0z:phi:eta:mass:pairDca:nsige1:nsige2");
     
     h2dPhEMassVsPt = new TH2D("h2dPhEMassVsPt","h2dPhEMassVsPt",100,0,0.5,100,0,20);
     h2dPhELMassVsPt = new TH2D("h2dPhELMassVsPt","h2dPhELMassVsPt",100,0,0.5,100,0,20);
@@ -309,9 +309,16 @@ Int_t StPicoNpeAnaMaker::Make()
         StLorentzVectorF const partnerFourMom(partnerMomAtDca, partnerMomAtDca.massHypothesis(M_ELECTRON));
         StLorentzVectorF const epairFourMom = electronFourMom + partnerFourMom;
 
+        StThreeVectorF pairMomAtDca = electronMomAtDca + partnerMomAtDca;
+        StThreeVectorF pairCross = electronMomAtDca.cross(partnerMomAtDca);
+        
+        StThreeVectorF pairUnit = pairMomAtDca.unit();
+        StThreeVectorF zUnit(0,0,1);
+        float phiV = TMath::ACos(pairUnit.cross(pairCross).dot(pairUnit.cross(zUnit)));
+
+        
         float pt1 = electron->gPt() * electron->charge();
         float pt2 = partner->gPt() * partner->charge();
-        float theta = electronMomAtDca.angle(partnerMomAtDca);
         float eta = epairFourMom.pseudoRapidity();
         float phi = epairFourMom.phi();
         float v0x = epair->positionX();
@@ -322,7 +329,7 @@ Int_t StPicoNpeAnaMaker::Make()
         float nsige1 =  electron->nSigmaElectron();
         float nsige2 =  partner->nSigmaElectron();
         
-        nt->Fill(pt1,pt2,theta,v0x,v0y,v0z,phi,eta,mass,pairDca,nsige1,nsige2);
+        nt->Fill(pt1,pt2,phiV,v0x,v0y,v0z,phi,eta,mass,pairDca,nsige1,nsige2);
     }
 
     
