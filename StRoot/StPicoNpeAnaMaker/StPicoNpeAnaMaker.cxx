@@ -311,7 +311,7 @@ Int_t StPicoNpeAnaMaker::Make()
 
         StThreeVectorF pairMomAtDca = electronMomAtDca + partnerMomAtDca;
         StThreeVectorF pairUnit = pairMomAtDca.unit();                          // u
-        StThreeVectorF pairCross = electronMomAtDca.cross(partnerMomAtDca);     // v
+        StThreeVectorF pairCross = electronMomAtDca.cross(partnerMomAtDca).unit();     // v
         StThreeVectorF uvCross = pairUnit.cross(pairCross);                     // w
         StThreeVectorF zUnit(0,0,-1);                                            // z
         StThreeVectorF uzCross = pairUnit.cross(zUnit);                         // wc
