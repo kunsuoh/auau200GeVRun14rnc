@@ -309,14 +309,8 @@ Int_t StPicoNpeAnaMaker::Make()
         StLorentzVectorF const partnerFourMom(partnerMomAtDca, partnerMomAtDca.massHypothesis(M_ELECTRON));
         StLorentzVectorF const epairFourMom = electronFourMom + partnerFourMom;
 
-        StThreeVectorF pairMomAtDca = electronMomAtDca + partnerMomAtDca;
-        StThreeVectorF pairUnit = pairMomAtDca.unit();                          // u
-        StThreeVectorF pairCross = electronMomAtDca.cross(partnerMomAtDca).unit();     // v
-        StThreeVectorF uvCross = pairUnit.cross(pairCross);                     // w
-        StThreeVectorF zUnit(0,0,-1);                                            // z
-        StThreeVectorF uzCross = pairUnit.cross(zUnit);                         // wc
-        
-        float phiV = TMath::ACos(uvCross.dot(uzCross));
+        float phiV = 0;
+        phiCalculation(electronFourMom,partnerFourMom,phiV);
 
         
         float pt1 = electron->gPt() * electron->charge();
@@ -470,3 +464,15 @@ Int_t StPicoNpeAnaMaker::Make()
     return kStOK;
 }
 //-----------------------------------------------------------------------------
+void StPicoNpeAnaMaker::phiCalculation(TLorentzVector positron,TLorentzVector electron, double &phiV)
+{
+    StThreeVector<double> ppp(positron.Px(),positron.Py(),positron.Pz());
+    StThreeVector<double> eee(electron.Px(),electron.Py(),electron.Pz());
+    StThreeVector<double> u=ppp+eee;
+    StThreeVector<double> v=eee.cross(ppp);
+    StThreeVector<double> w=u.cross(v);
+    StThreeVector<double> nz(0.,0.,mN);
+    StThreeVector<double> wc=u.cross(nz);
+    
+    phiV =w.angle(wc);
+}
