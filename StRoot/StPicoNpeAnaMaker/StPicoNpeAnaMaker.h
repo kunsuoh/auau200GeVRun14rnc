@@ -58,7 +58,7 @@ class StPicoNpeAnaMaker : public StMaker
     int getEntries() const;
 
     void setNpeCuts(StNpeCuts* cuts);
-    void phiCalculation(StLorentzVectorF ,StLorentzVectorF , double , double &);
+    void phiCalculation(StLorentzVectorF ,StLorentzVectorF , double , double &, double &);
 
     
   private:

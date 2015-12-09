@@ -129,7 +129,7 @@ Int_t StPicoNpeAnaMaker::Init()
     h2dPhELConvXYZ_HFT = new TH3D("h2dPhELConvXYZ_HFT","h2dPhELConvXYZ_HFT",100,-50,50, 100,-50,50, 40,-20,20);
     h2dPhELInvMassvsZ_HFT = new TH2D("h2dPhELInvMassvsZ_HFT","h2dPhELInvMassvsZ_HFT",100,-20,20, 100, 0, 0.5);
 
-    nt = new TNtuple("nt","electron pair ntuple","pt1:pt2:phiV:v0x:v0y:v0z:phi:eta:mass:pairDca:nsige1:nsige2");
+    nt = new TNtuple("nt","electron pair ntuple","pt1:pt2:phiV:openangle,v0x:v0y:v0z:phi:eta:mass:pairDca:nsige1:nsige2");
     
     h2dPhEMassVsPt = new TH2D("h2dPhEMassVsPt","h2dPhEMassVsPt",100,0,0.5,100,0,20);
     h2dPhELMassVsPt = new TH2D("h2dPhELMassVsPt","h2dPhELMassVsPt",100,0,0.5,100,0,20);
@@ -310,7 +310,8 @@ Int_t StPicoNpeAnaMaker::Make()
         StLorentzVectorF const epairFourMom = electronFourMom + partnerFourMom;
 
         double phiV = 0;
-        phiCalculation(electronFourMom,partnerFourMom,picoDst->event()->bField() > 0 ? 1. : -1.,phiV);
+        double openangle = 0;
+        phiCalculation(electronFourMom,partnerFourMom,picoDst->event()->bField() > 0 ? 1. : -1.,phiV,openangle);
 
         
         float pt1 = electron->gPt() * electron->charge();
@@ -325,7 +326,7 @@ Int_t StPicoNpeAnaMaker::Make()
         float nsige1 =  electron->nSigmaElectron();
         float nsige2 =  partner->nSigmaElectron();
         
-        nt->Fill(pt1,pt2,phiV,v0x,v0y,v0z,phi,eta,mass,pairDca,nsige1,nsige2);
+        nt->Fill(pt1,pt2,phiV,openangle,v0x,v0y,v0z,phi,eta,mass,pairDca,nsige1,nsige2);
     }
 
     
@@ -464,7 +465,7 @@ Int_t StPicoNpeAnaMaker::Make()
     return kStOK;
 }
 //-----------------------------------------------------------------------------
-void StPicoNpeAnaMaker::phiCalculation(StLorentzVectorF positron,StLorentzVectorF electron, double mN, double &phiV)
+void StPicoNpeAnaMaker::phiCalculation(StLorentzVectorF positron,StLorentzVectorF electron, double mN, double &phiV, , double &openangle)
 {
     StThreeVector<double> ppp(positron.px(),positron.py(),positron.pz());
     StThreeVector<double> eee(electron.px(),electron.py(),electron.pz());
@@ -475,4 +476,6 @@ void StPicoNpeAnaMaker::phiCalculation(StLorentzVectorF positron,StLorentzVector
     StThreeVector<double> wc=u.cross(nz);
     
     phiV =w.angle(wc);
+    openangle=ppp.angle(eee);
+
 }
