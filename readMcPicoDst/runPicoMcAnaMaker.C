@@ -75,7 +75,8 @@ void runPicoMcAnaMaker(TString mcPicoList="test.list", TString outFileName="test
 
     
     npeChain->Init();
-    int nEntries = picoMcAnaMaker->getEntries();
+
+    int nEntries = picoDstMaker->chain()->GetEntries();
     cout << " Total entries = " << nEntries << endl;
     for (int iEvent = 0; iEvent < nEntries; ++iEvent)
     {
@@ -92,8 +93,5 @@ void runPicoMcAnaMaker(TString mcPicoList="test.list", TString outFileName="test
     npeChain->Finish();
     delete npeChain;
     
-    // delete list of picos
-    command = "rm -f correspondingPico.list";
-    gSystem->Exec(command.Data());
     
 }
