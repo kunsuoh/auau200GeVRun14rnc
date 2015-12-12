@@ -1,73 +1,169 @@
 #ifndef StPicoMcAnaMaker_h
 #define StPicoMcAnaMaker_h
 
+/* **************************************************
+ *  A Maker to read a StPicoEvent and StPicoNpeEvent
+ *  simultaneously and do analysis.
+ *
+ *  Please write your analysis in the ::Make() function.
+ *
+ *  Authors:  Xin Dong        (xdong@lbl.gov)
+ *            Michael Lomnitz (mrlomnitz@lbl.gov)
+ *            Mustafa Mustafa (mmustafa@lbl.gov)
+ *            Jochen Thaeder  (jmthader@lbl.gov)
+ *          **Kunsu OH        (kunsuoh@gmail.com)
+ *
+ *  ** Code Maintainer
+ *
+ * **************************************************
+ */
+
+
+
+#include "TChain.h"
 #include "StMaker.h"
+#include "TH2F.h"
+#include "TH2D.h"
+#include "TH3D.h"
 #include "TNtuple.h"
+#include "StThreeVectorF.hh"
+#include "THnSparse.h"
+#include "TLorentzVector.h"
+#include "StLorentzVectorF.hh"
 
-#include "StarClassLibrary/StThreeVectorF.hh"
-#include "StEvent/StDcaGeometry.h"
-
-#include "StPicoDstMaker/StPicoEvent.h"
-#include "StPicoDstMaker/StPicoTrack.h"
-#include "StPicoDstMaker/StPicoMcTrack.h"
-
-class StPicoDst;
-class StPicoDstMaker;
-class StPicoEvent;
-class StPicoTrack;
-class StPicoMcTrack;
 class TString;
-class TH1F;
-class TH2F;
-class TTree;
-class StDcaGeometry;
-class StPicoMcAnaHists;
+class TFile;
+class TNtuple;
+class StPicoNpeEvent;
+class StElectronTrack;
+class StElectronPair;
+class StPicoDstMaker;
+class StPicoTrack;
+class StPicoDst;
+class StPicoPrescales;
+
+class StNpeCuts;
 
 class StPicoMcAnaMaker : public StMaker
 {
- public: 
-  StPicoMcAnaMaker( TString  name,   TString outname, StPicoDstMaker *picoMaker);
-  virtual ~StPicoMcAnaMaker(){;};  
-  virtual Int_t Init();
-  virtual Int_t Make();
-  virtual Int_t Finish();
-  bool isGoodEvent(StPicoEvent *event);
-  bool isGoodTrack(StPicoMcTrack const * const trk);
-  bool isHftTrack(StPicoMcTrack const * const trk);
-  bool isGoodTrack(StPicoTrack const * const trk, StPicoEvent const * const evt);
-  bool isRcTrack(StPicoMcTrack const * const trk ,StPicoDst const * const PicoDst, int &id);
-
- private:
-  StPicoDstMaker   *mPicoDstMaker;
-  StPicoDst        *mPicoDst;
-
-  TNtuple* nt;
-  TFile* mFile;
-  TString outfile;
-
-  ClassDef(StPicoMcAnaMaker, 1)
+public:
+    StPicoMcAnaMaker(char const * name, char const * inputFilesList,
+                      char const * outName,StPicoDstMaker* picoDstMaker);
+    virtual ~StPicoMcAnaMaker();
+    
+    virtual Int_t Init();
+    virtual Int_t Make();
+    virtual Int_t Finish();
+    
+    int getEntries() const;
+    
+    void setNpeCuts(StNpeCuts* cuts);
+    void phiCalculation(StLorentzVectorF ,StLorentzVectorF , double , double &, double &);
+    
+    
+private:
+    StPicoMcAnaMaker() {}
+    void readNextEvent();
+    
+    bool isGoodPair(StElectronPair const*) const;
+    
+    StPicoDstMaker* mPicoDstMaker;
+    StPicoNpeEvent* mPicoNpeEvent;
+    
+    TString mOutFileName;
+    TString mInputFileList;
+    TFile* mOutputFile;
+    TChain* mChain;
+    int mEventCounter;
+    
+    StNpeCuts* mNpeCuts;
+    
+    
+    // -------------- USER variables -------------------------
+    // add your member variables here.
+    // Remember that ntuples size can be really big, use histograms where appropriate
+    
+    TH1I * h1dEvent;
+    TH1F * h1dEventZDCx;
+    TH1I * h1dEventRefMult;
+    TH1I * h1dEventTrigger;
+    TH1F * h1dEventZDCxCut;
+    TH1I * h1dEventRefMultCut;
+    TH1I * h1dEventTriggerCut;
+    
+    TH1I * h1dTrack;
+    
+    TH2F * h2dIncEDcaVsPt;
+    TH2F * h2dIncENSigEVsPt;
+    TH2F * h2dIncEDcaVsPtCut;
+    TH2F * h2dIncENSigEVsPtCut;
+    TH2F * h2dIncEDcaVsPtCut2;
+    TH2F * h2dIncENSigEVsPtCut2;
+    
+    TH2F * h2dIncEBsmdNEtaPt;
+    TH2F * h2dIncEBsmdNPhiPt;
+    
+    TH2F * h2dPhEDcaVsPt;
+    TH2F * h2dPhENSigEVsPt;
+    TH2F * h2dPhEConvRVsPt;
+    
+    TH2F * h2dPhELDcaVsPt;
+    TH2F * h2dPhELNSigEVsPt;
+    TH2F * h2dPhELConvRVsPt;
+    
+    TH1F * hQaPt;
+    TH1F * hQaEta;
+    TH1F * hQaDca;
+    TH1F * hQaNHitFit;
+    TH1F * hQaNHitDedx;
+    
+    TH1F * hQaPtCut;
+    TH1F * hQaEtaCut;
+    TH1F * hQaDcaCut;
+    TH1F * hQaNHitFitCut;
+    TH1F * hQaNHitDedxCut;
+    
+    TH2D * h2dPhENSigEVsZ;
+    TH2D * h2dPhEConvRVsZ;
+    TH3D * h2dPhEConvXYZ;
+    TH2D * h2dPhEInvMassvsZ;
+    TH2D * h2dPhELNSigEVsZ;
+    TH2D * h2dPhELConvRVsZ;
+    TH3D * h2dPhELConvXYZ;
+    TH2D * h2dPhELInvMassvsZ;
+    
+    TH2D * h2dPhENSigEVsZ_HFT;
+    TH2D * h2dPhEConvRVsZ_HFT;
+    TH3D * h2dPhEConvXYZ_HFT;
+    TH2D * h2dPhEInvMassvsZ_HFT;
+    TH2D * h2dPhELNSigEVsZ_HFT;
+    TH2D * h2dPhELConvRVsZ_HFT;
+    TH3D * h2dPhELConvXYZ_HFT;
+    TH2D * h2dPhELInvMassvsZ_HFT;
+    
+    TNtuple * nt;
+    
+    TH2D * h2dPhEMassVsPt;
+    TH2D * h2dPhELMassVsPt;
+    TH2D * h2dPhEPairDcaVsPt;
+    TH2D * h2dPhELPairDcaVsPt;
+    
+    ClassDef(StPicoMcAnaMaker, 0)
 };
-inline bool StPicoMcAnaMaker::isGoodEvent(StPicoEvent *event)
-{
-  return( fabs(event->primaryVertex().z())<5.0 );   
-}
-inline bool StPicoMcAnaMaker::isGoodTrack(StPicoMcTrack const * const trk)
-{
-  return ( trk->hitsTpc()>15 && fabs(trk->Mom().pseudoRapidity())<1  &&
-	   trk->Mom().perp() > 0.2  );
-inline bool StPicoMcAnaMaker::isGoodTrack(StPicoTrack const * const trk, StPicoEvent const * const evt)
-{
-  StThreeVectorF pVtx = evt->primaryVertex();
-  float B = evt->bField();
-  StThreeVectorF mom = trk->gMom(pVtx,B);
-  return( trk->nHitsMax()>15 && std::fabs(mom.pseudoRapidity()) &&
-	  mom.perp()>0.2);
-}
-inline bool StPicoMcAnaMaker::isHftTrack(StPicoMcTrack const * const trk)
-{
-  if( trk->hitsPxl1() == 0 ||  trk->hitsPxl2() == 0 || trk->hitsIst() == 0 ) 
-    return false;
-  return true;
-}
-#endif
 
+inline int StPicoMcAnaMaker::getEntries() const
+{
+    return mChain? mChain->GetEntries() : 0;
+}
+
+inline void StPicoMcAnaMaker::readNextEvent()
+{
+    mChain->GetEntry(mEventCounter++);
+}
+inline void StPicoMcAnaMaker::setNpeCuts(StNpeCuts* cuts)
+{
+    mNpeCuts = cuts;
+}
+
+
+#endif
