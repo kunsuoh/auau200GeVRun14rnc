@@ -53,8 +53,8 @@ mPositionZ(std::numeric_limits<float>::quiet_NaN())
         return;
     }
     
-    StPhysicalHelixD electron->dcaGeometry().helix();
-    StPhysicalHelixD partner->dcaGeometry().helix();
+    StPhysicalHelixD electronHelix = electron->dcaGeometry().helix();
+    StPhysicalHelixD partnerHelix = partner->dcaGeometry().helix();
     
     // normal method
     pair<double,double> ss = electronHelix.pathLengths(partnerHelix);
