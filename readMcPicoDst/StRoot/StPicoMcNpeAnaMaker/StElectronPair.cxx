@@ -9,6 +9,7 @@
 #include "phys_constants.h"
 #include "SystemOfUnits.h"
 #include "StPicoDstMaker/StPicoTrack.h"
+#include "TVector3.h"
 
 #include "StElectronPair.h"
 
@@ -52,9 +53,8 @@ mPositionZ(std::numeric_limits<float>::quiet_NaN())
         return;
     }
     
-    
-    StPhysicalHelixD electronHelix = electron->dcaGeometry().helix();
-    StPhysicalHelixD partnerHelix = partner->dcaGeometry().helix();
+    StPhysicalHelixD electronHelix(electron->gMom(),electron->origin(),bField,electron->nHitsFit());
+    StPhysicalHelixD partnerHelix(partner->gMom(),partner->origin(),bField,partner->nHitsFit());
     
     // normal method
     pair<double,double> ss = electronHelix.pathLengths(partnerHelix);

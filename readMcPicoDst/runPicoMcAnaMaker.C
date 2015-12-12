@@ -75,8 +75,8 @@ void runPicoMcAnaMaker(TString mcPicoList="test.list", TString outFileName="test
 
     
     npeChain->Init();
-
     int nEntries = picoDstMaker->chain()->GetEntries();
+
     cout << " Total entries = " << nEntries << endl;
     for (int iEvent = 0; iEvent < nEntries; ++iEvent)
     {

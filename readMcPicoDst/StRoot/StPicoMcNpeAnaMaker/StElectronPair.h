@@ -8,7 +8,6 @@
  *  and storing them.
  *
  *  Authors:  **Kunsu OH        (kunsuoh@gmail.com)
- *            Mustafa Mustafa (mmustafa@lbl.gov)
  *
  *  **Code Maintainer
  * **************************************************
