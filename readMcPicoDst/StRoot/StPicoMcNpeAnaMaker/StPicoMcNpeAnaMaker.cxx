@@ -113,7 +113,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
                 
                 StElectronPair electronPair(electron, partner, idxPicoTaggedEs[ik], idxPicoPartnerEs[ip], bField);
                 
-                if (!isGoodElectronPair(electronPair, electron->gMom().perp())) continue;
+                if (!isGoodElectronPair(electronPair, electron->gPt())) continue;
                 
             } // .. end make electron pairs
         } // .. end of tagged e loop
@@ -152,8 +152,8 @@ bool StPicoMcNpeAnaMaker::isGoodEvent()
 bool StPicoMcNpeAnaMaker::isGoodTrack(StPicoTrack const * const trk) const
 {
     return
-    trk->gMom().perp() > cuts::ptMin &&
-    trk->gMom().perp() < cuts::ptMax &&
+    trk->gPt() > cuts::ptMin &&
+    trk->gPt() < cuts::ptMax &&
     trk->nHitsFit() >= cuts::nHitsFit &&
     (float)trk->nHitsFit()/(float)trk->nHitsMax() > cuts::nHitsRatioMin &&
     (float)trk->nHitsFit()/(float)trk->nHitsMax() < cuts::nHitsRatioMax ;
@@ -164,9 +164,7 @@ bool StPicoMcNpeAnaMaker::isElectron(StPicoTrack const * const trk) const
 {
     return
     isGoodTrack(trk) &&
-    fabs(trk->gMom().pseudoRapidity()) < cuts::etaTagged &&
-    trk->nHitsDedx() >= cuts::nHitsDedx &&
-    trk->dca() < cuts::globalDca ;
+     trk->nHitsDedx() >= cuts::nHitsDedx ;
 }
 
 //-----------------------------------------------------------------------------
@@ -180,8 +178,7 @@ bool StPicoMcNpeAnaMaker::isTaggedElectron(StPicoTrack const * const trk) const
 bool StPicoMcNpeAnaMaker::isPartnerElectron(StPicoTrack const * const trk) const
 {
     return
-    isGoodTrack(trk) &&
-    fabs(trk->gMom().pseudoRapidity()) < cuts::etaPartner ;
+    isGoodTrack(trk)  ;
 }
 //-----------------------------------------------------------------------------
 bool StPicoMcNpeAnaMaker::isGoodElectronPair(StElectronPair const & epair, float pt) const
