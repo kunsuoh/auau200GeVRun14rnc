@@ -18,7 +18,7 @@ StChain * npeChain;
 
 void runPicoMcAnaMaker(TString npeList="small.list", TString outFileName="test")
 {
-    string SL_version = "SL10k";
+    string SL_version = "SL15c";
     string env_SL = getenv("STAR");
     if (env_SL.find(SL_version) == string::npos)
     {
