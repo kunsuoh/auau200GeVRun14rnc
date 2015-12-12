@@ -1,5 +1,5 @@
 /* **************************************************
- *  A macro to run StLowPtNpeAnaMaker
+ *  A macro to run StPicoMcNpeAnaMaker
  *
  *  Authors:  **Kunsu OH (kunsu OH)
  *
@@ -31,13 +31,13 @@ void runPicoMcAnaMaker(TString npeList="small.list", TString outFileName="test")
     
     gSystem->Load("StBTofUtil");
     gSystem->Load("StPicoDstMaker");
-    gSystem->Load("StLowPtNpeAnaMaker");
+    gSystem->Load("StPicoMcNpeAnaMaker");
     gSystem->Load("StRefMultCorr");
 
     npeChain = new StChain();
     
     StPicoDstMaker* picoDstMaker = new StPicoDstMaker(0,npeList,"picoDstMaker");
-    StLowPtNpeAnaMaker*  LowPtNpeAnaMaker = new StLowPtNpeAnaMaker("LowPtNpeAnaMaker", picoDstMaker, outFileName.Data());
+    StPicoMcNpeAnaMaker*  LowPtNpeAnaMaker = new StPicoMcNpeAnaMaker("LowPtNpeAnaMaker", picoDstMaker, outFileName.Data());
     
     // -------------- USER variables -------------------------
     
