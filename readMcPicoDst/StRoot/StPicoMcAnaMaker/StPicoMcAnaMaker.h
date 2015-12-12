@@ -47,8 +47,7 @@ class StNpeCuts;
 class StPicoMcAnaMaker : public StMaker
 {
 public:
-    StPicoMcAnaMaker(char const * name, char const * inputFilesList,
-                      char const * outName,StPicoDstMaker* picoDstMaker);
+    StPicoMcAnaMaker(char const * name, char const * outName, StPicoDstMaker* picoDstMaker);
     virtual ~StPicoMcAnaMaker();
     
     virtual Int_t Init();
@@ -71,7 +70,6 @@ private:
     StPicoNpeEvent* mPicoNpeEvent;
     
     TString mOutFileName;
-    TString mInputFileList;
     TFile* mOutputFile;
     TChain* mChain;
     int mEventCounter;

@@ -1,5 +1,5 @@
 /* **************************************************
- *  A macro to run StPicoNpeAnaMaker
+ *  A macro to run StPicoMcAnaMaker
  *
  *  Authors:  **Kunsu OH (kunsu OH)
  *  Authors:  Mustafa Mustafa (mmustafa@lbl.gov)
@@ -17,7 +17,7 @@ class StPicoDstMaker;
 
 StChain * npeChain;
 
-void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunListFileName = "picoList_bad_MB.list")
+void runPicoMcAnaMaker(TString mcPicoList, TString outFileName)
 {
     //Check STAR Library. Please set SL_version to the original star library used in the production from http://www.star.bnl.gov/devcgi/dbProdOptionRetrv.pl
     string SL_version = "SL15c";
@@ -35,28 +35,18 @@ void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunList
     gSystem->Load("StPicoPrescales");
     gSystem->Load("StPicoCutsBase");
     gSystem->Load("StPicoNpeEventMaker");
-    gSystem->Load("StPicoNpeAnaMaker");
+    gSystem->Load("StPicoMcAnaMaker");
 
     npeChain = new StChain();
     
-    // create list of picoDst files
-    TString command = "sed 's/hft\\\/npeTree/picodsts/g' " + npeList + " >correspondingPico.list";
-    gSystem->Exec(command.Data());
-    command = "sed -i 's/picoNpe/picoDst/g' correspondingPico.list";
-    gSystem->Exec(command.Data());
-    StPicoDstMaker* picoDstMaker = new StPicoDstMaker(0, "correspondingPico.list", "picoDstMaker");
-    StPicoNpeAnaMaker*  picoNpeAnaMaker = new StPicoNpeAnaMaker("picoNpeAnaMaker", npeList, outFileName.Data(), picoDstMaker);
+    StPicoDstMaker* picoDstMaker = new StPicoDstMaker(0, mcPicoList, "picoDstMaker");
+    StPicoMcAnaMaker*  picoMcAnaMaker = new StPicoMcAnaMaker("picoMcAnaMaker", outFileName.Data(), picoDstMaker);
     
     StNpeCuts* npeCuts = new StNpeCuts("npeCuts");
-    picoNpeAnaMaker->setNpeCuts(npeCuts);
+    picoMcAnaMaker->setNpeCuts(npeCuts);
 
     // -------------- USER variables -------------------------
-    
-    // -- File name of bad run list
-    npeCuts->setBadRunListFileName(badRunListFileName);
 
-    // Add your cuts here.
-    
     // Event cuts
     npeCuts->setCutVzMax(6);
     npeCuts->setCutVzVpdVzMax(3);
@@ -84,7 +74,7 @@ void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunList
 
     
     npeChain->Init();
-    int nEntries = picoNpeAnaMaker->getEntries();
+    int nEntries = picoMcAnaMaker->getEntries();
     cout << " Total entries = " << nEntries << endl;
     for (int iEvent = 0; iEvent < nEntries; ++iEvent)
     {
