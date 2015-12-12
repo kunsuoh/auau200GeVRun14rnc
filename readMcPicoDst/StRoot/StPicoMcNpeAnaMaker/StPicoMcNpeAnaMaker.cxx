@@ -76,7 +76,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
     mPicoEvent = picoDst->event();
     
     cout << "check before isGoodEvent()" << endl;
-    if (isGoodEvent())
+    if (!isGoodEvent())
     {
         
         UInt_t nTracks = picoDst->numberOfTracks();
@@ -132,12 +132,9 @@ Int_t StPicoMcNpeAnaMaker::Make()
 //-----------------------------------------------------------------------------
 bool StPicoMcNpeAnaMaker::isGoodEvent()
 {
-    if (fabs(mPicoEvent->primaryVertex().z()) < cuts::vz) {
-        
-        if (fabs(mPicoEvent->primaryVertex().z() - mPicoEvent->vzVpd()) < cuts::vzVpdVz) {
-            return true;
-        }
-    }
+    return fabs(mPicoEvent->primaryVertex().z()) < cuts::vz &&
+    fabs(mPicoEvent->primaryVertex().z() - mPicoEvent->vzVpd()) < cuts::vzVpdVz;
+    
 }
 //-----------------------------------------------------------------------------
 bool StPicoMcNpeAnaMaker::isGoodTrack(StPicoTrack const * const trk) const
