@@ -286,9 +286,8 @@ Int_t StPicoMcAnaMaker::Make()
         
         double phiV = 0;
         double openangle = 0;
-        if (electron->Charge() > 0 && partner->Charge() < 0) phiCalculation(electronFourMom,partnerFourMom,picoDst->event()->bField() > 0 ? 1. : -1.,phiV,openangle);
-        else if (electron->Charge() < 0 && partner->Charge() > 0)  phiCalculation(partnerFourMom,electronFourMom,picoDst->event()->bField() > 0 ? 1. : -1.,phiV,openangle);
-        else {}
+        phiCalculation(electronFourMom,partnerFourMom,picoDst->event()->bField() > 0 ? 1. : -1.,phiV,openangle);
+        
         float pt1 = electron->gPt() * electron->charge();
         float pt2 = partner->gPt() * partner->charge();
         float eta = epairFourMom.pseudoRapidity();
