@@ -113,7 +113,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
                 StElectronPair electronPair(electron, partner, idxPicoTaggedEs[ik], idxPicoPartnerEs[ip], bField);
                 
                 if (!isGoodElectronPair(electronPair, electron->gPt())) continue;
-                cout << electronPair->pairMass() << endl;
+                cout << electronPair.pairMass() << endl;
                 
                 
             } // .. end make electron pairs
