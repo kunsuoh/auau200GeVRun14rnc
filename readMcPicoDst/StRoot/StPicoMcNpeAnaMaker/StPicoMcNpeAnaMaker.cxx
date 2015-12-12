@@ -93,7 +93,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
             
             if (isPartnerElectron(trk)) idxPicoPartnerEs.push_back(iTrack);
         } // .. end tracks loop
-        
+        cout << nTracks << " " << idxPicoTaggedEs.size() << " " << idxPicoPartnerEs.size() << endl;
         
         float const bField = mPicoEvent->bField();
 
