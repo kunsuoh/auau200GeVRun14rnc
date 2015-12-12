@@ -94,22 +94,14 @@ private:
     TH1I * h1dTrack;
     
     TH2F * h2dIncEDcaVsPt;
-    TH2F * h2dIncENSigEVsPt;
-    TH2F * h2dIncEDcaVsPtCut;
-    TH2F * h2dIncENSigEVsPtCut;
-    TH2F * h2dIncEDcaVsPtCut2;
-    TH2F * h2dIncENSigEVsPtCut2;
-    
-    TH2F * h2dIncEBsmdNEtaPt;
-    TH2F * h2dIncEBsmdNPhiPt;
+     TH2F * h2dIncEDcaVsPtCut;
+     TH2F * h2dIncEDcaVsPtCut2;
     
     TH2F * h2dPhEDcaVsPt;
-    TH2F * h2dPhENSigEVsPt;
-    TH2F * h2dPhEConvRVsPt;
+     TH2F * h2dPhEConvRVsPt;
     
     TH2F * h2dPhELDcaVsPt;
-    TH2F * h2dPhELNSigEVsPt;
-    TH2F * h2dPhELConvRVsPt;
+     TH2F * h2dPhELConvRVsPt;
     
     TH1F * hQaPt;
     TH1F * hQaEta;
@@ -123,21 +115,17 @@ private:
     TH1F * hQaNHitFitCut;
     TH1F * hQaNHitDedxCut;
     
-    TH2D * h2dPhENSigEVsZ;
     TH2D * h2dPhEConvRVsZ;
     TH3D * h2dPhEConvXYZ;
     TH2D * h2dPhEInvMassvsZ;
-    TH2D * h2dPhELNSigEVsZ;
-    TH2D * h2dPhELConvRVsZ;
+     TH2D * h2dPhELConvRVsZ;
     TH3D * h2dPhELConvXYZ;
     TH2D * h2dPhELInvMassvsZ;
     
-    TH2D * h2dPhENSigEVsZ_HFT;
-    TH2D * h2dPhEConvRVsZ_HFT;
+     TH2D * h2dPhEConvRVsZ_HFT;
     TH3D * h2dPhEConvXYZ_HFT;
     TH2D * h2dPhEInvMassvsZ_HFT;
-    TH2D * h2dPhELNSigEVsZ_HFT;
-    TH2D * h2dPhELConvRVsZ_HFT;
+     TH2D * h2dPhELConvRVsZ_HFT;
     TH3D * h2dPhELConvXYZ_HFT;
     TH2D * h2dPhELInvMassvsZ_HFT;
     

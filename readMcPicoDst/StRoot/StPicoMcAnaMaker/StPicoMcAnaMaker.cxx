@@ -13,11 +13,9 @@
 #include "StPicoDstMaker/StPicoEvent.h"
 #include "StPicoDstMaker/StPicoTrack.h"
 #include "StPicoDstMaker/StPicoEmcPidTraits.h"
-#include "StPicoDstMaker/StPicoBTofPidTraits.h"
 #include "StPicoNpeEventMaker/StPicoNpeEvent.h"
 #include "StPicoNpeEventMaker/StElectronPair.h"
 
-#include "StBTofUtil/tofPathLength.hh"
 #include "StLorentzVectorF.hh"
 #include "phys_constants.h"
 #include "SystemOfUnits.h"
@@ -78,23 +76,16 @@ Int_t StPicoMcAnaMaker::Init()
     h1dTrack = new TH1I("h1dTrack", "Number of Track", 10, 0, 10);
     
     h2dIncEDcaVsPt =    new TH2F("h2dIncEDcaVsPt",      "2D Dca vs pT Inclusive E",             200,0,20, 100,-0.1,0.1);
-    h2dIncENSigEVsPt =  new TH2F("h2dIncENSigEVsPt",    "2D nSigE vs pT Inclusive E",           200,0,20, 289,-13,13);
-    h2dIncEBsmdNEtaPt =  new TH2F("h2dIncEBsmdNEtaPt",    "2D nEta vs pT Inclusive E Cut2",           200,0,20, 10,-0.5,9.5);
-    h2dIncEBsmdNPhiPt =  new TH2F("h2dIncEBsmdNPhiPt",    "2D nPhi vs pT Inclusive E Cut2",           200,0,20, 10,-0.5,9.5);
     
     h2dIncEDcaVsPtCut =    new TH2F("h2dIncEDcaVsPtCut",      "2D Dca vs pT Inclusive E Cut",             200,0,20, 100,-0.1,0.1);
-    h2dIncENSigEVsPtCut =  new TH2F("h2dIncENSigEVsPtCut",    "2D nSigE vs pT Inclusive E Cut",           200,0,20, 289,-13,13);
     
     h2dIncEDcaVsPtCut2 =    new TH2F("h2dIncEDcaVsPtCut2",      "2D Dca vs pT Inclusive E Cut2",             200,0,20, 100,-0.1,0.1);
-    h2dIncENSigEVsPtCut2 =  new TH2F("h2dIncENSigEVsPtCut2",    "2D nSigE vs pT Inclusive E Cut2",           200,0,20, 289,-13,13);
     
     
     h2dPhEDcaVsPt =     new TH2F("h2dPhEDcaVsPt",       "2D Dca vs pT Photonic E",              200,0,20, 100,-0.1,0.1);
-    h2dPhENSigEVsPt =   new TH2F("h2dPhENSigEVsPt",     "2D nSigE vs pT Photonic E",            200,0,20, 289,-13,13);
     h2dPhEConvRVsPt =   new TH2F("h2dPhEConvRVsPt",     "2D Conversion Radius vs pT Photonic E",200,0,20, 100,0.,20);
     
     h2dPhELDcaVsPt =     new TH2F("h2dPhELDcaVsPt",       "2D Dca vs pT Photonic E Like",              200,0,20, 100,-0.1,0.1);
-    h2dPhELNSigEVsPt =   new TH2F("h2dPhELNSigEVsPt",     "2D nSigE vs pT Photonic E Like",            200,0,20, 289,-13,13);
     h2dPhELConvRVsPt =   new TH2F("h2dPhELConvRVsPt",     "2D Conversion Radius vs pT Photonic E Like",200,0,20, 100,0.,20);
     
     hQaPt = new TH1F("hQaPt","hQaPt",200,0,20);
@@ -109,27 +100,23 @@ Int_t StPicoMcAnaMaker::Init()
     hQaNHitFitCut = new TH1F("hQaNHitFitCut","hQaNHitFitCut",100,0,100);
     hQaNHitDedxCut = new TH1F("hQaNHitDedxCut","hQaNHitDedxCut",100,0,100);
     
-    h2dPhENSigEVsZ = new TH2D("h2dPhENSigEVsZ","h2dPhENSigEVsZ",100,-20,20, 289, -13, 13);
     h2dPhEConvRVsZ = new TH2D("h2dPhEConvRVsZ","h2dPhEConvRVsZ",100,-20,20, 1000, 0, 100);
     h2dPhEConvXYZ = new TH3D("h2dPhEConvXYZ","h2dPhEConvXYZ",100,-50,50, 100,-50,50, 40,-20,20);
     h2dPhEInvMassvsZ = new TH2D("h2dPhEInvMassvsZ","h2dPhEInvMassvsZ",100,-20,20, 100, 0, 0.5);
     
-    h2dPhELNSigEVsZ = new TH2D("h2dPhELNSigEVsZ","h2dPhELNSigEVsZ",100,-20,20, 289, -13, 13);
     h2dPhELConvRVsZ = new TH2D("h2dPhELConvRVsZ","h2dPhELConvRVsZ",100,-20,20, 1000, 0, 100);
     h2dPhELConvXYZ = new TH3D("h2dPhELConvXYZ","h2dPhELConvXYZ",100,-50,50, 100,-50,50, 40,-20,20);
     h2dPhELInvMassvsZ = new TH2D("h2dPhELInvMassvsZ","h2dPhELInvMassvsZ",100,-20,20, 100, 0, 0.5);
     
-    h2dPhENSigEVsZ_HFT = new TH2D("h2dPhENSigEVsZ_HFT","h2dPhENSigEVsZ_HFT",100,-20,20, 289, -13, 13);
     h2dPhEConvRVsZ_HFT = new TH2D("h2dPhEConvRVsZ_HFT","h2dPhEConvRVsZ_HFT",100,-20,20, 1000, 0, 100);
     h2dPhEConvXYZ_HFT = new TH3D("h2dPhEConvXYZ_HFT","h2dPhEConvXYZ_HFT",100,-50,50, 100,-50,50, 40,-20,20);
     h2dPhEInvMassvsZ_HFT = new TH2D("h2dPhEInvMassvsZ_HFT","h2dPhEInvMassvsZ_HFT",100,-20,20, 100, 0, 0.5);
     
-    h2dPhELNSigEVsZ_HFT = new TH2D("h2dPhELNSigEVsZ_HFT","h2dPhELNSigEVsZ_HFT",100,-20,20, 289, -13, 13);
     h2dPhELConvRVsZ_HFT = new TH2D("h2dPhELConvRVsZ_HFT","h2dPhELConvRVsZ_HFT",100,-20,20, 1000, 0, 100);
     h2dPhELConvXYZ_HFT = new TH3D("h2dPhELConvXYZ_HFT","h2dPhELConvXYZ_HFT",100,-50,50, 100,-50,50, 40,-20,20);
     h2dPhELInvMassvsZ_HFT = new TH2D("h2dPhELInvMassvsZ_HFT","h2dPhELInvMassvsZ_HFT",100,-20,20, 100, 0, 0.5);
     
-    nt = new TNtuple("nt","electron pair ntuple","pt1:pt2:phiV:openangle:v0x:v0y:v0z:phi:eta:mass:pairDca:nsige1:nsige2");
+    nt = new TNtuple("nt","electron pair ntuple","pt1:pt2:phiV:openangle:v0x:v0y:v0z:phi:eta:mass:pairDca");
     
     h2dPhEMassVsPt = new TH2D("h2dPhEMassVsPt","h2dPhEMassVsPt",100,0,0.5,100,0,20);
     h2dPhELMassVsPt = new TH2D("h2dPhELMassVsPt","h2dPhELMassVsPt",100,0,0.5,100,0,20);
@@ -158,23 +145,19 @@ Int_t StPicoMcAnaMaker::Finish()
     h2dPhELPairDcaVsPt->Write();
     
     
-    h2dPhENSigEVsZ->Write();
     h2dPhEConvRVsZ->Write();
     h2dPhEConvXYZ->Write();
     h2dPhEInvMassvsZ->Write();
     
-    h2dPhELNSigEVsZ->Write();
     h2dPhELConvRVsZ->Write();
     h2dPhELConvXYZ->Write();
     h2dPhELInvMassvsZ->Write();
     
     
-    h2dPhENSigEVsZ_HFT->Write();
     h2dPhEConvRVsZ_HFT->Write();
     h2dPhEConvXYZ_HFT->Write();
     h2dPhEInvMassvsZ_HFT->Write();
-    
-    h2dPhELNSigEVsZ_HFT->Write();
+
     h2dPhELConvRVsZ_HFT->Write();
     h2dPhELConvXYZ_HFT->Write();
     h2dPhELInvMassvsZ_HFT->Write();
@@ -189,21 +172,13 @@ Int_t StPicoMcAnaMaker::Finish()
     
     h1dTrack->Write();
     h2dIncEDcaVsPt->Write();
-    h2dIncENSigEVsPt->Write();
     h2dIncEDcaVsPtCut->Write();
-    h2dIncENSigEVsPtCut->Write();
     h2dIncEDcaVsPtCut2->Write();
-    h2dIncENSigEVsPtCut2->Write();
-    
-    h2dIncEBsmdNEtaPt->Write();
-    h2dIncEBsmdNPhiPt->Write();
     
     h2dPhEDcaVsPt->Write();
-    h2dPhENSigEVsPt->Write();
     h2dPhEConvRVsPt->Write();
     
     h2dPhELDcaVsPt->Write();
-    h2dPhELNSigEVsPt->Write();
     h2dPhELConvRVsPt->Write();
     
     
@@ -323,10 +298,8 @@ Int_t StPicoMcAnaMaker::Make()
         float v0z = epair->positionZ();
         float mass = epairFourMom.m();
         float pairDca = epair->pairDca();
-        float nsige1 =  electron->nSigmaElectron();
-        float nsige2 =  partner->nSigmaElectron();
         
-        nt->Fill(pt1,pt2,phiV,openangle,v0x,v0y,v0z,phi,eta,mass,pairDca,nsige1,nsige2);
+        nt->Fill(pt1,pt2,phiV,openangle,v0x,v0y,v0z,phi,eta,mass,pairDca);
     }
     
     
@@ -363,105 +336,37 @@ Int_t StPicoMcAnaMaker::Make()
             StPhysicalHelixD eHelix = track->dcaGeometry().helix();
             float dca = eHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
             float pt = track->gPt();
-            float nSigE = track->nSigmaElectron();
             
             h2dIncEDcaVsPt->Fill(pt, dca);
-            h2dIncENSigEVsPt->Fill(pt, nSigE);
             
             h1dTrack->Fill(jTrack);jTrack++;
-            if (mNpeCuts->isBEMCElectron(track)) {
                 h1dTrack->Fill(jTrack);jTrack++;
                 
                 h2dIncEDcaVsPtCut->Fill(pt, dca);
-                h2dIncENSigEVsPtCut->Fill(pt, nSigE);
                 
                 
-                if (pt < 2 && mNpeCuts->isTPCElectron(track, 0, 1.5)){
+                if (pt < 2 ){
                     h1dTrack->Fill(jTrack);jTrack++;
                     h2dIncEDcaVsPtCut2->Fill(pt, dca);
-                    h2dIncENSigEVsPtCut2->Fill(pt, nSigE);
                 }
-                else if (pt > 2 && pt < 4 && mNpeCuts->isTPCElectron(track, 0, 2.5)){
+                else if (pt > 2 && pt < 4 ){
                     h1dTrack->Fill(jTrack);jTrack++;
                     h2dIncEDcaVsPtCut2->Fill(pt, dca);
-                    h2dIncENSigEVsPtCut2->Fill(pt, nSigE);
                 }
-                else if (pt > 4 && pt < 6 && mNpeCuts->isTPCElectron(track, 0.5, 3)){
+                else if (pt > 4 && pt < 6){
                     h1dTrack->Fill(jTrack);jTrack++;
                     h2dIncEDcaVsPtCut2->Fill(pt, dca);
-                    h2dIncENSigEVsPtCut2->Fill(pt, nSigE);
                 }
-                else if (pt > 6 && pt < 8 && mNpeCuts->isTPCElectron(track, 1, 3)){
+                else if (pt > 6 && pt < 8){
                     h1dTrack->Fill(jTrack);jTrack++;
                     h2dIncEDcaVsPtCut2->Fill(pt, dca);
-                    h2dIncENSigEVsPtCut2->Fill(pt, nSigE);
                 }
-                else if (pt > 8 && pt < 20 && mNpeCuts->isTPCElectron(track, 0, 3)){
+                else if (pt > 8 && pt < 20){
                     h1dTrack->Fill(jTrack);jTrack++;
                     h2dIncEDcaVsPtCut2->Fill(pt, dca);
-                    h2dIncENSigEVsPtCut2->Fill(pt, nSigE);
                 }
-            }
         }
     }
-    
-    /*
-     // photonic electron reconstruction directly
-     for (unsigned short ik = 0; ik < idxPicoTaggedEs.size(); ++ik)
-     {
-     StPicoTrack const * electron = picoDst->track(idxPicoTaggedEs[ik]);
-     // make electron pairs
-     for (unsigned short ip = 0; ip < idxPicoPartnerEs.size(); ++ip)
-     {
-     if (idxPicoTaggedEs[ik] == idxPicoPartnerEs[ip]) continue;
-     StPicoTrack const * partner = picoDst->track(idxPicoPartnerEs[ip]);
-     StElectronPair * epair =  new StElectronPair(electron, partner, idxPicoTaggedEs[ik], idxPicoPartnerEs[ip], picoDst->event()->bField());
-     if(!mNpeCuts->isGoodElectronPair(epair)) continue;
-     
-     StPhysicalHelixD eHelix = electron->dcaGeometry().helix();
-     float dca = eHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
-     float pt = electron->gPt();
-     float nSigE = electron->nSigmaElectron();
-     float pairPositionX = epair->positionX();
-     float pairPositionY = epair->positionY();
-     float pairPositionZ = epair->positionZ();
-     float invMass = epair->pairMass();
-     float convR = TMath::Sqrt((pairPositionX+0.2383) * (pairPositionX+0.2383) + (pairPositionY+0.1734) * (pairPositionY+0.1734));
-     int pairCharge = electron->charge()+partner->charge();
-     
-     if (pairCharge==0) {
-     h2dPhENSigEVsZ->Fill(pairPositionZ, nSigE);
-     h2dPhEConvRVsZ->Fill(pairPositionZ, convR);
-     h2dPhEConvXYZ->Fill(pairPositionX,pairPositionY,pairPositionZ);
-     h2dPhEInvMassvsZ->Fill(pairPositionZ,invMass);
-     if (electron->isHFTTrack()) {
-     h2dPhENSigEVsZ_HFT->Fill(pairPositionZ, nSigE);
-     h2dPhEConvRVsZ_HFT->Fill(pairPositionZ, convR);
-     h2dPhEConvXYZ_HFT->Fill(pairPositionX,pairPositionY,pairPositionZ);
-     h2dPhEInvMassvsZ_HFT->Fill(pairPositionZ,invMass);
-     
-     }
-     }
-     else {
-     h2dPhELNSigEVsZ->Fill(pairPositionZ, nSigE);
-     h2dPhELConvRVsZ->Fill(pairPositionZ, convR);
-     h2dPhELConvXYZ->Fill(pairPositionX,pairPositionY,pairPositionZ);
-     h2dPhELInvMassvsZ->Fill(pairPositionZ,invMass);
-     if (electron->isHFTTrack()) {
-     h2dPhELNSigEVsZ_HFT->Fill(pairPositionZ, nSigE);
-     h2dPhELConvRVsZ_HFT->Fill(pairPositionZ, convR);
-     h2dPhELConvXYZ_HFT->Fill(pairPositionX,pairPositionY,pairPositionZ);
-     h2dPhELInvMassvsZ_HFT->Fill(pairPositionZ,invMass);
-     
-     }
-     
-     }
-     delete epair;
-     } // .. end make electron pairs
-     } // .. end of tagged e loop
-     
-     */
-    
     return kStOK;
 }
 //-----------------------------------------------------------------------------
