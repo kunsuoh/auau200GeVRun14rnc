@@ -75,6 +75,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
     
     mPicoEvent = picoDst->event();
     
+    cout << "check before isGoodEvent()" << endl;
     if (isGoodEvent())
     {
         
