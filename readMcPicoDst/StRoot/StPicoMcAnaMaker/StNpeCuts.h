@@ -61,11 +61,6 @@ public:
     void setCutPartnerEta(float fmin, float fmax);
     void setCutPartnerElectronRequireHFT(bool b);
 
-    void setCutTPCNSigmaElectron(float fmin, float fmax);
-    void setCutPartnerTPCNSigmaElectron(float fmin, float fmax);
-    void setCutBemcPid(bool pid, float epmin, float epmax, float phi, float z, float ass);
-    void setCutBsmdPid(bool pid, int eta, int phi);
-    void setCutTofPid(bool pid, float beta);
     
     // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
     // -- GETTER for single CUTS
@@ -73,10 +68,6 @@ public:
     StPicoEmcPidTraits * hasEmcPid(StPicoTrack const * const trk) const;
     
     void setPicoDst(StPicoDst const * picoDst);
-    bool isTPCElectron(StPicoTrack const *trk, float min, float max) const;
-    bool isTOFElectron(StPicoTrack const *trk) const;
-    bool isBEMCElectron(StPicoTrack const *trk) const;
-    bool isBSMDElectron(StPicoTrack const *trk) const;
     bool isGoodElectronPair(StElectronPair const* epair) const;
 
     bool isGoodInclusiveElectron(StPicoTrack const *trk) const;
@@ -123,20 +114,7 @@ private:
     float mElectronEtaMin;
     float mElectronEtaMax;
     float mElectronDca;
-    int mElectronBsmdNEta;
-    int mElectronBsmdNPhi;
     bool mElectronRequireHFT;
-    float mElectronTPCNSigmaElectronMin;
-    float mElectronTPCNSigmaElectronMax;
-    float mElectronBemcEoverPMin;
-    float mElectronBemcEoverPMax;
-    float mElectronBemcPhiDistMax;
-    float mElectronBemcZDistMax;
-    float mElectronBemcAssDistMax;
-    bool mElectronBemcPid;
-    bool mElectronBsmdPid;
-    bool mElectronTofPid;
-    float mElectronTofBeta;
     
     // ------------------------------------------
     // -- Track cuts for partner electron
@@ -147,8 +125,6 @@ private:
     float mPartnerElectronPtMax;
     float mPartnerElectronEtaMin;
     float mPartnerElectronEtaMax;
-    float mPartnerTPCNSigmaElectronMin;
-    float mPartnerTPCNSigmaElectronMax;
     bool mPartnerElectronRequireHFT;
 
     
@@ -198,34 +174,6 @@ inline void StNpeCuts::setCutPartnerEta(float fmin, float fmax)  {
 }
 inline void StNpeCuts::setCutPartnerElectronRequireHFT(bool b)  {
     mPartnerElectronRequireHFT = b;
-}
-
-inline void StNpeCuts::setCutTPCNSigmaElectron(float fmin, float fmax)  {
-    mElectronTPCNSigmaElectronMin = fmin;
-    mElectronTPCNSigmaElectronMax = fmax;
-}
-inline void StNpeCuts::setCutPartnerTPCNSigmaElectron(float fmin, float fmax)  {
-    mPartnerTPCNSigmaElectronMin = fmin;
-    mPartnerTPCNSigmaElectronMax = fmax;
-
-}
-inline void StNpeCuts::setCutBemcPid(bool pid, float epmin, float epmax, float phi, float z, float ass)  {
-    mElectronBemcPid = pid;
-    mElectronBemcEoverPMin = epmin;
-    mElectronBemcEoverPMax = epmax;
-    mElectronBemcPhiDistMax = phi;
-    mElectronBemcZDistMax = z;
-    mElectronBemcAssDistMax = ass;
-    
-}
-inline void StNpeCuts::setCutBsmdPid(bool pid, int eta, int phi)  {
-    mElectronBsmdPid = pid;
-    mElectronBsmdNEta = eta;
-    mElectronBsmdNPhi = phi;
-}
-inline void StNpeCuts::setCutTofPid(bool pid, float beta)  {
-    mElectronTofPid = pid;
-    mElectronTofBeta = beta;
 }
 inline void StNpeCuts::setPicoDst(StPicoDst const * picoDst)  {
     mPicoDst2=picoDst;
