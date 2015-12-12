@@ -31,7 +31,6 @@ void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunList
     gROOT->LoadMacro("$STAR/StRoot/StMuDSTMaker/COMMON/macros/loadSharedLibraries.C");
     loadSharedLibraries();
     
-    gSystem->Load("StBTofUtil");
     gSystem->Load("StPicoDstMaker");
     gSystem->Load("StPicoPrescales");
     gSystem->Load("StPicoCutsBase");
@@ -70,13 +69,11 @@ void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunList
     npeCuts->setCutEta(-1., 1.);
     npeCuts->setCutDca(100);
     npeCuts->setCutElectronRequireHFT(true);
-    npeCuts->setCutTPCNSigmaElectron(-3.0, 3.0);
     
     // Partner electron cuts
     npeCuts->setCutPartnerElectronNHitsFitMax(15);
     npeCuts->setCutPartnerPt(0.6, 20);
     npeCuts->setCutPartnerEta(-1., 1.);
-    npeCuts->setCutPartnerTPCNSigmaElectron(-3.0, 3.0);
     npeCuts->setCutPartnerElectronRequireHFT(true);
     
     // Electron pair cuts
@@ -85,26 +82,6 @@ void runPicoNpeAnaMaker(TString npeList, TString outFileName, TString badRunList
     float maxMass         = 0.4;
     npeCuts->setCutElectronPair(dcaDaughtersMax, minMass, maxMass);
 
-    
-    // BEMC PID
-    bool const bemc = true;
-    float const minEoverP   = 0.333;
-    float const maxEoverP   = 3.0;
-    float const phiDist     = 0.02;
-    float const zDist       = 10;
-    float const assDist     = 0.02;
-    npeCuts->setCutBemcPid(bemc, minEoverP, maxEoverP, phiDist, zDist, assDist);
-
-    // BSMD PID
-    bool const bsmd = false;
-    int const nEta     = 1;
-    int const nPhi     = 1;
-    npeCuts->setCutBsmdPid(bsmd, nEta, nPhi);
-    
-    // TOF PID
-    bool const tof = true;
-    float const tofBeta     = 0.025;
-    npeCuts->setCutTofPid(tof, tofBeta);
     
     npeChain->Init();
     int nEntries = picoNpeAnaMaker->getEntries();
