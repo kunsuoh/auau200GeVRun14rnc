@@ -29,10 +29,9 @@ void runPicoMcAnaMaker(TString npeList="small.list", TString outFileName="test")
     gROOT->LoadMacro("$STAR/StRoot/StMuDSTMaker/COMMON/macros/loadSharedLibraries.C");
     loadSharedLibraries();
     
-    gSystem->Load("StBTofUtil");
+//    gSystem->Load("StBTofUtil");
     gSystem->Load("StPicoDstMaker");
     gSystem->Load("StPicoMcNpeAnaMaker");
-    gSystem->Load("StRefMultCorr");
 
     npeChain = new StChain();
     
