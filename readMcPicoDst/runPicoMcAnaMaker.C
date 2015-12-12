@@ -1,8 +1,7 @@
 /* **************************************************
- *  A macro to run StPicoMcAnaMaker
+ *  A macro to run StLowPtNpeAnaMaker
  *
  *  Authors:  **Kunsu OH (kunsu OH)
- *  Authors:  Mustafa Mustafa (mmustafa@lbl.gov)
  *
  *  **Code Maintainer
  *
@@ -17,10 +16,9 @@ class StPicoDstMaker;
 
 StChain * npeChain;
 
-void runPicoMcAnaMaker(TString mcPicoList="test.list", TString outFileName="test")
+void runLowPtNpeAnaMaker(TString npeList="small.list", TString outFileName="test")
 {
-    //Check STAR Library. Please set SL_version to the original star library used in the production from http://www.star.bnl.gov/devcgi/dbProdOptionRetrv.pl
-    string SL_version = "SL15c";
+    string SL_version = "SL10k";
     string env_SL = getenv("STAR");
     if (env_SL.find(SL_version) == string::npos)
     {
@@ -33,54 +31,25 @@ void runPicoMcAnaMaker(TString mcPicoList="test.list", TString outFileName="test
     
     gSystem->Load("StBTofUtil");
     gSystem->Load("StPicoDstMaker");
-    gSystem->Load("StPicoPrescales");
-    gSystem->Load("StPicoCutsBase");
-    gSystem->Load("StPicoNpeEventMaker");
-    gSystem->Load("StPicoMcAnaMaker");
+    gSystem->Load("StLowPtNpeAnaMaker");
+    gSystem->Load("StRefMultCorr");
 
     npeChain = new StChain();
     
-    StPicoDstMaker* picoDstMaker = new StPicoDstMaker(0, mcPicoList, "picoDstMaker");
-    StPicoMcAnaMaker*  picoMcAnaMaker = new StPicoMcAnaMaker("picoMcAnaMaker", outFileName.Data(), picoDstMaker);
+    StPicoDstMaker* picoDstMaker = new StPicoDstMaker(0,npeList,"picoDstMaker");
+    StLowPtNpeAnaMaker*  LowPtNpeAnaMaker = new StLowPtNpeAnaMaker("LowPtNpeAnaMaker", picoDstMaker, outFileName.Data());
     
-    StNpeCuts* npeCuts = new StNpeCuts("npeCuts");
-    picoMcAnaMaker->setNpeCuts(npeCuts);
-
     // -------------- USER variables -------------------------
-
-    // Event cuts
-    npeCuts->setCutVzMax(6);
-    npeCuts->setCutVzVpdVzMax(3);
-    npeCuts->setCutTriggerWord(0xFFFFFFF);
-
-    // Tagged electron cuts
-    npeCuts->setCutElectronNHitsFitMax(15);
-    npeCuts->setCutElectronNHitsdEdxMax(0);
-    npeCuts->setCutPt(0.6, 20);
-    npeCuts->setCutEta(-1., 1.);
-    npeCuts->setCutDca(100);
-    npeCuts->setCutElectronRequireHFT(true);
     
-    // Partner electron cuts
-    npeCuts->setCutPartnerElectronNHitsFitMax(15);
-    npeCuts->setCutPartnerPt(0.6, 20);
-    npeCuts->setCutPartnerEta(-1., 1.);
-    npeCuts->setCutPartnerElectronRequireHFT(true);
-    
-    // Electron pair cuts
-    float dcaDaughtersMax = 1.;  // maximum
-    float minMass         = 0;
-    float maxMass         = 0.4;
-    npeCuts->setCutElectronPair(dcaDaughtersMax, minMass, maxMass);
-
-    
+    // add your cuts here.
     npeChain->Init();
     int nEntries = picoDstMaker->chain()->GetEntries();
-
     cout << " Total entries = " << nEntries << endl;
+    
     for (int iEvent = 0; iEvent < nEntries; ++iEvent)
     {
-        if (iEvent%100==0) cout << iEvent << endl;
+        if(iEvent%100==0) cout << "Working on eventNumber " << iEvent << endl;
+
         npeChain->Clear();
         int iret = npeChain->Make();
         if (iret)
@@ -90,8 +59,9 @@ void runPicoMcAnaMaker(TString mcPicoList="test.list", TString outFileName="test
         }
     }
     
+    
     npeChain->Finish();
     delete npeChain;
-    
+
     
 }
