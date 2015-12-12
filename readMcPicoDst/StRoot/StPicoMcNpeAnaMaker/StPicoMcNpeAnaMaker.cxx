@@ -88,7 +88,6 @@ Int_t StPicoMcNpeAnaMaker::Make()
             if (!trk) continue;
             if (isElectron(trk))
             {
-                fillHistogram(trk);
                 if (isTaggedElectron(trk)) idxPicoTaggedEs.push_back(iTrack);
             }
             
@@ -97,7 +96,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
         
         
         float const bField = mPicoEvent->bField();
-        /*
+
         for (unsigned short ik = 0; ik < idxPicoTaggedEs.size(); ++ik)
         {
             
@@ -114,10 +113,12 @@ Int_t StPicoMcNpeAnaMaker::Make()
                 StElectronPair electronPair(electron, partner, idxPicoTaggedEs[ik], idxPicoPartnerEs[ip], bField);
                 
                 if (!isGoodElectronPair(electronPair, electron->gPt())) continue;
+                cout << electronPair->pairMass() << endl;
+                
                 
             } // .. end make electron pairs
         } // .. end of tagged e loop
-        */
+
         idxPicoTaggedEs.clear();
         idxPicoPartnerEs.clear();
         
