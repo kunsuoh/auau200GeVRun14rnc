@@ -11,15 +11,15 @@
 #include "../StPicoDstMaker/StPicoEvent.h"
 #include "../StPicoDstMaker/StPicoTrack.h"
 
-#include "StLowPtNpeAnaMaker.h"
+#include "StPicoMcNpeAnaMaker.h"
 #include "StElectronPair.h"
 #include "StCuts.h"
 
 
-ClassImp(StLowPtNpeAnaMaker)
+ClassImp(StPicoMcNpeAnaMaker)
 
 //-----------------------------------------------------------------------------
-StLowPtNpeAnaMaker::StLowPtNpeAnaMaker(char const* makerName, StPicoDstMaker* picoMaker, char const* fileBaseName)
+StPicoMcNpeAnaMaker::StPicoMcNpeAnaMaker(char const* makerName, StPicoDstMaker* picoMaker, char const* fileBaseName)
 : StMaker(makerName), mPicoDstMaker(picoMaker), mPicoEvent(NULL),
 mOutputFile(NULL), mTofcal(NULL)
 {
@@ -29,21 +29,21 @@ mOutputFile(NULL), mTofcal(NULL)
 }
 
 //-----------------------------------------------------------------------------
-StLowPtNpeAnaMaker::~StLowPtNpeAnaMaker()
+StPicoMcNpeAnaMaker::~StPicoMcNpeAnaMaker()
 {
     /* mTree is owned by mOutputFile directory, it will be destructed once
      * the file is closed in ::Finish() */
 }
 
 //-----------------------------------------------------------------------------
-Int_t StLowPtNpeAnaMaker::Init()
+Int_t StPicoMcNpeAnaMaker::Init()
 {
     
     return kStOK;
 }
 
 //-----------------------------------------------------------------------------
-Int_t StLowPtNpeAnaMaker::Finish()
+Int_t StPicoMcNpeAnaMaker::Finish()
 {
     mOutputFile->cd();
     // write histograms
@@ -53,12 +53,12 @@ Int_t StLowPtNpeAnaMaker::Finish()
     return kStOK;
 }
 //-----------------------------------------------------------------------------
-void StLowPtNpeAnaMaker::Clear(Option_t *opt)
+void StPicoMcNpeAnaMaker::Clear(Option_t *opt)
 {
 }
 
 //-----------------------------------------------------------------------------
-Int_t StLowPtNpeAnaMaker::Make()
+Int_t StPicoMcNpeAnaMaker::Make()
 {
     if (!mPicoDstMaker)
     {
@@ -128,7 +128,7 @@ Int_t StLowPtNpeAnaMaker::Make()
 }
 
 //-----------------------------------------------------------------------------
-bool StLowPtNpeAnaMaker::isGoodEvent()
+bool StPicoMcNpeAnaMaker::isGoodEvent()
 {
     hEvent->Fill(0);
     hEventVz->Fill(mPicoEvent->primaryVertex().z());
@@ -149,7 +149,7 @@ bool StLowPtNpeAnaMaker::isGoodEvent()
     }
 }
 //-----------------------------------------------------------------------------
-bool StLowPtNpeAnaMaker::isGoodTrack(StPicoTrack const * const trk) const
+bool StPicoMcNpeAnaMaker::isGoodTrack(StPicoTrack const * const trk) const
 {
     return
     trk->gMom().perp() > cuts::ptMin &&
@@ -160,7 +160,7 @@ bool StLowPtNpeAnaMaker::isGoodTrack(StPicoTrack const * const trk) const
 }
 
 //-----------------------------------------------------------------------------
-bool StLowPtNpeAnaMaker::isElectron(StPicoTrack const * const trk) const
+bool StPicoMcNpeAnaMaker::isElectron(StPicoTrack const * const trk) const
 {
     return
     isGoodTrack(trk) &&
@@ -170,28 +170,28 @@ bool StLowPtNpeAnaMaker::isElectron(StPicoTrack const * const trk) const
 }
 
 //-----------------------------------------------------------------------------
-bool StLowPtNpeAnaMaker::isTaggedElectron(StPicoTrack const * const trk) const
+bool StPicoMcNpeAnaMaker::isTaggedElectron(StPicoTrack const * const trk) const
 {
     return
     isElectron(trk) ;
 }
 
 //-----------------------------------------------------------------------------
-bool StLowPtNpeAnaMaker::isPartnerElectron(StPicoTrack const * const trk) const
+bool StPicoMcNpeAnaMaker::isPartnerElectron(StPicoTrack const * const trk) const
 {
     return
     isGoodTrack(trk) &&
     fabs(trk->gMom().pseudoRapidity()) < cuts::etaPartner ;
 }
 //-----------------------------------------------------------------------------
-bool StLowPtNpeAnaMaker::isGoodElectronPair(StElectronPair const & epair, float pt) const
+bool StPicoMcNpeAnaMaker::isGoodElectronPair(StElectronPair const & epair, float pt) const
 {
     return
     epair.pairMass() < cuts::pairMass &&
     epair.pairDca() < cuts::pairDca;
 }
 //-----------------------------------------------------------------------------
-void StLowPtNpeAnaMaker::fillHistogram(StPicoTrack const * const trk) const
+void StPicoMcNpeAnaMaker::fillHistogram(StPicoTrack const * const trk) const
 {
 
 }

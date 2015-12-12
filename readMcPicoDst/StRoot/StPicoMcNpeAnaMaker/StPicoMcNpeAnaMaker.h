@@ -1,5 +1,5 @@
-#ifndef StLowPtNpeAnaMaker_h
-#define StLowPtNpeAnaMaker_h
+#ifndef StPicoMcNpeAnaMaker_h
+#define StPicoMcNpeAnaMaker_h
 
 /* **************************************************
  *  A Maker that reads StPicoEvents and creates
@@ -20,11 +20,11 @@ class StPicoDstMaker;
 class StElectronPair;
 
 
-class StLowPtNpeAnaMaker : public StMaker
+class StPicoMcNpeAnaMaker : public StMaker
 {
 public:
-    StLowPtNpeAnaMaker(char const* makerName, StPicoDstMaker* picoMaker, char const* fileBaseName);
-    virtual ~StLowPtNpeAnaMaker();
+    StPicoMcNpeAnaMaker(char const* makerName, StPicoDstMaker* picoMaker, char const* fileBaseName);
+    virtual ~StPicoMcNpeAnaMaker();
     
     virtual Int_t Init();
     virtual Int_t Make();
@@ -48,7 +48,7 @@ private:
     TTree* mTree;
     
     
-    ClassDef(StLowPtNpeAnaMaker, 0)
+    ClassDef(StPicoMcNpeAnaMaker, 0)
 };
 
 #endif
