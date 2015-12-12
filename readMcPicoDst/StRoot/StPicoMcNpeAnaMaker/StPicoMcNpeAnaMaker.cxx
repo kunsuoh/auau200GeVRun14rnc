@@ -21,7 +21,7 @@ ClassImp(StPicoMcNpeAnaMaker)
 //-----------------------------------------------------------------------------
 StPicoMcNpeAnaMaker::StPicoMcNpeAnaMaker(char const* makerName, StPicoDstMaker* picoMaker, char const* fileBaseName)
 : StMaker(makerName), mPicoDstMaker(picoMaker), mPicoEvent(NULL),
-mOutputFile(NULL), mTofcal(NULL)
+mOutputFile(NULL)
 {
     
     TString baseName(fileBaseName);
@@ -130,21 +130,10 @@ Int_t StPicoMcNpeAnaMaker::Make()
 //-----------------------------------------------------------------------------
 bool StPicoMcNpeAnaMaker::isGoodEvent()
 {
-    hEvent->Fill(0);
-    hEventVz->Fill(mPicoEvent->primaryVertex().z());
-    hEventVzVpdVz->Fill(mPicoEvent->primaryVertex().z(),mPicoEvent->vzVpd());
-    
-    if (isTofEvent()) {
-        hEvent->Fill(1);
+    if (fabs(mPicoEvent->primaryVertex().z()) < cuts::vz) {
         
-        if (fabs(mPicoEvent->primaryVertex().z()) < cuts::vz) {
-            hEvent->Fill(2);
-        
-            if (fabs(mPicoEvent->primaryVertex().z() - mPicoEvent->vzVpd()) < cuts::vzVpdVz) {
-                hEvent->Fill(3);
-                return true;
-            
-            }
+        if (fabs(mPicoEvent->primaryVertex().z() - mPicoEvent->vzVpd()) < cuts::vzVpdVz) {
+            return true;
         }
     }
 }
