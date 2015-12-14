@@ -213,7 +213,7 @@ void StPicoMcNpeAnaMaker::fillHistogram(StElectronPair const * const pair) const
 {
     hPairMass->Fill(pair->pairMass());
     hPairDca->Fill(pair->pairDca());
-    hPairPosition->Fill(pair->pairPositionX(),pair->pairPositionY());
+    hPairPosition->Fill(pair->positionX(),pair->positionY());
 }
 bool StPicoMcNpeAnaMaker::isRcTrack(StPicoMcTrack const * const PicoMcTrack, StPicoDst const * const  PicoDst,int &id)
 {
