@@ -116,8 +116,10 @@ Int_t StPicoMcNpeAnaMaker::Make()
             }
         }
         cout << idPicoDstRcPositrons.size() << " " << idPicoDstRcElectrons.size() << endl;
+        
         for (int i=0; i<idPicoDstRcPositrons.size(); i++) {
-            StPicoMcTrack *mcPositron = (StPicoMcTrack*)picoDst->mctrack(idPicoDstRcElectrons[i]);
+            StPicoMcTrack *mcPositron = (StPicoMcTrack*)picoDst->mctrack(idPicoDstRcPositrons[i]);
+            
             for (int j=0; j<idPicoDstRcElectrons.size(); j++) {
                 StPicoMcTrack *mcElectron = (StPicoMcTrack*)picoDst->mctrack(idPicoDstRcElectrons[j]);
                 if (mcPositron->parentId() != Pico::USHORTMAX && mcPositron->parentId() == mcElectron->parentId()) {
