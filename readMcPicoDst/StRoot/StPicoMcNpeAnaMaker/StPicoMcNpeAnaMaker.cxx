@@ -91,11 +91,17 @@ Int_t StPicoMcNpeAnaMaker::Make()
         cout << "check after isGoodEvent()" << endl;
 
         for(int i_Mc=0; i_Mc<nMcTracks; i_Mc++){
+            cout << "check Mc Track" << i_Mc << endl;
             StPicoMcTrack *mcTrk = (StPicoMcTrack*)picoDst->mctrack(i_Mc);
+            cout << "check Mc Track" << i_Mc << endl;
             float parentId=((StPicoMcTrack*)(picoDst->mctrack(mcTrk->parentId())))->GePid();
+            cout << "check Mc Track" << i_Mc << endl;
             float gepid=mcTrk->GePid();
+            cout << "check Mc Track" << i_Mc << endl;
             hTrackParentGeantId->Fill(parentId);
+            cout << "check Mc Track" << i_Mc << endl;
             hTrackGeantId->Fill(gepid);
+            cout << "check Mc Track" << i_Mc << endl;
         }
         cout << "check after isGoodEvent()" << endl;
         
