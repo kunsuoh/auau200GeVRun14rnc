@@ -90,8 +90,8 @@ Int_t StPicoMcNpeAnaMaker::Make()
             StPicoMcTrack *mcTrk = (StPicoMcTrack*)picoDst->mctrack(i_Mc);
             float parentId=((StPicoMcTrack*)(picoDst->mctrack(mcTrk->parentId())))->GePid();
             float gepid=mcTrk->GePid();
-            hParentGeantId->Fill(parentId);
-            hGeantId->Fill(gepid);
+            hTrackParentGeantId->Fill(parentId);
+            hTrackGeantId->Fill(gepid);
             
 
         }
