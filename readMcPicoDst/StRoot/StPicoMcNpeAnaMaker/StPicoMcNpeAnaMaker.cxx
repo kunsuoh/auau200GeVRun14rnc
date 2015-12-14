@@ -140,21 +140,23 @@ Int_t StPicoMcNpeAnaMaker::Make()
             StPicoTrack *rcPositron = picoDst->track(idPicoDstRcPositrons[i]);
             for (int j=0; j<idPicoDstMcElectrons.size(); j++) {
                 StPicoMcTrack *mcElectron = (StPicoMcTrack*)picoDst->mctrack(idPicoDstMcElectrons[j]);
-                if (mcPositron->parentId() != Pico::USHORTMAX && mcPositron->parentId() == mcElectron->parentId()) {
+                if (mcPositron->parentId() != Pico::USHORTMAX && mcPositron->parentId() == mcElectron->parentId())
+                {
                     StPicoTrack *rcPositron = picoDst->track(idPicoDstRcPositrons[i]);
                     StPicoTrack *rcElectron = picoDst->track(idPicoDstRcElectrons[j]);
                     StElectronPair * rcPair = new StElectronPair(rcPositron,rcElectron,i,j,bField);
-                    fillHistogram(rcPair);
-                    nt2->Fill(rcPositron->gPt(),
-                              rcElectron->gPt()*-1,
-                              rcPair->phiV(),
-                              rcPair->openAngle(),
-                              rcPair->positionX(),rcPair->positionY(),rcPair->positionZ(),
-                              rcPair->phi(),rcPair->eta(),
-                              rcPair->pairMass(),rcPair->pairDca(),
-                              mcElectron->Origin().x(),mcElectron->Origin().y(),mcElectron->Origin().z(),
-                              ((StPicoMcTrack*)(picoDst->mctrack(mcElectron->parentId())))->Mom().perp());
-                    
+                    if (isGoodTrack(rcPositron) && isGoodTrack(rcElectron)) {
+                        fillHistogram(rcPair);
+                        nt2->Fill(rcPositron->gPt(),
+                                  rcElectron->gPt()*-1,
+                                  rcPair->phiV(),
+                                  rcPair->openAngle(),
+                                  rcPair->positionX(),rcPair->positionY(),rcPair->positionZ(),
+                                  rcPair->phi(),rcPair->eta(),
+                                  rcPair->pairMass(),rcPair->pairDca(),
+                                  mcElectron->Origin().x(),mcElectron->Origin().y(),mcElectron->Origin().z(),
+                                  ((StPicoMcTrack*)(picoDst->mctrack(mcElectron->parentId())))->Mom().perp());
+                    }
                 }
             }
         }
@@ -182,43 +184,15 @@ bool StPicoMcNpeAnaMaker::isGoodTrack(StPicoTrack const * const trk) const
     trk->gPt() > cuts::ptMin &&
     trk->gPt() < cuts::ptMax &&
     trk->nHitsFit() >= cuts::nHitsFit &&
-    (float)trk->nHitsFit()/(float)trk->nHitsMax() > cuts::nHitsRatioMin &&
-    (float)trk->nHitsFit()/(float)trk->nHitsMax() < cuts::nHitsRatioMax ;
+    trk->isHFTTrack() ;
 }
 
-//-----------------------------------------------------------------------------
-bool StPicoMcNpeAnaMaker::isElectron(StPicoTrack const * const trk) const
-{
-    return
-    isGoodTrack(trk) &&
-     trk->nHitsDedx() >= cuts::nHitsDedx ;
-}
-
-//-----------------------------------------------------------------------------
-bool StPicoMcNpeAnaMaker::isTaggedElectron(StPicoTrack const * const trk) const
-{
-    return
-    isElectron(trk) ;
-}
-
-//-----------------------------------------------------------------------------
-bool StPicoMcNpeAnaMaker::isPartnerElectron(StPicoTrack const * const trk) const
-{
-    return
-    isGoodTrack(trk)  ;
-}
-//-----------------------------------------------------------------------------
-bool StPicoMcNpeAnaMaker::isGoodElectronPair(StElectronPair const & epair, float pt) const
-{
-    return
-    epair.pairMass() < cuts::pairMass &&
-    epair.pairDca() < cuts::pairDca;
-}
 //-----------------------------------------------------------------------------
 void StPicoMcNpeAnaMaker::fillHistogram(StPicoTrack const * const trk) const
 {
     
 }
+//-----------------------------------------------------------------------------
 void StPicoMcNpeAnaMaker::fillHistogram(StElectronPair const * const pair) const
 {
     
@@ -227,6 +201,7 @@ void StPicoMcNpeAnaMaker::fillHistogram(StElectronPair const * const pair) const
     hPairPosition->Fill(pair->positionX(),pair->positionY());
 
 }
+//-----------------------------------------------------------------------------
 bool StPicoMcNpeAnaMaker::isRcTrack(StPicoMcTrack const * const PicoMcTrack, StPicoDst const * const  PicoDst,int &id)
 {
     int nMcTracks =  PicoDst->numberOfMcTracks();
