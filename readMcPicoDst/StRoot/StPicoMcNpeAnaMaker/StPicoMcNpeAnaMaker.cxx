@@ -85,28 +85,40 @@ Int_t StPicoMcNpeAnaMaker::Make()
     cout << "check before isGoodEvent()" << endl;
     if (isGoodEvent())
     {
-        cout << "check after isGoodEvent()" << endl;
+        std::vector<Int_t> idPicoDstRcElectrons;
+        std::vector<Int_t> idPicoDstRcPositrons;
         float const bField = mPicoEvent->bField();
         int nMcTracks =  picoDst->numberOfMcTracks();
-        cout << "check after isGoodEvent()" << endl;
 
         for(int i_Mc=0; i_Mc<nMcTracks; i_Mc++){
+            // get Mc Track
             StPicoMcTrack *mcTrk = (StPicoMcTrack*)picoDst->mctrack(i_Mc);
+            
+            // get Geant Id for track and parent
             float parentId= Pico::USHORTMAX;
             if(mcTrk->parentId() != Pico::USHORTMAX)
                 parentId=((StPicoMcTrack*)(picoDst->mctrack(mcTrk->parentId())))->GePid();
-            cout << "check Mc Track" << i_Mc << endl;
-            float gepid=mcTrk->GePid();
-            cout << "check Mc Track" << i_Mc << endl;
+            float trackId=mcTrk->GePid();
+            
+            // fill histogram
             hTrackParentGeantId->Fill(parentId);
-            cout << "check Mc Track" << i_Mc << endl;
-            hTrackGeantId->Fill(gepid);
-            cout << "check Mc Track" << i_Mc << endl;
+            hTrackGeantId->Fill(trackId);
+            
+            // get Rc Trcak
+            if (parentId == 1 && (trackId == 2 || trackId == 3)) {
+                StPicoTrack *rcTrk=0;
+                Int_t id=-999;
+                isRcTrack(mcTrk,picoDst,id);
+                if(id!=-999){
+                    rcTrk = (StPicoTrack*)mPicoDst->track(id);
+                    if (trackId==2)idPicoDstRcPositrons.push_back(id);
+                    else idPicoDstRcElectrons.push_back(id);
+                }
+            }
         }
-        cout << "check after isGoodEvent()" << endl;
+        cout << idPicoDstRcPositrons.size() << " " << idPicoDstRcElectrons.size() << endl;
         
-        
-    } //.. end of good event fill
+    } //.. end of good event
     
     return kStOK;
 }
@@ -164,4 +176,21 @@ bool StPicoMcNpeAnaMaker::isGoodElectronPair(StElectronPair const & epair, float
 void StPicoMcNpeAnaMaker::fillHistogram(StPicoTrack const * const trk) const
 {
 
+}
+bool StPicoMcAnaMaker::isRcTrack(StPicoMcTrack const * const PicoMcTrack, StPicoDst const * const  PicoDst,int &id)
+{
+    int nMcTracks =  PicoDst->numberOfMcTracks();
+    if(PicoMcTrack->assoId() == Pico::USHORTMAX )
+        return false;
+    int temp = Pico::USHORTMAX ;
+    for(int i_Rc =0; i_Rc<PicoDst->numberOfTracks(); ++i_Rc){
+        StPicoTrack *Trk = (StPicoTrack*)PicoDst->track(i_Rc);
+        if(PicoMcTrack->assoId() == Trk->id() ) {
+            temp = i_Rc;
+            break;
+        }
+    }
+    if (temp == Pico::USHORTMAX) return false;;
+    id=temp;
+    return true;
 }
