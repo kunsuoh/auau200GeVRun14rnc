@@ -121,7 +121,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
             for (int j=0; j<idPicoDstRcElectrons.size(); j++) {
                 StPicoMcTrack *mcElectron = (StPicoMcTrack*)picoDst->mctrack(j);
                 if (mcPositron->parentId() == mcElectron->parentId()) {
-                    cout << "gamma conversion!" << endl;
+                    cout << "gamma conversion!" << i << " " << j << endl;
                     
                 }
             }
