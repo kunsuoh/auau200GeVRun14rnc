@@ -110,18 +110,24 @@ Int_t StPicoMcNpeAnaMaker::Make()
                 isRcTrack(mcTrk,picoDst,id);
                 if(id!=-999){
                     rcTrk = (StPicoTrack*)picoDst->track(id);
-                    if (trackId==2)idPicoDstRcPositrons.push_back(id);
-                    else idPicoDstRcElectrons.push_back(id);
+                    if (trackId==2) {
+                        idPicoDstRcPositrons.push_back(id);
+                        idPicoDstMcPositrons.push_back(i_Mc);
+                    }
+                    else {
+                        idPicoDstRcElectrons.push_back(id);
+                        idPicoDstMcElectrons.push_back(i_Mc);
+                    }
                 }
             }
         }
         cout << idPicoDstRcPositrons.size() << " " << idPicoDstRcElectrons.size() << endl;
         
-        for (int i=0; i<idPicoDstRcPositrons.size(); i++) {
-            StPicoMcTrack *mcPositron = (StPicoMcTrack*)picoDst->mctrack(idPicoDstRcPositrons[i]);
+        for (int i=0; i<idPicoDstMcPositrons.size(); i++) {
+            StPicoMcTrack *mcPositron = (StPicoMcTrack*)picoDst->mctrack(idPicoDstMcPositrons[i]);
             
-            for (int j=0; j<idPicoDstRcElectrons.size(); j++) {
-                StPicoMcTrack *mcElectron = (StPicoMcTrack*)picoDst->mctrack(idPicoDstRcElectrons[j]);
+            for (int j=0; j<idPicoDstMcElectrons.size(); j++) {
+                StPicoMcTrack *mcElectron = (StPicoMcTrack*)picoDst->mctrack(idPicoDstMcElectrons[j]);
                 if (mcPositron->parentId() != Pico::USHORTMAX && mcPositron->parentId() == mcElectron->parentId()) {
                     cout << "gamma conversion!" << i << " " << j << " " << mcPositron->parentId() << " " << mcElectron->parentId() << endl;
                     
