@@ -43,6 +43,10 @@ Int_t StPicoMcNpeAnaMaker::Init()
     hEventVz = new TH1F("hEventVz","hEventVz",200,-10,10);
     hTrackParentGeantId = new TH1F("hTrackParentGeantId","hTrackParentGeantId",100,0,100);
     hTrackGeantId = new TH1F("hTrackGeantId","hTrackGeantId",100,0,100);
+    hPairMass = new TH1F("hPairMass","hPairMass",100,-0.1,0.4);
+    hPairDca = new TH1F("hPairDca","hPairDca",100,0,0.5);
+    hPairPosition = new TH2F("hPairPosition","hPairPosition",200,-10,10,200,-10,10);
+
     return kStOK;
 }
 
@@ -54,6 +58,9 @@ Int_t StPicoMcNpeAnaMaker::Finish()
     hEventVz->Write();
     hTrackParentGeantId->Write();
     hTrackGeantId->Write();
+    hPairMass->Write();
+    hPairDca->Write();
+    hPairPosition->Write();
     
     mOutputFile->Write();
     mOutputFile->Close();
@@ -135,6 +142,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
                     StPicoTrack *rcPositron = picoDst->track(idPicoDstRcPositrons[i]);
                     StPicoTrack *rcElectron = picoDst->track(idPicoDstRcElectrons[j]);
                     StElectronPair * rcPair = new StElectronPair(rcPositron,rcElectron,i,j,bField);
+                    fillHistogram(rcPair);
                     
                     
                 }
@@ -199,7 +207,13 @@ bool StPicoMcNpeAnaMaker::isGoodElectronPair(StElectronPair const & epair, float
 //-----------------------------------------------------------------------------
 void StPicoMcNpeAnaMaker::fillHistogram(StPicoTrack const * const trk) const
 {
-
+    
+}
+void StPicoMcNpeAnaMaker::fillHistogram(StElectronPair const * const pair) const
+{
+    hPairMass->Fill(pair->pairMass());
+    hPairDca->Fill(pair->pairDca());
+    hPairPosition->Fill(pair->pairPositionX(),pair->pairPositionY());
 }
 bool StPicoMcNpeAnaMaker::isRcTrack(StPicoMcTrack const * const PicoMcTrack, StPicoDst const * const  PicoDst,int &id)
 {

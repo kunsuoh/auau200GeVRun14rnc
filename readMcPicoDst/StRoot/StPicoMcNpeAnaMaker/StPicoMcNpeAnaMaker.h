@@ -69,6 +69,9 @@ private:
     TH1F * hEventVz;
     TH1F * hTrackParentGeantId;
     TH1F * hTrackGeantId;
+    TH1F * hPairMass;
+    TH1F * hPairDca;
+    TH2F * hPairPosition;
 
     
     ClassDef(StPicoMcNpeAnaMaker, 0)
