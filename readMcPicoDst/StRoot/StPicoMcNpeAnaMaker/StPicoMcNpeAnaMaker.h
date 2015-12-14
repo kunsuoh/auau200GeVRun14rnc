@@ -47,6 +47,10 @@ private:
     TFile* mOutputFile;
     TTree* mTree;
     
+    TH1F * hEventVz;
+    TH1F * hTrackParentGeantId;
+    TH1F * hTrackGeantId;
+
     
     ClassDef(StPicoMcNpeAnaMaker, 0)
 };

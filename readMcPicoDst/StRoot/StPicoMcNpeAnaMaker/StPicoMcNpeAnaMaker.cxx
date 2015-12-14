@@ -38,7 +38,9 @@ StPicoMcNpeAnaMaker::~StPicoMcNpeAnaMaker()
 //-----------------------------------------------------------------------------
 Int_t StPicoMcNpeAnaMaker::Init()
 {
-    
+    hEventVz = new TH1F("hEventVz","hEventVz",200,-10,10);
+    hTrackParentGeantId = new TH1F("hTrackParentGeantId","hTrackParentGeantId",100,0,100);
+    hTrackGeantId = new TH1F("hTrackGeantId","hTrackGeantId",100,0,100);
     return kStOK;
 }
 
@@ -47,6 +49,9 @@ Int_t StPicoMcNpeAnaMaker::Finish()
 {
     mOutputFile->cd();
     // write histograms
+    hEventVz->Write();
+    hTrackParentGeantId->Write();
+    hTrackGeantId->Write();
     
     mOutputFile->Write();
     mOutputFile->Close();
@@ -76,55 +81,23 @@ Int_t StPicoMcNpeAnaMaker::Make()
     mPicoEvent = picoDst->event();
     
     cout << "check before isGoodEvent()" << endl;
-    if (!isGoodEvent())
+    if (isGoodEvent())
     {
         
-        UInt_t nTracks = picoDst->numberOfTracks();
-        
-        std::vector<unsigned short> idxPicoTaggedEs;
-        std::vector<unsigned short> idxPicoPartnerEs;
-        for (unsigned short iTrack = 0; iTrack < nTracks; ++iTrack)
-        {
-            StPicoTrack const* trk = picoDst->track(iTrack);
-            if (!trk) continue;
-            if (isElectron(trk))
-            {
-                if (isTaggedElectron(trk)) idxPicoTaggedEs.push_back(iTrack);
-            }
-            
-            if (isPartnerElectron(trk)) idxPicoPartnerEs.push_back(iTrack);
-        } // .. end tracks loop
-        cout << nTracks << " " << idxPicoTaggedEs.size() << " " << idxPicoPartnerEs.size() << endl;
-        
         float const bField = mPicoEvent->bField();
-
-        for (unsigned short ik = 0; ik < idxPicoTaggedEs.size(); ++ik)
-        {
+        int nMcTracks =  picoDst->numberOfMcTracks();
+        for(int i_Mc=0; i_Mc<nMcTracks; i_Mc++){
+            StPicoMcTrack *mcTrk = (StPicoMcTrack*)picoDst->mctrack(i_Mc);
+            float parentId=((StPicoMcTrack*)(picoDst->mctrack(mcTrk->parentId())))->GePid();
+            float gepid=mcTrk->GePid();
+            hParentGeantId->Fill(parentId);
+            hGeantId->Fill(gepid);
             
-            StPicoTrack const * electron = picoDst->track(idxPicoTaggedEs[ik]);
-            
-            // make electron pairs
-            for (unsigned short ip = 0; ip < idxPicoPartnerEs.size(); ++ip)
-            {
-                
-                if (idxPicoTaggedEs[ik] == idxPicoPartnerEs[ip]) continue;
-                
-                StPicoTrack const * partner = picoDst->track(idxPicoPartnerEs[ip]);
-                
-                StElectronPair electronPair(electron, partner, idxPicoTaggedEs[ik], idxPicoPartnerEs[ip], bField);
-                
-                cout << electronPair.pairMass() << endl;
-                if (!isGoodElectronPair(electronPair, electron->gPt())) continue;
-                
-                
-            } // .. end make electron pairs
-        } // .. end of tagged e loop
 
-        idxPicoTaggedEs.clear();
-        idxPicoPartnerEs.clear();
+        }
+        
         
     } //.. end of good event fill
-    
     
     return kStOK;
 }
@@ -132,8 +105,11 @@ Int_t StPicoMcNpeAnaMaker::Make()
 //-----------------------------------------------------------------------------
 bool StPicoMcNpeAnaMaker::isGoodEvent()
 {
-    return fabs(mPicoEvent->primaryVertex().z()) < cuts::vz &&
-    fabs(mPicoEvent->primaryVertex().z() - mPicoEvent->vzVpd()) < cuts::vzVpdVz;
+    float vZ = mPicoEvent->primaryVertex().z();
+    
+    hEventVz->Fill(vZ);
+    
+    return fabs(vZ) < cuts::vz ;
     
 }
 //-----------------------------------------------------------------------------
