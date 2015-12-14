@@ -110,7 +110,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
                 Int_t id=-999;
                 isRcTrack(mcTrk,picoDst,id);
                 if(id!=-999){
-                    rcTrk = (StPicoTrack*)mPicoDst->track(id);
+                    rcTrk = (StPicoTrack*)picoDst->track(id);
                     if (trackId==2)idPicoDstRcPositrons.push_back(id);
                     else idPicoDstRcElectrons.push_back(id);
                 }
