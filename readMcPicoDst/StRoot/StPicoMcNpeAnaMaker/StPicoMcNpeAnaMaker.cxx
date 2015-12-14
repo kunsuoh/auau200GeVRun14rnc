@@ -177,7 +177,7 @@ void StPicoMcNpeAnaMaker::fillHistogram(StPicoTrack const * const trk) const
 {
 
 }
-bool StPicoMcAnaMaker::isRcTrack(StPicoMcTrack const * const PicoMcTrack, StPicoDst const * const  PicoDst,int &id)
+bool StPicoMcNpeAnaMaker::isRcTrack(StPicoMcTrack const * const PicoMcTrack, StPicoDst const * const  PicoDst,int &id)
 {
     int nMcTracks =  PicoDst->numberOfMcTracks();
     if(PicoMcTrack->assoId() == Pico::USHORTMAX )
