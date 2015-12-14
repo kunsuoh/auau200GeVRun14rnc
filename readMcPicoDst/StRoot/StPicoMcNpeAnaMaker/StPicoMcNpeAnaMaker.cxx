@@ -86,6 +86,9 @@ Int_t StPicoMcNpeAnaMaker::Make()
     {
         std::vector<Int_t> idPicoDstRcElectrons;
         std::vector<Int_t> idPicoDstRcPositrons;
+        std::vector<Int_t> idPicoDstMcElectrons;
+        std::vector<Int_t> idPicoDstMcPositrons;
+
         float const bField = mPicoEvent->bField();
         int nMcTracks =  picoDst->numberOfMcTracks();
 
