@@ -85,18 +85,19 @@ Int_t StPicoMcNpeAnaMaker::Make()
     cout << "check before isGoodEvent()" << endl;
     if (isGoodEvent())
     {
-        
+        cout << "check after isGoodEvent()" << endl;
         float const bField = mPicoEvent->bField();
         int nMcTracks =  picoDst->numberOfMcTracks();
+        cout << "check after isGoodEvent()" << endl;
+
         for(int i_Mc=0; i_Mc<nMcTracks; i_Mc++){
             StPicoMcTrack *mcTrk = (StPicoMcTrack*)picoDst->mctrack(i_Mc);
             float parentId=((StPicoMcTrack*)(picoDst->mctrack(mcTrk->parentId())))->GePid();
             float gepid=mcTrk->GePid();
             hTrackParentGeantId->Fill(parentId);
             hTrackGeantId->Fill(gepid);
-            
-
         }
+        cout << "check after isGoodEvent()" << endl;
         
         
     } //.. end of good event fill
