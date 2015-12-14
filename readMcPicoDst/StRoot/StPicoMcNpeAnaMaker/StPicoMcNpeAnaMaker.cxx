@@ -62,7 +62,7 @@ Int_t StPicoMcNpeAnaMaker::Finish()
     hPairMass->Write();
     hPairDca->Write();
     hPairPosition->Write();
-    nt->Write();
+    nt2->Write();
     
     mOutputFile->Write();
     mOutputFile->Close();
