@@ -17,14 +17,14 @@ namespace cuts
 {
 
     //event
-    float const vz = 30.0;
+    float const vz = 6.0;
     float const vzVpdVz = 3.0;
     
     // track
     int const nHitsFit = 20;
     float const nHitsRatioMin = 0.52; float const nHitsRatioMax = 1.2;
     float const ptMin = .2;
-    float const ptMax = 5.;
+    float const ptMax = 20.;
 
     
     // electrons

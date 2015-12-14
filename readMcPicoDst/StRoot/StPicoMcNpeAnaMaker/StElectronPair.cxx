@@ -23,7 +23,11 @@ mMass(std::numeric_limits<unsigned short>::quiet_NaN()),
 mPairDca(std::numeric_limits<float>::quiet_NaN()),
 mPositionX(std::numeric_limits<float>::quiet_NaN()),
 mPositionY(std::numeric_limits<float>::quiet_NaN()),
-mPositionZ(std::numeric_limits<float>::quiet_NaN())
+mPositionZ(std::numeric_limits<float>::quiet_NaN()),
+mPhiV(std::numeric_limits<float>::quiet_NaN()),
+mOpenAngle(std::numeric_limits<float>::quiet_NaN()),
+mPhi(std::numeric_limits<float>::quiet_NaN()),
+mEta(std::numeric_limits<float>::quiet_NaN())
 {
 }
 //------------------------------------
@@ -33,7 +37,11 @@ mMass(t->mMass),
 mPairDca(t->mPairDca),
 mPositionX(t->mPositionX),
 mPositionY(t->mPositionY),
-mPositionZ(t->mPositionZ)
+mPositionZ(t->mPositionZ),
+mPhiV(t->mPhiV),
+mOpenAngle(t->mOpenAngle),
+mPhi(t->mPhi),
+mEta(t->mEta)
 {
 }
 //------------------------------------
@@ -44,7 +52,11 @@ mMass(std::numeric_limits<unsigned short>::quiet_NaN()),
 mPairDca(std::numeric_limits<float>::quiet_NaN()),
 mPositionX(std::numeric_limits<float>::quiet_NaN()),
 mPositionY(std::numeric_limits<float>::quiet_NaN()),
-mPositionZ(std::numeric_limits<float>::quiet_NaN())
+mPositionZ(std::numeric_limits<float>::quiet_NaN()),
+mPhiV(std::numeric_limits<float>::quiet_NaN()),
+mOpenAngle(std::numeric_limits<float>::quiet_NaN()),
+mPhi(std::numeric_limits<float>::quiet_NaN()),
+mEta(std::numeric_limits<float>::quiet_NaN())
 {
     if ((!electron || !partner) || (electron->id() == partner->id()))
     {
@@ -83,5 +95,24 @@ mPositionZ(std::numeric_limits<float>::quiet_NaN())
     mPositionY = Position.y();
 
     mPositionZ = Position.z();
+    phiCalculation(partnerFourMom, electronFourMom, bField > 0 ? 1 : -1, mPhiV, mOpenAngle);
+    mPhi = epairFourMom.phi();
+    mEta = epairFourMom.eta();
+    
 }
+void StElectronPair::phiCalculation(StLorentzVectorF positron,StLorentzVectorF electron, double mN, double &phiV, double &openangle)
+{
+    TVector3 ppp(positron.px(),positron.py(),positron.pz());
+    TVector3 eee(electron.px(),electron.py(),electron.pz());
+    TVector3 u=ppp+eee;
+    TVector3 v=eee.Cross(ppp);
+    TVector3 w=u.Cross(v);
+    TVector3 nz(0.,0.,mN);
+    TVector3 wc=u.Cross(nz);
+    
+    phiV =w.Angle(wc);
+    openangle=ppp.Angle(eee);
+    
+}
+
 #endif // __ROOT__

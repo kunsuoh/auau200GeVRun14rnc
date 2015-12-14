@@ -34,14 +34,18 @@ public:
     float positionX() const;                // conversion position X
     float positionY() const;                // conversion position Y
     float positionZ() const;                // conversion position Z
-
+    float phiV() const;
+    float openAngle() const;
+    float phi() const;
+    float eta() const;
     
     
 private:
     // disable copy constructor and assignment operator by making them private (once C++11 is available in STAR you can use delete specifier instead)
     StElectronPair(StElectronPair const &);
     StElectronPair& operator=(StElectronPair const &);
-    
+    phiCalculation(StLorentzVectorF,StLorentzVectorF, double, double &, double &);
+
     unsigned short mElectronIdx;    // index of electron track in StPicoDstEvent (2 Bytes)
     unsigned short mPartnerIdx;     // index of partner track in StPicoDstEvent (2 Bytes)
     unsigned short mMass;           // mass * 1000 (2 Bytes)
@@ -49,6 +53,10 @@ private:
     float mPositionX;               // conversion position x (4 Bytes)
     float mPositionY;               // conversion position y (4 Bytes)
     float mPositionZ;               // conversion position z (4 Bytes)
+    float mPhiV;
+    float mOpenAngle;
+    float mPhi;
+    float mEta;
     
     ClassDef(StElectronPair,2)
 };
@@ -59,6 +67,10 @@ inline float StElectronPair::pairDca() const                    { return mPairDc
 inline float StElectronPair::positionX() const                  { return mPositionX;}
 inline float StElectronPair::positionY() const                  { return mPositionY;}
 inline float StElectronPair::positionZ() const                  { return mPositionZ;}
+inline float StElectronPair::phiV() const                       { return mPhiV;}
+inline float StElectronPair::openAngle() const                  { return mOpenAngle;}
+inline float StElectronPair::phi() const                        { return mPhi;}
+inline float StElectronPair::eta() const                        { return mEta ;}
 
 #endif
 #endif

@@ -65,7 +65,7 @@ private:
     StPicoEvent*    mPicoEvent;
     
     TFile* mOutputFile;
-    TTree* mTree;
+    TNtuple * nt2;
     
     TH1F * hEventVz;
     TH1F * hTrackParentGeantId;

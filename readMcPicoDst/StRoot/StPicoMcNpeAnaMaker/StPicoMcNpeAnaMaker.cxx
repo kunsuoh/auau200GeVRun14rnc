@@ -46,6 +46,7 @@ Int_t StPicoMcNpeAnaMaker::Init()
     hPairMass = new TH1F("hPairMass","hPairMass",100,-0.1,0.4);
     hPairDca = new TH1F("hPairDca","hPairDca",100,0,0.5);
     hPairPosition = new TH2F("hPairPosition","hPairPosition",200,-10,10,200,-10,10);
+    nt2 = new TNtuple("nt2","electron pair ntuple","pt1:pt2:phiV:openangle:v0x:v0y:v0z:phi:eta:mass:pairDca:mcv0x:mcv0y:mcv0z:mcPairPt");
 
     return kStOK;
 }
@@ -61,6 +62,7 @@ Int_t StPicoMcNpeAnaMaker::Finish()
     hPairMass->Write();
     hPairDca->Write();
     hPairPosition->Write();
+    nt->Write();
     
     mOutputFile->Write();
     mOutputFile->Close();
@@ -143,7 +145,15 @@ Int_t StPicoMcNpeAnaMaker::Make()
                     StPicoTrack *rcElectron = picoDst->track(idPicoDstRcElectrons[j]);
                     StElectronPair * rcPair = new StElectronPair(rcPositron,rcElectron,i,j,bField);
                     fillHistogram(rcPair);
-                    
+                    nt2->Fill(rcPositron->gPt(),
+                              rcElectron->gPt()*-1,
+                              rcPair->phiV(),
+                              rcPair->openAngle(),
+                              rcPair->positionX(),rcPair->positionY(),rcPair->positionZ(),
+                              rcPair->phi(),rcPair->eta(),
+                              rcPair->pairMass(),rcPair->pairDca(),
+                              mcElectron->Origin().x(),mcElectron->Origin().y(),mcElectron->Origin().z(),
+                              ((StPicoMcTrack*)(picoDst->mctrack(mcElectron->parentId())))->Mom().perp());
                     
                 }
             }
@@ -211,9 +221,11 @@ void StPicoMcNpeAnaMaker::fillHistogram(StPicoTrack const * const trk) const
 }
 void StPicoMcNpeAnaMaker::fillHistogram(StElectronPair const * const pair) const
 {
+    
     hPairMass->Fill(pair->pairMass());
     hPairDca->Fill(pair->pairDca());
     hPairPosition->Fill(pair->positionX(),pair->positionY());
+
 }
 bool StPicoMcNpeAnaMaker::isRcTrack(StPicoMcTrack const * const PicoMcTrack, StPicoDst const * const  PicoDst,int &id)
 {
