@@ -82,7 +82,6 @@ Int_t StPicoMcNpeAnaMaker::Make()
     
     mPicoEvent = picoDst->event();
     
-    cout << "check before isGoodEvent()" << endl;
     if (isGoodEvent())
     {
         std::vector<Int_t> idPicoDstRcElectrons;
@@ -117,6 +116,17 @@ Int_t StPicoMcNpeAnaMaker::Make()
             }
         }
         cout << idPicoDstRcPositrons.size() << " " << idPicoDstRcElectrons.size() << endl;
+        for (int i=0; i<idPicoDstRcPositrons.size(); i++) {
+            StPicoMcTrack *mcPositron = (StPicoMcTrack*)picoDst->mctrack(i);
+            for (int j=0; j<idPicoDstRcElectrons.size(); j++) {
+                StPicoMcTrack *mcElectron = (StPicoMcTrack*)picoDst->mctrack(j);
+                if (mcPositron->parentId() == mcElectron->parentId()) {
+                    cout << "gamma conversion!" << endl;
+                    
+                }
+            }
+        }
+        
         
     } //.. end of good event
     
