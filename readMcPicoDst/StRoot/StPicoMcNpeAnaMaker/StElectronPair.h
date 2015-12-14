@@ -14,6 +14,7 @@
  */
 
 #include "TObject.h"
+#include "StLorentzVectorF.h"
 
 class StPicoTrack;
 class StPicoEvent;

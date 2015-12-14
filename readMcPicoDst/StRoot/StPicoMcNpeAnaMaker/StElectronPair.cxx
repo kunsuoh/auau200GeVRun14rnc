@@ -97,7 +97,7 @@ mEta(std::numeric_limits<float>::quiet_NaN())
     mPositionZ = Position.z();
     phiCalculation(partnerFourMom, electronFourMom, bField > 0 ? 1 : -1, mPhiV, mOpenAngle);
     mPhi = epairFourMom.phi();
-    mEta = epairFourMom.eta();
+    mEta = epairFourMom.pseudoRapidity();
     
 }
 void StElectronPair::phiCalculation(StLorentzVectorF positron,StLorentzVectorF electron, double mN, double &phiV, double &openangle)
