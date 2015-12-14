@@ -94,17 +94,17 @@ Int_t StPicoMcNpeAnaMaker::Make()
             StPicoMcTrack *mcTrk = (StPicoMcTrack*)picoDst->mctrack(i_Mc);
             
             // get Geant Id for track and parent
-            float parentId= Pico::USHORTMAX;
+            float parentGid= Pico::USHORTMAX;
             if(mcTrk->parentId() != Pico::USHORTMAX)
-                parentId=((StPicoMcTrack*)(picoDst->mctrack(mcTrk->parentId())))->GePid();
+                parentGid=((StPicoMcTrack*)(picoDst->mctrack(mcTrk->parentId())))->GePid();
             float trackId=mcTrk->GePid();
             
             // fill histogram
-            hTrackParentGeantId->Fill(parentId);
+            hTrackParentGeantId->Fill(parentGid);
             hTrackGeantId->Fill(trackId);
             
             // get Rc Trcak
-            if (parentId == 1 && (trackId == 2 || trackId == 3)) {
+            if (parentGid == 1 && (trackId == 2 || trackId == 3)) {
                 StPicoTrack *rcTrk=0;
                 Int_t id=-999;
                 isRcTrack(mcTrk,picoDst,id);
@@ -120,7 +120,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
             StPicoMcTrack *mcPositron = (StPicoMcTrack*)picoDst->mctrack(i);
             for (int j=0; j<idPicoDstRcElectrons.size(); j++) {
                 StPicoMcTrack *mcElectron = (StPicoMcTrack*)picoDst->mctrack(j);
-                if (mcPositron->parentId() == mcElectron->parentId()) {
+                if (mcPositron->parentId() != Pico::USHORTMAX && mcPositron->parentId() == mcElectron->parentId()) {
                     cout << "gamma conversion!" << i << " " << j << " " << mcPositron->parentId() << " " << mcElectron->parentId() << endl;
                     
                 }
