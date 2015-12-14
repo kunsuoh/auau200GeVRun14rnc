@@ -128,11 +128,14 @@ Int_t StPicoMcNpeAnaMaker::Make()
         
         for (int i=0; i<idPicoDstMcPositrons.size(); i++) {
             StPicoMcTrack *mcPositron = (StPicoMcTrack*)picoDst->mctrack(idPicoDstMcPositrons[i]);
-            
+            StPicoTrack *rcPositron = picoDst->track(idPicoDstRcPositrons[i]);
             for (int j=0; j<idPicoDstMcElectrons.size(); j++) {
                 StPicoMcTrack *mcElectron = (StPicoMcTrack*)picoDst->mctrack(idPicoDstMcElectrons[j]);
                 if (mcPositron->parentId() != Pico::USHORTMAX && mcPositron->parentId() == mcElectron->parentId()) {
-                    cout << "gamma conversion!" << idPicoDstMcPositrons[i] << " " << idPicoDstMcElectrons[j] << " " << mcPositron->parentId() << " " << mcElectron->parentId() << endl;
+                    StPicoTrack *rcPositron = picoDst->track(idPicoDstRcPositrons[i]);
+                    StPicoTrack *rcElectron = picoDst->track(idPicoDstRcElectrons[j]);
+                    StElectronPair * rcPair = new StElectronPair(rcPositron,rcElectron,i,j,bField);
+                    
                     
                 }
             }
