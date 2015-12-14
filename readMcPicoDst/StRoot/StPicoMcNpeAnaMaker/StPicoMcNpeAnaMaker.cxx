@@ -130,10 +130,9 @@ Int_t StPicoMcNpeAnaMaker::Make()
             StPicoMcTrack *mcPositron = (StPicoMcTrack*)picoDst->mctrack(idPicoDstMcPositrons[i]);
             
             for (int j=0; j<idPicoDstMcElectrons.size(); j++) {
-                if (i<j) continue;
                 StPicoMcTrack *mcElectron = (StPicoMcTrack*)picoDst->mctrack(idPicoDstMcElectrons[j]);
                 if (mcPositron->parentId() != Pico::USHORTMAX && mcPositron->parentId() == mcElectron->parentId()) {
-                    cout << "gamma conversion!" << i << " " << j << " " << mcPositron->parentId() << " " << mcElectron->parentId() << endl;
+                    cout << "gamma conversion!" << idPicoDstMcPositrons[i] << " " << idPicoDstMcPositrons[j] << " " << mcPositron->parentId() << " " << mcElectron->parentId() << endl;
                     
                 }
             }
