@@ -45,7 +45,7 @@ private:
     // disable copy constructor and assignment operator by making them private (once C++11 is available in STAR you can use delete specifier instead)
     StElectronPair(StElectronPair const &);
     StElectronPair& operator=(StElectronPair const &);
-    phiCalculation(StLorentzVectorF const,StLorentzVectorF const, int, float &, float &);
+    void phiCalculation(StLorentzVectorF const, StLorentzVectorF const, int, float &, float &);
 
     unsigned short mElectronIdx;    // index of electron track in StPicoDstEvent (2 Bytes)
     unsigned short mPartnerIdx;     // index of partner track in StPicoDstEvent (2 Bytes)
