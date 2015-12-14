@@ -10,13 +10,31 @@
  *  **Code Maintainer
  * **************************************************
  */
-
 #include "StMaker.h"
+#include "TNtuple.h"
 #include "TH2F.h"
+
+#include "StarClassLibrary/StThreeVectorF.hh"
+#include "StEvent/StDcaGeometry.h"
+
+#include "StPicoDstMaker/StPicoEvent.h"
+#include "StPicoDstMaker/StPicoTrack.h"
+#include "StPicoDstMaker/StPicoMcTrack.h"
 
 class TTree;
 class TFile;
+class TH1F;
+class TH2F;
+class TTree;
+
+class StPicoDst;
 class StPicoDstMaker;
+class StPicoEvent;
+class StPicoTrack;
+class StPicoMcTrack;
+class TString;
+class StDcaGeometry;
+
 class StElectronPair;
 
 

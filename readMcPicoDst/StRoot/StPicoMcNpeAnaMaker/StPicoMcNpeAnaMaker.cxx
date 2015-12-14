@@ -10,6 +10,8 @@
 #include "../StPicoDstMaker/StPicoDstMaker.h"
 #include "../StPicoDstMaker/StPicoEvent.h"
 #include "../StPicoDstMaker/StPicoTrack.h"
+#include "../StPicoDstMaker/StPicoMcEvent.h"
+#include "../StPicoDstMaker/StPicoMcTrack.h"
 
 #include "StPicoMcNpeAnaMaker.h"
 #include "StElectronPair.h"
