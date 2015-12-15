@@ -85,8 +85,7 @@ mEta(std::numeric_limits<float>::quiet_NaN())
     StLorentzVectorF const partnerFourMom(partnerMomAtDca, partnerMomAtDca.massHypothesis(M_ELECTRON));
     StLorentzVectorF const epairFourMom = electronFourMom + partnerFourMom;
 
-    mMass = static_cast<unsigned int>(epairFourMom.m()*1000) < std::numeric_limits<unsigned short>::max() ?
-            static_cast<unsigned short>(epairFourMom.m()*1000) : std::numeric_limits<unsigned short>::quiet_NaN();
+    mMass = epairFourMom.m();
     
     StThreeVectorD Position = (kAtDcaToPartner + pAtDcaToElectron)/2.0;
 
