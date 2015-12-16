@@ -109,13 +109,16 @@ Int_t StPicoMcNpeAnaMaker::Make()
             
             // get Geant Id for track and parent
             float parentGid= Pico::USHORTMAX;
-            if(mcTrk->parentId() != Pico::USHORTMAX)
-                parentGid=((StPicoMcTrack*)(picoDst->mctrack(mcTrk->parentId())))->GePid();
+            if(mcTrk->parentId() != Pico::USHORTMAX) {
+                StPicoMcTrack *mcParentTrk = (StPicoMcTrack*)picoDst->mctrack(mcTrk->parentId());
+                parentGid=mcParentTrk->GePid();
+                if(mcParentTrk->parentId() != Pico::USHORTMAX) {
+                    continue;
+                }
+            }
             float trackId=mcTrk->GePid();
 
-            
-            if ( ((StPicoMcTrack*)(picoDst->mctrack(mcTrk->parentId())))->parentId()!=Pico::USHORTMAX) continue;
-            hTrackParentGeantId->Fill(((StPicoMcTrack*)(picoDst->mctrack(((StPicoMcTrack*)(picoDst->mctrack(mcTrk->parentId())))->parentId())))->GePid());
+            hTrackParentGeantId->Fill(parentGid);
             hTrackGeantId->Fill(trackId);
             
             // get Rc Trcak
