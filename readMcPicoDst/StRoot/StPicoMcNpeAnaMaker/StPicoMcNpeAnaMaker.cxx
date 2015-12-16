@@ -114,7 +114,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
             float trackId=mcTrk->GePid();
 
             hTrackParentGeantId->Fill(picoDst->mctrack(mcTrk->parentId()))->parentId()->GePid());
-            if (picoDst->mctrack(mcTrk->parentId()))->parentId()!=Pico::USHORTMAX) continue;
+            if ( picoDst->mctrack(mcTrk->parentId())->parentId()!=Pico::USHORTMAX) continue;
             hTrackGeantId->Fill(trackId);
             
             // get Rc Trcak
