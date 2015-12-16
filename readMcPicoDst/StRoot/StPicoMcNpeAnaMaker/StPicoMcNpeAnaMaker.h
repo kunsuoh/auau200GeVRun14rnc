@@ -66,6 +66,7 @@ private:
     
     TFile* mOutputFile;
     TNtuple * nt2;
+    TNtuple * nt3;
     
     TH1F * hEventVz;
     TH1F * hTrackParentGeantId;
