@@ -204,8 +204,8 @@ bool StPicoMcNpeAnaMaker::isGoodTrack(StPicoTrack const * const trk) const
 //-----------------------------------------------------------------------------
 void StPicoMcNpeAnaMaker::fillHistogram(StPicoTrack const * const rcTrk, StPicoMcTrack const * const mcTrk) const
 {
-    hTrackPt->Fill(rcTrk->gPt());
-    hTrackNHitsFit->Fill(rcTrk->nHitsFit());
+//    hTrackPt->Fill(rcTrk->gPt());
+//    hTrackNHitsFit->Fill(rcTrk->nHitsFit());
 }
 //-----------------------------------------------------------------------------
 void StPicoMcNpeAnaMaker::fillHistogram(StElectronPair const * const pair) const
