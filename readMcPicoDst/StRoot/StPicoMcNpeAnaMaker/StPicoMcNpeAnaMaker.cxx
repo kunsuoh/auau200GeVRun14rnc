@@ -47,7 +47,7 @@ Int_t StPicoMcNpeAnaMaker::Init()
     hPairDca = new TH1F("hPairDca","hPairDca",100,0,0.5);
     hPairPosition = new TH2F("hPairPosition","hPairPosition",200,-10,10,200,-10,10);
     nt2 = new TNtuple("nt2","electron pair ntuple","pt1:pt2:phiV:openangle:v0x:v0y:v0z:phi:eta:mass:pairDca:mcv0x:mcv0y:mcv0z:mcPairPt");
-    nt3 = new TNtuple("nt2","electron pair ntuple","pt1:pt2:v0x:v0y:v0z:phi:eta:mass:pairDca:mcv0x:mcv0y:mcv0z:mcPairPt:angle:length");
+    nt3 = new TNtuple("nt3","electron pair ntuple 3","pt1:pt2:v0x:v0y:v0z:phi:eta:mass:pairDca:mcv0x:mcv0y:mcv0z:mcPairPt:angle:length");
 
     return kStOK;
 }

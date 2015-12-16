@@ -95,7 +95,7 @@ mLength(std::numeric_limits<float>::quiet_NaN())
     StThreeVectorF const Position = (kAtDcaToPartner + pAtDcaToElectron)/2.0;
 
     mAngle = epairMomAtDca.angle(Position);
-    mLength = TMath::Sin(mAngle)*epairMomAtDca.mag();
+    mLength = TMath::Sin(mAngle)*Position.mag();
     
     mMass = epairFourMom.m();
     

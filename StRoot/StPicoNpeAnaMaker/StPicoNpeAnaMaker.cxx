@@ -16,6 +16,7 @@
 #include "StPicoDstMaker/StPicoBTofPidTraits.h"
 #include "StPicoNpeEventMaker/StPicoNpeEvent.h"
 #include "StPicoNpeEventMaker/StElectronPair.h"
+#include "StElectronSimPair.h"
 
 #include "StBTofUtil/tofPathLength.hh"
 #include "StLorentzVectorF.hh"
@@ -130,6 +131,7 @@ Int_t StPicoNpeAnaMaker::Init()
     h2dPhELInvMassvsZ_HFT = new TH2D("h2dPhELInvMassvsZ_HFT","h2dPhELInvMassvsZ_HFT",100,-20,20, 100, 0, 0.5);
 
     nt = new TNtuple("nt","electron pair ntuple","pt1:pt2:phiV:openangle:v0x:v0y:v0z:phi:eta:mass:pairDca:nsige1:nsige2");
+    nt2 = new TNtuple("nt","electron pair ntuple","pt1:pt2:v0x:v0y:v0z:phi:eta:mass:pairDca:nsige1:nsige2,angle,length");
     
     h2dPhEMassVsPt = new TH2D("h2dPhEMassVsPt","h2dPhEMassVsPt",100,0,0.5,100,0,20);
     h2dPhELMassVsPt = new TH2D("h2dPhELMassVsPt","h2dPhELMassVsPt",100,0,0.5,100,0,20);
@@ -151,6 +153,7 @@ Int_t StPicoNpeAnaMaker::Finish()
     // --------------- USER HISTOGRAM WRITE --------------------
     
     nt->Write();
+    nt2->Write();
     
     h2dPhEMassVsPt->Write();
     h2dPhELMassVsPt->Write();
@@ -325,8 +328,11 @@ Int_t StPicoNpeAnaMaker::Make()
         float pairDca = epair->pairDca();
         float nsige1 =  electron->nSigmaElectron();
         float nsige2 =  partner->nSigmaElectron();
+        StElectronSimPair * epairSim = new StElectronSimPair(electron,partner,epair->electronIdx(),epair->partnerIdx(),picoDst->event()->bField());
+
         
         nt->Fill(pt1,pt2,phiV,openangle,v0x,v0y,v0z,phi,eta,mass,pairDca,nsige1,nsige2);
+        nt2->Fill(pt1,pt2,v0x,v0y,v0z,phi,eta,mass,pairDca,nsige1,nsige2,epairSim->angle(),epairSim->length());
     }
 
     
