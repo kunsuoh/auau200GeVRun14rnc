@@ -112,7 +112,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
             if(mcTrk->parentId() != Pico::USHORTMAX)
                 parentGid=((StPicoMcTrack*)(picoDst->mctrack(mcTrk->parentId())))->GePid();
             float trackId=mcTrk->GePid();
-            
+            if (picoDst->mctrack(mcTrk->parentId()))->parentId()!=Pico::USHORTMAX) continue;
             // fill histogram
             hTrackParentGeantId->Fill(parentGid);
             hTrackGeantId->Fill(trackId);
