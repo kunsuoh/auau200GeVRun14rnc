@@ -46,7 +46,8 @@ Int_t StPicoMcNpeAnaMaker::Init()
     hPairMass = new TH1F("hPairMass","hPairMass",100,-0.1,0.4);
     hPairDca = new TH1F("hPairDca","hPairDca",100,0,0.5);
     hPairPosition = new TH2F("hPairPosition","hPairPosition",200,-10,10,200,-10,10);
-    nt2 = new TNtuple("nt2","electron pair ntuple","pt1:pt2:phiV:openangle:v0x:v0y:v0z:phi:eta:mass:pairDca:mcv0x:mcv0y:mcv0z:mcPairPt:angle:length");
+    nt2 = new TNtuple("nt2","electron pair ntuple","pt1:pt2:phiV:openangle:v0x:v0y:v0z:phi:eta:mass:pairDca:mcv0x:mcv0y:mcv0z:mcPairPt");
+    nt3 = new TNtuple("nt2","electron pair ntuple","pt1:pt2:v0x:v0y:v0z:phi:eta:mass:pairDca:mcv0x:mcv0y:mcv0z:mcPairPt:angle:length");
 
     return kStOK;
 }
@@ -63,6 +64,7 @@ Int_t StPicoMcNpeAnaMaker::Finish()
     hPairDca->Write();
     hPairPosition->Write();
     nt2->Write();
+    nt3->Write();
     
     mOutputFile->Write();
     mOutputFile->Close();
@@ -152,6 +154,14 @@ Int_t StPicoMcNpeAnaMaker::Make()
                                   rcElectron->gPt()*-1,
                                   rcPair->phiV(),
                                   rcPair->openAngle(),
+                                  rcPair->positionX(),rcPair->positionY(),rcPair->positionZ(),
+                                  rcPair->phi(),rcPair->eta(),
+                                  rcPair->pairMass(),rcPair->pairDca(),
+                                  mcElectron->Origin().x(),mcElectron->Origin().y(),mcElectron->Origin().z(),
+                                  ((StPicoMcTrack*)(picoDst->mctrack(mcElectron->parentId())))->Mom().perp()
+                                  );
+                        nt3->Fill(rcPositron->gPt(),
+                                  rcElectron->gPt()*-1,
                                   rcPair->positionX(),rcPair->positionY(),rcPair->positionZ(),
                                   rcPair->phi(),rcPair->eta(),
                                   rcPair->pairMass(),rcPair->pairDca(),
