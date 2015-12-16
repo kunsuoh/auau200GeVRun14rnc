@@ -46,7 +46,7 @@ Int_t StPicoMcNpeAnaMaker::Init()
     hPairMass = new TH1F("hPairMass","hPairMass",100,-0.1,0.4);
     hPairDca = new TH1F("hPairDca","hPairDca",100,0,0.5);
     hPairPosition = new TH2F("hPairPosition","hPairPosition",200,-10,10,200,-10,10);
-    nt2 = new TNtuple("nt2","electron pair ntuple","pt1:pt2:phiV:openangle:v0x:v0y:v0z:phi:eta:mass:pairDca:mcv0x:mcv0y:mcv0z:mcPairPt");
+    nt2 = new TNtuple("nt2","electron pair ntuple","pt1:pt2:phiV:openangle:v0x:v0y:v0z:phi:eta:mass:pairDca:mcv0x:mcv0y:mcv0z:mcPairPt:angle:length");
 
     return kStOK;
 }
@@ -116,13 +116,15 @@ Int_t StPicoMcNpeAnaMaker::Make()
             hTrackGeantId->Fill(trackId);
             
             // get Rc Trcak
-            if (parentGid == 1 && (trackId == 2 || trackId == 3)) {
+            if (parentGid == cuts::parentGid && (trackId == cuts::dau1Gid || trackId == cuts::dau2Gid)) {
                 StPicoTrack *rcTrk=0;
                 Int_t id=-999;
                 isRcTrack(mcTrk,picoDst,id);
                 if(id!=-999){
                     rcTrk = (StPicoTrack*)picoDst->track(id);
-                    if (trackId==2) {
+                    fillHistogram(rcTrk,mcTrk);
+                    
+                    if (trackId==cuts::dau1Gid) {
                         idPicoDstRcPositrons.push_back(id);
                         idPicoDstMcPositrons.push_back(i_Mc);
                     }
@@ -137,7 +139,6 @@ Int_t StPicoMcNpeAnaMaker::Make()
         
         for (int i=0; i<idPicoDstMcPositrons.size(); i++) {
             StPicoMcTrack *mcPositron = (StPicoMcTrack*)picoDst->mctrack(idPicoDstMcPositrons[i]);
-            StPicoTrack *rcPositron = picoDst->track(idPicoDstRcPositrons[i]);
             for (int j=0; j<idPicoDstMcElectrons.size(); j++) {
                 StPicoMcTrack *mcElectron = (StPicoMcTrack*)picoDst->mctrack(idPicoDstMcElectrons[j]);
                 if (mcPositron->parentId() != Pico::USHORTMAX && mcPositron->parentId() == mcElectron->parentId())
@@ -155,7 +156,10 @@ Int_t StPicoMcNpeAnaMaker::Make()
                                   rcPair->phi(),rcPair->eta(),
                                   rcPair->pairMass(),rcPair->pairDca(),
                                   mcElectron->Origin().x(),mcElectron->Origin().y(),mcElectron->Origin().z(),
-                                  ((StPicoMcTrack*)(picoDst->mctrack(mcElectron->parentId())))->Mom().perp());
+                                  ((StPicoMcTrack*)(picoDst->mctrack(mcElectron->parentId())))->Mom().perp(),
+                                  rcPair->angle(),
+                                  rcPair->length()
+                                  );
                     }
                 }
             }
@@ -188,9 +192,10 @@ bool StPicoMcNpeAnaMaker::isGoodTrack(StPicoTrack const * const trk) const
 }
 
 //-----------------------------------------------------------------------------
-void StPicoMcNpeAnaMaker::fillHistogram(StPicoTrack const * const trk) const
+void StPicoMcNpeAnaMaker::fillHistogram(StPicoTrack const * const rcTrk, StPicoMcTrack const * const mcTrk) const
 {
-    
+    hTrackPt->Fill(rcTrk->gPt());
+    hTrackNHitsFit->Fill(rcTrk->nHitsFit());
 }
 //-----------------------------------------------------------------------------
 void StPicoMcNpeAnaMaker::fillHistogram(StElectronPair const * const pair) const
@@ -215,7 +220,7 @@ bool StPicoMcNpeAnaMaker::isRcTrack(StPicoMcTrack const * const PicoMcTrack, StP
             break;
         }
     }
-    if (temp == Pico::USHORTMAX) return false;;
+    if (temp == Pico::USHORTMAX) return false;
     id=temp;
     return true;
 }

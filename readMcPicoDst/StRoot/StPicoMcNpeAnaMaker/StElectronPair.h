@@ -39,6 +39,8 @@ public:
     float openAngle() const;
     float phi() const;
     float eta() const;
+    float angle() const;
+    float length() const;
     
     
 private:
@@ -58,6 +60,8 @@ private:
     float mOpenAngle;
     float mPhi;
     float mEta;
+    float mAngle;
+    float mLength;
     
     ClassDef(StElectronPair,2)
 };
@@ -72,6 +76,8 @@ inline float StElectronPair::phiV() const                       { return mPhiV;}
 inline float StElectronPair::openAngle() const                  { return mOpenAngle;}
 inline float StElectronPair::phi() const                        { return mPhi;}
 inline float StElectronPair::eta() const                        { return mEta ;}
+inline float StElectronPair::angle() const                      { return mAngle;}
+inline float StElectronPair::length() const                     { return mLength ;}
 
 #endif
 #endif

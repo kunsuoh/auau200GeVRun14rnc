@@ -57,7 +57,7 @@ private:
     bool  isTaggedElectron(StPicoTrack const*) const;
     bool  isPartnerElectron(StPicoTrack const*) const;
     bool  isGoodElectronPair(StElectronPair const &, float) const;
-    void  fillHistogram(StPicoTrack const*) const;
+    void  fillHistogram(StPicoTrack const*,StPicoMcTrack const*) const;
     void  fillHistogram(StElectronPair const*) const;
     bool  isRcTrack(StPicoMcTrack const * const trk ,StPicoDst const * const PicoDst, int &id);
     

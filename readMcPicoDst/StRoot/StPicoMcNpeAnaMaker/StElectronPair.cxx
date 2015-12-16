@@ -27,7 +27,9 @@ mPositionZ(std::numeric_limits<float>::quiet_NaN()),
 mPhiV(std::numeric_limits<float>::quiet_NaN()),
 mOpenAngle(std::numeric_limits<float>::quiet_NaN()),
 mPhi(std::numeric_limits<float>::quiet_NaN()),
-mEta(std::numeric_limits<float>::quiet_NaN())
+mEta(std::numeric_limits<float>::quiet_NaN()),
+mAngle(std::numeric_limits<float>::quiet_NaN()),
+mLength(std::numeric_limits<float>::quiet_NaN())
 {
 }
 //------------------------------------
@@ -41,7 +43,9 @@ mPositionZ(t->mPositionZ),
 mPhiV(t->mPhiV),
 mOpenAngle(t->mOpenAngle),
 mPhi(t->mPhi),
-mEta(t->mEta)
+mEta(t->mEta),
+mAngle(t->mAngle),
+mLength(t->mLength)
 {
 }
 //------------------------------------
@@ -56,7 +60,9 @@ mPositionZ(std::numeric_limits<float>::quiet_NaN()),
 mPhiV(std::numeric_limits<float>::quiet_NaN()),
 mOpenAngle(std::numeric_limits<float>::quiet_NaN()),
 mPhi(std::numeric_limits<float>::quiet_NaN()),
-mEta(std::numeric_limits<float>::quiet_NaN())
+mEta(std::numeric_limits<float>::quiet_NaN()),
+mAngle(std::numeric_limits<float>::quiet_NaN()),
+mLength(std::numeric_limits<float>::quiet_NaN())
 {
     if ((!electron || !partner) || (electron->id() == partner->id()))
     {
@@ -84,10 +90,15 @@ mEta(std::numeric_limits<float>::quiet_NaN())
     StLorentzVectorF const electronFourMom(electronMomAtDca, electronMomAtDca.massHypothesis(M_ELECTRON));
     StLorentzVectorF const partnerFourMom(partnerMomAtDca, partnerMomAtDca.massHypothesis(M_ELECTRON));
     StLorentzVectorF const epairFourMom = electronFourMom + partnerFourMom;
+    
+    StThreeVectorF const epairMomAtDca = epairFourMom.vect();
+    StThreeVectorF const Position = (kAtDcaToPartner + pAtDcaToElectron)/2.0;
 
+    mAngle = epairMomAtDca.angle(Position);
+    mLength = TMath::Sin(angle)*epairMomAtDca.mag();
+    
     mMass = epairFourMom.m();
     
-    StThreeVectorD Position = (kAtDcaToPartner + pAtDcaToElectron)/2.0;
 
     mPositionX = Position.x();
 
