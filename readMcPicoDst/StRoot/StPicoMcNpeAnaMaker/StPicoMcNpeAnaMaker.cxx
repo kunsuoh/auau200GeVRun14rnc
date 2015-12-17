@@ -100,6 +100,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
         std::vector<Int_t> idPicoDstMcElectrons;
         std::vector<Int_t> idPicoDstMcPositrons;
 
+        StThreeVectorF pVtx = mPicoEvent->primaryVertex();
         float const bField = mPicoEvent->bField();
         int nMcTracks =  picoDst->numberOfMcTracks();
 
@@ -151,7 +152,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
                 {
                     StPicoTrack *rcPositron = picoDst->track(idPicoDstRcPositrons[i]);
                     StPicoTrack *rcElectron = picoDst->track(idPicoDstRcElectrons[j]);
-                    StElectronPair * rcPair = new StElectronPair(rcPositron,rcElectron,i,j,bField);
+                    StElectronPair * rcPair = new StElectronPair(rcPositron,rcElectron,i,j,bField,pVtx);
                     if (isGoodTrack(rcPositron) && isGoodTrack(rcElectron)) {
                         fillHistogram(rcPair);
                         nt2->Fill(rcPositron->gPt(),

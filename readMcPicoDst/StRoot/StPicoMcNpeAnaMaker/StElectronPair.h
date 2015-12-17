@@ -15,6 +15,7 @@
 
 #include "TObject.h"
 #include "StLorentzVectorF.hh"
+#include "StThreeVectorF.hh"
 
 class StPicoTrack;
 class StPicoEvent;
@@ -25,7 +26,7 @@ public:
     StElectronPair();
     StElectronPair(StElectronPair const *);
     StElectronPair(StPicoTrack const * Electron, StPicoTrack const * Partner,
-                   unsigned short electronIdx,unsigned short partnerIdx, float bField);
+                   unsigned short electronIdx,unsigned short partnerIdx, float bField, StThreeVectorF pVtx);
     ~StElectronPair() {}// please keep this non-virtual and NEVER inherit from this class
     
     unsigned short   electronIdx() const;	// tagged electron idx
