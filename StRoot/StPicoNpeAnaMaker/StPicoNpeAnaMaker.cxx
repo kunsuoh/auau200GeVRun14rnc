@@ -327,7 +327,7 @@ Int_t StPicoNpeAnaMaker::Make()
         float pairDca = epair->pairDca();
         float nsige1 =  electron->nSigmaElectron();
         float nsige2 =  partner->nSigmaElectron();
-        StElectronSimPair * epairSim = new StElectronSimPair(electron,partner,epair->electronIdx(),epair->partnerIdx(),picoDst->event()->bField());
+        StElectronSimPair * epairSim = new StElectronSimPair(electron,partner,epair->electronIdx(),epair->partnerIdx(),picoDst->event()->bField(),pVtx);
 
         
         nt->Fill(pt1,pt2,phiV,openangle,v0x,v0y,v0z,phi,eta,mass,pairDca,nsige1,nsige2);

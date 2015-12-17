@@ -50,7 +50,7 @@ mLength(t->mLength)
 }
 //------------------------------------
 StElectronSimPair::StElectronSimPair(StPicoTrack const * const electron, StPicoTrack const * const partner,
-                               unsigned short const electronIdx, unsigned short const partnerIdx, float const bField) :
+                               unsigned short const electronIdx, unsigned short const partnerIdx, float const bField, StThreeVectorF pVtx) :
 mElectronIdx(electronIdx), mPartnerIdx(partnerIdx),
 mMass(std::numeric_limits<unsigned short>::quiet_NaN()),
 mPairDca(std::numeric_limits<float>::quiet_NaN()),
@@ -94,7 +94,7 @@ mLength(std::numeric_limits<float>::quiet_NaN())
     StThreeVectorF const epairMomAtDca = epairFourMom.vect();
     StThreeVectorF const Position = (kAtDcaToPartner + pAtDcaToElectron)/2.0;
 
-    mAngle = epairMomAtDca.angle(Position);
+    mAngle = epairMomAtDca.angle(Position-pVtx);
     mLength = TMath::Sin(mAngle)*epairMomAtDca.mag();
     
     mMass = epairFourMom.m();
