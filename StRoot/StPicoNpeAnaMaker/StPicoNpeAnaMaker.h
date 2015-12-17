@@ -142,6 +142,7 @@ class StPicoNpeAnaMaker : public StMaker
     TH2D * h2dPhELInvMassvsZ_HFT;
     
     TNtuple * nt;
+    TNtuple * nt2;
     
     TH2D * h2dPhEMassVsPt;
     TH2D * h2dPhELMassVsPt;
