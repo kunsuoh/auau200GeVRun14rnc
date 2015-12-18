@@ -130,14 +130,16 @@ Int_t StPicoMcNpeAnaMaker::Make()
                 if(id!=-999){
                     rcTrk = (StPicoTrack*)picoDst->track(id);
                     fillHistogram(rcTrk,mcTrk);
-                    if(!mcTrk->Pxl1Truth() || !mcTrk->Pxl2Truth()) continue;
-                    if (trackId==cuts::dau1Gid) {
-                        idPicoDstRcPositrons.push_back(id);
-                        idPicoDstMcPositrons.push_back(i_Mc);
-                    }
-                    else {
-                        idPicoDstRcElectrons.push_back(id);
-                        idPicoDstMcElectrons.push_back(i_Mc);
+                    cout << mcTrk->Pxl1Truth() << " " << mcTrk->Pxl2Truth() << endl;
+                    if(mcTrk->Pxl1Truth()==1 && mcTrk->Pxl2Truth()==1) {
+                        if (trackId==cuts::dau1Gid) {
+                            idPicoDstRcPositrons.push_back(id);
+                            idPicoDstMcPositrons.push_back(i_Mc);
+                        }
+                        else {
+                            idPicoDstRcElectrons.push_back(id);
+                            idPicoDstMcElectrons.push_back(i_Mc);
+                        }
                     }
                 }
             }
