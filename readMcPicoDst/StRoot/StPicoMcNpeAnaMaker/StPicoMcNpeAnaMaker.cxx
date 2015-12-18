@@ -130,7 +130,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
                 if(id!=-999){
                     rcTrk = (StPicoTrack*)picoDst->track(id);
                     fillHistogram(rcTrk,mcTrk);
-                    cout << mcTrk->Pxl1Truth() << " " << mcTrk->Pxl2Truth() << endl;
+                  //  cout << mcTrk->Pxl1Truth() << " " << mcTrk->Pxl2Truth() << endl;
                     if(mcTrk->Pxl1Truth()!=0 && mcTrk->Pxl2Truth()!=0) {
                         if (trackId==cuts::dau1Gid) {
                             idPicoDstRcPositrons.push_back(id);
