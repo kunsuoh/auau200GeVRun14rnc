@@ -178,7 +178,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
                                   rcPair->angle(),
                                   rcPair->length()
                                   );
-                        cout << mcElectron->Pxl1Truth() << " " << mcElectron->Pxl2Truth() << " "  << mcPositron->Pxl1Truth() << " " << mcPositron->Pxl2Truth() << endl;
+                        cout << mcElectron->Pxl1Truth() << " " << mcElectron->Pxl2Truth() << " "  << mcElectron->IstTruth() << " " << mcElectron->SsdTruth() << " "  << mcPositron->Pxl1Truth() << " " << mcPositron->Pxl2Truth() << " "  << mcPositron->IstTruth() << " " << mcPositron->SsdTruth() << endl;
 
                     }
                 }
