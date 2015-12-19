@@ -108,6 +108,16 @@ Int_t StPicoMcNpeAnaMaker::Make()
             // get Mc Track
             StPicoMcTrack *mcTrk = (StPicoMcTrack*)picoDst->mctrack(i_Mc);
         //    if(mcTrk->Pxl1Truth()==0 || mcTrk->Pxl2Truth()==0) continue;
+            cout <<
+            mcTrk->Pxl1Truth() << " " <<
+            mcTrk->Pxl2Truth() << " "  <<
+            mcTrk->IstTruth() << " " <<
+            mcTrk->SsdTruth()<< " / " <<
+            mcTrk->hitsPxl1() << " " <<
+            mcTrk->hitsPxl2() << " "  <<
+            mcTrk->hitsIst() << " " <<
+            mcTrk->hitsSst()<< endl; //" / " <<
+            //rcTrk->nHitsMapHFT() << endl;
 
             // get Geant Id for track and parent
             float parentGid= Pico::USHORTMAX;
@@ -138,16 +148,6 @@ Int_t StPicoMcNpeAnaMaker::Make()
                         idPicoDstRcElectrons.push_back(id);
                         idPicoDstMcElectrons.push_back(i_Mc);
                     }
-                    cout <<
-                    mcTrk->Pxl1Truth() << " " <<
-                    mcTrk->Pxl2Truth() << " "  <<
-                    mcTrk->IstTruth() << " " <<
-                    mcTrk->SsdTruth()<< " " <<
-                    mcTrk->hitsPxl1() << " " <<
-                    mcTrk->hitsPxl2() << " "  <<
-                    mcTrk->hitsIst() << " " <<
-                    mcTrk->hitsSst()<< " " <<
-                    rcTrk->nHitsMapHFT() << endl;
                 }
             }
         }
