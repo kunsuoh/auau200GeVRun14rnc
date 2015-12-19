@@ -129,7 +129,6 @@ Int_t StPicoMcNpeAnaMaker::Make()
                 if(id!=-999){
                     rcTrk = (StPicoTrack*)picoDst->track(id);
                     fillHistogram(rcTrk,mcTrk);
-                    cout << mcTrk->Pxl1Truth() << " " << mcTrk->Pxl2Truth() << " " << mcTrk->mTruthBit << endl;
 
                     if (trackId==cuts::dau1Gid) {
                         idPicoDstRcPositrons.push_back(id);
@@ -179,6 +178,8 @@ Int_t StPicoMcNpeAnaMaker::Make()
                                   rcPair->angle(),
                                   rcPair->length()
                                   );
+                        cout << mcElectron->Pxl1Truth() << " " << mcElectron->Pxl2Truth() << " "  << mcPositron->Pxl1Truth() << " " << mcPositron->Pxl2Truth() << " " << mcTrk->mTruthBit << endl;
+
                     }
                 }
             }
