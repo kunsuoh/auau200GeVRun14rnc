@@ -109,6 +109,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
             StPicoMcTrack *mcTrk = (StPicoMcTrack*)picoDst->mctrack(i_Mc);
         //    if(mcTrk->Pxl1Truth()==0 || mcTrk->Pxl2Truth()==0) continue;
             cout <<
+            mcTrk->GePid() << " " <<
             mcTrk->Pxl1Truth() << " " <<
             mcTrk->Pxl2Truth() << " "  <<
             mcTrk->IstTruth() << " " <<
