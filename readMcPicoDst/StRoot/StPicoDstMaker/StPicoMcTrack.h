@@ -39,7 +39,8 @@ class StPicoMcTrack : public TObject {
   float pseudorapidity() const;
   StThreeVectorF const & Mom() const;
   StThreeVectorF const & Origin() const;
-  // -- 
+    UShort_t mTruthBit;
+  // --
  protected: 
   UShort_t mMcId;
   Short_t mGePid;
@@ -47,7 +48,6 @@ class StPicoMcTrack : public TObject {
   UShort_t mAssoId;
   UShort_t nHitsPxl1, nHitsPxl2, nHitsIst, nHitsSst;
   UShort_t nHitsTpc, nHitsTpcCommon;
-  UShort_t mTruthBit;
   float mEta;
   StThreeVectorF mMcMomentum;
   StThreeVectorF mOrigin;
