@@ -112,7 +112,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
             StPicoTrack *rcTrk=0;
             Int_t id=-999;
             isRcTrack(mcTrk,picoDst,id);
-            if(id!=-999){
+            if(id!=-999 && (mcTrk->GePid()==2 || mcTrk->GePid()==3)){
                 rcTrk = (StPicoTrack*)picoDst->track(id);
                 
                 cout <<
