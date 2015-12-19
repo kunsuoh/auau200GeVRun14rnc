@@ -120,7 +120,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
                     parentGid=mcParentTrk->GePid();
                     //    if(mcParentTrk->parentId() != Pico::USHORTMAX) continue;
                 }
-                if (parentGid!=7) continue;
+                if (sqrt(mcTrk->Origin.x()*mcTrk->Origin.x()+mcTrk->Origin.y()*mcTrk->Origin.y()) > 0.1) continue;
                 cout <<
                 mcTrk->GePid() << " " <<
                 parentGid << " / " <<
