@@ -179,8 +179,8 @@ Int_t StPicoMcNpeAnaMaker::Make()
                                   rcPair->angle(),
                                   rcPair->length()
                                   );
-                        cout << mcElectron->Pxl1Truth() << " " << mcElectron->Pxl2Truth() << " "  << mcElectron->IstTruth() << " " << mcElectron->SsdTruth() << " "  << mcPositron->Pxl1Truth() << " " << mcPositron->Pxl2Truth() << " "  << mcPositron->IstTruth() << " " << mcPositron->SsdTruth() << endl;
-                        cout << mcElectron->hitsPxl1() << " " << mcElectron->hitsPxl2() << " "  << mcElectron->hitsIst() << " " << mcElectron->hitsSsd() << " "  << mcPositron->hitsPxl1() << " " << mcPositron->hitsPxl2() << " "  << mcPositron->hitsIst() << " " << mcPositron->hitsSsd() << endl;
+                        cout << "truth " << mcElectron->Pxl1Truth() << " " << mcElectron->Pxl2Truth() << " "  << mcElectron->IstTruth() << " " << mcElectron->SsdTruth() << " "  << mcPositron->Pxl1Truth() << " " << mcPositron->Pxl2Truth() << " "  << mcPositron->IstTruth() << " " << mcPositron->SsdTruth() << endl;
+                        cout << "hits " << mcElectron->hitsPxl1() << " " << mcElectron->hitsPxl2() << " "  << mcElectron->hitsIst() << " " << mcElectron->hitsSst() << " "  << mcPositron->hitsPxl1() << " " << mcPositron->hitsPxl2() << " "  << mcPositron->hitsIst() << " " << mcPositron->hitsSst() << endl;
 
                     }
                 }
