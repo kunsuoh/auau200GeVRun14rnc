@@ -107,7 +107,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
         for(int i_Mc=0; i_Mc<nMcTracks; i_Mc++){
             // get Mc Track
             StPicoMcTrack *mcTrk = (StPicoMcTrack*)picoDst->mctrack(i_Mc);
-            if(mcTrk->Pxl1Truth()==0 || mcTrk->Pxl2Truth()==0) continue;
+        //    if(mcTrk->Pxl1Truth()==0 || mcTrk->Pxl2Truth()==0) continue;
 
             // get Geant Id for track and parent
             float parentGid= Pico::USHORTMAX;
