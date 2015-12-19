@@ -138,6 +138,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
                         idPicoDstRcElectrons.push_back(id);
                         idPicoDstMcElectrons.push_back(i_Mc);
                     }
+                    cout << mcTrk->Pxl1Truth() << " " << mcTrk->Pxl2Truth() << " "  << mcTrk->IstTruth() << " " << mcTrk->SsdTruth()<< " " << rcTrk->nHitsMapHFT() endl;
                 }
             }
         }
