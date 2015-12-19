@@ -107,7 +107,6 @@ Int_t StPicoMcNpeAnaMaker::Make()
         for(int i_Mc=0; i_Mc<nMcTracks; i_Mc++){
             // get Mc Track
             StPicoMcTrack *mcTrk = (StPicoMcTrack*)picoDst->mctrack(i_Mc);
-            cout << mcTrk->Pxl1Truth() << " " << mcTrk->Pxl2Truth() << endl;
             if(mcTrk->Pxl1Truth()==0 || mcTrk->Pxl2Truth()==0) continue;
 
             // get Geant Id for track and parent
@@ -130,6 +129,8 @@ Int_t StPicoMcNpeAnaMaker::Make()
                 if(id!=-999){
                     rcTrk = (StPicoTrack*)picoDst->track(id);
                     fillHistogram(rcTrk,mcTrk);
+                    cout << mcTrk->Pxl1Truth() << " " << mcTrk->Pxl2Truth() << endl;
+
                     if (trackId==cuts::dau1Gid) {
                         idPicoDstRcPositrons.push_back(id);
                         idPicoDstMcPositrons.push_back(i_Mc);
