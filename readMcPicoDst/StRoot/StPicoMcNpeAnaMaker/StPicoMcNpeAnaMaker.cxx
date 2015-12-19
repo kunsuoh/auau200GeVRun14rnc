@@ -138,7 +138,16 @@ Int_t StPicoMcNpeAnaMaker::Make()
                         idPicoDstRcElectrons.push_back(id);
                         idPicoDstMcElectrons.push_back(i_Mc);
                     }
-                    cout << mcTrk->Pxl1Truth() << " " << mcTrk->Pxl2Truth() << " "  << mcTrk->IstTruth() << " " << mcTrk->SsdTruth()<< " " << rcTrk->nHitsMapHFT() << endl;
+                    cout <<
+                    mcTrk->Pxl1Truth() << " " <<
+                    mcTrk->Pxl2Truth() << " "  <<
+                    mcTrk->IstTruth() << " " <<
+                    mcTrk->SsdTruth()<< " " <<
+                    mcTrk->hitsPxl1() << " " <<
+                    mcTrk->hitsPxl2() << " "  <<
+                    mcTrk->hitsIst() << " " <<
+                    mcTrk->hitsSst()<< " " <<
+                    rcTrk->nHitsMapHFT() << endl;
                 }
             }
         }
@@ -150,10 +159,10 @@ Int_t StPicoMcNpeAnaMaker::Make()
                 StPicoMcTrack *mcElectron = (StPicoMcTrack*)picoDst->mctrack(idPicoDstMcElectrons[j]);
                 if (mcPositron->parentId() != Pico::USHORTMAX && mcPositron->parentId() == mcElectron->parentId())
                 {
-                    if (mcElectron->hitsPxl1()==0) continue;
-                    if (mcElectron->hitsPxl2()==0) continue;
-                    if (mcPositron->hitsPxl1()==0) continue;
-                    if (mcPositron->hitsPxl2()==0) continue;
+               //     if (mcElectron->hitsPxl1()==0) continue;
+               //     if (mcElectron->hitsPxl2()==0) continue;
+               //     if (mcPositron->hitsPxl1()==0) continue;
+               //     if (mcPositron->hitsPxl2()==0) continue;
                     StPicoTrack *rcPositron = picoDst->track(idPicoDstRcPositrons[i]);
                     StPicoTrack *rcElectron = picoDst->track(idPicoDstRcElectrons[j]);
                     StElectronPair * rcPair = new StElectronPair(rcPositron,rcElectron,i,j,bField,pVtx);
