@@ -152,8 +152,8 @@ Int_t StPicoMcNpeAnaMaker::Make()
                 {
                     if (mcElectron->hitsPxl1()==0) continue;
                     if (mcElectron->hitsPxl2()==0) continue;
-                    if (mcPositron->hitsIst()==0) continue;
-                    if (mcPositron->hitsSst()==0) continue;
+                    if (mcPositron->hitsPxl1()==0) continue;
+                    if (mcPositron->hitsPxl2()==0) continue;
                     StPicoTrack *rcPositron = picoDst->track(idPicoDstRcPositrons[i]);
                     StPicoTrack *rcElectron = picoDst->track(idPicoDstRcElectrons[j]);
                     StElectronPair * rcPair = new StElectronPair(rcPositron,rcElectron,i,j,bField,pVtx);
