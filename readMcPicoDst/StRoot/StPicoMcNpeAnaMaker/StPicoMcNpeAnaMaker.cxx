@@ -150,10 +150,10 @@ Int_t StPicoMcNpeAnaMaker::Make()
                 StPicoMcTrack *mcElectron = (StPicoMcTrack*)picoDst->mctrack(idPicoDstMcElectrons[j]);
                 if (mcPositron->parentId() != Pico::USHORTMAX && mcPositron->parentId() == mcElectron->parentId())
                 {
-                   // if (mcElectron->Pxl1Truth()==0) continue;
-                    if (mcElectron->Pxl2Truth()==0) continue;
-                   // if (mcPositron->Pxl1Truth()==0) continue;
-                    if (mcPositron->Pxl2Truth()==0) continue;
+                    if (mcElectron->Pxl1Truth()!=0) continue;
+                    if (mcElectron->Pxl2Truth()!=0) continue;
+                    if (mcPositron->Pxl1Truth()!=0) continue;
+                    if (mcPositron->Pxl2Truth()!=0) continue;
                     StPicoTrack *rcPositron = picoDst->track(idPicoDstRcPositrons[i]);
                     StPicoTrack *rcElectron = picoDst->track(idPicoDstRcElectrons[j]);
                     StElectronPair * rcPair = new StElectronPair(rcPositron,rcElectron,i,j,bField,pVtx);
