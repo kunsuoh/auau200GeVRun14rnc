@@ -114,9 +114,16 @@ Int_t StPicoMcNpeAnaMaker::Make()
             isRcTrack(mcTrk,picoDst,id);
             if(id!=-999 && (mcTrk->GePid()==2 || mcTrk->GePid()==3)){
                 rcTrk = (StPicoTrack*)picoDst->track(id);
-                
+                float parentGid= Pico::USHORTMAX;
+                if(mcTrk->parentId() != Pico::USHORTMAX) {
+                    StPicoMcTrack *mcParentTrk = (StPicoMcTrack*)picoDst->mctrack(mcTrk->parentId());
+                    parentGid=mcParentTrk->GePid();
+                    //    if(mcParentTrk->parentId() != Pico::USHORTMAX) continue;
+                }
+
                 cout <<
                 mcTrk->GePid() << " " <<
+                parentGid << " / " <<
                 mcTrk->Pxl1Truth() << " " <<
                 mcTrk->Pxl2Truth() << " "  <<
                 mcTrk->IstTruth() << " " <<
