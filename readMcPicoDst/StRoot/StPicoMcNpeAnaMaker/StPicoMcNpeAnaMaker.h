@@ -37,6 +37,15 @@ class StDcaGeometry;
 
 class StElectronPair;
 
+typedef struct {Float_t x,y,z;} POSITION;
+typedef struct {UChar_t pxl1,pxl2,ist,ssd;} HITS;
+static POSITION rc;
+static POSITION mc;
+
+static HITS nHits1;
+static HITS truth1;
+static HITS nHits2;
+static HITS truth2;
 
 class StPicoMcNpeAnaMaker : public StMaker
 {
@@ -75,15 +84,6 @@ private:
     TH1F * hPairDca;
     TH2F * hPairPosition;
 
-    typedef struct {Float_t x,y,z;} POSITION;
-    typedef struct {UChar_t pxl1,pxl2,ist,ssd;} HITS;
-    static POSITION rc;
-    static POSITION mc;
-    
-    static HITS nHits1;
-    static HITS truth1;
-    static HITS nHits2;
-    static HITS truth2;
     
     float length, angle, mcPairPt, pairDca, mass, eta, phi, openangle, phiV, pt1, pt2;
 
