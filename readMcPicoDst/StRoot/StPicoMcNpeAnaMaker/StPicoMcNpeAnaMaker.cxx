@@ -51,8 +51,8 @@ Int_t StPicoMcNpeAnaMaker::Init()
     nt3 = new TNtuple("nt3","electron pair ntuple 3","pt1:pt2:v0x:v0y:v0z:phi:eta:mass:pairDca:mcv0x:mcv0y:mcv0z:mcPairPt:angle:length");
     
     tree = new TTree("T","Electron pair tree");
-    tree->Branch("mc conversion Position",&mc,"x:y:z");
-    tree->Branch("rc conversion Position",&rc,"x:y:z");
+    tree->Branch("mc",&mc,"x:y:z");
+    tree->Branch("rc",&rc,"x:y:z");
     tree->Branch("pt1",&pt1,"pt1/F");
     tree->Branch("pt2",&pt1,"pt2/F");
     tree->Branch("phiV",&phiV,"phiV/F");
@@ -64,10 +64,10 @@ Int_t StPicoMcNpeAnaMaker::Init()
     tree->Branch("mcPairPt",&mcPairPt,"mcPairPt/F");
     tree->Branch("angle",&angle,"angle/F");
     tree->Branch("length",&length,"length/F");          //
-    tree->Branch("nHits for positron",&nHits1,"pxl1:pxl2:ist:ssd");   //
-    tree->Branch("truth for positron",&truth1,"pxl1:pxl2:ist:ssd");   //
-    tree->Branch("nHits for electron",&nHits2,"pxl1:pxl2:ist:ssd");   //
-    tree->Branch("truth for electron",&truth2,"pxl1:pxl2:ist:ssd");   //
+    tree->Branch("nHits1",&nHits1,"pxl1:pxl2:ist:ssd");   //
+    tree->Branch("truth1",&truth1,"pxl1:pxl2:ist:ssd");   //
+    tree->Branch("nHits2",&nHits2,"pxl1:pxl2:ist:ssd");   //
+    tree->Branch("truth2",&truth2,"pxl1:pxl2:ist:ssd");   //
     
 
     return kStOK;
