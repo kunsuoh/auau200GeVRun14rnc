@@ -63,7 +63,7 @@ private:
     
     StPicoDstMaker* mPicoDstMaker;
     StPicoEvent*    mPicoEvent;
-    
+    TTree *tree;
     TFile* mOutputFile;
     TNtuple * nt2;
     TNtuple * nt3;
@@ -74,6 +74,17 @@ private:
     TH1F * hPairMass;
     TH1F * hPairDca;
     TH2F * hPairPosition;
+
+    typedef struct {Float_t x,y,z;} POSITION;
+    typedef struct {UChar_t pxl1,pxl2,ist,ssd;} HITS;
+    static POSITION rc;
+    static POSITION mc;
+    static HITS nHits1;
+    static HITS truth1;
+    static HITS nHits2;
+    static HITS truth2;
+    
+    float length, angle, mcPairPt, pairDca, mass, eta, phi, openangle, phiV, pt1, pt2;
 
     
     ClassDef(StPicoMcNpeAnaMaker, 0)

@@ -40,6 +40,7 @@ StPicoMcNpeAnaMaker::~StPicoMcNpeAnaMaker()
 //-----------------------------------------------------------------------------
 Int_t StPicoMcNpeAnaMaker::Init()
 {
+    
     hEventVz = new TH1F("hEventVz","hEventVz",200,-10,10);
     hTrackParentGeantId = new TH1F("hTrackParentGeantId","hTrackParentGeantId",100,0,100);
     hTrackGeantId = new TH1F("hTrackGeantId","hTrackGeantId",100,0,100);
@@ -48,6 +49,26 @@ Int_t StPicoMcNpeAnaMaker::Init()
     hPairPosition = new TH2F("hPairPosition","hPairPosition",200,-10,10,200,-10,10);
     nt2 = new TNtuple("nt2","electron pair ntuple","pt1:pt2:phiV:openangle:v0x:v0y:v0z:phi:eta:mass:pairDca:mcv0x:mcv0y:mcv0z:mcPairPt");
     nt3 = new TNtuple("nt3","electron pair ntuple 3","pt1:pt2:v0x:v0y:v0z:phi:eta:mass:pairDca:mcv0x:mcv0y:mcv0z:mcPairPt:angle:length");
+    
+    tree = new TTree("T","Electron pair tree");
+    tree->Branch("mc conversion Position",&mc,"x:y:z");
+    tree->Branch("rc conversion Position",&rc,"x:y:z");
+    tree->Branch("pt1",&pt1,"pt1/F");
+    tree->Branch("pt2",&pt1,"pt2/F");
+    tree->Branch("phiV",&phiV,"phiV/F");
+    tree->Branch("openangle",&openangle,"openangle/F");
+    tree->Branch("phi",&phi,"phi/F");
+    tree->Branch("eta",&eta,"eta/F");
+    tree->Branch("mass",&mass,"mass/F");
+    tree->Branch("pairDca",&pairDca,"pairDca/F");
+    tree->Branch("mcPairPt",&mcPairPt,"mcPairPt/F");
+    tree->Branch("angle",&angle,"angle/F");
+    tree->Branch("length",&length,"length/F");          //
+    tree->Branch("nHits1",&nHits,"pxl1:pxl2:ist:ssd");   //
+    tree->Branch("truth1",&truth,"pxl1:pxl2:ist:ssd");   //
+    tree->Branch("nHits2",&nHits,"pxl1:pxl2:ist:ssd");   //
+    tree->Branch("truth2",&truth,"pxl1:pxl2:ist:ssd");   //
+    
 
     return kStOK;
 }
@@ -65,6 +86,7 @@ Int_t StPicoMcNpeAnaMaker::Finish()
     hPairPosition->Write();
     nt2->Write();
     nt3->Write();
+    tree->Write();
     
     mOutputFile->Write();
     mOutputFile->Close();
@@ -78,6 +100,7 @@ void StPicoMcNpeAnaMaker::Clear(Option_t *opt)
 //-----------------------------------------------------------------------------
 Int_t StPicoMcNpeAnaMaker::Make()
 {
+
     if (!mPicoDstMaker)
     {
         LOG_WARN << " No PicoDstMaker! Skip! " << endm;
@@ -204,9 +227,46 @@ Int_t StPicoMcNpeAnaMaker::Make()
                                   rcPair->angle(),
                                   rcPair->length()
                                   );
-                        cout << "truth " << mcElectron->Pxl1Truth() << " " << mcElectron->Pxl2Truth() << " "  << mcElectron->IstTruth() << " " << mcElectron->SsdTruth() << " "  << mcPositron->Pxl1Truth() << " " << mcPositron->Pxl2Truth() << " "  << mcPositron->IstTruth() << " " << mcPositron->SsdTruth() << endl;
-                        cout << "hits " << mcElectron->hitsPxl1() << " " << mcElectron->hitsPxl2() << " "  << mcElectron->hitsIst() << " " << mcElectron->hitsSst() << " "  << mcPositron->hitsPxl1() << " " << mcPositron->hitsPxl2() << " "  << mcPositron->hitsIst() << " " << mcPositron->hitsSst() << endl;
 
+                        length = rcPair->length();
+                        angle = rcPair->angle();
+                        mcPairPt = ((StPicoMcTrack*)(picoDst->mctrack(mcElectron->parentId())))->Mom().perp();
+                        pairDca = rcPair->pairDca();
+                        mass = rcPair->pairMass();
+                        eta = rcPair->eta();
+                        phi = rcPair->phi();
+                        openangle = rcPair->openangle();
+                        phiV = rcPair->phiV();
+                        pt1 = rcPositron->gPt();
+                        pt2 = rcPositron->gPt()*-1;
+                        
+                        rc.x = rcPair->positionX();
+                        rc.y = rcPair->positionY();
+                        rc.z = rcPair->positionZ();
+                        
+                        mc.x = mcElectron->Origin().x();
+                        mc.y = mcElectron->Origin().y();
+                        mc.z = mcElectron->Origin().z();
+                        
+                        nHits1.pxl1 = mcPositron->hitsPxl1();
+                        nHits1.pxl2 = mcPositron->hitsPxl1();
+                        nHits1.Ist = mcPositron->hitsIst();
+                        nHits1.ssd = mcPositron->hitsSst();
+                        truth1.pxl1 = mcPositron->Pxl1Truth();
+                        truth1.pxl2 = mcPositron->Pxl2Truth();
+                        truth1.Ist = mcPositron->IstTruth();
+                        truth1.ssd = mcPositron->SsdTruth();
+
+                        nHits2.pxl1 = mcElectron->hitsPxl1();
+                        nHits2.pxl2 = mcElectron->hitsPxl1();
+                        nHits2.Ist = mcElectron->hitsIst();
+                        nHits2.ssd = mcElectron->hitsSst();
+                        truth2.pxl1 = mcElectron->Pxl1Truth();
+                        truth2.pxl2 = mcElectron->Pxl2Truth();
+                        truth2.Ist = mcElectron->IstTruth();
+                        truth2.ssd = mcElectron->SsdTruth();
+
+                        tree->Fill();
                     }
                 }
             }
