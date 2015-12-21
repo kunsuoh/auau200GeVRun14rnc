@@ -64,10 +64,10 @@ Int_t StPicoMcNpeAnaMaker::Init()
     tree->Branch("mcPairPt",&mcPairPt,"mcPairPt/F");
     tree->Branch("angle",&angle,"angle/F");
     tree->Branch("length",&length,"length/F");          //
-    tree->Branch("nHits1",&nHits1,"pxl1:pxl2:ist:ssd");   //
-    tree->Branch("truth1",&truth1,"pxl1:pxl2:ist:ssd");   //
-    tree->Branch("nHits2",&nHits2,"pxl1:pxl2:ist:ssd");   //
-    tree->Branch("truth2",&truth2,"pxl1:pxl2:ist:ssd");   //
+    tree->Branch("nHits1",&nHits1,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
+    tree->Branch("truth1",&truth1,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
+    tree->Branch("nHits2",&nHits2,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
+    tree->Branch("truth2",&truth2,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
     tree->Branch("parentGid",&parentGid,"parentGid/b");   //
     
 
