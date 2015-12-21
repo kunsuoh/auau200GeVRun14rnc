@@ -252,25 +252,25 @@ Int_t StPicoMcNpeAnaMaker::Make()
                         mc.y = mcElectron->Origin().y();
                         mc.z = mcElectron->Origin().z();
                         
-                        nHits1.pxl1 = UChar_t(mcPositron->hitsPxl1());
-                        nHits1.pxl2 = UChar_t(mcPositron->hitsPxl1());
-                        nHits1.ist = UChar_t(mcPositron->hitsIst());
-                        nHits1.ssd = UChar_t(mcPositron->hitsSst());
+                        nHits1.pxl1 = (mcPositron->hitsPxl1());
+                        nHits1.pxl2 = (mcPositron->hitsPxl1());
+                        nHits1.ist = (mcPositron->hitsIst());
+                        nHits1.ssd = (mcPositron->hitsSst());
                         
-                        truth1.pxl1 = UChar_t(mcPositron->Pxl1Truth());
-                        truth1.pxl2 = UChar_t(mcPositron->Pxl2Truth());
-                        truth1.ist = UChar_t(mcPositron->IstTruth());
-                        truth1.ssd = UChar_t(mcPositron->SsdTruth());
+                        truth1.pxl1 = (mcPositron->Pxl1Truth());
+                        truth1.pxl2 = (mcPositron->Pxl2Truth());
+                        truth1.ist = (mcPositron->IstTruth());
+                        truth1.ssd = (mcPositron->SsdTruth());
 
-                        nHits2.pxl1 = UChar_t(mcElectron->hitsPxl1());
-                        nHits2.pxl2 = UChar_t(mcElectron->hitsPxl1());
-                        nHits2.ist = UChar_t(mcElectron->hitsIst());
-                        nHits2.ssd = UChar_t(mcElectron->hitsSst());
+                        nHits2.pxl1 = (mcElectron->hitsPxl1());
+                        nHits2.pxl2 = (mcElectron->hitsPxl1());
+                        nHits2.ist = (mcElectron->hitsIst());
+                        nHits2.ssd = (mcElectron->hitsSst());
                         
-                        truth2.pxl1 = UChar_t(mcElectron->Pxl1Truth());
-                        truth2.pxl2 = UChar_t(mcElectron->Pxl2Truth());
-                        truth2.ist = UChar_t(mcElectron->IstTruth());
-                        truth2.ssd = UChar_t(mcElectron->SsdTruth());
+                        truth2.pxl1 = (mcElectron->Pxl1Truth());
+                        truth2.pxl2 = (mcElectron->Pxl2Truth());
+                        truth2.ist = (mcElectron->IstTruth());
+                        truth2.ssd = (mcElectron->SsdTruth());
                         parentGid = ((StPicoMcTrack*)(picoDst->mctrack(mcElectron->parentId())))->GePid();
                         tree->Fill();
                     }
