@@ -64,10 +64,10 @@ Int_t StPicoMcNpeAnaMaker::Init()
     tree->Branch("mcPairPt",&mcPairPt,"mcPairPt/F");
     tree->Branch("angle",&angle,"angle/F");
     tree->Branch("length",&length,"length/F");          //
-    tree->Branch("nHits1",&nHits,"pxl1:pxl2:ist:ssd");   //
-    tree->Branch("truth1",&truth,"pxl1:pxl2:ist:ssd");   //
-    tree->Branch("nHits2",&nHits,"pxl1:pxl2:ist:ssd");   //
-    tree->Branch("truth2",&truth,"pxl1:pxl2:ist:ssd");   //
+    tree->Branch("nHits for positron",&nHits1,"pxl1:pxl2:ist:ssd");   //
+    tree->Branch("truth for positron",&truth1,"pxl1:pxl2:ist:ssd");   //
+    tree->Branch("nHits for electron",&nHits2,"pxl1:pxl2:ist:ssd");   //
+    tree->Branch("truth for electron",&truth2,"pxl1:pxl2:ist:ssd");   //
     
 
     return kStOK;
@@ -235,7 +235,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
                         mass = rcPair->pairMass();
                         eta = rcPair->eta();
                         phi = rcPair->phi();
-                        openangle = rcPair->openangle();
+                        openangle = rcPair->openAngle();
                         phiV = rcPair->phiV();
                         pt1 = rcPositron->gPt();
                         pt2 = rcPositron->gPt()*-1;
@@ -250,20 +250,20 @@ Int_t StPicoMcNpeAnaMaker::Make()
                         
                         nHits1.pxl1 = mcPositron->hitsPxl1();
                         nHits1.pxl2 = mcPositron->hitsPxl1();
-                        nHits1.Ist = mcPositron->hitsIst();
+                        nHits1.ist = mcPositron->hitsIst();
                         nHits1.ssd = mcPositron->hitsSst();
                         truth1.pxl1 = mcPositron->Pxl1Truth();
                         truth1.pxl2 = mcPositron->Pxl2Truth();
-                        truth1.Ist = mcPositron->IstTruth();
+                        truth1.ist = mcPositron->IstTruth();
                         truth1.ssd = mcPositron->SsdTruth();
 
                         nHits2.pxl1 = mcElectron->hitsPxl1();
                         nHits2.pxl2 = mcElectron->hitsPxl1();
-                        nHits2.Ist = mcElectron->hitsIst();
+                        nHits2.ist = mcElectron->hitsIst();
                         nHits2.ssd = mcElectron->hitsSst();
                         truth2.pxl1 = mcElectron->Pxl1Truth();
                         truth2.pxl2 = mcElectron->Pxl2Truth();
-                        truth2.Ist = mcElectron->IstTruth();
+                        truth2.ist = mcElectron->IstTruth();
                         truth2.ssd = mcElectron->SsdTruth();
 
                         tree->Fill();
