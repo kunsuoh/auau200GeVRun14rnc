@@ -68,6 +68,7 @@ Int_t StPicoMcNpeAnaMaker::Init()
     tree->Branch("truth1",&truth1,"pxl1:pxl2:ist:ssd");   //
     tree->Branch("nHits2",&nHits2,"pxl1:pxl2:ist:ssd");   //
     tree->Branch("truth2",&truth2,"pxl1:pxl2:ist:ssd");   //
+    tree->Branch("parentGid",&parentGid,"parentGid/b");   //
     
 
     return kStOK;
@@ -173,7 +174,8 @@ Int_t StPicoMcNpeAnaMaker::Make()
             hTrackGeantId->Fill(trackId);
             
             // get Rc Trcak
-            if (parentGid == cuts::parentGid && (trackId == cuts::dau1Gid || trackId == cuts::dau2Gid)) {
+            if (//parentGid == cuts::parentGid &&
+                (trackId == cuts::dau1Gid || trackId == cuts::dau2Gid)) {
                 StPicoTrack *rcTrk=0;
                 Int_t id=-999;
                 isRcTrack(mcTrk,picoDst,id);
@@ -240,7 +242,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
                         openangle = rcPair->openAngle();
                         phiV = rcPair->phiV();
                         pt1 = rcPositron->gPt();
-                        pt2 = rcPositron->gPt()*-1;
+                        pt2 = rcElectron->gPt() * -1;
                         
                         rc.x = rcPair->positionX();
                         rc.y = rcPair->positionY();
@@ -269,7 +271,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
                         truth2.pxl2 = UChar_t(mcElectron->Pxl2Truth());
                         truth2.ist = UChar_t(mcElectron->IstTruth());
                         truth2.ssd = UChar_t(mcElectron->SsdTruth());
-
+                        parentGid = ((StPicoMcTrack*)(picoDst->mctrack(mcElectron->parentId())))->GePid();
                         tree->Fill();
                     }
                 }
