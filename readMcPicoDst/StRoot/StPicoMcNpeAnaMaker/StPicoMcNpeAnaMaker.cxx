@@ -253,7 +253,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
                         mc.z = mcElectron->Origin().z();
                         
                         nHits1.pxl1 = (mcPositron->hitsPxl1());
-                        nHits1.pxl2 = (mcPositron->hitsPxl1());
+                        nHits1.pxl2 = (mcPositron->hitsPxl2());
                         nHits1.ist = (mcPositron->hitsIst());
                         nHits1.ssd = (mcPositron->hitsSst());
                         
@@ -263,7 +263,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
                         truth1.ssd = (mcPositron->SsdTruth());
 
                         nHits2.pxl1 = (mcElectron->hitsPxl1());
-                        nHits2.pxl2 = (mcElectron->hitsPxl1());
+                        nHits2.pxl2 = (mcElectron->hitsPxl2());
                         nHits2.ist = (mcElectron->hitsIst());
                         nHits2.ssd = (mcElectron->hitsSst());
                         
