@@ -87,8 +87,8 @@ mLength(std::numeric_limits<float>::quiet_NaN())
     StThreeVectorF const electronMomAtDca = electronHelix.momentumAt(ss.first, bField * kilogauss);
     StThreeVectorF const partnerMomAtDca = partnerHelix.momentumAt(ss.second, bField * kilogauss);
     
-    StLorentzVectorF const electronFourMom(electronMomAtDca, electronMomAtDca.massHypothesis(M_PION_PLUS));//M_ELECTRON));
-    StLorentzVectorF const partnerFourMom(partnerMomAtDca, partnerMomAtDca.massHypothesis(M_PION_MINUS));//M_ELECTRON));
+    StLorentzVectorF const electronFourMom(electronMomAtDca, electronMomAtDca.massHypothesis(M_ELECTRON));
+    StLorentzVectorF const partnerFourMom(partnerMomAtDca, partnerMomAtDca.massHypothesis(M_ELECTRON));
     StLorentzVectorF const epairFourMom = electronFourMom + partnerFourMom;
     
     StThreeVectorF const epairMomAtDca = epairFourMom.vect();

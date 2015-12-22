@@ -28,8 +28,8 @@ namespace cuts
     
     // set Geant Id
     int parentGid = 1;
-    int dau1Gid = 8;
-    int dau2Gid = 9;
+    int dau1Gid = 2;
+    int dau2Gid = 3;
 
 }
 #endif
