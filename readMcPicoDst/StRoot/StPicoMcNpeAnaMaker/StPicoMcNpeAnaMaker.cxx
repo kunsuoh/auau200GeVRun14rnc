@@ -306,7 +306,7 @@ bool StPicoMcNpeAnaMaker::isGoodTrack(StPicoTrack const * const trk) const
 //-----------------------------------------------------------------------------
 bool StPicoMcNpeAnaMaker::isHftTrack(StPicoTrack const * const trk) const
 {
-    return ((trk->nHitsMapHFT()>>1 & 0x3) && (trk->nHitsMapHFT()>>3 & 0x3);
+    return (trk->nHitsMapHFT()>>1 & 0x3) && (trk->nHitsMapHFT()>>3 & 0x3);
 }
 
 //-----------------------------------------------------------------------------
