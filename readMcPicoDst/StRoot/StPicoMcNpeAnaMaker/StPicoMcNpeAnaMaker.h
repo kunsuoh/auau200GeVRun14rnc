@@ -88,6 +88,7 @@ private:
     
     float length, angle, mcPairPt, pairDca, mass, eta, phi, openangle, phiV, pt1, pt2;
     UChar_t parentGid;
+    int refmult;
     
     ClassDef(StPicoMcNpeAnaMaker, 0)
 };

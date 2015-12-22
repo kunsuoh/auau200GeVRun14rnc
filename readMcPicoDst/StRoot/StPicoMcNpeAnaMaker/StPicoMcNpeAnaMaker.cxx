@@ -69,6 +69,7 @@ Int_t StPicoMcNpeAnaMaker::Init()
     tree->Branch("nHits2",&nHits2,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
     tree->Branch("truth2",&truth2,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
     tree->Branch("parentGid",&parentGid,"parentGid/b");   //
+    tree->Branch("refmult",&refmult,"refmult/I");   //
     
 
     return kStOK;
@@ -127,6 +128,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
         StThreeVectorF pVtx = mPicoEvent->primaryVertex();
         float const bField = mPicoEvent->bField();
         int nMcTracks =  picoDst->numberOfMcTracks();
+        refmult = mPicoEvent->refMult();
 
         for(int i_Mc=0; i_Mc<nMcTracks; i_Mc++){
             // get Mc Track
