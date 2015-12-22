@@ -69,7 +69,8 @@ private:
     void  fillHistogram(StPicoTrack const*,StPicoMcTrack const*) const;
     void  fillHistogram(StElectronPair const*) const;
     bool  isRcTrack(StPicoMcTrack const * const trk ,StPicoDst const * const PicoDst, int &id);
-    
+    bool  isHftTrack(StPicoTrack const * const trk) const;
+
     StPicoDstMaker* mPicoDstMaker;
     StPicoEvent*    mPicoEvent;
     TTree *tree;
