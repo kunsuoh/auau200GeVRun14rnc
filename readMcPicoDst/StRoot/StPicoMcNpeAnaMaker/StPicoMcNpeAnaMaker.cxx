@@ -303,7 +303,8 @@ bool StPicoMcNpeAnaMaker::isGoodTrack(StPicoTrack const * const trk) const
     trk->gPt() > cuts::ptMin &&
     trk->gPt() < cuts::ptMax &&
     trk->nHitsFit() >= cuts::nHitsFit &&
-    isHftTrack(trk) ;
+    trk->isHFTTrack();
+//    isHftTrack(trk) ;
 }
 //-----------------------------------------------------------------------------
 bool StPicoMcNpeAnaMaker::isHftTrack(StPicoTrack const * const trk) const
