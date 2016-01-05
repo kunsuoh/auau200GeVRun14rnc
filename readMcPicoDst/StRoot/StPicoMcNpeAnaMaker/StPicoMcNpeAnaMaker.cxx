@@ -1,6 +1,7 @@
 #include <vector>
 #include <cmath>
 
+#include "TVector3.h"
 #include "TTree.h"
 #include "TFile.h"
 #include "TString.h"
