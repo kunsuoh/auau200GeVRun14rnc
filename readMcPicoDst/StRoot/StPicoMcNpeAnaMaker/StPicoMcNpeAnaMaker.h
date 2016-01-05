@@ -86,7 +86,7 @@ private:
     TH2F * hPairPosition;
 
     
-    float length, angle, mcPairPt, pairDca, mass, eta, phi, openangle, phiV, pt1, pt2, chi1, chi2;
+    float length, angle, mcPairPt, pairDca, mass, eta, phi, openangle, mcopenangle, phiV, pt1, pt2, chi1, chi2;
     UChar_t parentGid;
     int refmult;
     

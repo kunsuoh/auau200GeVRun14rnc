@@ -57,6 +57,7 @@ Int_t StPicoMcNpeAnaMaker::Init()
     tree->Branch("pt2",&pt1,"pt2/F");
     tree->Branch("phiV",&phiV,"phiV/F");
     tree->Branch("openangle",&openangle,"openangle/F");
+    tree->Branch("mcopenangle",&mcopenangle,"mcopenangle/F");
     tree->Branch("phi",&phi,"phi/F");
     tree->Branch("eta",&eta,"eta/F");
     tree->Branch("mass",&mass,"mass/F");
@@ -244,6 +245,9 @@ Int_t StPicoMcNpeAnaMaker::Make()
                         eta = rcPair->eta();
                         phi = rcPair->phi();
                         openangle = rcPair->openAngle();
+                        TVector3 ppp(mcPositron->Mom().x(),mcPositron->Mom().y(),mcPositron->Mom().z());
+                        TVector3 eee(mcElectron->Mom().x(),mcElectron->Mom().y(),mcElectron->Mom().z());
+                        mcopenangle = ppp.Angle(eee);
                         phiV = rcPair->phiV();
                         pt1 = rcPositron->gPt();
                         pt2 = rcElectron->gPt() * -1;
