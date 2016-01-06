@@ -8,18 +8,20 @@ from rootpy.tree.categories import Categories
 from rootpy.io import root_open
 from rootpy.plotting import Hist, Hist2D, Hist3D, histogram, Canvas, Legend
 
-# Simulation
-infile = root_open('out_gamma_5.root')
-#infile = root_open('out_k0s_2.root')
-T = infile.T
+input='gamma'
+#input='pi0dalitz'
 
+# Simulation
+if (input=='gamma') : infile = root_open('root/out_gamma_9.root')
+if (input=='pi0dalitz') : infile = root_open('root/test.pi0dalitz.root')
+T = infile.T
 canvas = Canvas()
-#canvas.SetLogz()
+canvas.SetLogz()
 
 def draw2D(
            xval, xmin, xmax, xvalname,
            yval='sqrt(rc.x**2+rc.y**2)', ymin=0, ymax=10, yvalname='ConvR',
-           xbin=100,ybin=300,
+           xbin=100,ybin=100,
            cut='',
            histoname='histo',xTitle='',yTitle=''
            ):
@@ -33,33 +35,35 @@ def draw2D(
         histo1.yaxis.SetTitle(yvalname)
     else :
         histo1.yaxis.SetTitle(yTitle)
-    canvas.SaveAs(histoname+'_'+yvalname+'_'+xvalname+'.pdf')
+    canvas.SaveAs(histoname+'_'+input+'_'+yvalname+'_'+xvalname+'.pdf')
 
 def draw1D(
            xval, xmin, xmax, xvalname, xbin=100,
-           cut='abs(pt1) > 0.6 && abs(pt2) > 0.6 &&sqrt(rc.x**2+rc.y**2) > 2 && sqrt(rc.x**2+rc.y**2) < 4',
+           cut='abs(pt1) > 0.6 && abs(pt2) > 0.6',
            histoname='histo1D'
            ):
+    canvas.SetLogy()
     histo1 = T.Draw(xval, hist=Hist(xbin,xmin,xmax), selection=cut)
     histo1.color = 'red'
     histo1.Draw('E0')
     histo1.xaxis.SetTitle(xvalname)
-    canvas.SaveAs(histoname+'_'+xvalname+'.pdf')
+    canvas.SaveAs(histoname+'_'+input+'_'+xvalname+'.pdf')
 
 def draw1DCompare(
                   xval, xmin, xmax, xvalname, xbin=100,
-                  cut='abs(pt1) > 0.2 && abs(pt2) > 0.2',
-                  histoname='histo1DCompare_gamma'
+                  cut='abs(pt1) > 0.2 && abs(pt2) > 0.2',cut1='',cut2='',cut3='',
+                  histoname='histo1DCompare'
                   ):
     canvas1 = Canvas()
-    histo1 = T.Draw(xval, hist=Hist(xbin,xmin,xmax), selection=cut + '&& sqrt(mc.x**2+mc.y**2) < 2.1')
-    histo1.scale(1/histo1.integral())
+    canvas1.SetLogy()
+    histo1 = T.Draw(xval, hist=Hist(xbin,xmin,xmax), selection=cut + cut1)
+    #histo1.scale(1/histo1.integral())
     histo1.color = 'red'
-    histo2 = T.Draw(xval, hist=Hist(xbin,xmin,xmax), selection=cut + '&& sqrt(mc.x**2+mc.y**2) > 2.1 && sqrt(mc.x**2+mc.y**2) < 4')
-    histo2.scale(1/histo2.integral())
+    histo2 = T.Draw(xval, hist=Hist(xbin,xmin,xmax), selection=cut + cut2)
+    #histo2.scale(1/histo2.integral())
     histo2.color = 'blue'
-    histo3 = T.Draw(xval, hist=Hist(xbin,xmin,xmax), selection=cut + '&& sqrt(mc.x**2+mc.y**2) > 4')
-    histo3.scale(1/histo3.integral())
+    histo3 = T.Draw(xval, hist=Hist(xbin,xmin,xmax), selection=cut + cut3)
+    #histo3.scale(1/histo3.integral())
     histo3.color = 'black'
     
     histo1.SetMaximum(histo1.GetMaximum()*1.5)
@@ -73,6 +77,48 @@ def draw1DCompare(
     canvas1.SaveAs(histoname+'_'+xvalname+'.pdf')
 
 
+draw2D('mcopenangle', 0, 0.5, 'McOpenAngle',
+       yval='openangle', ymin=0, ymax=0.5, yvalname='RcOpenAngle')
+draw2D('mcopenangle', 0, 0.5, 'McOpenAngleCut',
+       yval='openangle', ymin=0, ymax=0.5, yvalname='RcOpenAngle'
+       ,cut='sqrt(mc.x**2+mc.y**2)>1.')
+
+
+
+draw1D('mcopenangle', 0, 0.02, 'McOpenAngle', cut='')
+draw1D('openangle', 0, 0.02, 'RcOpenAngle', cut='')
+draw1D('mcopenangle', 0, 0.02, 'McOpenAngleCut', cut='sqrt(mc.x**2+mc.y**2)>1.')
+draw1D('openangle', 0, 0.02, 'RcOpenAngleCut', cut='sqrt(mc.x**2+mc.y**2)>1.')
+
+draw1D('truth1.pxl1',0,4,'McPxl1HitsElectron',4)
+draw1D('truth1.pxl2',0,4,'McPxl2HitsElectron',4)
+draw1D('truth2.pxl1',0,4,'McPxl1HitsPositron',4)
+draw1D('truth2.pxl2',0,4,'McPxl2HitsPositron',4)
+
+draw1D('truth1.pxl1',0,4,'McPxl1HitsElectronCut',4,cut='sqrt(mc.x**2+mc.y**2)>1.9')
+draw1D('truth1.pxl2',0,4,'McPxl2HitsElectronCut',4,cut='sqrt(mc.x**2+mc.y**2)>1.9')
+draw1D('truth2.pxl1',0,4,'McPxl1HitsPositronCut',4,cut='sqrt(mc.x**2+mc.y**2)>1.9')
+draw1D('truth2.pxl2',0,4,'McPxl2HitsPositronCut',4,cut='sqrt(mc.x**2+mc.y**2)>1.9')
+
+draw1D('sqrt(rc.x**2+rc.y**2)',0,10,'ConvRadi')
+draw1D('sqrt(rc.x**2+rc.y**2)',0,10,'ConvRadiPxlMatched',cut='truth1.pxl1!=0 && truth1.pxl2!=0 && truth2.pxl1!=0&& truth2.pxl2!=0')
+draw1D('sqrt(rc.x**2+rc.y**2)',0,10,'ConvRadiPxlMisMatchedAtLeastOne',cut='truth1.pxl1==0 || truth1.pxl2==0 || truth2.pxl1==0|| truth2.pxl2==0')
+draw1D('sqrt(rc.x**2+rc.y**2)',0,10,'ConvRadiPxlMisMatchedAll',cut='truth1.pxl1==0 && truth1.pxl2==0 && truth2.pxl1==0 && truth2.pxl2==0')
+draw1D('sqrt(rc.x**2+rc.y**2)',0,10,'ConvRadiPxlMisMatched11',cut='truth1.pxl1==0 && truth1.pxl2!=0 && truth2.pxl1!=0 && truth2.pxl2!=0')
+draw1D('sqrt(rc.x**2+rc.y**2)',0,10,'ConvRadiPxlMisMatched12',cut='truth1.pxl1!=0 && truth1.pxl2==0 && truth2.pxl1!=0 && truth2.pxl2!=0')
+draw1D('sqrt(rc.x**2+rc.y**2)',0,10,'ConvRadiPxlMisMatched21',cut='truth1.pxl1!=0 && truth1.pxl2!=0 && truth2.pxl1==0 && truth2.pxl2!=0')
+draw1D('sqrt(rc.x**2+rc.y**2)',0,10,'ConvRadiPxlMisMatched22',cut='truth1.pxl1!=0 && truth1.pxl2!=0 && truth2.pxl1!=0 && truth2.pxl2==0')
+draw1D('sqrt(rc.x**2+rc.y**2)',0,10,'ConvRadiPxlMisMatched1',cut='(truth1.pxl1==0 || truth1.pxl2!=0) && truth2.pxl1==0 && truth2.pxl2!=0')
+
+draw1DCompare('sqrt(rc.x**2+rc.y**2)',0,10,'ConvRadi',
+              cut2='&& (truth1.pxl1==0 || truth2.pxl1==0) && truth1.pxl2!=0 && truth2.pxl2!=0',
+              cut3='&& (truth1.pxl2==0 || truth2.pxl2==0) && truth1.pxl1!=0 && truth2.pxl1!=0')
+draw1DCompare('sqrt(rc.x**2+rc.y**2)',0,10,'ConvRadi2',
+              cut2='&& truth1.pxl1!=0 && truth2.pxl1!=0 && truth1.pxl2!=0 && truth2.pxl2!=0',
+              cut3='&& (truth1.pxl1==0 || truth2.pxl1==0 || truth1.pxl2==0 || truth2.pxl2==0)')
+
+'''
+
 draw1DCompare('mass',0., 0.1,'Mass',100)
 draw1DCompare('sqrt(rc.x**2+rc.y**2)',0, 10,'ConvR',100)
 draw1DCompare('sqrt(mc.x**2+mc.y**2)',0, 10,'mcConvR',100)
@@ -83,12 +129,13 @@ draw1DCompare('angle',0, .01,'angle',100)
 draw1DCompare('openangle',0, 0.02,'OpenAngle',100)
 draw1DCompare('phiV',0, 0.8,'phiV',100)
 
+'''
 
 '''
     draw2D('sqrt(v0x**2+v0y**2)',0,10,'RcConvR',
-    'sqrt(mcv0x**2+mcv0y**2)',0,10,'McTruthConvR',
+    'sqrt(mcv0x**2+mcv0y**2)',0,10,'MctruthConvR',
     xTitle='Rc Conversion Radius [cm]',
-    yTitle='Mc Truth Conversion Radius [cm]',
+    yTitle='Mc truth Conversion Radius [cm]',
     xbin=100,ybin=100,
     histoname='histoPi0',
     cut='')
@@ -227,4 +274,4 @@ draw1DCompare('phiV',0, 0.8,'phiV',100)
     
     
     nhisto += 1
-    '''
+'''
