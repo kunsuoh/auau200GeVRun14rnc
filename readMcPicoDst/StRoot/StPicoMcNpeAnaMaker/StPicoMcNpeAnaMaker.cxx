@@ -74,7 +74,8 @@ Int_t StPicoMcNpeAnaMaker::Init()
     tree->Branch("refmult",&refmult,"refmult/I");   //
     tree->Branch("chi1",&chi1,"chi1/F");
     tree->Branch("chi2",&chi2,"chi2/F");
-    
+    tree->Branch("rchfthit",&rchfthit,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
+
 
     return kStOK;
 }
@@ -283,6 +284,12 @@ Int_t StPicoMcNpeAnaMaker::Make()
                         parentGid = ((StPicoMcTrack*)(picoDst->mctrack(mcElectron->parentId())))->GePid();
                         chi1 = rcPositron->chi2();
                         chi2 = rcElectron->chi2();
+                        
+                        rchfthit.pxl1 = trk->nHitsMapHFT()>>0 & 0x1;
+                        rchfthit.pxl2 = trk->nHitsMapHFT()>>1 & 0x3;
+                        rchfthit.ist = trk->nHitsMapHFT()>>3 & 0x3;
+                        rchfthit.ssd = 0;
+
                         tree->Fill();
                     }
                 }
