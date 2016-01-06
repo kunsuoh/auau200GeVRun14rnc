@@ -42,7 +42,8 @@ typedef struct {UChar_t pxl1,pxl2,ist,ssd;} HITS;
 static POSITION rc;
 static POSITION mc;
 
-static HITS rchfthit;
+static HITS rchfthit1;
+static HITS rchfthit2;
 static HITS nHits1;
 static HITS truth1;
 static HITS nHits2;

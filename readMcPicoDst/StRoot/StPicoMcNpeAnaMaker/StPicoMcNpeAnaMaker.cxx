@@ -74,7 +74,8 @@ Int_t StPicoMcNpeAnaMaker::Init()
     tree->Branch("refmult",&refmult,"refmult/I");   //
     tree->Branch("chi1",&chi1,"chi1/F");
     tree->Branch("chi2",&chi2,"chi2/F");
-    tree->Branch("rchfthit",&rchfthit,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
+    tree->Branch("rchfthit1",&rchfthit1,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
+    tree->Branch("rchfthit2",&rchfthit2,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
 
 
     return kStOK;
@@ -285,10 +286,16 @@ Int_t StPicoMcNpeAnaMaker::Make()
                         chi1 = rcPositron->chi2();
                         chi2 = rcElectron->chi2();
                         
-                        rchfthit.pxl1 = trk->nHitsMapHFT()>>0 & 0x1;
-                        rchfthit.pxl2 = trk->nHitsMapHFT()>>1 & 0x3;
-                        rchfthit.ist = trk->nHitsMapHFT()>>3 & 0x3;
-                        rchfthit.ssd = 0;
+                        rchfthit1.pxl1 = rcPositron->nHitsMapHFT()>>0 & 0x1;
+                        rchfthit1.pxl2 = rcPositron->nHitsMapHFT()>>1 & 0x3;
+                        rchfthit1.ist = rcPositron->nHitsMapHFT()>>3 & 0x3;
+                        rchfthit1.ssd = 0;
+
+                        rchfthit2.pxl1 = rcElectron->nHitsMapHFT()>>0 & 0x1;
+                        rchfthit2.pxl2 = rcElectron->nHitsMapHFT()>>1 & 0x3;
+                        rchfthit2.ist = rcElectron->nHitsMapHFT()>>3 & 0x3;
+                        rchfthit2.ssd = 0;
+                        
 
                         tree->Fill();
                     }
