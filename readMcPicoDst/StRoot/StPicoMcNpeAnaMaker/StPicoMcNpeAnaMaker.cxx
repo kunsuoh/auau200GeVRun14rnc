@@ -55,7 +55,7 @@ Int_t StPicoMcNpeAnaMaker::Init()
     tree->Branch("mc",&mc,"x:y:z");
     tree->Branch("rc",&rc,"x:y:z");
     tree->Branch("pt1",&pt1,"pt1/F");
-    tree->Branch("pt2",&pt1,"pt2/F");
+    tree->Branch("pt2",&pt2,"pt2/F");
     tree->Branch("phiV",&phiV,"phiV/F");
     tree->Branch("openangle",&openangle,"openangle/F");
     tree->Branch("mcopenangle",&mcopenangle,"mcopenangle/F");
