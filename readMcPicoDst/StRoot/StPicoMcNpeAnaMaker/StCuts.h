@@ -27,7 +27,7 @@ namespace cuts
     float const eta = 1.;
     
     // set Geant Id
-    int parentGid = 7;
+    int parentGid = 1;
     int dau1Gid = 2;
     int dau2Gid = 3;
 
