@@ -221,7 +221,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
 
                     singleTree->Fill(rcTrk->gPt(),rcTrk->gMom(pVtx,bField)->phi(),rcTrk->gMom(pVtx,bField)->pseudoRapidity(),
                                      mcTrk->gPt(),mcTrk->gMom(pVtx,bField)->phi(),mcTrk->pseudoRapidity(),
-                                     parentGid,rcTrk->chi2(),nHits, truth, rchfthit)
+                                     parentGid,rcTrk->chi2(),nHits, truth, rchfthit);
                     
                     if (trackId==cuts::dau1Gid) {
                         idPicoDstRcPositrons.push_back(id);
