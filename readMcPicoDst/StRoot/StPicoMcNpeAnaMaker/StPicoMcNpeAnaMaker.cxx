@@ -223,7 +223,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
                     rcEta = rcTrk->gMom(pVtx,bField).pseudoRapidity();
                     mcPt = mcTrk->Mom().perp();
                     mcPhi = mcTrk->Mom().phi();
-                    mceta = mcTrk->pseudorapidity();
+                    mcEta = mcTrk->pseudorapidity();
                     chi = rcTrk->chi2();
                     
                     singleTree->Fill();
