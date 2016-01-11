@@ -214,14 +214,14 @@ Int_t StPicoMcNpeAnaMaker::Make()
                     truth.ist = (mcTrk->IstTruth());
                     truth.ssd = (mcTrk->SsdTruth());
                     
-                    rchfthit1.pxl1 = rcTrk->nHitsMapHFT()>>0 & 0x1;
-                    rchfthit1.pxl2 = rcTrk->nHitsMapHFT()>>1 & 0x3;
-                    rchfthit1.ist = rcTrk->nHitsMapHFT()>>3 & 0x3;
-                    rchfthit1.ssd = 0;
+                    rchfthit.pxl1 = rcTrk->nHitsMapHFT()>>0 & 0x1;
+                    rchfthit.pxl2 = rcTrk->nHitsMapHFT()>>1 & 0x3;
+                    rchfthit.ist = rcTrk->nHitsMapHFT()>>3 & 0x3;
+                    rchfthit.ssd = 0;
 
-                    singleTree->Fill(rcTrk->gPt(),rcTrk->gMom(pVtx,bField).phi(),rcTrk->gMom(pVtx,bField).pseudoRapidity(),
-                                     mcTrk->Mom().perp(),mcTrk->Mom().phi(),mcTrk->pseudorapidity(),
-                                     parentGid,rcTrk->chi2(),nHits, truth, rchfthit);
+                    singleTree->Fill(rcTrk->gPt(), rcTrk->gMom(pVtx,bField).phi(), rcTrk->gMom(pVtx,bField).pseudoRapidity(),
+                                     mcTrk->Mom().perp(), mcTrk->Mom().phi(), mcTrk->pseudorapidity(),
+                                     parentGid, rcTrk->chi2(), nHits, truth, rchfthit);
                     
                     if (trackId==cuts::dau1Gid) {
                         idPicoDstRcPositrons.push_back(id);
