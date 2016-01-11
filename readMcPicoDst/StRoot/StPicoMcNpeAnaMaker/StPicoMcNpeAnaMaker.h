@@ -49,6 +49,10 @@ static HITS truth1;
 static HITS nHits2;
 static HITS truth2;
 
+static HITS nHits;
+static HITS truth;
+static HITS rchfthit;
+
 class StPicoMcNpeAnaMaker : public StMaker
 {
 public:
@@ -76,6 +80,7 @@ private:
     StPicoDstMaker* mPicoDstMaker;
     StPicoEvent*    mPicoEvent;
     TTree *tree;
+    TTree *singleTree;
     TFile* mOutputFile;
     TNtuple * nt2;
     TNtuple * nt3;
@@ -91,6 +96,8 @@ private:
     float length, angle, mcPairPt, pairDca, mass, eta, phi, openangle, mcopenangle, phiV, pt1, pt2, chi1, chi2;
     UChar_t parentGid;
     int refmult;
+    
+    float rcPt, rcPhi, rcEta, mcPt, mcPhi, mcEta;
     
     ClassDef(StPicoMcNpeAnaMaker, 0)
 };

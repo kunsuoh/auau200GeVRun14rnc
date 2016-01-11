@@ -661,133 +661,133 @@ Int_t StPicoDstMaker::MakeWrite() {
 }
 //-----------------------------------------------------------------------
 void StPicoDstMaker::fillTracksMc() {
-  StSPtrVecMcTrack mctracks=(StSPtrVecMcTrack)mMcEvent->tracks();
-
-  Int_t nGlobals = mMuDst->numberOfGlobalTracks();
-  for (int i_mc=0; i_mc< mctracks.size(); i_mc ++){
-    StMcTrack* mcTrk = dynamic_cast<StMcTrack *>(mctracks[i_mc]);
-    if( !mcTrk) continue;
-    if(mcTrk->key()==0 && mcTrk->geantId()==0) continue;  // not geant tracks
-    int nCommonHits;
-    const StGlobalTrack* rT = findPartner(mcTrk, nCommonHits);
+    StSPtrVecMcTrack mctracks=(StSPtrVecMcTrack)mMcEvent->tracks();
     
-    int counter = mPicoArrays[picoMcTrack]->GetEntries();
-    new((*(mPicoArrays[picoMcTrack]))[counter]) StPicoMcTrack(mcTrk, rT,nCommonHits);
-    //StPicoMcTrack mcTrack(mcTrk, rT);
-  }  
+    Int_t nGlobals = mMuDst->numberOfGlobalTracks();
+    for (int i_mc=0; i_mc< mctracks.size(); i_mc ++){
+        StMcTrack* mcTrk = dynamic_cast<StMcTrack *>(mctracks[i_mc]);
+        if( !mcTrk) continue;
+        if(mcTrk->key()==0 && mcTrk->geantId()==0) continue;  // not geant tracks
+        int nCommonHits;
+        const StGlobalTrack* rT = findPartner(mcTrk, nCommonHits);
+        
+        int counter = mPicoArrays[picoMcTrack]->GetEntries();
+        new((*(mPicoArrays[picoMcTrack]))[counter]) StPicoMcTrack(mcTrk, rT,nCommonHits);
+        //StPicoMcTrack mcTrack(mcTrk, rT);
+    }  
 }
 //-----------------------------------------------------------------------
 const StGlobalTrack* StPicoDstMaker::findPartner(StMcTrack* mcTrk, int& nCommon){
-  pair<mcTrackMapIter, mcTrackMapIter> p = mAssoc->mcTrackMap()->equal_range(mcTrk);
-  const StGlobalTrack* maxTrack = 0;
-  nCommon = 0;
-  for(mcTrackMapIter k = p.first; k != p.second; ++k) {
-    int commonTpcHits = k->second->commonTpcHits();
-    const StGlobalTrack* track = (StGlobalTrack* )k->second->partnerTrack()->node()->track(global);
-    if (track && commonTpcHits > nCommon) {
-      maxTrack = track;
-      nCommon = commonTpcHits;
+    pair<mcTrackMapIter, mcTrackMapIter> p = mAssoc->mcTrackMap()->equal_range(mcTrk);
+    const StGlobalTrack* maxTrack = 0;
+    nCommon = 0;
+    for(mcTrackMapIter k = p.first; k != p.second; ++k) {
+        int commonTpcHits = k->second->commonTpcHits();
+        const StGlobalTrack* track = (StGlobalTrack* )k->second->partnerTrack()->node()->track(global);
+        if (track && commonTpcHits > nCommon) {
+            maxTrack = track;
+            nCommon = commonTpcHits;
+        }
     }
-  }
-  return maxTrack;
+    return maxTrack;
 }
 //-----------------------------------------------------------------------
 void StPicoDstMaker::fillTracks() {
-  cout<<"Filling tracks"<<endl;
-  Int_t nPrimarys = mMuDst->numberOfPrimaryTracks();
-  for(int i=0;i<nPrimarys;i++) {
-    StMuTrack *pTrk = (StMuTrack *)mMuDst->primaryTracks(i);
-    if(!pTrk) continue;
-    if(pTrk->id()<0 || pTrk->id()>=50000) {
-      LOG_WARN << " This primary track has a track id out of the range : " << pTrk->id() << endm;
-      continue;
+    cout<<"Filling tracks"<<endl;
+    Int_t nPrimarys = mMuDst->numberOfPrimaryTracks();
+    for(int i=0;i<nPrimarys;i++) {
+        StMuTrack *pTrk = (StMuTrack *)mMuDst->primaryTracks(i);
+        if(!pTrk) continue;
+        if(pTrk->id()<0 || pTrk->id()>=50000) {
+            LOG_WARN << " This primary track has a track id out of the range : " << pTrk->id() << endm;
+            continue;
+        }
+        mIndex2Primary[pTrk->id()] = i;
     }
-    mIndex2Primary[pTrk->id()] = i;
-  }
-
-  Int_t nGlobals = mMuDst->numberOfGlobalTracks();
-  for(int i=0;i<nGlobals;i++) {
-    StMuTrack *gTrk = (StMuTrack *)mMuDst->globalTracks(i);
-    if(!gTrk) continue;
-    if(!mPicoCut->passTrack(gTrk)) continue;
-    if(gTrk->id()<0 || gTrk->id()>=50000) {
-      LOG_WARN << " This global track has a track id out of the range : " << gTrk->id() << endm;
-      continue;
-    }
-    int index = mIndex2Primary[gTrk->id()];
-    StMuTrack *pTrk = (index>=0) ? (StMuTrack *)mMuDst->primaryTracks(index) : 0;
-    if(mCreatingPhiWgt && !pTrk) continue;
-
-//    Int_t flowFlag = mPicoCut->flowFlag(pTrk);
-    Int_t flowFlag = 1;
-    Float_t Vz = mMuDst->primaryVertex()->position().z();
-    Int_t iPhi = phiBin(flowFlag, pTrk, Vz);
-    float phi_wgt_read = 1.;
-    if(iPhi>=0) phi_wgt_read = mPhiWeightRead[mCentrality][iPhi];
-
-    int id = -1;
-    int adc0; float e[5]; float dist[4]; int nhit[2]; int ntow[3];
-    if(mEmcMode) getBEMC(gTrk, &id, &adc0, e, dist, nhit, ntow);
     
-    if(mProdMode==4)
-      {
-	// save only electron or muon candidates
-	Double_t nsigmaE = gTrk->nSigmaElectron();
-	Double_t beta = (gTrk) ? gTrk->btofPidTraits().beta() : -999.;
-
-	// running on st_mtd data
-	Bool_t isTPC = kFALSE, isTOF = kFALSE, isEMC = kFALSE, isMTD = kFALSE;
-	if(gTrk->index2MtdHit()>=0) isMTD = kTRUE;
-	if(nsigmaE>=-3 && nsigmaE<=3)   isTPC = kTRUE;
-	if(TMath::Abs(1/beta-1)<0.05) isTOF = kTRUE;
-	if(gTrk->pt()>1.5 && id>=0)   isEMC = kTRUE;
-
-	if( ! ( (isTPC&&isTOF) ||
-		(isTPC&&isEMC) ||
-		isMTD)
-	    )
-	  continue;
-      }
-
-    if(gTrk->index2Cov()<0) continue;
-    StDcaGeometry *dcaG = mMuDst->covGlobTracks(gTrk->index2Cov());
-    if(!dcaG) { cout << "No dca Geometry for this track !!! " << i << endm; }
-    int counter = mPicoArrays[picoTrack]->GetEntries();
-    cout<<"Actually adding track:"<<counter<<endl;
-    new((*(mPicoArrays[picoTrack]))[counter]) StPicoTrack(gTrk, pTrk, phi_wgt_read, flowFlag, mBField, dcaG);
- 
-    if(iPhi>=nEW*nDet*nPhi) 
-      {
-	cout << " flowFlag = " << flowFlag << " eta=" << pTrk->eta() << " q=" << pTrk->charge() << " vz=" << Vz << endl;
-	cout << " WARN !!! " << iPhi << endl;
-      }
-    if(iPhi>=0) addPhiWeight(pTrk, phi_wgt_read, &mPhiWeightWrite[iPhi]);
-
-    StPicoTrack *picoTrk = (StPicoTrack*)mPicoArrays[picoTrack]->At(counter);
-    // Fill pid traits
-    if(id>=0)
-      {
-	Int_t emc_index = mPicoArrays[picoEmcPidTraits]->GetEntries();
-	new((*(mPicoArrays[picoEmcPidTraits]))[emc_index]) StPicoEmcPidTraits(counter, id, adc0, e, dist, nhit, ntow);
-	picoTrk->setEmcPidTraitsIndex(emc_index);
-      }
-
-    if(gTrk->tofHit())
-      {
-	Int_t btof_index = mPicoArrays[picoBTofPidTraits]->GetEntries();
-	new((*(mPicoArrays[picoBTofPidTraits]))[btof_index]) StPicoBTofPidTraits(gTrk, pTrk, counter);
-	picoTrk->setBTofPidTraitsIndex(btof_index);
-      }
-
-    if(gTrk->mtdHit())
-      {
-	Int_t emc_index = mPicoArrays[picoMtdPidTraits]->GetEntries();
-	new((*(mPicoArrays[picoMtdPidTraits]))[emc_index]) StPicoMtdPidTraits(gTrk->mtdHit(), &(gTrk->mtdPidTraits()),counter);
-	picoTrk->setMtdPidTraitsIndex(emc_index);
-      }
-  }
-  cout<<"added "<<mPicoArrays[picoTrack]->GetEntries() << "out of "<< nGlobals <<endl;
-//  cout << "   ++ track branch size = " <<  mPicoArrays[picoTrack]->GetEntries() << endl;
+    Int_t nGlobals = mMuDst->numberOfGlobalTracks();
+    for(int i=0;i<nGlobals;i++) {
+        StMuTrack *gTrk = (StMuTrack *)mMuDst->globalTracks(i);
+        if(!gTrk) continue;
+        if(!mPicoCut->passTrack(gTrk)) continue;
+        if(gTrk->id()<0 || gTrk->id()>=50000) {
+            LOG_WARN << " This global track has a track id out of the range : " << gTrk->id() << endm;
+            continue;
+        }
+        int index = mIndex2Primary[gTrk->id()];
+        StMuTrack *pTrk = (index>=0) ? (StMuTrack *)mMuDst->primaryTracks(index) : 0;
+        if(mCreatingPhiWgt && !pTrk) continue;
+        
+        //    Int_t flowFlag = mPicoCut->flowFlag(pTrk);
+        Int_t flowFlag = 1;
+        Float_t Vz = mMuDst->primaryVertex()->position().z();
+        Int_t iPhi = phiBin(flowFlag, pTrk, Vz);
+        float phi_wgt_read = 1.;
+        if(iPhi>=0) phi_wgt_read = mPhiWeightRead[mCentrality][iPhi];
+        
+        int id = -1;
+        int adc0; float e[5]; float dist[4]; int nhit[2]; int ntow[3];
+        if(mEmcMode) getBEMC(gTrk, &id, &adc0, e, dist, nhit, ntow);
+        
+        if(mProdMode==4)
+        {
+            // save only electron or muon candidates
+            Double_t nsigmaE = gTrk->nSigmaElectron();
+            Double_t beta = (gTrk) ? gTrk->btofPidTraits().beta() : -999.;
+            
+            // running on st_mtd data
+            Bool_t isTPC = kFALSE, isTOF = kFALSE, isEMC = kFALSE, isMTD = kFALSE;
+            if(gTrk->index2MtdHit()>=0) isMTD = kTRUE;
+            if(nsigmaE>=-3 && nsigmaE<=3)   isTPC = kTRUE;
+            if(TMath::Abs(1/beta-1)<0.05) isTOF = kTRUE;
+            if(gTrk->pt()>1.5 && id>=0)   isEMC = kTRUE;
+            
+            if( ! ( (isTPC&&isTOF) ||
+                   (isTPC&&isEMC) ||
+                   isMTD)
+               )
+                continue;
+        }
+        
+        if(gTrk->index2Cov()<0) continue;
+        StDcaGeometry *dcaG = mMuDst->covGlobTracks(gTrk->index2Cov());
+        if(!dcaG) { cout << "No dca Geometry for this track !!! " << i << endm; }
+        int counter = mPicoArrays[picoTrack]->GetEntries();
+        cout<<"Actually adding track:"<<counter<<endl;
+        new((*(mPicoArrays[picoTrack]))[counter]) StPicoTrack(gTrk, pTrk, phi_wgt_read, flowFlag, mBField, dcaG);
+        
+        if(iPhi>=nEW*nDet*nPhi)
+        {
+            cout << " flowFlag = " << flowFlag << " eta=" << pTrk->eta() << " q=" << pTrk->charge() << " vz=" << Vz << endl;
+            cout << " WARN !!! " << iPhi << endl;
+        }
+        if(iPhi>=0) addPhiWeight(pTrk, phi_wgt_read, &mPhiWeightWrite[iPhi]);
+        
+        StPicoTrack *picoTrk = (StPicoTrack*)mPicoArrays[picoTrack]->At(counter);
+        // Fill pid traits
+        if(id>=0)
+        {
+            Int_t emc_index = mPicoArrays[picoEmcPidTraits]->GetEntries();
+            new((*(mPicoArrays[picoEmcPidTraits]))[emc_index]) StPicoEmcPidTraits(counter, id, adc0, e, dist, nhit, ntow);
+            picoTrk->setEmcPidTraitsIndex(emc_index);
+        }
+        
+        if(gTrk->tofHit())
+        {
+            Int_t btof_index = mPicoArrays[picoBTofPidTraits]->GetEntries();
+            new((*(mPicoArrays[picoBTofPidTraits]))[btof_index]) StPicoBTofPidTraits(gTrk, pTrk, counter);
+            picoTrk->setBTofPidTraitsIndex(btof_index);
+        }
+        
+        if(gTrk->mtdHit())
+        {
+            Int_t emc_index = mPicoArrays[picoMtdPidTraits]->GetEntries();
+            new((*(mPicoArrays[picoMtdPidTraits]))[emc_index]) StPicoMtdPidTraits(gTrk->mtdHit(), &(gTrk->mtdPidTraits()),counter);
+            picoTrk->setMtdPidTraitsIndex(emc_index);
+        }
+    }
+    cout<<"added "<<mPicoArrays[picoTrack]->GetEntries() << "out of "<< nGlobals <<endl;
+    //  cout << "   ++ track branch size = " <<  mPicoArrays[picoTrack]->GetEntries() << endl;
 }
 
 //-----------------------------------------------------------------------

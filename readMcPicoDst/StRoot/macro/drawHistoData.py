@@ -9,14 +9,14 @@ from rootpy.io import root_open
 from rootpy.plotting import Hist, Hist2D, Hist3D, histogram, Canvas, Legend
 
 # Data
-infile = root_open('../out_gamma9.root')
+infile = root_open('../out_gamma8.root')
 ntuple = infile.nt
 # Simulation
-infile2 = root_open('out.root')
-ntuple2 = infile2.nt2
+infile2 = root_open('root/out_pi0_0.root')
+ntuple2 = infile2.T
 
 canvas = Canvas()
-canvas.SetLogz()
+canvas.SetLogy()
 
 def draw2D(
            xval, xmin, xmax, xvalname,
@@ -33,47 +33,140 @@ def draw2D(
 
 def draw1D(
            xval, xmin, xmax, xvalname, xbin=100,
-           cut='mass < 0.02 && pairDca < 0.01 && abs(pt1) > 0.6 && abs(pt2) > 0.6 && abs(pt1) < 0.8 && abs(pt2) < 0.8 && nsige1>-1 && nsige2>-1',
-           histoname='histo1DData',
-           cutSim='abs(pt1) > 0.6 && abs(pt2) > 0.6 && abs(pt1) < 0.8 && abs(pt2) < 0.8 ',
+           cut='mass < 0.05 && pairDca < 0.01 && nsige1>-1 && nsige2>-1 && abs(pt1) > 0.6 && abs(pt2) > 0.6',
+           histoname='histoPi0Dalitz',
+           cutSim='abs(pt1) > 0.6 && abs(pt2) > 0.6', cutSim2 = '',
            xvalSim='',xvalSim2=''
            ):
-    histo1 = ntuple.Draw(xval, hist=Hist(xbin,xmin,xmax), selection=cut+' && pt1*pt2<0')
+    histo1 = ntuple.Draw(xval, hist=Hist(xbin,xmin,xmax), selection=cut+' && pt1*pt2<0') # data UL
     histo1.color = 'red'
     histo1.SetMarkerStyle(24)
-    histo2 = ntuple.Draw(xval, hist=Hist(xbin,xmin,xmax), selection=cut+' && pt1*pt2>0')
+    histo2 = ntuple.Draw(xval, hist=Hist(xbin,xmin,xmax), selection=cut+' && pt1*pt2>0') # data LS
     #histo2.scale(histo1.integral(90,99)/histo2.integral(90,99))
     histo2.color = 'blue'
     histo2.SetMarkerStyle(24)
-    histo3 = histo1-histo2
+    histo3 = histo1-histo2                                                               # data UL-LS
     histo3.scale(1/histo3.GetMaximum())
     histo3.color = 'black'
     histo3.SetMarkerStyle(20)
+
+    
     if xvalSim == '':
         xvalSim = xval
-    histo4 = ntuple2.Draw(xvalSim, hist=Hist(xbin,xmin,xmax), selection=cutSim)
+    histo4 = ntuple2.Draw(xvalSim, hist=Hist(xbin,xmin,xmax), selection=cutSim + cutSim2)          # sim #1
     histo4.scale(1/histo4.GetMaximum())
     histo4.color = 'red'
     histo4.scale(histo3.GetMaximum()/histo4.GetMaximum())
     if xvalSim2 == '':
         xvalSim2 = xval
-    histo5 = ntuple2.Draw(xvalSim2, hist=Hist(xbin,xmin,xmax), selection=cutSim)
+    histo5 = ntuple2.Draw(xvalSim2, hist=Hist(xbin,xmin,xmax), selection=cutSim + cutSim2)         # sim #2
     histo5.scale(1/histo5.GetMaximum())
     histo5.color = 'blue'
     histo5.scale(histo3.GetMaximum()/histo4.GetMaximum())
 
-    histo3.SetMinimum(0)
+    histo3.SetMinimum(1e-4)
     #histo1.Draw('E0')
     #histo2.Draw('sameE0')
     histo3.Draw('E0')
+    canvas.SaveAs('data.pdf')
+    canvas.SaveAs('data.root')
+
     histo4.Draw('sameE0')
     histo5.Draw('sameE0')
-    histo1.xaxis.SetTitle(xvalname)
-    canvas.SaveAs(histoname+'_'+xvalname+'.pdf')
+    canvas.SaveAs('4bitsLog1GeV'+histoname+'_'+xvalname+'.pdf')
 
-draw1D('sqrt((v0x+0.2383)**2+(v0y+0.1734)**2)',0, 10,'ConvR',100,xvalSim='sqrt((v0x)**2+(v0y)**2)',xvalSim2='sqrt((mcv0x)**2+(mcv0y)**2)')
+
+
+draw1D('sqrt((v0x+0.2383)**2+(v0y+0.1734)**2)',0, 10,'ConvR0000',100,xvalSim='sqrt((mc.x)**2+(mc.y)**2)',xvalSim2='sqrt((rc.x)**2+(rc.y)**2)',
+       cutSim2 =' && rchfthit1.pxl1 && rchfthit1.pxl2 && rchfthit2.pxl1 && rchfthit2.pxl2'+
+       ' && truth1.pxl1==0 && truth1.pxl2==0 && truth2.pxl1==0 && truth2.pxl2==0')
+draw1D('sqrt((v0x+0.2383)**2+(v0y+0.1734)**2)',0, 10,'ConvR0001',100,xvalSim='sqrt((mc.x)**2+(mc.y)**2)',xvalSim2='sqrt((rc.x)**2+(rc.y)**2)',
+       cutSim2 =' && rchfthit1.pxl1 && rchfthit1.pxl2 && rchfthit2.pxl1 && rchfthit2.pxl2'+
+       ' && truth1.pxl1==0 && truth1.pxl2==0 && truth2.pxl1==0 && truth2.pxl2')
+draw1D('sqrt((v0x+0.2383)**2+(v0y+0.1734)**2)',0, 10,'ConvR0010',100,xvalSim='sqrt((mc.x)**2+(mc.y)**2)',xvalSim2='sqrt((rc.x)**2+(rc.y)**2)',
+       cutSim2 =' && rchfthit1.pxl1 && rchfthit1.pxl2 && rchfthit2.pxl1 && rchfthit2.pxl2'+
+       ' && truth1.pxl1==0 && truth1.pxl2==0 && truth2.pxl1 && truth2.pxl2==0')
+draw1D('sqrt((v0x+0.2383)**2+(v0y+0.1734)**2)',0, 10,'ConvR0011',100,xvalSim='sqrt((mc.x)**2+(mc.y)**2)',xvalSim2='sqrt((rc.x)**2+(rc.y)**2)',
+       cutSim2 =' && rchfthit1.pxl1 && rchfthit1.pxl2 && rchfthit2.pxl1 && rchfthit2.pxl2'+
+       ' && truth1.pxl1==0 && truth1.pxl2==0 && truth2.pxl1 && truth2.pxl2')
+draw1D('sqrt((v0x+0.2383)**2+(v0y+0.1734)**2)',0, 10,'ConvR0100',100,xvalSim='sqrt((mc.x)**2+(mc.y)**2)',xvalSim2='sqrt((rc.x)**2+(rc.y)**2)',
+       cutSim2 =' && rchfthit1.pxl1 && rchfthit1.pxl2 && rchfthit2.pxl1 && rchfthit2.pxl2'+
+       ' && truth1.pxl1==0 && truth1.pxl2 && truth2.pxl1==0 && truth2.pxl2==0')
+draw1D('sqrt((v0x+0.2383)**2+(v0y+0.1734)**2)',0, 10,'ConvR0101',100,xvalSim='sqrt((mc.x)**2+(mc.y)**2)',xvalSim2='sqrt((rc.x)**2+(rc.y)**2)',
+       cutSim2 =' && rchfthit1.pxl1 && rchfthit1.pxl2 && rchfthit2.pxl1 && rchfthit2.pxl2'+
+       ' && truth1.pxl1==0 && truth1.pxl2 && truth2.pxl1==0 && truth2.pxl2')
+draw1D('sqrt((v0x+0.2383)**2+(v0y+0.1734)**2)',0, 10,'ConvR0110',100,xvalSim='sqrt((mc.x)**2+(mc.y)**2)',xvalSim2='sqrt((rc.x)**2+(rc.y)**2)',
+       cutSim2 =' && rchfthit1.pxl1 && rchfthit1.pxl2 && rchfthit2.pxl1 && rchfthit2.pxl2'+
+       ' && truth1.pxl1==0 && truth1.pxl2 && truth2.pxl1 && truth2.pxl2==0')
+draw1D('sqrt((v0x+0.2383)**2+(v0y+0.1734)**2)',0, 10,'ConvR0111',100,xvalSim='sqrt((mc.x)**2+(mc.y)**2)',xvalSim2='sqrt((rc.x)**2+(rc.y)**2)',
+       cutSim2 =' && rchfthit1.pxl1 && rchfthit1.pxl2 && rchfthit2.pxl1 && rchfthit2.pxl2'+
+       ' && truth1.pxl1==0 && truth1.pxl2 && truth2.pxl1 && truth2.pxl2')
+
+draw1D('sqrt((v0x+0.2383)**2+(v0y+0.1734)**2)',0, 10,'ConvR1000',100,xvalSim='sqrt((mc.x)**2+(mc.y)**2)',xvalSim2='sqrt((rc.x)**2+(rc.y)**2)',
+       cutSim2 =' && rchfthit1.pxl1 && rchfthit1.pxl2 && rchfthit2.pxl1 && rchfthit2.pxl2'+
+       ' && truth1.pxl1 && truth1.pxl2==0 && truth2.pxl1==0 && truth2.pxl2==0')
+draw1D('sqrt((v0x+0.2383)**2+(v0y+0.1734)**2)',0, 10,'ConvR1001',100,xvalSim='sqrt((mc.x)**2+(mc.y)**2)',xvalSim2='sqrt((rc.x)**2+(rc.y)**2)',
+       cutSim2 =' && rchfthit1.pxl1 && rchfthit1.pxl2 && rchfthit2.pxl1 && rchfthit2.pxl2'+
+       ' && truth1.pxl1 && truth1.pxl2==0 && truth2.pxl1==0 && truth2.pxl2')
+draw1D('sqrt((v0x+0.2383)**2+(v0y+0.1734)**2)',0, 10,'ConvR1010',100,xvalSim='sqrt((mc.x)**2+(mc.y)**2)',xvalSim2='sqrt((rc.x)**2+(rc.y)**2)',
+       cutSim2 =' && rchfthit1.pxl1 && rchfthit1.pxl2 && rchfthit2.pxl1 && rchfthit2.pxl2'+
+       ' && truth1.pxl1 && truth1.pxl2==0 && truth2.pxl1 && truth2.pxl2==0')
+draw1D('sqrt((v0x+0.2383)**2+(v0y+0.1734)**2)',0, 10,'ConvR1011',100,xvalSim='sqrt((mc.x)**2+(mc.y)**2)',xvalSim2='sqrt((rc.x)**2+(rc.y)**2)',
+       cutSim2 =' && rchfthit1.pxl1 && rchfthit1.pxl2 && rchfthit2.pxl1 && rchfthit2.pxl2'+
+       ' && truth1.pxl1 && truth1.pxl2==0 && truth2.pxl1 && truth2.pxl2')
+draw1D('sqrt((v0x+0.2383)**2+(v0y+0.1734)**2)',0, 10,'ConvR1100',100,xvalSim='sqrt((mc.x)**2+(mc.y)**2)',xvalSim2='sqrt((rc.x)**2+(rc.y)**2)',
+       cutSim2 =' && rchfthit1.pxl1 && rchfthit1.pxl2 && rchfthit2.pxl1 && rchfthit2.pxl2'+
+       ' && truth1.pxl1 && truth1.pxl2 && truth2.pxl1==0 && truth2.pxl2==0')
+draw1D('sqrt((v0x+0.2383)**2+(v0y+0.1734)**2)',0, 10,'ConvR1101',100,xvalSim='sqrt((mc.x)**2+(mc.y)**2)',xvalSim2='sqrt((rc.x)**2+(rc.y)**2)',
+       cutSim2 =' && rchfthit1.pxl1 && rchfthit1.pxl2 && rchfthit2.pxl1 && rchfthit2.pxl2'+
+       ' && truth1.pxl1 && truth1.pxl2 && truth2.pxl1==0 && truth2.pxl2')
+draw1D('sqrt((v0x+0.2383)**2+(v0y+0.1734)**2)',0, 10,'ConvR1110',100,xvalSim='sqrt((mc.x)**2+(mc.y)**2)',xvalSim2='sqrt((rc.x)**2+(rc.y)**2)',
+       cutSim2 =' && rchfthit1.pxl1 && rchfthit1.pxl2 && rchfthit2.pxl1 && rchfthit2.pxl2'+
+       ' && truth1.pxl1 && truth1.pxl2 && truth2.pxl1 && truth2.pxl2==0')
+draw1D('sqrt((v0x+0.2383)**2+(v0y+0.1734)**2)',0, 10,'ConvR1111',100,xvalSim='sqrt((mc.x)**2+(mc.y)**2)',xvalSim2='sqrt((rc.x)**2+(rc.y)**2)',
+       cutSim2 =' && rchfthit1.pxl1 && rchfthit1.pxl2 && rchfthit2.pxl1 && rchfthit2.pxl2'+
+       ' && truth1.pxl1 && truth1.pxl2 && truth2.pxl1 && truth2.pxl2')
+
+
+'''
+draw1D('sqrt((v0x+0.2383)**2+(v0y+0.1734)**2)',0, 10,'ConvR3_1',100,xvalSim='sqrt((mc.x)**2+(mc.y)**2)',xvalSim2='sqrt((rc.x)**2+(rc.y)**2)',
+    cutSim2 =' && rchfthit1.pxl1 && rchfthit1.pxl2 && rchfthit2.pxl1 && rchfthit2.pxl2 && rchfthit1.ist && rchfthit2.ist && (truth1.pxl2==0 || truth2.pxl2==0) && (truth1.pxl1 && truth2.pxl1)')
+
+
+draw1D('sqrt((v0x+0.2383)**2+(v0y+0.1734)**2)',0, 10,'ConvR12',100,xvalSim='sqrt((mc.x)**2+(mc.y)**2)',xvalSim2='sqrt((rc.x)**2+(rc.y)**2)',
+       cutSim2 =' && rchfthit1.pxl1 && rchfthit1.pxl2 && rchfthit2.pxl1 && rchfthit2.pxl2 && (truth1.pxl2 || truth2.pxl2) && !(truth1.pxl2==0 && truth2.pxl2==0) && truth1.pxl1 && truth2.pxl1')
+
+
+draw1D('sqrt((v0x+0.2383)**2+(v0y+0.1734)**2)',0, 10,'ConvR',100,xvalSim='sqrt((mc.x)**2+(mc.y)**2)',xvalSim2='sqrt((rc.x)**2+(rc.y)**2)',
+       cutSim2 =' && rchfthit1.pxl1 && rchfthit1.pxl2 && rchfthit2.pxl1 && rchfthit2.pxl2 && truth1.pxl1 && truth1.pxl2 && truth2.pxl1 && truth2.pxl2')
+draw1D('sqrt((v0x+0.2383)**2+(v0y+0.1734)**2)',0, 10,'ConvR1',100,xvalSim='sqrt((mc.x)**2+(mc.y)**2)',xvalSim2='sqrt((rc.x)**2+(rc.y)**2)',
+       cutSim2 =' && rchfthit1.pxl1 && rchfthit1.pxl2 && rchfthit2.pxl1 && rchfthit2.pxl2 && (truth1.pxl1==0 || truth1.pxl2==0 || truth2.pxl1==0 || truth2.pxl2==0)')
+draw1D('sqrt((v0x+0.2383)**2+(v0y+0.1734)**2)',0, 10,'ConvR2',100,xvalSim='sqrt((mc.x)**2+(mc.y)**2)',xvalSim2='sqrt((rc.x)**2+(rc.y)**2)',
+       cutSim2 =' && rchfthit1.pxl1 && rchfthit1.pxl2 && rchfthit2.pxl1 && rchfthit2.pxl2 && (truth1.pxl1==0 || truth2.pxl1==0) && (truth1.pxl2 && truth2.pxl2)')
+draw1D('sqrt((v0x+0.2383)**2+(v0y+0.1734)**2)',0, 10,'ConvR3',100,xvalSim='sqrt((mc.x)**2+(mc.y)**2)',xvalSim2='sqrt((rc.x)**2+(rc.y)**2)',
+       cutSim2 =' && rchfthit1.pxl1 && rchfthit1.pxl2 && rchfthit2.pxl1 && rchfthit2.pxl2 && (truth1.pxl2==0 || truth2.pxl2==0) && (truth1.pxl1 && truth2.pxl1)')
+draw1D('sqrt((v0x+0.2383)**2+(v0y+0.1734)**2)',0, 10,'ConvR4',100,xvalSim='sqrt((mc.x)**2+(mc.y)**2)',xvalSim2='sqrt((rc.x)**2+(rc.y)**2)',
+       cutSim2 =' && rchfthit1.pxl1 && rchfthit1.pxl2 && rchfthit2.pxl1 && rchfthit2.pxl2')
+draw1D('sqrt((v0x+0.2383)**2+(v0y+0.1734)**2)',0, 10,'ConvR9',100,xvalSim='sqrt((mc.x)**2+(mc.y)**2)',xvalSim2='sqrt((rc.x)**2+(rc.y)**2)',
+       cutSim2 =' && rchfthit1.pxl1 && rchfthit1.pxl2 && rchfthit2.pxl1 && rchfthit2.pxl2 && truth1.pxl1 && truth2.pxl1 && truth1.pxl2==0 && truth2.pxl2==0')
+draw1D('sqrt((v0x+0.2383)**2+(v0y+0.1734)**2)',0, 10,'ConvR10',100,xvalSim='sqrt((mc.x)**2+(mc.y)**2)',xvalSim2='sqrt((rc.x)**2+(rc.y)**2)',
+       cutSim2 =' && rchfthit1.pxl1 && rchfthit1.pxl2 && rchfthit2.pxl1 && rchfthit2.pxl2 && truth1.pxl1==0 && truth2.pxl1==0 && truth1.pxl2 && truth2.pxl2')
+draw1D('sqrt((v0x+0.2383)**2+(v0y+0.1734)**2)',0, 10,'ConvR11',100,xvalSim='sqrt((mc.x)**2+(mc.y)**2)',xvalSim2='sqrt((rc.x)**2+(rc.y)**2)',
+       cutSim2 =' && rchfthit1.pxl1 && rchfthit1.pxl2 && rchfthit2.pxl1 && rchfthit2.pxl2 && (truth1.pxl1 || truth2.pxl1) && !(truth1.pxl1==0 && truth2.pxl1==0) && truth1.pxl2 && truth2.pxl2')
+
+
+# nHits
+draw1D('sqrt((v0x+0.2383)**2+(v0y+0.1734)**2)',0, 10,'ConvR5',100,xvalSim='sqrt((mc.x)**2+(mc.y)**2)',xvalSim2='sqrt((rc.x)**2+(rc.y)**2)',
+       cutSim2 =' && nHits1.pxl1 && nHits1.pxl2 && nHits2.pxl1 && nHits2.pxl2 && (truth1.pxl1==0 || truth1.pxl2==0 || truth2.pxl1==0 || truth2.pxl2==0)')
+draw1D('sqrt((v0x+0.2383)**2+(v0y+0.1734)**2)',0, 10,'ConvR6',100,xvalSim='sqrt((mc.x)**2+(mc.y)**2)',xvalSim2='sqrt((rc.x)**2+(rc.y)**2)',
+       cutSim2 =' && nHits1.pxl1 && nHits1.pxl2 && nHits2.pxl1 && nHits2.pxl2 && (truth1.pxl1==0 || truth2.pxl1==0)')
+draw1D('sqrt((v0x+0.2383)**2+(v0y+0.1734)**2)',0, 10,'ConvR7',100,xvalSim='sqrt((mc.x)**2+(mc.y)**2)',xvalSim2='sqrt((rc.x)**2+(rc.y)**2)',
+       cutSim2 =' && nHits1.pxl1 && nHits1.pxl2 && nHits2.pxl1 && nHits2.pxl2 && truth1.pxl1 && truth1.pxl2 && truth2.pxl1 && truth2.pxl2')
+
+
+
 draw1D('mass',0, 0.1,'Mass',100)
-
+'''
 '''
 draw2D('phi',-4,4,'Phi')
 draw2D('eta',-1.1,1.1,'Eta')

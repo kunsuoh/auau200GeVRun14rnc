@@ -77,6 +77,18 @@ Int_t StPicoMcNpeAnaMaker::Init()
     tree->Branch("rchfthit1",&rchfthit1,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
     tree->Branch("rchfthit2",&rchfthit2,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
 
+    singleTree = new TTree("eT","Single Electron tree");
+    singleTree->Branch("rcPt",&rcPt,"rcPt/F");
+    singleTree->Branch("rcPhi",&rcPhi,"rcPhi/F");
+    singleTree->Branch("rcEta",&rcEta,"rcEta/F");
+    singleTree->Branch("mcPt",&mcPt,"mcPt/F");
+    singleTree->Branch("mcPhi",&mcPhi,"mcPhi/F");
+    singleTree->Branch("mcEta",&mcEta,"mcEta/F");
+    singleTree->Branch("parentGid",&parentGid,"parentGid/b");   //
+    singleTree->Branch("chi",&chi,"chi/F");
+    singleTree->Branch("nHits",&nHits,"pxl/b:pxl/b:ist/b:ssd/b");   //
+    singleTree->Branch("truth",&truth,"pxl/b:pxl/b:ist/b:ssd/b");   //
+    singleTree->Branch("rchfthit",&rchfthit,"pxl/b:pxl/b:ist/b:ssd/b");   //
 
     return kStOK;
 }
@@ -95,6 +107,7 @@ Int_t StPicoMcNpeAnaMaker::Finish()
     nt2->Write();
     nt3->Write();
     tree->Write();
+    singleTree->Write();
     
     mOutputFile->Write();
     mOutputFile->Close();
@@ -182,7 +195,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
             hTrackGeantId->Fill(trackId);
             
             // get Rc Trcak
-            if (//parentGid == cuts::parentGid &&
+            if ((parentGid == cuts::parentGid || cuts::parentGid == -999) &&
                 (trackId == cuts::dau1Gid || trackId == cuts::dau2Gid)) {
                 StPicoTrack *rcTrk=0;
                 Int_t id=-999;
@@ -191,6 +204,25 @@ Int_t StPicoMcNpeAnaMaker::Make()
                     rcTrk = (StPicoTrack*)picoDst->track(id);
                     fillHistogram(rcTrk,mcTrk);
 
+                    nHits.pxl1 = (mcTrk->hitsPxl1());
+                    nHits.pxl2 = (mcTrk->hitsPxl2());
+                    nHits.ist = (mcTrk->hitsIst());
+                    nHits.ssd = (mcTrk->hitsSst());
+                    
+                    truth.pxl1 = (mcTrk->Pxl1Truth());
+                    truth.pxl2 = (mcTrk->Pxl2Truth());
+                    truth.ist = (mcTrk->IstTruth());
+                    truth.ssd = (mcTrk->SsdTruth());
+                    
+                    rchfthit1.pxl1 = rcTrk->nHitsMapHFT()>>0 & 0x1;
+                    rchfthit1.pxl2 = rcTrk->nHitsMapHFT()>>1 & 0x3;
+                    rchfthit1.ist = rcTrk->nHitsMapHFT()>>3 & 0x3;
+                    rchfthit1.ssd = 0;
+
+                    singleTree->Fill(rcTrk->gPt(),rcTrk->gMom(pVtx,bField)->phi(),rcTrk->gMom(pVtx,bField)->pseudoRapidity(),
+                                     mcTrk->gPt(),mcTrk->gMom(pVtx,bField)->phi(),mcTrk->pseudoRapidity(),
+                                     parentGid,rcTrk->chi2(),nHits, truth, rchfthit)
+                    
                     if (trackId==cuts::dau1Gid) {
                         idPicoDstRcPositrons.push_back(id);
                         idPicoDstMcPositrons.push_back(i_Mc);
@@ -199,6 +231,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
                         idPicoDstRcElectrons.push_back(id);
                         idPicoDstMcElectrons.push_back(i_Mc);
                     }
+                    
                 }
             }
         }
