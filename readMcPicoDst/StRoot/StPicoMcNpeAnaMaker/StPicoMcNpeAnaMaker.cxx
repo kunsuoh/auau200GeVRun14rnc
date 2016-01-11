@@ -152,35 +152,8 @@ Int_t StPicoMcNpeAnaMaker::Make()
         for(int i_Mc=0; i_Mc<nMcTracks; i_Mc++){
             // get Mc Track
             StPicoMcTrack *mcTrk = (StPicoMcTrack*)picoDst->mctrack(i_Mc);
-        //    if(mcTrk->Pxl1Truth()==0 || mcTrk->Pxl2Truth()==0) continue;
-            
-            /*
-            StPicoTrack *rcTrk=0;
-            Int_t id=-999;
-            isRcTrack(mcTrk,picoDst,id);
-            if(id!=-999 && (mcTrk->GePid()==2 || mcTrk->GePid()==3)){
-                rcTrk = (StPicoTrack*)picoDst->track(id);
-                float parentGid= Pico::USHORTMAX;
-                if(mcTrk->parentId() != Pico::USHORTMAX) {
-                    StPicoMcTrack *mcParentTrk = (StPicoMcTrack*)picoDst->mctrack(mcTrk->parentId());
-                    parentGid=mcParentTrk->GePid();
-                    //    if(mcParentTrk->parentId() != Pico::USHORTMAX) continue;
-                }
-                if (sqrt(mcTrk->Origin().x()*mcTrk->Origin().x()+mcTrk->Origin().y()*mcTrk->Origin().y()) > 0.1) continue;
-                cout <<
-                mcTrk->GePid() << " " <<
-                parentGid << " / " <<
-                mcTrk->Pxl1Truth() << " " <<
-                mcTrk->Pxl2Truth() << " "  <<
-                mcTrk->IstTruth() << " " <<
-                mcTrk->SsdTruth()<< " / " <<
-                mcTrk->hitsPxl1() << " " <<
-                mcTrk->hitsPxl2() << " "  <<
-                mcTrk->hitsIst() << " " <<
-                mcTrk->hitsSst()<< " / " <<
-                rcTrk->nHitsMapHFT() << endl;
-            }
-*/
+          //  if(mcTrk->Pxl1Truth()==0 || mcTrk->Pxl2Truth()==0) continue;
+
             
             // get Geant Id for track and parent
             Int_t parentGid= Pico::USHORTMAX;
@@ -189,13 +162,13 @@ Int_t StPicoMcNpeAnaMaker::Make()
                 parentGid=mcParentTrk->GePid();
             //    if(mcParentTrk->parentId() != Pico::USHORTMAX) continue;
             }
-            float trackId=mcTrk->GePid();
+            trackId=mcTrk->GePid();
 
             hTrackParentGeantId->Fill(parentGid);
             hTrackGeantId->Fill(trackId);
             
             // get Rc Trcak
-            if ((parentGid == cuts::parentGid || cuts::parentGid == -999) &&
+            if ((parentGid == cuts::parentGid || cuts::parentGid == Pico::USHORTMAX) &&
                 (trackId == cuts::dau1Gid || trackId == cuts::dau2Gid)) {
                 StPicoTrack *rcTrk=0;
                 Int_t id=-999;

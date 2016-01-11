@@ -27,9 +27,9 @@ namespace cuts
     float const eta = 1.;
     
     // set Geant Id
-    int parentGid = -999;
-    int dau1Gid = 2;
-    int dau2Gid = 3;
+    UShort_t parentGid = Pico::USHORTMAX;
+    UShort_t dau1Gid = 2;
+    UShort_t dau2Gid = 3;
 
 }
 #endif

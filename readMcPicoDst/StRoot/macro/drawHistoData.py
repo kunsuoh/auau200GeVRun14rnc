@@ -12,11 +12,12 @@ from rootpy.plotting import Hist, Hist2D, Hist3D, histogram, Canvas, Legend
 infile = root_open('../out_gamma8.root')
 ntuple = infile.nt
 # Simulation
-infile2 = root_open('root/out_pi0_0.root')
+infile2 = root_open('root/out_gamma_11.root')
 ntuple2 = infile2.T
+ntuple3 = infile2.eT
 
 canvas = Canvas()
-canvas.SetLogy()
+#canvas.SetLogy()
 
 def draw2D(
            xval, xmin, xmax, xvalname,
@@ -75,7 +76,27 @@ def draw1D(
     histo5.Draw('sameE0')
     canvas.SaveAs('4bitsLog1GeV'+histoname+'_'+xvalname+'.pdf')
 
+def drawRatio(xval, xmin, xmax, xvalname,
+              xbin=100,ybin=100,
+              #  cut='rchfthit.pxl1 && rchfthit.pxl2 && rchfthit.ist ',
+              #  cut2=' && truth.pxl1 && truth.pxl2 && truth.ist',
+              cut=' ',
+              cut2='',
+              histoname='histoRatio', drawOption='E0'):
+    histo1 = ntuple3.Draw(xval, hist=Hist(xbin,xmin,xmax), selection=cut)
+    histo1.color = 'red'
+    histo1.SetMarkerStyle(24)
+    histo2 = ntuple3.Draw(xval, hist=Hist(xbin,xmin,xmax), selection=cut + cut2)
+    histo2.color = 'blue'
+    histo2.Divide(histo1)
+    histo2.Draw(drawOption)
+    canvas.SaveAs('Eff/'+histoname+'_'+xvalname+'.pdf')
 
+drawRatio('rcPt',0,10,'rcPt',cut2='rchfthit.pxl1');
+drawRatio('rcPt',0,10,'rcPt',cut2='rchfthit.pxl1 && rchfthit.pxl2',drawOption='same');
+drawRatio('rcPt',0,10,'rcPt',cut2='rchfthit.pxl1 && rchfthit.pxl2 && rchfthit.ist',drawOption='same');
+
+'''
 
 draw1D('sqrt((v0x+0.2383)**2+(v0y+0.1734)**2)',0, 10,'ConvR0000',100,xvalSim='sqrt((mc.x)**2+(mc.y)**2)',xvalSim2='sqrt((rc.x)**2+(rc.y)**2)',
        cutSim2 =' && rchfthit1.pxl1 && rchfthit1.pxl2 && rchfthit2.pxl1 && rchfthit2.pxl2'+
@@ -128,7 +149,10 @@ draw1D('sqrt((v0x+0.2383)**2+(v0y+0.1734)**2)',0, 10,'ConvR1111',100,xvalSim='sq
        ' && truth1.pxl1 && truth1.pxl2 && truth2.pxl1 && truth2.pxl2')
 
 
-'''
+
+
+
+
 draw1D('sqrt((v0x+0.2383)**2+(v0y+0.1734)**2)',0, 10,'ConvR3_1',100,xvalSim='sqrt((mc.x)**2+(mc.y)**2)',xvalSim2='sqrt((rc.x)**2+(rc.y)**2)',
     cutSim2 =' && rchfthit1.pxl1 && rchfthit1.pxl2 && rchfthit2.pxl1 && rchfthit2.pxl2 && rchfthit1.ist && rchfthit2.ist && (truth1.pxl2==0 || truth2.pxl2==0) && (truth1.pxl1 && truth2.pxl1)')
 
