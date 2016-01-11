@@ -220,7 +220,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
                     rchfthit1.ssd = 0;
 
                     singleTree->Fill(rcTrk->gPt(),rcTrk->gMom(pVtx,bField).phi(),rcTrk->gMom(pVtx,bField).pseudoRapidity(),
-                                     mcTrk->gPt(),mcTrk->Mom().phi(),mcTrk->pseudorapidity(),
+                                     mcTrk->Mom().perp(),mcTrk->Mom().phi(),mcTrk->pseudorapidity(),
                                      parentGid,rcTrk->chi2(),nHits, truth, rchfthit);
                     
                     if (trackId==cuts::dau1Gid) {
