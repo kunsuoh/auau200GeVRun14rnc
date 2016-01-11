@@ -86,9 +86,9 @@ Int_t StPicoMcNpeAnaMaker::Init()
     singleTree->Branch("mcEta",&mcEta,"mcEta/F");
     singleTree->Branch("parentGid",&parentGid,"parentGid/s");   //
     singleTree->Branch("chi",&chi,"chi/F");
-    singleTree->Branch("nHits",&nHits,"pxl/b:pxl/b:ist/b:ssd/b");   //
-    singleTree->Branch("truth",&truth,"pxl/b:pxl/b:ist/b:ssd/b");   //
-    singleTree->Branch("rchfthit",&rchfthit,"pxl/b:pxl/b:ist/b:ssd/b");   //
+    singleTree->Branch("nHits",&nHits,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
+    singleTree->Branch("truth",&truth,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
+    singleTree->Branch("rchfthit",&rchfthit,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
 
     return kStOK;
 }
