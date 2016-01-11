@@ -94,7 +94,7 @@ private:
 
     
     float length, angle, mcPairPt, pairDca, mass, eta, phi, openangle, mcopenangle, phiV, pt1, pt2, chi1, chi2;
-    Int_t parentGid;
+    UShort_t parentGid;
     int refmult;
     
     float rcPt, rcPhi, rcEta, mcPt, mcPhi, mcEta, chi;

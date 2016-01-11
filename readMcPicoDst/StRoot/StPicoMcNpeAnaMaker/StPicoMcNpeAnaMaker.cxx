@@ -69,7 +69,7 @@ Int_t StPicoMcNpeAnaMaker::Init()
     tree->Branch("truth1",&truth1,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
     tree->Branch("nHits2",&nHits2,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
     tree->Branch("truth2",&truth2,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
-    tree->Branch("parentGid",&parentGid,"parentGid/I");   //
+    tree->Branch("parentGid",&parentGid,"parentGid/s");   //
     tree->Branch("refmult",&refmult,"refmult/I");   //
     tree->Branch("chi1",&chi1,"chi1/F");
     tree->Branch("chi2",&chi2,"chi2/F");
@@ -84,7 +84,7 @@ Int_t StPicoMcNpeAnaMaker::Init()
     singleTree->Branch("mcPt",&mcPt,"mcPt/F");
     singleTree->Branch("mcPhi",&mcPhi,"mcPhi/F");
     singleTree->Branch("mcEta",&mcEta,"mcEta/F");
-    singleTree->Branch("parentGid",&parentGid,"parentGid/I");   //
+    singleTree->Branch("parentGid",&parentGid,"parentGid/s");   //
     singleTree->Branch("chi",&chi,"chi/F");
     singleTree->Branch("nHits",&nHits,"pxl/b:pxl/b:ist/b:ssd/b");   //
     singleTree->Branch("truth",&truth,"pxl/b:pxl/b:ist/b:ssd/b");   //
@@ -183,7 +183,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
 */
             
             // get Geant Id for track and parent
-            Int_t parentGid= Pico::INTMAX;
+            Int_t parentGid= Pico::USHORTMAX;
             if(mcTrk->parentId() != Pico::USHORTMAX) {
                 StPicoMcTrack *mcParentTrk = (StPicoMcTrack*)picoDst->mctrack(mcTrk->parentId());
                 parentGid=mcParentTrk->GePid();
