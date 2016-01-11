@@ -52,7 +52,6 @@ Int_t StPicoMcNpeAnaMaker::Init()
     nt3 = new TNtuple("nt3","electron pair ntuple 3","pt1:pt2:v0x:v0y:v0z:phi:eta:mass:pairDca:mcv0x:mcv0y:mcv0z:mcPairPt:angle:length");
     
     tree = new TTree("T","Electron pair tree");
-    tree->Branch("mc",&mc,"x:y:z");
     tree->Branch("rc",&rc,"x:y:z");
     tree->Branch("pt1",&pt1,"pt1/F");
     tree->Branch("pt2",&pt2,"pt2/F");
@@ -78,6 +77,7 @@ Int_t StPicoMcNpeAnaMaker::Init()
     tree->Branch("rchfthit2",&rchfthit2,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
 
     singleTree = new TTree("eT","Single Electron tree");
+    singleTree->Branch("mc",&mc,"x:y:z");
     singleTree->Branch("rcPt",&rcPt,"rcPt/F");
     singleTree->Branch("rcPhi",&rcPhi,"rcPhi/F");
     singleTree->Branch("rcEta",&rcEta,"rcEta/F");
@@ -218,6 +218,11 @@ Int_t StPicoMcNpeAnaMaker::Make()
                     rchfthit.pxl2 = rcTrk->nHitsMapHFT()>>1 & 0x3;
                     rchfthit.ist = rcTrk->nHitsMapHFT()>>3 & 0x3;
                     rchfthit.ssd = 0;
+
+                    mc.x = mcTrk->Origin().x();
+                    mc.y = mcTrk->Origin().y();
+                    mc.z = mcTrk->Origin().z();
+
                     rcPt = rcTrk->gPt();
                     rcPhi = rcTrk->gMom(pVtx,bField).phi();
                     rcEta = rcTrk->gMom(pVtx,bField).pseudoRapidity();
