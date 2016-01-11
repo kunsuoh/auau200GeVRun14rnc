@@ -70,7 +70,7 @@ Int_t StPicoMcNpeAnaMaker::Init()
     tree->Branch("truth1",&truth1,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
     tree->Branch("nHits2",&nHits2,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
     tree->Branch("truth2",&truth2,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
-    tree->Branch("parentGid",&parentGid,"parentGid/b");   //
+    tree->Branch("parentGid",&parentGid,"parentGid/I");   //
     tree->Branch("refmult",&refmult,"refmult/I");   //
     tree->Branch("chi1",&chi1,"chi1/F");
     tree->Branch("chi2",&chi2,"chi2/F");
@@ -84,7 +84,7 @@ Int_t StPicoMcNpeAnaMaker::Init()
     singleTree->Branch("mcPt",&mcPt,"mcPt/F");
     singleTree->Branch("mcPhi",&mcPhi,"mcPhi/F");
     singleTree->Branch("mcEta",&mcEta,"mcEta/F");
-    singleTree->Branch("parentGid",&parentGid,"parentGid/b");   //
+    singleTree->Branch("parentGid",&parentGid,"parentGid/I");   //
     singleTree->Branch("chi",&chi,"chi/F");
     singleTree->Branch("nHits",&nHits,"pxl/b:pxl/b:ist/b:ssd/b");   //
     singleTree->Branch("truth",&truth,"pxl/b:pxl/b:ist/b:ssd/b");   //
@@ -218,10 +218,15 @@ Int_t StPicoMcNpeAnaMaker::Make()
                     rchfthit.pxl2 = rcTrk->nHitsMapHFT()>>1 & 0x3;
                     rchfthit.ist = rcTrk->nHitsMapHFT()>>3 & 0x3;
                     rchfthit.ssd = 0;
-
-                    singleTree->Fill(rcTrk->gPt(), rcTrk->gMom(pVtx,bField).phi(), rcTrk->gMom(pVtx,bField).pseudoRapidity(),
-                                     mcTrk->Mom().perp(), mcTrk->Mom().phi(), mcTrk->pseudorapidity(),
-                                     (unsigned short)parentGid, rcTrk->chi2(), nHits, truth, rchfthit);
+                    rcPt = rcTrk->gPt();
+                    rcPhi = rcTrk->gMom(pVtx,bField).phi();
+                    rcEta = rcTrk->gMom(pVtx,bField).pseudoRapidity();
+                    mcPt = mcTrk->Mom().perp();
+                    mcPhi = mcTrk->Mom().phi();
+                    mceta = mcTrk->pseudorapidity();
+                    chi = rcTrk->chi2();
+                    
+                    singleTree->Fill();
                     
                     if (trackId==cuts::dau1Gid) {
                         idPicoDstRcPositrons.push_back(id);
