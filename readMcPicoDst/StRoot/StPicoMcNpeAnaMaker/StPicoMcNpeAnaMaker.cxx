@@ -183,7 +183,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
 */
             
             // get Geant Id for track and parent
-            short parentGid= Pico::USHORTMAX;
+            Int_t parentGid= Pico::INTMAX;
             if(mcTrk->parentId() != Pico::USHORTMAX) {
                 StPicoMcTrack *mcParentTrk = (StPicoMcTrack*)picoDst->mctrack(mcTrk->parentId());
                 parentGid=mcParentTrk->GePid();
