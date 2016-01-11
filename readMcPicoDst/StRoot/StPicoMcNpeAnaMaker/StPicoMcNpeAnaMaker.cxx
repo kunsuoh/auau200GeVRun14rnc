@@ -85,6 +85,7 @@ Int_t StPicoMcNpeAnaMaker::Init()
     singleTree->Branch("mcPhi",&mcPhi,"mcPhi/F");
     singleTree->Branch("mcEta",&mcEta,"mcEta/F");
     singleTree->Branch("parentGid",&parentGid,"parentGid/s");   //
+    singleTree->Branch("parentGid2",&parentGid2,"parentGid2/s");   //
     singleTree->Branch("chi",&chi,"chi/F");
     singleTree->Branch("nHits",&nHits,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
     singleTree->Branch("truth",&truth,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
@@ -204,6 +205,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
                     mcEta = mcTrk->pseudorapidity();
                     chi = rcTrk->chi2();
                     
+                    parentGid2 = ((StPicoMcTrack*)(picoDst->mctrack(mcTrk->parentId())))->GePid();
                     singleTree->Fill();
                     
                     if (trackId==cuts::dau1Gid) {
