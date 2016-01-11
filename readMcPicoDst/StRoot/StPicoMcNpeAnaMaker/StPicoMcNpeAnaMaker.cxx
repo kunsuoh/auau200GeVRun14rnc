@@ -219,8 +219,8 @@ Int_t StPicoMcNpeAnaMaker::Make()
                     rchfthit1.ist = rcTrk->nHitsMapHFT()>>3 & 0x3;
                     rchfthit1.ssd = 0;
 
-                    singleTree->Fill(rcTrk->gPt(),rcTrk->gMom(pVtx,bField)->phi(),rcTrk->gMom(pVtx,bField)->pseudoRapidity(),
-                                     mcTrk->gPt(),mcTrk->gMom(pVtx,bField)->phi(),mcTrk->pseudoRapidity(),
+                    singleTree->Fill(rcTrk->gPt(),rcTrk->gMom(pVtx,bField).phi(),rcTrk->gMom(pVtx,bField).pseudoRapidity(),
+                                     mcTrk->gPt(),mcTrk->gMom(pVtx,bField).phi(),mcTrk->pseudoRapidity(),
                                      parentGid,rcTrk->chi2(),nHits, truth, rchfthit);
                     
                     if (trackId==cuts::dau1Gid) {

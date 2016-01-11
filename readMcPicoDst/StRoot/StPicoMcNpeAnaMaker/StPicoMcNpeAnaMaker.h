@@ -97,7 +97,7 @@ private:
     UChar_t parentGid;
     int refmult;
     
-    float rcPt, rcPhi, rcEta, mcPt, mcPhi, mcEta;
+    float rcPt, rcPhi, rcEta, mcPt, mcPhi, mcEta, chi;
     
     ClassDef(StPicoMcNpeAnaMaker, 0)
 };
