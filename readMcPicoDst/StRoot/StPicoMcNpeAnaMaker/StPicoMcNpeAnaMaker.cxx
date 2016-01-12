@@ -53,6 +53,7 @@ Int_t StPicoMcNpeAnaMaker::Init()
     
     tree = new TTree("T","Electron pair tree");
     tree->Branch("rc",&rc,"x:y:z");
+    tree->Branch("mc",&mc,"x:y:z");
     tree->Branch("pt1",&pt1,"pt1/F");
     tree->Branch("pt2",&pt2,"pt2/F");
     tree->Branch("phiV",&phiV,"phiV/F");
@@ -75,7 +76,11 @@ Int_t StPicoMcNpeAnaMaker::Init()
     tree->Branch("chi2",&chi2,"chi2/F");
     tree->Branch("rchfthit1",&rchfthit1,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
     tree->Branch("rchfthit2",&rchfthit2,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
-
+    tree->Branch("rcdca1",&rcdca1,"rcdca1/F")
+    tree->Branch("rcdca2",&rcdca2,"rcdca2/F")
+    tree->Branch("mcdca1",&mcdca1,"mcdca1/F")
+    tree->Branch("mcdca2",&mcdca2,"mcdca2/F")
+    
     singleTree = new TTree("eT","Single Electron tree");
     singleTree->Branch("mc",&mc,"x:y:z");
     singleTree->Branch("rcPt",&rcPt,"rcPt/F");
@@ -90,7 +95,9 @@ Int_t StPicoMcNpeAnaMaker::Init()
     singleTree->Branch("nHits",&nHits,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
     singleTree->Branch("truth",&truth,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
     singleTree->Branch("rchfthit",&rchfthit,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
-
+    singleTree->Branch("rcdca",&rcdca,"rcdca/F");
+    singleTree->Branch("mcdca",&mcdca,"mcdca/F");
+    
     return kStOK;
 }
 
@@ -204,7 +211,12 @@ Int_t StPicoMcNpeAnaMaker::Make()
                     mcPhi = mcTrk->Mom().phi();
                     mcEta = mcTrk->pseudorapidity();
                     chi = rcTrk->chi2();
-                    
+
+                    StPhysicalHelixD rcHelix = rcTrk->dcaGeometry().helix();
+                    rcdca = rcHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
+                    StPhysicalHelixD mcHelix(mcTrk->Mom(), mcTrk->Origin(), bField, trackId == 2 ? 1 : -1);
+                    mcdca = mcHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
+
                     parentGid2 = ((StPicoMcTrack*)(picoDst->mctrack(mcTrk->parentId())))->GePid();
                     singleTree->Fill();
                     
@@ -314,6 +326,15 @@ Int_t StPicoMcNpeAnaMaker::Make()
                         rchfthit2.ist = rcElectron->nHitsMapHFT()>>3 & 0x3;
                         rchfthit2.ssd = 0;
                         
+                        StPhysicalHelixD rc1Helix = rcPositron->dcaGeometry().helix();
+                        StPhysicalHelixD mc1Helix(mcPositron->Mom(), mcPositron->Origin(), bField, 1);
+                        StPhysicalHelixD rc2Helix = rcElectron->dcaGeometry().helix();
+                        StPhysicalHelixD mc2Helix(mcElectron->Mom(), mcElectron->Origin(), bField, -1);
+                        rcdca1 = rc1Helix.curvatureSignedDistance(pVtx.x(),pVtx.y());
+                        mcdca1 = mc1Helix.curvatureSignedDistance(pVtx.x(),pVtx.y());
+                        rcdca2 = rc2Helix.curvatureSignedDistance(pVtx.x(),pVtx.y());
+                        mcdca2 = mc2Helix.curvatureSignedDistance(pVtx.x(),pVtx.y());
+
 
                         tree->Fill();
                     }

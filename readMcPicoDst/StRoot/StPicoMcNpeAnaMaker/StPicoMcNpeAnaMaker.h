@@ -95,6 +95,8 @@ private:
     
     float length, angle, mcPairPt, pairDca, mass, eta, phi, openangle, mcopenangle, phiV, pt1, pt2, chi1, chi2;
     UShort_t parentGid, parentGid2, trackId;
+    float rcdca1, rcdca2, rcdca, mcdca1, mcdca2, mcdca;
+    
     int refmult;
     
     float rcPt, rcPhi, rcEta, mcPt, mcPhi, mcEta, chi;
