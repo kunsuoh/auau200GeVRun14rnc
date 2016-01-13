@@ -76,10 +76,10 @@ Int_t StPicoMcNpeAnaMaker::Init()
     tree->Branch("chi2",&chi2,"chi2/F");
     tree->Branch("rchfthit1",&rchfthit1,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
     tree->Branch("rchfthit2",&rchfthit2,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
-    tree->Branch("rcdca1",&rcdca1,"rcdca1/F")
-    tree->Branch("rcdca2",&rcdca2,"rcdca2/F")
-    tree->Branch("mcdca1",&mcdca1,"mcdca1/F")
-    tree->Branch("mcdca2",&mcdca2,"mcdca2/F")
+    tree->Branch("rcdca1",&rcdca1,"rcdca1/F");
+    tree->Branch("rcdca2",&rcdca2,"rcdca2/F");
+    tree->Branch("mcdca1",&mcdca1,"mcdca1/F");
+    tree->Branch("mcdca2",&mcdca2,"mcdca2/F");
     
     singleTree = new TTree("eT","Single Electron tree");
     singleTree->Branch("mc",&mc,"x:y:z");
