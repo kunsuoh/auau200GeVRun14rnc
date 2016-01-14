@@ -37,6 +37,8 @@ class StPxlDb;
 #include <vector>
 #include <utility>
 #include <string>
+#include "StPxlDbMaker/StPxlDb.h"
+#include "StPxlDb.h"
 
 #if !defined(ST_NO_NAMESPACES)
 using namespace std;
