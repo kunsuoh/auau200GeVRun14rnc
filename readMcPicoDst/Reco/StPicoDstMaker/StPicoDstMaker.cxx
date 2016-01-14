@@ -35,6 +35,10 @@
 #include "StMuDSTMaker/COMMON/StMuBTofPidTraits.h"
 #include "StEvent/StBTofHeader.h"
 
+
+#include "StPxlDbMaker/StPxlDb.h"
+
+
 #include "StMuDSTMaker/COMMON/StMuMtdHit.h"
 #include "StMuDSTMaker/COMMON/StMuMtdPidTraits.h"
 #include "tables/St_mtdModuleToQTmap_Table.h"
@@ -81,7 +85,6 @@
 #include "StEvent/StRnDHit.h"
 #include "StMcEvent/StMcTrack.hh"
 #include "StEvent/StEvent.h"
-#include "StPxlDbMaker/StPxl.h"
 
 ClassImp(StPicoDstMaker)
 
