@@ -2,6 +2,8 @@
 #define STAR_StPicoDstMaker
 #include "StChain/StMaker.h"
 #include "TClonesArray.h"
+#include "StPxlDbMaker/StPxlDb.h"
+
 class TFile;
 class TTree;
 class StFile;
@@ -37,7 +39,6 @@ class StPxlDb;
 #include <vector>
 #include <utility>
 #include <string>
-#include "StPxlDbMaker/StPxlDb.h"
 
 #if !defined(ST_NO_NAMESPACES)
 using namespace std;
