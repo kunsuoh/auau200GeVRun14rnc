@@ -284,10 +284,14 @@ Int_t StPicoDstMaker::Init(){
             }
         if(mEmcMode) initEmc();
     }
+    cout << "Start loading Pxl Db" << endl;
     TDataSet *hitErrSet = GetDataBase("Calibrations/tracker/PixelHitError");
+    cout << "   loading pxlDbDataSet" << endl;
     TObjectSet *pxlDbDataSet = 0;
     pxlDbDataSet = (TObjectSet*)GetDataSet("pxl_db");
+    cout << "   loading mPxlDb" << endl;
     mPxlDb = (StPxlDb*) pxlDbDataSet->GetObject();
+    cout << "End loading Pxl Db" << endl;
     
     return kStOK;
 }
