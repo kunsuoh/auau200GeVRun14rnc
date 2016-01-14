@@ -694,7 +694,7 @@ void StPicoDstMaker::fillTracksMc() {
     const StGlobalTrack* rT = findPartner(mcTrk, nCommonHits);
     
     int counter = mPicoArrays[picoMcTrack]->GetEntries();
-    new((*(mPicoArrays[picoMcTrack]))[counter]) StPicoMcTrack(mcTrk, rT,nCommonHits);
+    new((*(mPicoArrays[picoMcTrack]))[counter]) StPicoMcTrack(mcTrk, rT,nCommonHits,mPxlDb);
     //StPicoMcTrack mcTrack(mcTrk, rT);
   }  
 }

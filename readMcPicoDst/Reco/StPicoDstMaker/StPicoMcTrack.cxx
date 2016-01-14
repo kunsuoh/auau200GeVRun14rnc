@@ -47,7 +47,7 @@ StPicoMcTrack::StPicoMcTrack(StPicoMcTrack *t) :
 {
 }
 //----------------------------------------------------------------------------------
-StPicoMcTrack::StPicoMcTrack(StMcTrack *mcTrk, const StGlobalTrack *Trk = 0, const int nCommon = 0) : 
+StPicoMcTrack::StPicoMcTrack(StMcTrack *mcTrk, const StGlobalTrack *Trk = 0, const int nCommon = 0,StPxlDb* mPxlDb) :
   mMcId(Pico::SHORTMAX), mGePid(Pico::SHORTMAX), mParentId(Pico::USHORTMAX), mAssoId(Pico::USHORTMAX),
   nHitsPxl1(0), nHitsPxl2(0), nHitsIst(0),nHitsSst(0), 
   nHitsTpc(0),nHitsTpcCommon(nCommon), mTruthBit(0), 

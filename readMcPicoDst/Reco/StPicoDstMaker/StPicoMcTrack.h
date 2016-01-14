@@ -8,6 +8,8 @@ class StPicoDst;
 class StMcTrack;
 //class StTrack;
 class StGlobalTrack;
+class StPxlDb;
+
 #include "TObject.h"
 #include "StThreeVectorF.hh"
 #include "TVector2.h"
@@ -20,7 +22,7 @@ class StPicoMcTrack : public TObject {
   StPicoMcTrack();
   ~StPicoMcTrack() {;}
   StPicoMcTrack(StPicoMcTrack *);
-  StPicoMcTrack(StMcTrack *, const StGlobalTrack *, const int);
+  StPicoMcTrack(StMcTrack *, const StGlobalTrack *, const int,StPxlDb*);
   // -- Getter functions for mc track
   Int_t mcId() const;
   Int_t GePid() const;
@@ -52,7 +54,7 @@ class StPicoMcTrack : public TObject {
   StThreeVectorF mMcMomentum;
   StThreeVectorF mOrigin;
   friend class StPicoDst;
-
+    StPxlDb* mPxlDb;
   ClassDef(StPicoMcTrack, 1)
 };
 inline Int_t StPicoMcTrack:: mcId() const              { return (Int_t) mMcId; }

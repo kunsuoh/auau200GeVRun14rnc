@@ -26,6 +26,8 @@ class StPicoCut;
 //Mlomnitz
 class StEvent;
 class StMcEvent;
+class StPxlDb;
+
 #include "StAssociationMaker/StAssociationMaker.h"
 #include "StAssociationMaker/StTrackPairInfo.hh"
 
@@ -75,7 +77,7 @@ class StPicoDstMaker : public StMaker {
                           
  protected:
  #define saveDelete(t) { delete t; t=0;}
- 
+    StPxlDb* mPxlDb;
    void streamerOff();
   
    void openWrite();

@@ -268,19 +268,24 @@ TClonesArray* StPicoDstMaker::clonesArray(TClonesArray*& p, const char* type, in
 
 //-----------------------------------------------------------------------
 Int_t StPicoDstMaker::Init(){
-  if (mIoMode == ioRead) {
-    openRead();     // if read, don't care about phi weight files
-  } else if (mIoMode == ioWrite) {
-    openWrite();
-    //Lomnitz
-    if(!mMcMode)
-      if(!initMtd()) {                                                                            
-	LOG_ERROR << " MTD initialization error!!! " << endm;
-	return kStErr;
+    if (mIoMode == ioRead) {
+        openRead();     // if read, don't care about phi weight files
+    } else if (mIoMode == ioWrite) {
+        openWrite();
+        //Lomnitz
+        if(!mMcMode)
+            if(!initMtd()) {
+                LOG_ERROR << " MTD initialization error!!! " << endm;
+                return kStErr;
+            }
+        if(mEmcMode) initEmc();
     }
-    if(mEmcMode) initEmc();
-  }
-  return kStOK;
+    TDataSet *hitErrSet = GetDataBase("Calibrations/tracker/PixelHitError");
+    TObjectSet *pxlDbDataSet = 0;
+    pxlDbDataSet = (TObjectSet*)GetDataSet("pxl_db");
+    StPxlDb* mPxlDb = (StPxlDb *)pxlDbDataSet->GetObject();
+
+    return kStOK;
 }
 
 //-----------------------------------------------------------------------
