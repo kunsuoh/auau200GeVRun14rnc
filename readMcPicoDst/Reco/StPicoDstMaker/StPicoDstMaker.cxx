@@ -81,8 +81,7 @@
 #include "StEvent/StRnDHit.h"
 #include "StMcEvent/StMcTrack.hh"
 #include "StEvent/StEvent.h"
-#include "StPxlDbMaker/StPxlDb.h"
-#include "StPxlDbMaker/StPxlDbMaker.h"
+#include "StPxlDbMaker/StPxl.h"
 
 ClassImp(StPicoDstMaker)
 
