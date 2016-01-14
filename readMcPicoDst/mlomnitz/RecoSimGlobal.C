@@ -235,11 +235,16 @@ void RecoSimGlobal(Long64_t nevent = 999999,const char* file="./*.MuDst.root",co
                 decayId.push_back(std::make_pair(pmcTrack->IdVxEnd(),pmcTrack->GePid()));
             }
         }
+        
+        
+        
         /////////////////////////////////////////
         vector<int> piplus,pivertex,kminus,kvertex;
         ////////////--->Primary vertex tracks
         for (Int_t k = 0; k < NoGlobalTracks; k++) {
             StMuTrack *Trk = (StMuTrack *) GlobalTracks->UncheckedAt(k);
+            StTrack *stTrk = (StTrack *) mu->createStTrack(Trk);
+            
             if (Trk->vertexIndex() != nummult) continue;
             if (! AcceptTrk(Trk)) continue;
             if (Trk->idTruth()>= NoMuMcTracks) continue;    //This will skip the tracks with no MC partner
