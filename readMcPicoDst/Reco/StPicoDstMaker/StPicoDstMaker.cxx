@@ -82,6 +82,7 @@
 #include "StMcEvent/StMcTrack.hh"
 #include "StEvent/StEvent.h"
 #include "StPxlDbMaker/StPxlDb.h"
+#include "StPxlDbMaker/StPxlDbMaker.h"
 
 ClassImp(StPicoDstMaker)
 
