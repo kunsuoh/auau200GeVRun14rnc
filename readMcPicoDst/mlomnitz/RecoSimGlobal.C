@@ -324,7 +324,7 @@ void RecoSimGlobal(Long64_t nevent = 999999,const char* file="./*.MuDst.root",co
             }
             primtrack->Fill();
             
-            StThreeVectorF pos = Trk->position();
+            StThreeVectorF pos = Trk->firstPoint();
             cout << pos.x() << " " << pos.y() << " " << pos.z() << endl;
 
         }
