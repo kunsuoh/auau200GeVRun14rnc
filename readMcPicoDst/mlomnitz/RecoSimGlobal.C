@@ -58,6 +58,71 @@ StMuDstMaker* maker = 0;
 #include "/star/institutions/ksu/aquinter/V0Finder/Ask.h"
 #include "AQHist.h"
 
+#include "StMcEvent/StMcIstHitCollection.hh"
+#include "StMcEvent/StMcIstLayerHitCollection.hh"
+#include "StMcEvent/StMcIstHit.hh"
+#include "StMcEvent/StMcPxlHitCollection.hh"
+#include "StMcEvent/StMcPxlHit.hh"
+#include "StMcEvent/StMcEvent.hh"
+#include "StEvent/StRnDHitCollection.h"
+#include "StEvent/StRnDHit.h"
+#include "StMcEvent/StMcTrack.hh"
+#include "StEvent/StEvent.h"
+#include "StarRoot/THack.h"
+#include "TChain.h"
+#include "TTree.h"
+#include "TH1D.h"
+#include "TBranch.h"
+#include "TRandom3.h"
+#include "TRandom.h"
+#include "StMuDSTMaker/COMMON/StMuDstMaker.h"
+#include "StMuDSTMaker/COMMON/StMuDst.h"
+#include "StMuDSTMaker/COMMON/StMuEvent.h"
+#include "StMuDSTMaker/COMMON/StMuBTofHit.h"
+#include "StMuDSTMaker/COMMON/StMuTrack.h"
+#include "StMuDSTMaker/COMMON/StMuPrimaryVertex.h"
+#include "StMuDSTMaker/COMMON/StMuBTofPidTraits.h"
+#include "StEvent/StBTofHeader.h"
+
+
+#include "StPxlDbMaker/StPxlDb.h"
+
+
+#include "StMuDSTMaker/COMMON/StMuMtdHit.h"
+#include "StMuDSTMaker/COMMON/StMuMtdPidTraits.h"
+#include "tables/St_mtdModuleToQTmap_Table.h"
+
+#include "StMuDSTMaker/COMMON/StMuEmcCollection.h"
+#include "StMuDSTMaker/COMMON/StMuEmcPoint.h"
+#include "StEmcUtil/projection/StEmcPosition.h"
+//StEmc
+#include "StEvent/StEmcCollection.h"
+#include "StEvent/StEmcCluster.h"
+#include "StEvent/StEmcDetector.h"
+#include "StEvent/StEmcModule.h"
+#include "StEvent/StEmcClusterCollection.h"
+#include "StEvent/StEmcPoint.h"
+#include "StEvent/StEmcRawHit.h"
+#include "StEmcUtil/geometry/StEmcGeom.h"
+#include "StEmcUtil/others/emcDetectorName.h"
+#include "StEmcADCtoEMaker/StBemcData.h"
+#include "StEmcADCtoEMaker/StEmcADCtoEMaker.h"
+#include "StEmcRawMaker/defines.h"
+#include "StEmcRawMaker/StBemcRaw.h"
+#include "StEmcRawMaker/StBemcTables.h"
+#include "StEmcRawMaker/StEmcRawMaker.h"
+#include "StEmcRawMaker/defines.h"
+#include "StTriggerUtilities/StTriggerSimuMaker.h"
+#include "StTriggerUtilities/Bemc/StBemcTriggerSimu.h"
+#include "StTriggerUtilities/Eemc/StEemcTriggerSimu.h"
+#include "StTriggerUtilities/Emc/StEmcTriggerSimu.h"
+#include "StEvent/StTriggerData.h"
+#include "StEvent/StDcaGeometry.h"
+// Lomnitz MC information
+#include "StTrack.h"
+#include "StGlobalTrack.h"
+#include "StTrackNode.h"
+
 //________________________________________________________________________________
 // Conditions to accept the vertices
 Bool_t AcceptVtx(const StMuPrimaryVertex *Vtx = 0) {
@@ -98,7 +163,7 @@ Bool_t IsKaon(const StMuMcTrack *mcTrack = 0){
 //________________________________________________________________________________
 //--->START MAIN PROGRAM
 //________________________________________________________________________________
-void RecoSimGlobal(Long64_t nevent = 999999,const char* file="./*.MuDst.root",const  char* outFile="test1") {
+void RecoSimGlobal(Long64_t nevent = 999999,const char* file="hijing_pi0Dalitz_10.MuDst.root",const char* fileMc="hijing_pi0Dalitz_10.McEvent.root",const  char* outFile="test1") {
     
     gROOT->cd();
     
