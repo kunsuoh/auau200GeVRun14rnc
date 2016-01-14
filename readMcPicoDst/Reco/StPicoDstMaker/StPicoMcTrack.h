@@ -22,7 +22,7 @@ class StPicoMcTrack : public TObject {
   StPicoMcTrack();
   ~StPicoMcTrack() {;}
   StPicoMcTrack(StPicoMcTrack *);
-  StPicoMcTrack(StMcTrack *, const StGlobalTrack *, const int, StPxlDb *);
+  StPicoMcTrack(StMcTrack *, const StGlobalTrack *, const int, const StPxlDb *);
   // -- Getter functions for mc track
   Int_t mcId() const;
   Int_t GePid() const;
