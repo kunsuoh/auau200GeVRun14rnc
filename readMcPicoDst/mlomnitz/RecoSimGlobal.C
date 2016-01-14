@@ -252,7 +252,7 @@ void RecoSimGlobal(Long64_t nevent = 999999,const char* file="./*.MuDst.root",co
             //
             /////////////////////
             //cout<<"Lomnitz: Curent track PID"<<pmcTrack->GePid()<<endl;
-            if(pmcTrack->GePid()==37 || pmcTrack->GePid()==16){ //D0 according to http://www.star.bnl.gov/public/comp/simu/gstar/kumacs/NewParticle.html
+            if(pmcTrack->GePid()==1 || pmcTrack->GePid()==10007){ //D0 according to http://www.star.bnl.gov/public/comp/simu/gstar/kumacs/NewParticle.html
                 //cout<<"Lomnitz: Adding to list"<<endl;
                 decayId.push_back(std::make_pair(pmcTrack->IdVxEnd(),pmcTrack->GePid()));
             }
