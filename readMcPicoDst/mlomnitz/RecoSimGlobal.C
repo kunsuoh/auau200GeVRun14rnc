@@ -62,22 +62,22 @@ StMuDstMaker* maker = 0;
 // Conditions to accept the vertices
 Bool_t AcceptVtx(const StMuPrimaryVertex *Vtx = 0) {
     if (! Vtx) return kFALSE;
-    if (abs(Vtx->position().z()) > 5) return kFALSE;
+    if (abs(Vtx->position().z()) > 6) return kFALSE;
     if (Vtx->refMult()<30) return kFALSE;                              //REF multiplicity CUT
     return kTRUE;
 }
 //________________________________________________________________________________
 Bool_t AcceptTrk(const StMuTrack *gTrack = 0) {
-    if (! gTrack)            return kFALSE;
-    if ( gTrack->nHitsFit(kTpcId) < 15)                            return kFALSE;
-    if ( TMath::Abs(gTrack->eta())> 2)          return kFALSE;
-    if ( (1.0*gTrack->nHitsFit(kTpcId))/gTrack->nHitsPoss(kTpcId) < 0.51) return kFALSE;
+    if (! gTrack)                                                           return kFALSE;
+    if ( gTrack->nHitsFit(kTpcId) < 15)                                     return kFALSE;
+    if ( TMath::Abs(gTrack->eta())> 1)                                      return kFALSE;
+    if ( (1.0*gTrack->nHitsFit(kTpcId))/gTrack->nHitsPoss(kTpcId) < 0.51)   return kFALSE;
     //if(gTrack->nHitsFit(kPxlId)==0) return kFALSE;        //One pixel hit in the track
-    if (  gTrack->flag() < 100 ||  gTrack->flag()%100 == 11) return kFALSE; // bad fit or short track pointing to EEMC
-    if (  gTrack->flag() > 1000) return kFALSE;  // pile up track in TPC
-    if (  gTrack->nHitsFit() < 10) return kFALSE;
-    if (TMath::Abs(gTrack->charge())!=1) return kFALSE;
-    if ( gTrack->p().mag()< 0.1)                  return kFALSE;
+    if (  gTrack->flag() < 100 ||  gTrack->flag()%100 == 11)                return kFALSE; // bad fit or short track pointing to EEMC
+    if (  gTrack->flag() > 1000)                                            return kFALSE;  // pile up track in TPC
+    if (  gTrack->nHitsFit() < 10)                                          return kFALSE;
+    if (TMath::Abs(gTrack->charge())!=1)                                    return kFALSE;
+    if ( gTrack->p().mag()< 0.2)                                            return kFALSE;
     // if ( gTrack->p().mag()> 2)                  return kFALSE;
     return kTRUE;
 }
@@ -345,7 +345,8 @@ void RecoSimGlobal(Long64_t nevent = 999999,const char* file="./*.MuDst.root",co
                 }
             }
             primtrack->Fill();
-            
+        }
+            /*
             ////Fill Tracks histograms
             pthist->Fill(Track.pt);
             etaphihist->Fill(Track.phi,Track.eta);
@@ -428,6 +429,7 @@ void RecoSimGlobal(Long64_t nevent = 999999,const char* file="./*.MuDst.root",co
         if (! gROOT->IsBatch()) {
             if (Ask()) return;
         } else {_debugAsk = 0;}
+         */
         
     }     //END EVENTS
     
