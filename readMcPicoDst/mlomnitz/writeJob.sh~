@@ -1,0 +1,20 @@
+#!/bin/bash
+date
+ifile=0
+rm script/*$2*
+rm log/$2*
+    
+    cp run.con run_$2_${ifile}.con
+
+    echo "Arguments      = runAna.csh $1 " >> run_$2_${ifile}.con
+    echo "Output         = log/$2_${ifile}.out" >> run_$2_${ifile}.con
+    echo "Error          = log/$2_${ifile}.err" >> run_$2_${ifile}.con
+    echo "Log            = log/$2_${ifile}.log" >> run_$2_${ifile}.con
+    echo "Executable   = /bin/csh" >> run_$2_${ifile}.con
+    echo "Queue"         >> run_$2_${ifile}.con 
+    condor_submit run_$2_${ifile}.con
+
+    mv run_$2_${ifile}.con script/
+
+    let "ifile+=1"
+

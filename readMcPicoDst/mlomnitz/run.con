@@ -1,0 +1,8 @@
+Universe     = vanilla
+Notification = never
+Requirements = (CPU_Type != "crs") && (CPU_Experiment == "star")
+Initialdir   = /star/institutions/lbl/mlomnitz/D0_simu/Analysis
+Priority        = +10
+GetEnv       = True
++Experiment  = "star"
++Job_Type    = "cas"
