@@ -289,6 +289,11 @@ Int_t StPicoDstMaker::Init(){
     cout << "   loading pxlDbDataSet" << endl;
     TObjectSet *pxlDbDataSet = 0;
     pxlDbDataSet = (TObjectSet*)GetDataSet("pxl_db");
+    if (!pxlDbDataSet)
+	   {
+           LOG_ERROR << "StPxlSimMaker - E - pxlDb  is not available" << endm;
+           return kStErr;
+       }
     cout << "   loading mPxlDb" << endl;
     mPxlDb = (StPxlDb*) pxlDbDataSet->GetObject();
     cout << "End loading Pxl Db" << endl;
