@@ -177,22 +177,6 @@ void RecoSimGlobal(Long64_t nevent = 999999,const char* file="./*.MuDst.root",co
             continue;
         }
         
-        ///////// MC Vertices
-        struct MCBPoint_t {
-            Float_t MCMult, MCX, MCY, MCZ;
-        };
-        TNtuple *MCtuple = new TNtuple("MCTuple","MC variables","MCMult:MCX:MCY:MCZ");
-        MCBPoint_t MCB;
-        for (Int_t lll = 0; lll < NoMuMcVertices; lll++) {
-            StMuMcVertex *mcVertex = (StMuMcVertex *) MuMcVertices->UncheckedAt(lll);
-            MCB.MCMult = mcVertex->NoDaughters();
-            MCB.MCX    = mcVertex->XyzV().x();
-            MCB.MCY    = mcVertex->XyzV().y();
-            MCB.MCZ    = mcVertex->XyzV().z();
-            MCtuple->Fill(&MCB.MCMult);
-        }
-        ///////////////END MC Vertices
-        
         
         ////////////////////////--->Look for the maximum multiplicity vertex
         // This is the primary vertex but sometimes is bad ranked
@@ -231,12 +215,6 @@ void RecoSimGlobal(Long64_t nevent = 999999,const char* file="./*.MuDst.root",co
         primVtx.MCpvZ = mcVertex1->XyzV().z();
         primaryvtx->Fill();
         if (TMath::Abs(primVtx.primZ-primVtx.MCpvZ)>3) continue;
-        ////////////->Fill  primary vertices histos
-        vertexall->Fill(xyzP.X(),xyzP.Y());
-        vertexZall->Fill(xyzP.Z());
-        multiplicityP->Fill(Vtx1->noTracks());
-        refmultP->Fill(Vtx1->refMult());
-        /////////////////////////////////////
         //MICHAEL FOR TEST purposes
         std::vector<std::pair<int,int> > decayId;
         for(Int_t k = 0; k < NoMuMcTracks; k++) {
@@ -345,91 +323,11 @@ void RecoSimGlobal(Long64_t nevent = 999999,const char* file="./*.MuDst.root",co
                 }
             }
             primtrack->Fill();
+            
+            StThreeVectorF pos = Trk->position();
+            cout << pos.x() << " " << pos.y() << " " << pos.z() << endl;
+
         }
-            /*
-            ////Fill Tracks histograms
-            pthist->Fill(Track.pt);
-            etaphihist->Fill(Track.phi,Track.eta);
-            dEdxphist->Fill(Track.pMag,Track.dEdx*1000000);
-            //if (Track.beta>-999){
-            //Float_t m2tof = Track.pMag*Track.pMag*(1-(Track.beta*Track.beta))/(Track.beta*Track.beta);
-            //	m2tofhist->Fill(Track.pMag,m2tof);
-            // }
-            istfithist->Fill(Trk->nHitsFit(kIstId));
-            istposshist->Fill(Trk->nHitsPoss(kIstId));
-            pxlfithist->Fill(Trk->nHitsFit(kPxlId));
-            pxlposshist->Fill(Trk->nHitsPoss(kPxlId));
-            if(Track.pt>0.2 && TMath::Abs(Trk->eta())<1){
-                istfitcuthist->Fill(Trk->nHitsFit(kIstId));
-                istposscuthist->Fill(Trk->nHitsPoss(kIstId));
-                pxlfitcuthist->Fill(Trk->nHitsFit(kPxlId));
-                pxlposscuthist->Fill(Trk->nHitsPoss(kPxlId));
-            }
-            // if(Track.pt>0.1 && TMath::Abs(Track.eta)<0.5 && Track.isttop==1 && Track.pxltop==11){
-            //dcaxypthist->Fill(1./Track.pMag,Track.dcaxy);
-            //dcazpthist->Fill(1./Track.pMag,Track.dcaz);
-            // }
-            /////////////END FillTracks histograms
-            for(Int_t j=0; j<decayId.size(); j++){
-                pair<int, int > temp=decayId.at(j);
-                if (mcTrack->IdVx()!=temp.first) continue;
-                if(Trk->charge()<0 && IsKaon(mcTrack)){
-                    //Dsitinguishing pions from k0s vs primaries. In data will use dca2 vtx to distinguish
-                    kminus.push_back(k);
-                    kvertex.push_back(mcTrack->IdVx());
-                }
-                if(Trk->charge()>0 && IsPion(mcTrack)){
-                    piplus.push_back(k);
-                    pivertex.push_back(mcTrack->IdVx());
-                }
-            }
-            //if (k==NoGlobalTracks-1) continue;                     //Does not count the last track
-        }
-        /////////////////////////////////////////
-        for(Int_t k=0; k<piplus.size();k++){
-            StMuTrack *Trk = (StMuTrack *) GlobalTracks->UncheckedAt(piplus.at(k));
-            Int_t kgc = Trk->index2Cov();         //Like Yuri   looping over GlobalTracks *****Yuri
-            if (kgc<=0) continue;
-            StDcaGeometry *dcaG = (StDcaGeometry *) CovGlobTrack->UncheckedAt(kgc);   //No Put a -1 shift
-            if (! dcaG) continue;
-            THelixTrack thelix =  dcaG->thelix();
-            for (Int_t kk = 0; kk < kminus.size(); kk++) { //Second track
-                if(kvertex.at(kk)!=pivertex.at(k))continue;
-                //StMuTrack *Trkp2 = (StMuTrack *) PrimaryTracks->UncheckedAt(kk);
-                StMuTrack *Trkp2 = (StMuTrack *) GlobalTracks->UncheckedAt(kminus.at(kk)); 
-                Int_t kgc2 = Trkp2->index2Cov();         //Like Yuri   looping over GlobalTracks *****Yuri
-                if (kgc2<=0) continue;
-                StDcaGeometry *dcaG2 = (StDcaGeometry *) CovGlobTrack->UncheckedAt(kgc2);
-                if (! dcaG2) continue;
-                ////////////////<- END Calculate DCA 
-                //Apply KFParticles
-                AppKFPart(muEvent->magneticField(),Vtx1,dcaG,Trk,dcaG2,Trkp2,secKF);
-                //END Apply KFParticles
-                //Apply Helix swing
-                AppHelix(muEvent->magneticField(),Vtx1,Trk,Trkp2,secHE);
-                //END Apply Helix swing
-                
-                //Fill Histograms
-                disthist->Fill(B2.dist);
-                projhist->Fill(B2.proj);
-                if(B2.q==0 && B2.dist>2 && B2.dist<15 && B2.proj>0.99 && B2.dca2vtx<0.5 && B2.dcamag<0.5 && B2.lambda<0.08) masshist->Fill(B2.Mass);
-                if(B2.q!=0 && B2.dist>2 && B2.dist<15 && B2.proj>0.99 && B2.dca2vtx<0.5 && B2.dcamag<0.5 && B2.lambda<0.08) masRhist->Fill(B2.Mass);//masRhist->Fill(B2.MassRot);
-                lifehist->Fill(B2.lifet);
-                //END Fill Histograms
-                
-            }  ///////END TRACK 2
-        }  ///////END TRACK 1
-        
-        
-        // }//END VERTEX
-        if(_debugAsk) {cout << Form("[%i]",nummult) <<Form(" %8.3f  %8.3f  %8.3f",Vtx1->position().x(),Vtx1->position().y(),Vtx1->position().z()) << "   MCz: " << primVtx.MCpvZ << Form("  Rank:%1.0f",Vtx1->ranking()) << "    Multiplicity: " << Vtx1->noTracks();;
-            if(nummult!=0) cout << "   Bad Ranked   " << count++ << endl;
-            else cout << endl;}
-        
-        if (! gROOT->IsBatch()) {
-            if (Ask()) return;
-        } else {_debugAsk = 0;}
-         */
         
     }     //END EVENTS
     
