@@ -288,7 +288,7 @@ Int_t StPicoDstMaker::Init(){
     TDataSet *hitErrSet = GetDataBase("Calibrations/tracker/PixelHitError");
     cout << "   loading pxlDbDataSet" << endl;
     TObjectSet *pxlDbDataSet = 0;
-    pxlDbDataSet = (TObjectSet*)GetDataSet("pxl_db");
+    pxlDbDataSet = (TObjectSet*)GetDataSet("VmcGeometry");
     if (!pxlDbDataSet)
 	   {
            LOG_ERROR << "StPxlSimMaker - E - pxlDb  is not available" << endm;
