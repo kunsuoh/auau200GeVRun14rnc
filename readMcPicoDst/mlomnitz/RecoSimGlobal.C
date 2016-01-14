@@ -314,6 +314,7 @@ void RecoSimGlobal(Long64_t nevent = 999999,const char* file="./*.MuDst.root",co
             Track.istfit   = Trk->nHitsFit(kIstId);
             Track.istpos  = Trk->nHitsPoss(kIstId);
             Track.isttop   = Trk->topologyMap().hasHitInIstLayer(1);//Trk->nHitsFit(kIstId);
+            
             Track.pxlfit   = Trk->nHitsFit(kPxlId);
             Track.pxlpos  = Trk->nHitsPoss(kPxlId);
             Track.pxltop   = Trk->topologyMap().hasHitInPxlLayer(1) + 10*(Trk->topologyMap().hasHitInPxlLayer(2));
@@ -323,8 +324,8 @@ void RecoSimGlobal(Long64_t nevent = 999999,const char* file="./*.MuDst.root",co
             Track.SigPr  = fabs(Trk->nSigmaProton())>100. ? 100. : Trk->nSigmaProton();
             Track.SigEl  = fabs(Trk->nSigmaElectron())>100. ? 100. : Trk->nSigmaElectron();
             //Finding track parent for pc distribution test
-            Track.isD0=0;
-            Track.isK0=0;
+            Track.isGamma=0;
+            Track.isPi0Dalitz=0;
             Int_t prodvtx_ID=mcTrack->IdVx();
             if(!IsElectron(mcTrack)) continue;
             cout<<"Checking against "<<decayId.size()<<" decay vertices for daugter id "<<mcTrack->GePid()<<endl;
@@ -332,13 +333,13 @@ void RecoSimGlobal(Long64_t nevent = 999999,const char* file="./*.MuDst.root",co
                 pair<int, int> temp=decayId.at(jjj);
                 if(temp.first!=mcTrack->IdVx()) continue;
                 cout<<"Found parent vertex, parent particle is "<<temp.second<<endl;
-                if(temp.second==37){
-                    Track.isD0=1;
+                if(temp.second==1){
+                    Track.isGamma=1;
                     jjj=decayId.size();
                     continue;
                 }
-                if(temp.second==16){
-                    Track.isK0=1;
+                if(temp.second==10007){
+                    Track.isPi0Dalitz=1;
                     jjj=decayId.size();
                     continue;
                 }

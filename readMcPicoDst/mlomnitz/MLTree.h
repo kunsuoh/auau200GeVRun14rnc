@@ -27,7 +27,7 @@ struct TrackPoint_t {
   Float_t SigPi; Float_t SigKa;
   Float_t SigEl; Float_t SigPr;
   //FOR Siimu use only
-  Int_t isD0, isK0;
+  Int_t isGamma, isPi0Dalitz;
   };  
 TrackPoint_t Track;
 
@@ -113,8 +113,8 @@ void DefineTree(){
   primtrack->Branch("SigKa",&Track.SigKa,"SigKa/F");
   primtrack->Branch("SigPr",&Track.SigPr,"SigPr/F");
   primtrack->Branch("SigEl",&Track.SigEl,"SigEl/F");
-  primtrack->Branch("isD0",&Track.isD0,"isD0/I");
-  primtrack->Branch("isK0",&Track.isK0,"isK0/I");
+  primtrack->Branch("isGamma",&Track.isGamma,"isGamma/I");
+  primtrack->Branch("isPi0Dalitz",&Track.isPi0Dalitz,"isPi0Dalitz/I");
 
   secKF = new TTree("secKF","The Secondary Vertices via KFParticles");
   secKF->SetAutoSave(1000000);
