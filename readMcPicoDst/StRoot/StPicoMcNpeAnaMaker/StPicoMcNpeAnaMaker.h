@@ -93,13 +93,12 @@ private:
     TH1F * hPairDca;
     TH2F * hPairPosition;
 
-    
     Float_t rc_x, rc_y, rc_z, mc_x, mc_y, mc_z;
-
+    
     UChar_t nHits1_pxl1, nHits1_pxl2, nHits1_ist, nHits1_ssd;
     UChar_t nHits2_pxl1, nHits2_pxl2, nHits2_ist, nHits2_ssd;
     UChar_t nHits_pxl1, nHits_pxl2, nHits_ist, nHits_ssd;
-
+    
     UChar_t truth1_pxl1, truth1_pxl2, truth1_ist, truth1_ssd;
     UChar_t truth2_pxl1, truth2_pxl2, truth2_ist, truth2_ssd;
     UChar_t truth_pxl1, truth_pxl2, truth_ist, truth_ssd;

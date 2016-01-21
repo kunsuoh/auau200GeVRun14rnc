@@ -241,10 +241,10 @@ Int_t StPicoMcNpeAnaMaker::Make()
                     truth_ist = (mcTrk->IstTruth());
                     truth_ssd = (mcTrk->SsdTruth());
                     
-                    rchfthit_pxl1 = rcTrk->nHitsMapHFT()>>0 & 0x1;
-                    rchfthit_pxl2 = rcTrk->nHitsMapHFT()>>1 & 0x3;
-                    rchfthit_ist = rcTrk->nHitsMapHFT()>>3 & 0x3;
-                    rchfthit_ssd = 0;
+                    rcHftHit_pxl1 = rcTrk->nHitsMapHFT()>>0 & 0x1;
+                    rcHftHit_pxl2 = rcTrk->nHitsMapHFT()>>1 & 0x3;
+                    rcHftHit_ist = rcTrk->nHitsMapHFT()>>3 & 0x3;
+                    rcHftHit_ssd = 0;
 
                     mc_x = mcTrk->Origin().x();
                     mc_y = mcTrk->Origin().y();
@@ -362,15 +362,15 @@ Int_t StPicoMcNpeAnaMaker::Make()
                         chi1 = rcPositron->chi2();
                         chi2 = rcElectron->chi2();
                         
-                        rchfthit1_pxl1 = rcPositron->nHitsMapHFT()>>0 & 0x1;
-                        rchfthit1_pxl2 = rcPositron->nHitsMapHFT()>>1 & 0x3;
-                        rchfthit1_ist = rcPositron->nHitsMapHFT()>>3 & 0x3;
-                        rchfthit1_ssd = 0;
+                        rcHftHit1_pxl1 = rcPositron->nHitsMapHFT()>>0 & 0x1;
+                        rcHftHit1_pxl2 = rcPositron->nHitsMapHFT()>>1 & 0x3;
+                        rcHftHit1_ist = rcPositron->nHitsMapHFT()>>3 & 0x3;
+                        rcHftHit1_ssd = 0;
 
-                        rchfthit2_pxl1 = rcElectron->nHitsMapHFT()>>0 & 0x1;
-                        rchfthit2_pxl2 = rcElectron->nHitsMapHFT()>>1 & 0x3;
-                        rchfthit2_ist = rcElectron->nHitsMapHFT()>>3 & 0x3;
-                        rchfthit2_ssd = 0;
+                        rcHftHit2_pxl1 = rcElectron->nHitsMapHFT()>>0 & 0x1;
+                        rcHftHit2_pxl2 = rcElectron->nHitsMapHFT()>>1 & 0x3;
+                        rcHftHit2_ist = rcElectron->nHitsMapHFT()>>3 & 0x3;
+                        rcHftHit2_ssd = 0;
                         
                         StPhysicalHelixD rc1Helix = rcPositron->dcaGeometry().helix();
                         StPhysicalHelixD mc1Helix(mcPositron->Mom(), mcPositron->Origin(), bField, 1);
