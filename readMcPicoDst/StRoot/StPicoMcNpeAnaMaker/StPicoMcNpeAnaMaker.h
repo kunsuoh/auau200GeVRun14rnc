@@ -37,23 +37,6 @@ class StDcaGeometry;
 
 class StElectronPair;
 
-typedef struct {Float_t x,y,z;} POSITION;
-typedef struct {UChar_t pxl1,pxl2,ist,ssd;} HITS;
-static POSITION rc;
-static POSITION mc;
-
-static HITS nHits1;
-static HITS truth1;
-static HITS rchfthit1;
-
-static HITS nHits2;
-static HITS truth2;
-static HITS rchfthit2;
-
-static HITS nHits;
-static HITS truth;
-static HITS rchfthit;
-
 class StPicoMcNpeAnaMaker : public StMaker
 {
 public:

@@ -14,47 +14,60 @@ from ROOT import TTree, TFile, AddressOf, gROOT
 
 
 # load input files
-input = 'Pi0'
+input = 'Gamma'
 if input=='Pi0':
-    infileSim = root_open('root/out_pi0_1.root')
-    infileSim2 = root_open('root/out_gamma_12.root')
+    infileSim = root_open('root/out_pi0_15.root')
+    #infileSim = root_open('test.pi0.root')
+    infileWeight = root_open('/Users/kunsu/auau200GeVRun10/Efficiency/PartnerFinding/Decay/Out/Pion_STAR.root')
+    wt = infileWeight.fitfun_pt_MB
+    gid = 10007
+
 
 if input=='Gamma':
-    infileSim = root_open('root/out_gamma_12.root')
-    infileSim2 = root_open('root/out_pi0_1.root')
+    infileSim = root_open('root/out_gamma_15.root')
+    infileWeight = root_open('/Users/kunsu/auau200GeVRun10/Efficiency/PartnerFinding/Decay/Out/pi02gamma_dir_3.root')
+    wt = infileWeight.funDirGamma_MB
+    gid = 1
 
 tree = infileSim.T
-tree2 = infileSim2.T
 
-infileWeight = root_open('/Users/kunsu/auau200GeVRun10/Efficiency/PartnerFinding/Decay/Out/Pion_STAR.root')
-wt = infileWeight.fitfun_pt_MB
 
 # define histograms
 hRcPt = ROOT.TH1F("hRcPt","hRcPt",100, 0, 10)
 hRcPtWt = ROOT.TH1F("hRcPtWt","hRcPtWt",100, 0, 10)
-wt = ROOT.TF1('wt','x',0,10)
+hConvR = ROOT.TH1F("hConvR","hConvR",100, 0, 10)
+hConvRWt = ROOT.TH1F("hConvRWt","hConvRWt",100, 0, 10)
+hMomPt = ROOT.TH1F("hMomPt","hMomPt",100, 0, 10)
+hMomPtWt = ROOT.TH1F("hMomPtWt","hMomPtWt",100, 0, 10)
 
-gROOT.ProcessLine(\
-                  "struct POSITION{\
-                  Float_t x,y,z;\
-                  };")
-from ROOT import POSITION
-
-rc = POSITION()
 # pair loop
 for pair in tree:
-    momPt = pair.mcPairPt
-    pt1 =  pair.pt1
-    pt2 =  pair.pt2
-    rcConvR = math.sqrt(pair.rc.x**2 + pair.rc.y**2)
-    
-    hRcPt.Fill(pt1)
-    hRcPtWt.Fill(pt1,wt.Eval(momPt))
+    if pair.parentGid == gid: # and pair.mcPairPt > 0.2 and pair.mcPairPt < 10:
+        momPt = pair.mcPairPt
+        pt1 =  abs(pair.pt1)
+        pt2 =  abs(pair.pt2)
+        rcConvR = math.sqrt(pair.rc_x**2 + pair.rc_y**2)
+        hft1 = pair.rcHftHit1_pxl1 and pair.rcHftHit1_pxl2 and pair.rcHftHit1_ist
+        hft2 = pair.rcHftHit2_pxl1 and pair.rcHftHit2_pxl2 and pair.rcHftHit2_ist
+        if pt1 > 2 and pt1 < 4 and pt2 > 2 and pt2 < 4 and hft1 and hft2:
+            hRcPt.Fill(pt1)
+            hRcPt.Fill(pt2)
+            hRcPtWt.Fill(pt1, wt.Eval(momPt))
+            hRcPtWt.Fill(pt2, wt.Eval(momPt))
+            hConvR.Fill(rcConvR)
+            hConvRWt.Fill(rcConvR, wt.Eval(momPt))
+            hMomPt.Fill(momPt)
+            hMomPtWt.Fill(momPt, wt.Eval(momPt))
 
 fout = ROOT.TFile('histo.root','RECREATE')
 fout.cd()
 hRcPt.Write()
 hRcPtWt.Write()
+hConvR.Write()
+hConvRWt.Write()
+hMomPt.Write()
+hMomPtWt.Write()
+wt.Write()
 
 
 
