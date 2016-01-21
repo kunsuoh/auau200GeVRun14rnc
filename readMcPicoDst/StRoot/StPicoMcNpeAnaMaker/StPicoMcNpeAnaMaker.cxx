@@ -261,12 +261,12 @@ Int_t StPicoMcNpeAnaMaker::Make()
                     mcPhi = mcTrk->Mom().phi();
                     mcEta = mcTrk->pseudorapidity();
                     chi = rcTrk->chi2();
-/*
+
                     StPhysicalHelixD rcHelix = rcTrk->dcaGeometry().helix();
                     rcdca = rcHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
-*/
-                    StPhysicalHelixD mcHelix(mcTrk->Mom(), mcTrk->Origin(), bField, trackId == 2 ? 1 : -1);
-                    mcdca = mcHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
+
+//                    StPhysicalHelixD mcHelix(mcTrk->Mom(), mcTrk->Origin(), bField, trackId == 2 ? 1 : -1);
+//                    mcdca = mcHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
 
                     parentGid2 = ((StPicoMcTrack*)(picoDst->mctrack(mcTrk->parentId())))->GePid();
 
