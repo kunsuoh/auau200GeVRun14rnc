@@ -42,12 +42,13 @@ typedef struct {UChar_t pxl1,pxl2,ist,ssd;} HITS;
 static POSITION rc;
 static POSITION mc;
 
-static HITS rchfthit1;
-static HITS rchfthit2;
 static HITS nHits1;
 static HITS truth1;
+static HITS rchfthit1;
+
 static HITS nHits2;
 static HITS truth2;
+static HITS rchfthit2;
 
 static HITS nHits;
 static HITS truth;
@@ -91,6 +92,21 @@ private:
     TH1F * hPairMass;
     TH1F * hPairDca;
     TH2F * hPairPosition;
+
+    
+    Float_t rc_x, rc_y, rc_z, mc_x, mc_y, mc_z;
+
+    UChar_t nHits1_pxl1, nHits1_pxl2, nHits1_ist, nHits1_ssd;
+    UChar_t nHits2_pxl1, nHits2_pxl2, nHits2_ist, nHits2_ssd;
+    UChar_t nHits_pxl1, nHits_pxl2, nHits_ist, nHits_ssd;
+
+    UChar_t truth1_pxl1, truth1_pxl2, truth1_ist, truth1_ssd;
+    UChar_t truth2_pxl1, truth2_pxl2, truth2_ist, truth2_ssd;
+    UChar_t truth_pxl1, truth_pxl2, truth_ist, truth_ssd;
+    
+    UChar_t rcHftHit1_pxl1, rcHftHit1_pxl2, rcHftHit1_ist, rcHftHit1_ssd;
+    UChar_t rcHftHit2_pxl1, rcHftHit2_pxl2, rcHftHit2_ist, rcHftHit2_ssd;
+    UChar_t rcHftHit_pxl1, rcHftHit_pxl2, rcHftHit_ist, rcHftHit_ssd;
 
     
     float length, angle, mcPairPt, pairDca, mass, eta, phi, openangle, mcopenangle, phiV, pt1, pt2, chi1, chi2;

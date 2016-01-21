@@ -8,57 +8,188 @@ from rootpy.tree.categories import Categories
 from rootpy.io import root_open
 from rootpy.plotting import Hist, Hist2D, Hist3D, histogram, Canvas, Legend
 
-# Data
-infile = root_open('../out/out.root')
-ntuple = infile.nt
-xval = 'sqrt((v0x+0.2383)**2+(v0y+0.1734)**2)'
-xbin = 100
-xmin = 0
-xmax = 10
-cut='mass < 0.05 && pairDca < 0.01 && abs(pt1) > 0.6 && abs(pt2) > 0.6'
-histoUS = ntuple.Draw(xval, hist=Hist(xbin,xmin,xmax), selection=cut+'&& pt1*pt2<0')
-histoLS = ntuple.Draw(xval, hist=Hist(xbin,xmin,xmax), selection=cut+'&& pt1*pt2>0')
-histoData = histoUS - histoLS                                                               # data UL-LS
-histoData.scale(1/histoData.GetMaximum())
-histoData.color = 'black'
-histoData.SetMarkerStyle(20)
+import math
+
+from ROOT import TTree, TFile, AddressOf, gROOT
 
 
-# Simulation
-input = 'Gamma'
+# load input files
+input = 'Pi0'
 if input=='Pi0':
     infileSim = root_open('root/out_pi0_1.root')
+    infileSim2 = root_open('root/out_gamma_12.root')
+
 if input=='Gamma':
-    infileSim = root_open('root/out_gamma_14.root')
+    infileSim = root_open('root/out_gamma_12.root')
+    infileSim2 = root_open('root/out_pi0_1.root')
+
 tree = infileSim.T
+tree2 = infileSim2.T
 
-canvas = Canvas()
-canvas.SetLogy()
+infileWeight = root_open('/Users/kunsu/auau200GeVRun10/Efficiency/PartnerFinding/Decay/Out/Pion_STAR.root')
+wt = infileWeight.fitfun_pt_MB
 
+# define histograms
+hRcPt = ROOT.TH1F("hRcPt","hRcPt",100, 0, 10)
+hRcPtWt = ROOT.TH1F("hRcPtWt","hRcPtWt",100, 0, 10)
+wt = ROOT.TF1('wt','x',0,10)
 
-def draw1D(xval='sqrt(rc.x**2+rc.y**2)', xmin=0, xmax=10, xvalname='Radius',
-              xbin=100,ybin=100,
-              #  cut='rchfthit.pxl1 && rchfthit.pxl2 && rchfthit.ist ',
-              #  cut2=' && truth.pxl1 && truth.pxl2 && truth.ist',
-              cut='rchfthit1.pxl1 && rchfthit1.pxl2 && rchfthit1.ist && rchfthit2.pxl1 && rchfthit2.pxl2 && rchfthit2.ist && parentGid ==1',
-              cut2='',
-              histoname='histoRatio', drawOption='E0',inTree=tree):
-    histo2 = inTree.Draw(xval, hist=Hist(xbin,xmin,xmax), selection=cut + cut2)
-    histo2.color = 'blue'
-    histo2.scale(1/histo2.GetMaximum())
-    histo2.SetMaximum(10)
-    histo2.SetMinimum(0.001)
-    histo2.Draw(drawOption)
-    histoData.Draw(drawOption+'same')
-    canvas.SaveAs('Eff/'+histoname+'_'+xvalname+'.pdf')
+gROOT.ProcessLine(\
+                  "struct POSITION{\
+                  Float_t x,y,z;\
+                  };")
+from ROOT import POSITION
 
+rc = POSITION()
+# pair loop
+for pair in tree:
+    momPt = pair.mcPairPt
+    pt1 =  pair.pt1
+    pt2 =  pair.pt2
+    rcConvR = math.sqrt(pair.rc.x**2 + pair.rc.y**2)
+    
+    hRcPt.Fill(pt1)
+    hRcPtWt.Fill(pt1,wt.Eval(momPt))
 
-draw1D()
+fout = ROOT.TFile('histo.root','RECREATE')
+fout.cd()
+hRcPt.Write()
+hRcPtWt.Write()
+
 
 
 
 '''
 
+
+canvas = Canvas()
+#canvas.SetLogy()
+
+
+def drawRatio(xval, xmin, xmax, xvalname,
+              xbin=100,ybin=100,
+              #  cut='rchfthit.pxl1 && rchfthit.pxl2 && rchfthit.ist ',
+              #  cut2=' && truth.pxl1 && truth.pxl2 && truth.ist',
+              cut='',
+              cut2='',
+              histoname='histoRatio', drawOption='E0',inTree=tree):
+    histo1 = inTree.Draw(xval, hist=Hist(xbin,xmin,xmax), selection=cut)
+    histo1.color = 'red'
+    histo1.SetMarkerStyle(24)
+    histo2 = inTree.Draw(xval, hist=Hist(xbin,xmin,xmax), selection=cut + cut2)
+    histo2.color = 'blue'
+    histo2.Divide(histo1)
+    histo2.SetMaximum(1)
+    histo2.SetMinimum(0)
+    histo2.Draw(drawOption)
+    canvas.SaveAs('Eff/'+histoname+'_'+xvalname+'.pdf')
+
+drawRatio('rcPt',0,5,'rcPt',
+          cut='rchfthit.pxl1 && rchfthit.pxl2 && rchfthit.ist && parentGid == 1 && sqrt(mc.x**2+mc.y**2) < 2.1 && sqrt(mc.x**2+mc.y**2) > 1.9',
+          cut2='&& truth.pxl1 && truth.pxl2 && truth.ist',
+          histoname='histoRatio'+input+'BeamPipe');
+
+drawRatio('rcPt',0,5,'rcPt',
+          cut='rchfthit.pxl1 && rchfthit.pxl2 && rchfthit.ist && parentGid == 1 && sqrt(mc.x**2+mc.y**2) < 1.9',
+          cut2='&& truth.pxl1 && truth.pxl2 && truth.ist',
+          histoname='histoRatio'+input+'InnerBeamPipe');
+
+drawRatio('rcPt',0,5,'rcPt',
+          cut='rchfthit.pxl1 && rchfthit.pxl2 && rchfthit.ist && parentGid == 1 && sqrt(mc.x**2+mc.y**2) > 2.1',
+          cut2='&& truth.pxl1 && truth.pxl2 && truth.ist',
+          histoname='histoRatio'+input+'OuterBeamPipe');
+
+drawRatio('rcPt',0,5,'rcPt',
+          cut='rchfthit.pxl1 && rchfthit.pxl2 && rchfthit.ist && parentGid == 10007 && sqrt(mc.x**2+mc.y**2) < .1',
+          cut2='&& truth.pxl1 && truth.pxl2 && truth.ist',
+          histoname='histoRatioPi0');
+
+
+
+def draw1D(xval='sqrt(rc.x**2+rc.y**2)', xmin=0, xmax=10, xvalname='Radius',
+           xbin=100,ybin=100,
+           #  cut='rchfthit.pxl1 && rchfthit.pxl2 && rchfthit.ist ',
+           #  cut2=' && truth.pxl1 && truth.pxl2 && truth.ist',
+           cut='rchfthit1.pxl1 && rchfthit1.pxl2 && rchfthit1.ist && rchfthit2.pxl1 && rchfthit2.pxl2 && rchfthit2.ist && parentGid ==1',
+           cut2='',
+           histoname='histoRatio', drawOption='E0',inTree=tree,ndata=1):
+    inData = root_open('outHist.root')
+    histoData = inData.Get('h'+str(ndata))
+    histoData.Sumw2()
+    histoDataTemp = inData.Get('hLS'+str(ndata))
+    histoDataTemp.Sumw2()
+    histoData.Add(histoDataTemp,-1)
+    histoData.scale(1/histoData.GetMaximum())
+    histo2 = inTree.Draw(xval, hist=Hist(xbin,xmin,xmax), selection=cut + cut2)
+    histo2.color = 'blue'
+    histo2.scale(1/histo2.GetMaximum())
+    histoData.SetMaximum(10)
+    histoData.SetMinimum(0.001)
+    histoData.Draw(drawOption)
+    histo2.Draw(drawOption+'same')
+    canvas.SaveAs('Eff/'+histoname+'_'+xvalname+str(ndata)+'.pdf')
+
+
+def draw1DBoth(xval='sqrt(rc.x**2+rc.y**2)', xmin=0, xmax=10, xvalname='RadiusBoth',
+           xbin=100,ybin=100,
+           #  cut='rchfthit.pxl1 && rchfthit.pxl2 && rchfthit.ist ',
+           #  cut2=' && truth.pxl1 && truth.pxl2 && truth.ist',
+           cut='rchfthit1.pxl1 && rchfthit1.pxl2 && rchfthit1.ist && rchfthit2.pxl1 && rchfthit2.pxl2 && rchfthit2.ist',
+           cut2='',
+           histoname='histoRatio', drawOption='E0',inTree=tree,inTree2=tree2,ndata=1):
+    inData = root_open('outHist.root')
+    histoData = inData.Get('h'+str(ndata))
+    histoData.Sumw2()
+    histoDataTemp = inData.Get('hLS'+str(ndata))
+    histoDataTemp.Sumw2()
+    histoData.Add(histoDataTemp,-1)
+    histoData.scale(1/histoData.GetMaximum())
+    histo2 = inTree.Draw(xval, hist=Hist(xbin,xmin,xmax), selection=cut + cut2)
+    histo2.color = 'blue'
+    histo2.scale(1/histo2.GetMaximum())
+    histo3 = inTree2.Draw(xval, hist=Hist(xbin,xmin,xmax), selection=cut + cut2)
+    histo3.color = 'red'
+    histo3.scale(1/histo3.GetMaximum())
+    histoData.SetMaximum(10)
+    histoData.SetMinimum(0.001)
+    histoData.Draw(drawOption)
+    histo2.Draw(drawOption+'same')
+    histo3.Draw(drawOption+'same')
+    canvas.SaveAs('Eff/'+histoname+'_'+xvalname+str(ndata)+'.pdf')
+
+
+draw1DBoth(cut2='&& abs(pt1) > 0.6 && abs(pt2) > 0.6',ndata = 0)
+
+draw1D(cut2='&& abs(pt1) > 0.6 && abs(pt2) > 0.6',ndata = 0)
+draw1D(cut2='&& abs(pt1) > 0.6 && abs(pt2) > 0.6 && abs(pt1) < 0.8 && abs(pt2) < 0.8',ndata = 1)
+draw1D(cut2='&& abs(pt1) > 0.8 && abs(pt2) > 0.6 && abs(pt1) < 1. && abs(pt2) < 1.',ndata = 2)
+draw1D(cut2='&& abs(pt1) > 1. && abs(pt2) > 1. && abs(pt1) < 1.5 && abs(pt2) < 1.5',ndata = 3)
+draw1D(cut2='&& abs(pt1) > 1.5 && abs(pt2) > 1.5 && abs(pt1) < 2. && abs(pt2) < 2.',ndata = 4)
+draw1D(cut2='&& abs(pt1) > 2. && abs(pt2) > 2.',ndata = 5)
+
+draw1D(cut2='&& abs(pt1) > 0.6 && abs(pt2) > 0.6 && rc.z < -3',ndata = 6)
+draw1D(cut2='&& abs(pt1) > 0.6 && abs(pt2) > 0.6 && rc.z > -3 && rc.z < 0',ndata = 7)
+draw1D(cut2='&& abs(pt1) > 0.6 && abs(pt2) > 0.6 && rc.z > 0 && rc.z < 3',ndata = 8)
+draw1D(cut2='&& abs(pt1) > 0.6 && abs(pt2) > 0.6 && rc.z > 3',ndata = 9)
+
+
+    # Data
+    infile = root_open('../out_gamma10_5.root')
+    ntuple = infile.nt
+    xval = 'sqrt((v0x+0.2383)**2+(v0y+0.1734)**2)'
+    xbin = 100
+    xmin = 0
+    xmax = 10
+    cut='mass < 0.05 && pairDca < 0.01 && abs(pt1) > 0.6 && abs(pt2) > 0.6'
+    histoUS = ntuple.Draw(xval, hist=Hist(xbin,xmin,xmax), selection=cut+'&& pt1*pt2<0')
+    histoLS = ntuple.Draw(xval, hist=Hist(xbin,xmin,xmax), selection=cut+'&& pt1*pt2>0')
+    histoData = histoUS - histoLS                                                               # data UL-LS
+    histoData.scale(1/histoData.GetMaximum())
+    histoData.color = 'black'
+    histoData.SetMarkerStyle(20)
+    
+    
+    # Simulation
 def drawRatio(xval, xmin, xmax, xvalname,
               xbin=100,ybin=100,
               #  cut='rchfthit.pxl1 && rchfthit.pxl2 && rchfthit.ist ',

@@ -52,8 +52,14 @@ Int_t StPicoMcNpeAnaMaker::Init()
     nt3 = new TNtuple("nt3","electron pair ntuple 3","pt1:pt2:v0x:v0y:v0z:phi:eta:mass:pairDca:mcv0x:mcv0y:mcv0z:mcPairPt:angle:length");
     
     tree = new TTree("T","Electron pair tree");
-    tree->Branch("rc",&rc,"x:y:z");
-    tree->Branch("mc",&mc,"x:y:z");
+    tree->Branch("rc_x",&rc_x,"rc_x");
+    tree->Branch("rc_y",&rc_y,"rc_y");
+    tree->Branch("rc_z",&rc_z,"rc_z");
+    
+    tree->Branch("mc_x",&mc_x,"mc_x");
+    tree->Branch("mc_y",&mc_y,"mc_y");
+    tree->Branch("mc_z",&mc_z,"mc_z");
+    
     tree->Branch("pt1",&pt1,"pt1/F");
     tree->Branch("pt2",&pt2,"pt2/F");
     tree->Branch("phiV",&phiV,"phiV/F");
@@ -66,23 +72,50 @@ Int_t StPicoMcNpeAnaMaker::Init()
     tree->Branch("mcPairPt",&mcPairPt,"mcPairPt/F");
     tree->Branch("angle",&angle,"angle/F");
     tree->Branch("length",&length,"length/F");          //
-    tree->Branch("nHits1",&nHits1,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
-    tree->Branch("truth1",&truth1,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
-    tree->Branch("nHits2",&nHits2,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
-    tree->Branch("truth2",&truth2,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
     tree->Branch("parentGid",&parentGid,"parentGid/s");   //
     tree->Branch("refmult",&refmult,"refmult/I");   //
     tree->Branch("chi1",&chi1,"chi1/F");
     tree->Branch("chi2",&chi2,"chi2/F");
-    tree->Branch("rchfthit1",&rchfthit1,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
-    tree->Branch("rchfthit2",&rchfthit2,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
     tree->Branch("rcdca1",&rcdca1,"rcdca1/F");
     tree->Branch("rcdca2",&rcdca2,"rcdca2/F");
     tree->Branch("mcdca1",&mcdca1,"mcdca1/F");
     tree->Branch("mcdca2",&mcdca2,"mcdca2/F");
     
+    tree->Branch("nHits1_pxl1",&nHits1_pxl1,"nHits1_pxl1/b");   //
+    tree->Branch("nHits1_pxl2",&nHits1_pxl2,"nHits1_pxl2/b");   //
+    tree->Branch("nHits1_ist",&nHits1_ist,"nHits1_ist/b");   //
+    tree->Branch("nHits1_ssd",&nHits1_ssd,"nHits1_ssd/b");   //
+    
+    tree->Branch("nHits2_pxl1",&nHits2_pxl1,"nHits2_pxl1/b");   //
+    tree->Branch("nHits2_pxl2",&nHits2_pxl2,"nHits2_pxl2/b");   //
+    tree->Branch("nHits2_ist",&nHits2_ist,"nHits2_ist/b");   //
+    tree->Branch("nHits2_ssd",&nHits2_ssd,"nHits2_ssd/b");   //
+    
+    tree->Branch("truth1_pxl1",&truth1_pxl1,"truth1_pxl1/b");   //
+    tree->Branch("truth1_pxl2",&truth1_pxl2,"truth1_pxl2/b");   //
+    tree->Branch("truth1_ist",&truth1_ist,"truth1_ist/b");   //
+    tree->Branch("truth1_ssd",&truth1_ssd,"truth1_ssd/b");   //
+    
+    tree->Branch("truth2_pxl1",&truth2_pxl1,"truth2_pxl1/b");   //
+    tree->Branch("truth2_pxl2",&truth2_pxl2,"truth2_pxl2/b");   //
+    tree->Branch("truth2_ist",&truth2_ist,"truth2_ist/b");   //
+    tree->Branch("truth2_ssd",&truth2_ssd,"truth2_ssd/b");   //
+    
+    tree->Branch("rcHftHit1_pxl1",&rcHftHit1_pxl1,"rcHftHit1_pxl1/b");   //
+    tree->Branch("rcHftHit1_pxl2",&rcHftHit1_pxl2,"rcHftHit1_pxl2/b");   //
+    tree->Branch("rcHftHit1_ist",&rcHftHit1_ist,"rcHftHit1_ist/b");   //
+    tree->Branch("rcHftHit1_ssd",&rcHftHit1_ssd,"rcHftHit1_ssd/b");   //
+    
+    tree->Branch("rcHftHit2_pxl1",&rcHftHit2_pxl1,"rcHftHit2_pxl1/b");   //
+    tree->Branch("rcHftHit2_pxl2",&rcHftHit2_pxl2,"rcHftHit2_pxl2/b");   //
+    tree->Branch("rcHftHit2_ist",&rcHftHit2_ist,"rcHftHit2_ist/b");   //
+    tree->Branch("rcHftHit2_ssd",&rcHftHit2_ssd,"rcHftHit2_ssd/b");   //
+    
+    
     singleTree = new TTree("eT","Single Electron tree");
-    singleTree->Branch("mc",&mc,"x:y:z");
+    singleTree->Branch("mc_x",&mc_x,"mc_x");
+    singleTree->Branch("mc_y",&mc_y,"mc_y");
+    singleTree->Branch("mc_z",&mc_z,"mc_z");
     singleTree->Branch("rcPt",&rcPt,"rcPt/F");
     singleTree->Branch("rcPhi",&rcPhi,"rcPhi/F");
     singleTree->Branch("rcEta",&rcEta,"rcEta/F");
@@ -92,9 +125,22 @@ Int_t StPicoMcNpeAnaMaker::Init()
     singleTree->Branch("parentGid",&parentGid,"parentGid/s");   //
     singleTree->Branch("parentGid2",&parentGid2,"parentGid2/s");   //
     singleTree->Branch("chi",&chi,"chi/F");
-    singleTree->Branch("nHits",&nHits,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
-    singleTree->Branch("truth",&truth,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
-    singleTree->Branch("rchfthit",&rchfthit,"pxl1/b:pxl2/b:ist/b:ssd/b");   //
+    
+    singleTree->Branch("nHits_pxl1",&nHits_pxl1,"nHits_pxl1/b");   //
+    singleTree->Branch("nHits_pxl2",&nHits_pxl2,"nHits_pxl2/b");   //
+    singleTree->Branch("nHits_ist",&nHits_ist,"nHits_ist/b");   //
+    singleTree->Branch("nHits_ssd",&nHits_ssd,"nHits_ssd/b");   //
+
+    singleTree->Branch("truth_pxl1",&truth_pxl1,"truth_pxl1/b");   //
+    singleTree->Branch("truth_pxl2",&truth_pxl2,"truth_pxl2/b");   //
+    singleTree->Branch("truth_ist",&truth_ist,"truth_ist/b");   //
+    singleTree->Branch("truth_ssd",&truth_ssd,"truth_ssd/b");   //
+    
+    singleTree->Branch("rcHftHit_pxl1",&rcHftHit_pxl1,"rcHftHit_pxl1/b");   //
+    singleTree->Branch("rcHftHit_pxl2",&rcHftHit_pxl2,"rcHftHit_pxl2/b");   //
+    singleTree->Branch("rcHftHit_ist",&rcHftHit_ist,"rcHftHit_ist/b");   //
+    singleTree->Branch("rcHftHit_ssd",&rcHftHit_ssd,"rcHftHit_ssd/b");   //
+    
     singleTree->Branch("rcdca",&rcdca,"rcdca/F");
     singleTree->Branch("mcdca",&mcdca,"mcdca/F");
     
@@ -185,24 +231,24 @@ Int_t StPicoMcNpeAnaMaker::Make()
                     rcTrk = (StPicoTrack*)picoDst->track(id);
                     fillHistogram(rcTrk,mcTrk);
 
-                    nHits.pxl1 = (mcTrk->hitsPxl1());
-                    nHits.pxl2 = (mcTrk->hitsPxl2());
-                    nHits.ist = (mcTrk->hitsIst());
-                    nHits.ssd = (mcTrk->hitsSst());
+                    nHits_pxl1 = (mcTrk->hitsPxl1());
+                    nHits_pxl2 = (mcTrk->hitsPxl2());
+                    nHits_ist = (mcTrk->hitsIst());
+                    nHits_ssd = (mcTrk->hitsSst());
                     
-                    truth.pxl1 = (mcTrk->Pxl1Truth());
-                    truth.pxl2 = (mcTrk->Pxl2Truth());
-                    truth.ist = (mcTrk->IstTruth());
-                    truth.ssd = (mcTrk->SsdTruth());
+                    truth_pxl1 = (mcTrk->Pxl1Truth());
+                    truth_pxl2 = (mcTrk->Pxl2Truth());
+                    truth_ist = (mcTrk->IstTruth());
+                    truth_ssd = (mcTrk->SsdTruth());
                     
-                    rchfthit.pxl1 = rcTrk->nHitsMapHFT()>>0 & 0x1;
-                    rchfthit.pxl2 = rcTrk->nHitsMapHFT()>>1 & 0x3;
-                    rchfthit.ist = rcTrk->nHitsMapHFT()>>3 & 0x3;
-                    rchfthit.ssd = 0;
+                    rchfthit_pxl1 = rcTrk->nHitsMapHFT()>>0 & 0x1;
+                    rchfthit_pxl2 = rcTrk->nHitsMapHFT()>>1 & 0x3;
+                    rchfthit_ist = rcTrk->nHitsMapHFT()>>3 & 0x3;
+                    rchfthit_ssd = 0;
 
-                    mc.x = mcTrk->Origin().x();
-                    mc.y = mcTrk->Origin().y();
-                    mc.z = mcTrk->Origin().z();
+                    mc_x = mcTrk->Origin().x();
+                    mc_y = mcTrk->Origin().y();
+                    mc_z = mcTrk->Origin().z();
 
                     rcPt = rcTrk->gPt();
                     rcPhi = rcTrk->gMom(pVtx,bField).phi();
@@ -285,46 +331,46 @@ Int_t StPicoMcNpeAnaMaker::Make()
                         pt1 = rcPositron->gPt();
                         pt2 = rcElectron->gPt() * -1;
                         
-                        rc.x = rcPair->positionX();
-                        rc.y = rcPair->positionY();
-                        rc.z = rcPair->positionZ();
+                        rc_x = rcPair->positionX();
+                        rc_y = rcPair->positionY();
+                        rc_z = rcPair->positionZ();
                         
-                        mc.x = mcElectron->Origin().x();
-                        mc.y = mcElectron->Origin().y();
-                        mc.z = mcElectron->Origin().z();
+                        mc_x = mcElectron->Origin().x();
+                        mc_y = mcElectron->Origin().y();
+                        mc_z = mcElectron->Origin().z();
                         
-                        nHits1.pxl1 = (mcPositron->hitsPxl1());
-                        nHits1.pxl2 = (mcPositron->hitsPxl2());
-                        nHits1.ist = (mcPositron->hitsIst());
-                        nHits1.ssd = (mcPositron->hitsSst());
+                        nHits1_pxl1 = (mcPositron->hitsPxl1());
+                        nHits1_pxl2 = (mcPositron->hitsPxl2());
+                        nHits1_ist = (mcPositron->hitsIst());
+                        nHits1_ssd = (mcPositron->hitsSst());
                         
-                        truth1.pxl1 = (mcPositron->Pxl1Truth());
-                        truth1.pxl2 = (mcPositron->Pxl2Truth());
-                        truth1.ist = (mcPositron->IstTruth());
-                        truth1.ssd = (mcPositron->SsdTruth());
+                        truth1_pxl1 = (mcPositron->Pxl1Truth());
+                        truth1_pxl2 = (mcPositron->Pxl2Truth());
+                        truth1_ist = (mcPositron->IstTruth());
+                        truth1_ssd = (mcPositron->SsdTruth());
 
-                        nHits2.pxl1 = (mcElectron->hitsPxl1());
-                        nHits2.pxl2 = (mcElectron->hitsPxl2());
-                        nHits2.ist = (mcElectron->hitsIst());
-                        nHits2.ssd = (mcElectron->hitsSst());
+                        nHits2_pxl1 = (mcElectron->hitsPxl1());
+                        nHits2_pxl2 = (mcElectron->hitsPxl2());
+                        nHits2_ist = (mcElectron->hitsIst());
+                        nHits2_ssd = (mcElectron->hitsSst());
                         
-                        truth2.pxl1 = (mcElectron->Pxl1Truth());
-                        truth2.pxl2 = (mcElectron->Pxl2Truth());
-                        truth2.ist = (mcElectron->IstTruth());
-                        truth2.ssd = (mcElectron->SsdTruth());
+                        truth2_pxl1 = (mcElectron->Pxl1Truth());
+                        truth2_pxl2 = (mcElectron->Pxl2Truth());
+                        truth2_ist = (mcElectron->IstTruth());
+                        truth2_ssd = (mcElectron->SsdTruth());
                         parentGid = ((StPicoMcTrack*)(picoDst->mctrack(mcElectron->parentId())))->GePid();
                         chi1 = rcPositron->chi2();
                         chi2 = rcElectron->chi2();
                         
-                        rchfthit1.pxl1 = rcPositron->nHitsMapHFT()>>0 & 0x1;
-                        rchfthit1.pxl2 = rcPositron->nHitsMapHFT()>>1 & 0x3;
-                        rchfthit1.ist = rcPositron->nHitsMapHFT()>>3 & 0x3;
-                        rchfthit1.ssd = 0;
+                        rchfthit1_pxl1 = rcPositron->nHitsMapHFT()>>0 & 0x1;
+                        rchfthit1_pxl2 = rcPositron->nHitsMapHFT()>>1 & 0x3;
+                        rchfthit1_ist = rcPositron->nHitsMapHFT()>>3 & 0x3;
+                        rchfthit1_ssd = 0;
 
-                        rchfthit2.pxl1 = rcElectron->nHitsMapHFT()>>0 & 0x1;
-                        rchfthit2.pxl2 = rcElectron->nHitsMapHFT()>>1 & 0x3;
-                        rchfthit2.ist = rcElectron->nHitsMapHFT()>>3 & 0x3;
-                        rchfthit2.ssd = 0;
+                        rchfthit2_pxl1 = rcElectron->nHitsMapHFT()>>0 & 0x1;
+                        rchfthit2_pxl2 = rcElectron->nHitsMapHFT()>>1 & 0x3;
+                        rchfthit2_ist = rcElectron->nHitsMapHFT()>>3 & 0x3;
+                        rchfthit2_ssd = 0;
                         
                         StPhysicalHelixD rc1Helix = rcPositron->dcaGeometry().helix();
                         StPhysicalHelixD mc1Helix(mcPositron->Mom(), mcPositron->Origin(), bField, 1);
