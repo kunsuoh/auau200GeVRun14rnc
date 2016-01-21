@@ -203,7 +203,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
         
         cout << "start mcTrack loop" << endl;
         for(int i_Mc=0; i_Mc<nMcTracks; i_Mc++){
-            cout << i_Mc <<endl;
+            cout << i_Mc << " " ;
             // get Mc Track
             StPicoMcTrack *mcTrk = (StPicoMcTrack*)picoDst->mctrack(i_Mc);
           //  if(mcTrk->Pxl1Truth()==0 || mcTrk->Pxl2Truth()==0) continue;
@@ -217,6 +217,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
             //    if(mcParentTrk->parentId() != Pico::USHORTMAX) continue;
             }
             trackId=mcTrk->GePid();
+            cout << parentGid << " " trackId << " " ;
 
             hTrackParentGeantId->Fill(parentGid);
             hTrackGeantId->Fill(trackId);
@@ -224,10 +225,13 @@ Int_t StPicoMcNpeAnaMaker::Make()
             // get Rc Trcak
             if ((parentGid == cuts::parentGid || cuts::parentGid == Pico::USHORTMAX) &&
                 (trackId == cuts::dau1Gid || trackId == cuts::dau2Gid)) {
+
                 StPicoTrack *rcTrk=0;
                 Int_t id=-999;
                 isRcTrack(mcTrk,picoDst,id);
+                cout << id << " " ;
                 if(id!=-999){
+
                     rcTrk = (StPicoTrack*)picoDst->track(id);
                     fillHistogram(rcTrk,mcTrk);
 
@@ -277,6 +281,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
                     
                 }
             }
+            cout << endl;
         }
         cout << idPicoDstRcPositrons.size() << " " << idPicoDstRcElectrons.size() << endl;
         
