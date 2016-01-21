@@ -217,7 +217,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
             //    if(mcParentTrk->parentId() != Pico::USHORTMAX) continue;
             }
             trackId=mcTrk->GePid();
-            cout << parentGid << " " trackId << " " ;
+            cout << parentGid << " " << trackId << " " ;
 
             hTrackParentGeantId->Fill(parentGid);
             hTrackGeantId->Fill(trackId);
