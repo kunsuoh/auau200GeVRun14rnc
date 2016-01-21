@@ -187,9 +187,10 @@ Int_t StPicoMcNpeAnaMaker::Make()
     }
     
     mPicoEvent = picoDst->event();
-    
+    cout << "before isGoodEvent()" << endl;
     if (isGoodEvent())
     {
+        cout << "in isGoodEvent()" << endl;
         std::vector<Int_t> idPicoDstRcElectrons;
         std::vector<Int_t> idPicoDstRcPositrons;
         std::vector<Int_t> idPicoDstMcElectrons;
@@ -199,8 +200,10 @@ Int_t StPicoMcNpeAnaMaker::Make()
         float const bField = mPicoEvent->bField();
         int nMcTracks =  picoDst->numberOfMcTracks();
         refmult = mPicoEvent->refMult();
-
+        
+        cout << "start mcTrack loop" << endl;
         for(int i_Mc=0; i_Mc<nMcTracks; i_Mc++){
+            cout << i_Mc <<endl;
             // get Mc Track
             StPicoMcTrack *mcTrk = (StPicoMcTrack*)picoDst->mctrack(i_Mc);
           //  if(mcTrk->Pxl1Truth()==0 || mcTrk->Pxl2Truth()==0) continue;
