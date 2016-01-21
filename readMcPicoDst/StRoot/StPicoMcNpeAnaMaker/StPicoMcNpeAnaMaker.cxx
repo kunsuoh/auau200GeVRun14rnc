@@ -187,10 +187,10 @@ Int_t StPicoMcNpeAnaMaker::Make()
     }
     
     mPicoEvent = picoDst->event();
-    cout << "before isGoodEvent()" << endl;
+    //cout << "before isGoodEvent()" << endl;
     if (isGoodEvent())
     {
-        cout << "in isGoodEvent()" << endl;
+        //cout << "in isGoodEvent()" << endl;
         std::vector<Int_t> idPicoDstRcElectrons;
         std::vector<Int_t> idPicoDstRcPositrons;
         std::vector<Int_t> idPicoDstMcElectrons;
@@ -201,9 +201,9 @@ Int_t StPicoMcNpeAnaMaker::Make()
         int nMcTracks =  picoDst->numberOfMcTracks();
         refmult = mPicoEvent->refMult();
         
-        cout << "start mcTrack loop" << endl;
+        //cout << "start mcTrack loop" << endl;
         for(int i_Mc=0; i_Mc<nMcTracks; i_Mc++){
-            cout << i_Mc << " " ;
+            //cout << i_Mc << " " ;
             // get Mc Track
             StPicoMcTrack *mcTrk = (StPicoMcTrack*)picoDst->mctrack(i_Mc);
           //  if(mcTrk->Pxl1Truth()==0 || mcTrk->Pxl2Truth()==0) continue;
@@ -217,7 +217,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
             //    if(mcParentTrk->parentId() != Pico::USHORTMAX) continue;
             }
             trackId=mcTrk->GePid();
-            cout << parentGid << " " << trackId << " " ;
+            //cout << parentGid << " " << trackId << " " ;
 
             hTrackParentGeantId->Fill(parentGid);
             hTrackGeantId->Fill(trackId);
@@ -229,7 +229,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
                 StPicoTrack *rcTrk=0;
                 Int_t id=-999;
                 isRcTrack(mcTrk,picoDst,id);
-                cout << id << " " ;
+                //cout << id << " " ;
                 if(id!=-999){
 
                     rcTrk = (StPicoTrack*)picoDst->track(id);
@@ -283,9 +283,9 @@ Int_t StPicoMcNpeAnaMaker::Make()
                     
                 }
             }
-            cout << endl;
+  //          cout << endl;
         }
-        cout << idPicoDstRcPositrons.size() << " " << idPicoDstRcElectrons.size() << endl;
+        //cout << idPicoDstRcPositrons.size() << " " << idPicoDstRcElectrons.size() << endl;
         
         for (int i=0; i<idPicoDstMcPositrons.size(); i++) {
             StPicoMcTrack *mcPositron = (StPicoMcTrack*)picoDst->mctrack(idPicoDstMcPositrons[i]);
