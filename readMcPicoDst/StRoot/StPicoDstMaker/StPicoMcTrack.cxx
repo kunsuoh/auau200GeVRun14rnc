@@ -57,6 +57,9 @@ mEta(std::numeric_limits<float>::quiet_NaN()), mMcMomentum(0.0,0.0,0.0), mOrigin
     mMcMomentum = mcTrk->momentum();
     if(mcTrk->startVertex()){
         mOrigin = mcTrk->startVertex()->position();
+        if ((mGePid == 2 ||  mGePid == 3) && sqrt(mOrigin.x()*mOrigin.x() + mOrigin.y()*mOrigin.y()) >1.9 && sqrt(mOrigin.x()*mOrigin.x() + mOrigin.y()*mOrigin.y()) < 2.1){
+            cout << mcTrk->isShower();
+        }
     }
     mEta = mcTrk->pseudoRapidity();
     //Looping over hits to check for IdTruth

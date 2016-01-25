@@ -14,7 +14,7 @@ from ROOT import TTree, TFile, AddressOf, gROOT
 
 
 # load input files
-input = 'Gamma'
+input = 'Pi0'
 if input=='Pi0':
     infileSim = root_open('root/out_pi0_15.root')
     #infileSim = root_open('test.pi0.root')
@@ -33,10 +33,33 @@ tree = infileSim.T
 
 
 # define histograms
-hRcPt = ROOT.TH1F("hRcPt","hRcPt",100, 0, 10)
-hRcPtWt = ROOT.TH1F("hRcPtWt","hRcPtWt",100, 0, 10)
-hConvR = ROOT.TH1F("hConvR","hConvR",100, 0, 10)
-hConvRWt = ROOT.TH1F("hConvRWt","hConvRWt",100, 0, 10)
+hRcPt0 = ROOT.TH1F("hRcPt0","hRcPt0",100, 0, 10) 
+hRcPt1 = ROOT.TH1F("hRcPt1","hRcPt1",100, 0, 10) 
+hRcPt2 = ROOT.TH1F("hRcPt2","hRcPt2",100, 0, 10) 
+hRcPt3 = ROOT.TH1F("hRcPt3","hRcPt3",100, 0, 10) 
+hRcPt4 = ROOT.TH1F("hRcPt4","hRcPt4",100, 0, 10) 
+hRcPt5 = ROOT.TH1F("hRcPt5","hRcPt5",100, 0, 10)
+hConvR0 = ROOT.TH1F("hConvR0","hConvR0",100, 0, 10)
+hConvR1 = ROOT.TH1F("hConvR1","hConvR1",100, 0, 10)
+hConvR2 = ROOT.TH1F("hConvR2","hConvR2",100, 0, 10)
+hConvR3 = ROOT.TH1F("hConvR3","hConvR3",100, 0, 10)
+hConvR4 = ROOT.TH1F("hConvR4","hConvR4",100, 0, 10)
+hConvR5 = ROOT.TH1F("hConvR5","hConvR5",100, 0, 10)
+
+hRcPt0Wt = ROOT.TH1F("hRcPt0Wt","hRcPt0Wt",100, 0, 10) # pt > 0.6
+hRcPt1Wt = ROOT.TH1F("hRcPt1Wt","hRcPt1Wt",100, 0, 10) # 0.6 < pt < 0.8
+hRcPt2Wt = ROOT.TH1F("hRcPt2Wt","hRcPt2Wt",100, 0, 10) # 0.8 < pt < 1.0
+hRcPt3Wt = ROOT.TH1F("hRcPt3Wt","hRcPt3Wt",100, 0, 10) # 1.0 < pt < 1.5
+hRcPt4Wt = ROOT.TH1F("hRcPt4Wt","hRcPt4Wt",100, 0, 10) # 1.5 < pt < 2.0
+hRcPt5Wt = ROOT.TH1F("hRcPt5Wt","hRcPt5Wt",100, 0, 10) # pt > 2.0
+hConvR0Wt = ROOT.TH1F("hConvR0Wt","hConvR0Wt",100, 0, 10)
+hConvR1Wt = ROOT.TH1F("hConvR1Wt","hConvR1Wt",100, 0, 10)
+hConvR2Wt = ROOT.TH1F("hConvR2Wt","hConvR2Wt",100, 0, 10)
+hConvR3Wt = ROOT.TH1F("hConvR3Wt","hConvR3Wt",100, 0, 10)
+hConvR4Wt = ROOT.TH1F("hConvR4Wt","hConvR4Wt",100, 0, 10)
+hConvR5Wt = ROOT.TH1F("hConvR5Wt","hConvR5Wt",100, 0, 10)
+
+
 hMomPt = ROOT.TH1F("hMomPt","hMomPt",100, 0, 10)
 hMomPtWt = ROOT.TH1F("hMomPtWt","hMomPtWt",100, 0, 10)
 
@@ -49,22 +72,87 @@ for pair in tree:
         rcConvR = math.sqrt(pair.rc_x**2 + pair.rc_y**2)
         hft1 = pair.rcHftHit1_pxl1 and pair.rcHftHit1_pxl2 and pair.rcHftHit1_ist
         hft2 = pair.rcHftHit2_pxl1 and pair.rcHftHit2_pxl2 and pair.rcHftHit2_ist
-        if pt1 > 2 and pt1 < 4 and pt2 > 2 and pt2 < 4 and hft1 and hft2:
-            hRcPt.Fill(pt1)
-            hRcPt.Fill(pt2)
-            hRcPtWt.Fill(pt1, wt.Eval(momPt))
-            hRcPtWt.Fill(pt2, wt.Eval(momPt))
-            hConvR.Fill(rcConvR)
-            hConvRWt.Fill(rcConvR, wt.Eval(momPt))
-            hMomPt.Fill(momPt)
-            hMomPtWt.Fill(momPt, wt.Eval(momPt))
+        #cut = pair.truth1_pxl1 and pair.truth2_pxl1 and pair.truth1_pxl2 and pair.truth2_pxl2
+        #cut = (pair.truth1_pxl1 or pair.truth2_pxl1) and pair.truth1_pxl2 and pair.truth2_pxl2
+        cut = pair.mass < 0.05 and pair.pairDca < 0.01
+        if pt1 > 0.6 and pt2 > 0.6 and hft1 and hft2 and cut:
+            hRcPt0.Fill(pt1)
+            hRcPt0.Fill(pt2)
+            hRcPt0Wt.Fill(pt1, wt.Eval(momPt))
+            hRcPt0Wt.Fill(pt2, wt.Eval(momPt))
+            hConvR0.Fill(rcConvR)
+            hConvR0Wt.Fill(rcConvR, wt.Eval(momPt))
+        
+        if pt1 > 0.6 and pt1 < 0.8 and pt2 > 0.6 and pt2 < 0.8 and hft1 and hft2 and cut:
+            hRcPt1.Fill(pt1)
+            hRcPt1.Fill(pt2)
+            hRcPt1Wt.Fill(pt1, wt.Eval(momPt))
+            hRcPt1Wt.Fill(pt2, wt.Eval(momPt))
+            hConvR1.Fill(rcConvR)
+            hConvR1Wt.Fill(rcConvR, wt.Eval(momPt))
+        
+        if pt1 > 0.8 and pt1 < 1 and pt2 > 0.8 and pt2 < 1 and hft1 and hft2 and cut:
+            hRcPt2.Fill(pt1)
+            hRcPt2.Fill(pt2)
+            hRcPt2Wt.Fill(pt1, wt.Eval(momPt))
+            hRcPt2Wt.Fill(pt2, wt.Eval(momPt))
+            hConvR2.Fill(rcConvR)
+            hConvR2Wt.Fill(rcConvR, wt.Eval(momPt))
+        
+        if pt1 > 1 and pt1 < 1.5 and pt2 > 1 and pt2 < 1.5 and hft1 and hft2 and cut:
+            hRcPt3.Fill(pt1)
+            hRcPt3.Fill(pt2)
+            hRcPt3Wt.Fill(pt1, wt.Eval(momPt))
+            hRcPt3Wt.Fill(pt2, wt.Eval(momPt))
+            hConvR3.Fill(rcConvR)
+            hConvR3Wt.Fill(rcConvR, wt.Eval(momPt))
+        
+        if pt1 > 1.5 and pt1 < 2. and pt2 > 1.5 and pt2 < 2. and hft1 and hft2 and cut:
+            hRcPt4.Fill(pt1)
+            hRcPt4.Fill(pt2)
+            hRcPt4Wt.Fill(pt1, wt.Eval(momPt))
+            hRcPt4Wt.Fill(pt2, wt.Eval(momPt))
+            hConvR4.Fill(rcConvR)
+            hConvR4Wt.Fill(rcConvR, wt.Eval(momPt))
+        
+        if pt1 > 2 and pt2 > 2 and hft1 and hft2 and cut:
+            hRcPt5.Fill(pt1)
+            hRcPt5.Fill(pt2)
+            hRcPt5Wt.Fill(pt1, wt.Eval(momPt))
+            hRcPt5Wt.Fill(pt2, wt.Eval(momPt))
+            hConvR5.Fill(rcConvR)
+            hConvR5Wt.Fill(rcConvR, wt.Eval(momPt))
+        
+        hMomPt.Fill(momPt)
+        hMomPtWt.Fill(momPt, wt.Eval(momPt))
 
-fout = ROOT.TFile('histo.root','RECREATE')
+fout = ROOT.TFile('histo_All'+input+'Cut.root','RECREATE')
 fout.cd()
-hRcPt.Write()
-hRcPtWt.Write()
-hConvR.Write()
-hConvRWt.Write()
+hRcPt0.Write()
+hRcPt1.Write()
+hRcPt2.Write()
+hRcPt3.Write()
+hRcPt4.Write()
+hRcPt5.Write()
+hConvR0.Write()
+hConvR1.Write()
+hConvR2.Write()
+hConvR3.Write()
+hConvR4.Write()
+hConvR5.Write()
+hRcPt0Wt.Write()
+hRcPt1Wt.Write()
+hRcPt2Wt.Write()
+hRcPt3Wt.Write()
+hRcPt4Wt.Write()
+hRcPt5Wt.Write()
+hConvR0Wt.Write()
+hConvR1Wt.Write()
+hConvR2Wt.Write()
+hConvR3Wt.Write()
+hConvR4Wt.Write()
+hConvR5Wt.Write()
+
 hMomPt.Write()
 hMomPtWt.Write()
 wt.Write()
