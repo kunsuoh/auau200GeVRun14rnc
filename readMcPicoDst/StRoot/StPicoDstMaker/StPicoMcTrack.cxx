@@ -53,14 +53,15 @@ mEta(std::numeric_limits<float>::quiet_NaN()), mMcMomentum(0.0,0.0,0.0), mOrigin
         mParentId = mcTrk->parent()->key();
     }
     if(Trk)
-        mAssoId = Trk->key();
+    mAssoId = Trk->key();
     mMcMomentum = mcTrk->momentum();
     if(mcTrk->startVertex()){
         mOrigin = mcTrk->startVertex()->position();
-        if ((mGePid == 2 ||  mGePid == 3) && sqrt(mOrigin.x()*mOrigin.x() + mOrigin.y()*mOrigin.y()) >1.9 && sqrt(mOrigin.x()*mOrigin.x() + mOrigin.y()*mOrigin.y()) < 2.1){
+        if (mGePid == 1 && sqrt(mOrigin.x()*mOrigin.x() + mOrigin.y()*mOrigin.y()) >1.9 && sqrt(mOrigin.x()*mOrigin.x() + mOrigin.y()*mOrigin.y()) < 2.1){
             cout << mcTrk->isShower();
         }
     }
+    
     mEta = mcTrk->pseudoRapidity();
     //Looping over hits to check for IdTruth
     if(Trk){
@@ -77,7 +78,7 @@ mEta(std::numeric_limits<float>::quiet_NaN()), mMcMomentum(0.0,0.0,0.0), mOrigin
         if(nPartnerSsdHits > 0) {
             for(int issdhit=0; issdhit<nPartnerSsdHits; issdhit++) {
                 if(PartnerSsdHits[issdhit]->idTruth() == mMcId)
-                    continue;
+                continue;
                 ssdTruth=0;
                 break;
             }
@@ -86,7 +87,7 @@ mEta(std::numeric_limits<float>::quiet_NaN()), mMcMomentum(0.0,0.0,0.0), mOrigin
         if(nPartnerIstHits > 0) {
             for(int iisthit=0; iisthit<nPartnerIstHits; iisthit++) {
                 if( PartnerIstHits[iisthit]->idTruth() == mMcId)
-                    continue;
+                continue;
                 istTruth=0;
                 break;
             }
@@ -99,7 +100,7 @@ mEta(std::numeric_limits<float>::quiet_NaN()), mMcMomentum(0.0,0.0,0.0), mOrigin
         if(nPartnerPxlHits > 0) {
             for(int ipxlhit=0; ipxlhit<nPartnerPxlHits; ipxlhit++) {
                 if(PartnerPxlHits[ipxlhit]->idTruth() == mMcId)
-                    continue;
+                continue;
                 StThreeVectorF pos = PartnerPxlHits[ipxlhit]->position();
                 float const R = pow(pos.x(),2.0) + pow(pos.y(),2.0);
                 if(R > 3.5*3.5){
@@ -114,9 +115,9 @@ mEta(std::numeric_limits<float>::quiet_NaN()), mMcMomentum(0.0,0.0,0.0), mOrigin
         //Loop over PXL hits to separate into layers
         for(int ipxlhit = 0; ipxlhit < (int)mcPxlHits.size(); ipxlhit++){
             if((int)mcPxlHits.at(ipxlhit)->ladder() > 1)
-                pxl2Hits++;
+            pxl2Hits++;
             else
-                pxl1Hits++;
+            pxl1Hits++;
         }
         nHitsPxl1 = pxl1Hits;
         nHitsPxl2 = pxl2Hits;
