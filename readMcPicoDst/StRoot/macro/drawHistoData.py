@@ -14,7 +14,7 @@ from ROOT import TTree, TFile, AddressOf, gROOT
 
 
 # load input files
-input = 'Pi0'
+input = 'Gamma'
 if input=='Pi0':
     infileSim = root_open('root/out_pi0_15.root')
     #infileSim = root_open('test.pi0.root')
@@ -24,10 +24,43 @@ if input=='Pi0':
 
 
 if input=='Gamma':
-    infileSim = root_open('root/out_gamma_15.root')
+    #infileSim = root_open('root/out_gamma_15.root')
+    infileSim = root_open('root/out_gamma_SL15k.root')
     infileWeight = root_open('/Users/kunsu/auau200GeVRun10/Efficiency/PartnerFinding/Decay/Out/pi02gamma_dir_3.root')
     wt = infileWeight.funDirGamma_MB
     gid = 1
+
+tree = infileSim.eT
+
+
+canvas = Canvas()
+#canvas.SetLogy()
+def drawRatio(xval, xmin, xmax, xvalname,
+              xbin=100,ybin=100,
+              #  cut='rchfthit.pxl1 && rchfthit.pxl2 && rchfthit.ist ',
+              #  cut2=' && truth.pxl1 && truth.pxl2 && truth.ist',
+              cut='rcHftHit_pxl1 && rcHftHit_pxl2 && rcHftHit_ist && sqrt(mc_x**2+mc_y**2) > 1.9 && sqrt(mc_x**2+mc_y**2) < 2.1 && parentGid ==1',
+              cut2='',
+              histoname='histoRatio', drawOption='E0',inTree=tree):
+    histo1 = inTree.Draw(xval, hist=Hist(xbin,xmin,xmax), selection=cut)
+    histo1.color = 'red'
+    histo1.SetMarkerStyle(24)
+    histo2 = inTree.Draw(xval, hist=Hist(xbin,xmin,xmax), selection=cut + cut2)
+    histo2.color = 'blue'
+    histo2.Divide(histo1)
+    histo2.SetMaximum(1)
+    histo2.Draw(drawOption)
+    canvas.SaveAs('Eff/'+histoname+'_'+xvalname+'.pdf')
+
+drawRatio('rcPt',0,10,'rcPt',cut2='&& truth_pxl1 && truth_pxl2 && truth_ist',histoname='histoRatio'+input+'BeamPipe');
+drawRatio('rcPt',0,10,'rcPt',cut2='&& truth_pxl1 && truth_pxl2 && truth_ist',
+          cut='rcHftHit_pxl1 && rcHftHit_pxl2 && rcHftHit_ist && sqrt(mc_x**2+mc_y**2) < 1.9 && parentGid ==1',
+          histoname='histoRatio'+input+'Inner');
+drawRatio('rcPt',0,10,'rcPt',cut2='&& truth_pxl1 && truth_pxl2 && truth_ist',
+          cut='rcHftHit_pxl1 && rcHftHit_pxl2 && rcHftHit_ist && sqrt(mc_x**2+mc_y**2) >2.1 && parentGid ==1',
+          histoname='histoRatio'+input+'Outer');
+
+
 
 tree = infileSim.T
 
