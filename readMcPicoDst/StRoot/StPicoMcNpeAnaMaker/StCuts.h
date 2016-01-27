@@ -28,8 +28,8 @@ namespace cuts
     
     // set Geant Id
     UShort_t parentGid = Pico::USHORTMAX;
-    UShort_t dau1Gid = 2;
-    UShort_t dau2Gid = 3;
+    UShort_t dau1Gid = 8;
+    UShort_t dau2Gid = 9;
 
 }
 #endif
