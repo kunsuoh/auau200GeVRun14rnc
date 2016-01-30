@@ -75,7 +75,7 @@ mLength(std::numeric_limits<float>::quiet_NaN())
     StPhysicalHelixD partnerHelix = partner->dcaGeometry().helix();
     
     // normal method
-    pair<double,double> ss = electronHelix.pathLengths(partnerHelix, 1);
+    pair<double,double> ss = electronHelix.pathLengths(partnerHelix, 10);
     StThreeVectorD kAtDcaToPartner = electronHelix.at(ss.first);
     StThreeVectorD pAtDcaToElectron = partnerHelix.at(ss.second);
     
