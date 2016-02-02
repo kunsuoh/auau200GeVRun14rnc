@@ -371,8 +371,8 @@ Int_t StPicoMcNpeAnaMaker::Make()
                         mcdca2 = mc2Helix.curvatureSignedDistance(pVtx.x(),pVtx.y());
                         
                         distHits = sqrt(
-                                        (rc1Helix.at(0.7).x() - rc2Helix.at(0.7).x())**2 +
-                                        (rc1Helix.at(0.7).y() - rc2Helix.at(0.7).y())**2
+                                        (rc1Helix.at(0.7).x() - rc2Helix.at(0.7).x())*(rc1Helix.at(0.7).x() - rc2Helix.at(0.7).x()) +
+                                        (rc1Helix.at(0.7).y() - rc2Helix.at(0.7).y())*(rc1Helix.at(0.7).y() - rc2Helix.at(0.7).y())
                                         );
 
                         tree->Fill();
