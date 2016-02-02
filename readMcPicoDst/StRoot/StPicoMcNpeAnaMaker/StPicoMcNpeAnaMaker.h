@@ -76,6 +76,8 @@ private:
     TH1F * hPairDca;
     TH2F * hPairPosition;
 
+    Float_t distHits;
+    
     Float_t rc_x, rc_y, rc_z, mc_x, mc_y, mc_z;
     
     UChar_t nHits1_pxl1, nHits1_pxl2, nHits1_ist, nHits1_ssd;

@@ -79,6 +79,8 @@ Int_t StPicoMcNpeAnaMaker::Init()
     tree->Branch("mcdca1",&mcdca1,"mcdca1/F");
     tree->Branch("mcdca2",&mcdca2,"mcdca2/F");
     
+    tree->Branch("distHits",&distHits,"distHits/F");
+    
     tree->Branch("nHits1_pxl1",&nHits1_pxl1,"nHits1_pxl1/b");   //
     tree->Branch("nHits1_pxl2",&nHits1_pxl2,"nHits1_pxl2/b");   //
     tree->Branch("nHits1_ist",&nHits1_ist,"nHits1_ist/b");   //
@@ -367,7 +369,11 @@ Int_t StPicoMcNpeAnaMaker::Make()
                         mcdca1 = mc1Helix.curvatureSignedDistance(pVtx.x(),pVtx.y());
                         rcdca2 = rc2Helix.curvatureSignedDistance(pVtx.x(),pVtx.y());
                         mcdca2 = mc2Helix.curvatureSignedDistance(pVtx.x(),pVtx.y());
-
+                        
+                        distHits = sqrt(
+                                        (rc1Helix.at(0.7).x() - rc2Helix.at(0.7).x())**2 +
+                                        (rc1Helix.at(0.7).y() - rc2Helix.at(0.7).y())**2
+                                        );
 
                         tree->Fill();
                     }
