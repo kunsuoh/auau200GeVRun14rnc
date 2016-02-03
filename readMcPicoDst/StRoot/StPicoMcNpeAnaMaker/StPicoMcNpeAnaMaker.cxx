@@ -362,12 +362,13 @@ Int_t StPicoMcNpeAnaMaker::Make()
                         rcHftHit2_ssd = 0;
                         
                         StPhysicalHelixD rc1Helix = rcPositron->dcaGeometry().helix();
-                        StPhysicalHelixD mc1Helix(mcPositron->Mom(), pVtx, bField, 1);
                         StPhysicalHelixD rc2Helix = rcElectron->dcaGeometry().helix();
-                        StPhysicalHelixD mc2Helix(mcElectron->Mom(), pVtx, bField, -1);
                         rcdca1 = rc1Helix.curvatureSignedDistance(pVtx.x(),pVtx.y());
-                        mcdca1 = mc1Helix.curvatureSignedDistance(pVtx.x(),pVtx.y());
                         rcdca2 = rc2Helix.curvatureSignedDistance(pVtx.x(),pVtx.y());
+
+                        StPhysicalHelixD mc1Helix(mcPositron->Mom(), pVtx, bField, 1);
+                        StPhysicalHelixD mc2Helix(mcElectron->Mom(), pVtx, bField, -1);
+                        mcdca1 = mc1Helix.curvatureSignedDistance(pVtx.x(),pVtx.y());
                         mcdca2 = mc2Helix.curvatureSignedDistance(pVtx.x(),pVtx.y());
                         
                         distHits = sqrt(
