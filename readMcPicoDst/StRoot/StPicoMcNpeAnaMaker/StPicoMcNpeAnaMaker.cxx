@@ -212,7 +212,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
 
             
             // get Geant Id for track and parent
-            Int_t parentGid= Pico::USHORTMAX;
+            Int_t parentGid= -999;
             if(mcTrk->parentId() != Pico::USHORTMAX) {
                 StPicoMcTrack *mcParentTrk = (StPicoMcTrack*)picoDst->mctrack(mcTrk->parentId());
                 parentGid=mcParentTrk->GePid();
@@ -270,7 +270,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
                     StPhysicalHelixD mcHelix(mcTrk->Mom(), mcTrk->Origin(), bField, trackId == 2 ? 1 : -1);
                     mcdca = mcHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
 
-//                    parentGid2 = ((StPicoMcTrack*)(picoDst->mctrack(mcTrk->parentId())))->GePid();
+                    //parentGid2 = ((StPicoMcTrack*)(picoDst->mctrack(mcTrk->parentId())))->GePid();
 
                     singleTree->Fill();
                     
