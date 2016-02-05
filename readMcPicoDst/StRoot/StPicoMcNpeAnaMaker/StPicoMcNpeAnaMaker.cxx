@@ -122,8 +122,8 @@ Int_t StPicoMcNpeAnaMaker::Init()
     singleTree->Branch("mcPt",&mcPt,"mcPt/F");
     singleTree->Branch("mcPhi",&mcPhi,"mcPhi/F");
     singleTree->Branch("mcEta",&mcEta,"mcEta/F");
-    singleTree->Branch("parentGid",&parentGid,"parentGid/s");   //
-    singleTree->Branch("parentGid2",&parentGid2,"parentGid2/s");   //
+    singleTree->Branch("parentGid",&parentGid,"parentGid/I");   //
+    singleTree->Branch("parentGid2",&parentGid2,"parentGid2/I");   //
     singleTree->Branch("chi",&chi,"chi/F");
     
     singleTree->Branch("nHits_pxl1",&nHits_pxl1,"nHits_pxl1/b");   //
