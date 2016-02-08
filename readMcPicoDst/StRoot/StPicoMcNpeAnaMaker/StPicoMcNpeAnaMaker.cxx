@@ -220,7 +220,9 @@ Int_t StPicoMcNpeAnaMaker::Make()
             }
             trackId=mcTrk->GePid();
             //cout << parentGid << " " << trackId << " " ;
-
+            
+            if (parentGid!=1) continue;
+            
             hTrackParentGeantId->Fill(parentGid);
             hTrackGeantId->Fill(trackId);
             
