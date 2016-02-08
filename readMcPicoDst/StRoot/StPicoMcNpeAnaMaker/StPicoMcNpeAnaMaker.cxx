@@ -70,7 +70,7 @@ Int_t StPicoMcNpeAnaMaker::Init()
     tree->Branch("mcPairPt",&mcPairPt,"mcPairPt/F");
     tree->Branch("angle",&angle,"angle/F");
     tree->Branch("length",&length,"length/F");          //
-    tree->Branch("parentGid",&parentGid,"parentGid/s");   //
+    tree->Branch("parentGid",&parentGid,"parentGid/I");   //
     tree->Branch("refmult",&refmult,"refmult/I");   //
     tree->Branch("chi1",&chi1,"chi1/F");
     tree->Branch("chi2",&chi2,"chi2/F");
@@ -212,7 +212,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
 
             
             // get Geant Id for track and parent
-            Int_t parentGid= -999;
+            parentGid= -999;
             if(mcTrk->parentId() != Pico::USHORTMAX) {
                 StPicoMcTrack *mcParentTrk = (StPicoMcTrack*)picoDst->mctrack(mcTrk->parentId());
                 parentGid=mcParentTrk->GePid();
@@ -270,7 +270,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
                     StPhysicalHelixD mcHelix(mcTrk->Mom(), mcTrk->Origin(), bField, trackId == 2 ? 1 : -1);
                     mcdca = mcHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
 
-                    //parentGid2 = ((StPicoMcTrack*)(picoDst->mctrack(mcTrk->parentId())))->GePid();
+                    parentGid2 = ((StPicoMcTrack*)(picoDst->mctrack(mcTrk->parentId())))->GePid();
 
                     singleTree->Fill();
                     
@@ -349,7 +349,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
                         truth2_ssd = (mcElectron->SsdTruth());
 
                         // get Geant Id for track and parent
-                        Int_t parentGid= -999;
+                        parentGid= -999;
                         if(mcElectron->parentId() != Pico::USHORTMAX) {
                             StPicoMcTrack *mcParentTrk = (StPicoMcTrack*)picoDst->mctrack(mcElectron->parentId());
                             parentGid=mcParentTrk->GePid();
