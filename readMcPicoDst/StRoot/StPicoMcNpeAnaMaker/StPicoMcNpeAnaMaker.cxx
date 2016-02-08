@@ -347,7 +347,14 @@ Int_t StPicoMcNpeAnaMaker::Make()
                         truth2_pxl2 = (mcElectron->Pxl2Truth());
                         truth2_ist = (mcElectron->IstTruth());
                         truth2_ssd = (mcElectron->SsdTruth());
-                        parentGid = ((StPicoMcTrack*)(picoDst->mctrack(mcElectron->parentId())))->GePid();
+
+                        // get Geant Id for track and parent
+                        Int_t parentGid= -999;
+                        if(mcElectron->parentId() != Pico::USHORTMAX) {
+                            StPicoMcTrack *mcParentTrk = (StPicoMcTrack*)picoDst->mctrack(mcElectron->parentId());
+                            parentGid=mcParentTrk->GePid();
+                        }
+                        
                         chi1 = rcPositron->chi2();
                         chi2 = rcElectron->chi2();
                         
