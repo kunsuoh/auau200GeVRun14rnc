@@ -224,7 +224,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
             
             // get Rc Trcak
             //if (parentGid != cuts::parentGid && cuts::parentGid != Pico::USHORTMAX) continue;
-            //if (parentGid != -999) continue;
+            if (parentGid != -999) continue;
             if (trackId != cuts::dau1Gid && trackId != cuts::dau2Gid) continue;
 
             cout << parentGid << " " << trackId << endl;
