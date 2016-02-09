@@ -229,7 +229,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
             
             // get Rc Trcak
             //if (parentGid != cuts::parentGid && cuts::parentGid != Pico::USHORTMAX) continue;
-            if (mcTrk->parentId() != Pico::USHORTMAX) continue;
+            if (parentGid != -999) continue;
             if (trackId != cuts::dau1Gid && trackId != cuts::dau2Gid) continue;
             
             StPicoTrack *rcTrk=0;
@@ -279,12 +279,12 @@ Int_t StPicoMcNpeAnaMaker::Make()
                 singleTree->Fill();
                 
                 if (trackId==cuts::dau1Gid) {
-                //    idPicoDstRcPositrons.push_back(id);
-                //    idPicoDstMcPositrons.push_back(i_Mc);
+                    idPicoDstRcPositrons.push_back(id);
+                    idPicoDstMcPositrons.push_back(i_Mc);
                 }
                 else if (trackId==cuts::dau2Gid){
-                //    idPicoDstRcElectrons.push_back(id);
-                //    idPicoDstMcElectrons.push_back(i_Mc);
+                    idPicoDstRcElectrons.push_back(id);
+                    idPicoDstMcElectrons.push_back(i_Mc);
                 }
                 
             }
