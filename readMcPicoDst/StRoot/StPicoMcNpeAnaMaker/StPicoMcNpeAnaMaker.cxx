@@ -216,7 +216,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
                 StPicoMcTrack *mcParentTrk = (StPicoMcTrack*)picoDst->mctrack(mcTrk->parentId());
                 parentGid=mcParentTrk->GePid();
                 //if(mcParentTrk->parentId() != Pico::USHORTMAX) continue;
-                delete mcParentTrk;
+                //delete mcParentTrk;
             }
             trackId=mcTrk->GePid();
             hTrackParentGeantId->Fill(parentGid);
