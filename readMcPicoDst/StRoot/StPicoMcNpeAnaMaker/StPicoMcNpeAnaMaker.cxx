@@ -130,7 +130,7 @@ Int_t StPicoMcNpeAnaMaker::Init()
     singleTree->Branch("nHits_pxl2",&nHits_pxl2,"nHits_pxl2/b");   //
     singleTree->Branch("nHits_ist",&nHits_ist,"nHits_ist/b");   //
     singleTree->Branch("nHits_ssd",&nHits_ssd,"nHits_ssd/b");   //
-
+    
     singleTree->Branch("truth_pxl1",&truth_pxl1,"truth_pxl1/b");   //
     singleTree->Branch("truth_pxl2",&truth_pxl2,"truth_pxl2/b");   //
     singleTree->Branch("truth_ist",&truth_ist,"truth_ist/b");   //
@@ -174,7 +174,7 @@ void StPicoMcNpeAnaMaker::Clear(Option_t *opt)
 //-----------------------------------------------------------------------------
 Int_t StPicoMcNpeAnaMaker::Make()
 {
-
+    
     if (!mPicoDstMaker)
     {
         LOG_WARN << " No PicoDstMaker! Skip! " << endm;
@@ -197,7 +197,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
         std::vector<Int_t> idPicoDstRcPositrons;
         std::vector<Int_t> idPicoDstMcElectrons;
         std::vector<Int_t> idPicoDstMcPositrons;
-
+        
         StThreeVectorF pVtx = mPicoEvent->primaryVertex();
         float const bField = mPicoEvent->bField();
         int nMcTracks =  picoDst->numberOfMcTracks();
@@ -208,8 +208,8 @@ Int_t StPicoMcNpeAnaMaker::Make()
             //cout << i_Mc << " " ;
             // get Mc Track
             StPicoMcTrack *mcTrk = (StPicoMcTrack*)picoDst->mctrack(i_Mc);
-          //  if(mcTrk->Pxl1Truth()==0 || mcTrk->Pxl2Truth()==0) continue;
-
+            //  if(mcTrk->Pxl1Truth()==0 || mcTrk->Pxl2Truth()==0) continue;
+            
             
             // get Geant Id for track and parent
             parentGid= -999;
@@ -279,16 +279,16 @@ Int_t StPicoMcNpeAnaMaker::Make()
                 singleTree->Fill();
                 
                 if (trackId==cuts::dau1Gid) {
-                    idPicoDstRcPositrons.push_back(id);
-                    idPicoDstMcPositrons.push_back(i_Mc);
+                //    idPicoDstRcPositrons.push_back(id);
+                //    idPicoDstMcPositrons.push_back(i_Mc);
                 }
                 else if (trackId==cuts::dau2Gid){
-                    idPicoDstRcElectrons.push_back(id);
-                    idPicoDstMcElectrons.push_back(i_Mc);
+                //    idPicoDstRcElectrons.push_back(id);
+                //    idPicoDstMcElectrons.push_back(i_Mc);
                 }
                 
             }
-  //          cout << endl;
+            //          cout << endl;
         }
         //cout << idPicoDstRcPositrons.size() << " " << idPicoDstRcElectrons.size() << endl;
         
@@ -296,7 +296,6 @@ Int_t StPicoMcNpeAnaMaker::Make()
             StPicoMcTrack *mcPositron = (StPicoMcTrack*)picoDst->mctrack(idPicoDstMcPositrons[i]);
             for (int j=0; j<idPicoDstMcElectrons.size(); j++) {
                 StPicoMcTrack *mcElectron = (StPicoMcTrack*)picoDst->mctrack(idPicoDstMcElectrons[j]);
-                continue;
                 if (mcPositron->parentId() == Pico::USHORTMAX) continue;
                 if (mcPositron->parentId() != mcElectron->parentId()) continue;
                 //     if (mcElectron->hitsPxl1()==0) continue;
@@ -417,21 +416,21 @@ bool StPicoMcNpeAnaMaker::isGoodTrack(StPicoTrack const * const trk) const
     trk->gPt() > cuts::ptMin &&
     trk->gPt() < cuts::ptMax &&
     trk->nHitsFit() >= cuts::nHitsFit;// &&
-//    trk->isHFTTrack();
-//    isHftTrack(trk) ;
+    //    trk->isHFTTrack();
+    //    isHftTrack(trk) ;
 }
 //-----------------------------------------------------------------------------
 bool StPicoMcNpeAnaMaker::isHftTrack(StPicoTrack const * const trk) const
 {
     return trk->nHitsMapHFT()>>1 & 0x3;
-   // return !(trk->nHitsMapHFT()>>0 & 0x1) && (trk->nHitsMapHFT()>>1 & 0x3) && (trk->nHitsMapHFT()>>3 & 0x3);
+    // return !(trk->nHitsMapHFT()>>0 & 0x1) && (trk->nHitsMapHFT()>>1 & 0x3) && (trk->nHitsMapHFT()>>3 & 0x3);
 }
 
 //-----------------------------------------------------------------------------
 void StPicoMcNpeAnaMaker::fillHistogram(StPicoTrack const * const rcTrk, StPicoMcTrack const * const mcTrk) const
 {
-//    hTrackPt->Fill(rcTrk->gPt());
-//    hTrackNHitsFit->Fill(rcTrk->nHitsFit());
+    //    hTrackPt->Fill(rcTrk->gPt());
+    //    hTrackNHitsFit->Fill(rcTrk->nHitsFit());
 }
 //-----------------------------------------------------------------------------
 void StPicoMcNpeAnaMaker::fillHistogram(StElectronPair const * const pair) const
@@ -440,14 +439,14 @@ void StPicoMcNpeAnaMaker::fillHistogram(StElectronPair const * const pair) const
     hPairMass->Fill(pair->pairMass());
     hPairDca->Fill(pair->pairDca());
     hPairPosition->Fill(pair->positionX(),pair->positionY());
-
+    
 }
 //-----------------------------------------------------------------------------
 bool StPicoMcNpeAnaMaker::isRcTrack(StPicoMcTrack const * const PicoMcTrack, StPicoDst const * const  PicoDst,int &id)
 {
     int nMcTracks =  PicoDst->numberOfMcTracks();
     if(PicoMcTrack->assoId() == Pico::USHORTMAX )
-        return false;
+    return false;
     int temp = Pico::USHORTMAX ;
     for(int i_Rc =0; i_Rc<PicoDst->numberOfTracks(); ++i_Rc){
         StPicoTrack *Trk = (StPicoTrack*)PicoDst->track(i_Rc);
