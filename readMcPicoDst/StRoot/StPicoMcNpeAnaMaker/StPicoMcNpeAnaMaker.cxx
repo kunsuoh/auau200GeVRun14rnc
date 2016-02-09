@@ -274,7 +274,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
                 StPhysicalHelixD mcHelix(mcTrk->Mom(), mcTrk->Origin(), bField, trackId == 2 ? 1 : -1);
                 mcdca = mcHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
                 
-                parentGid2 = ((StPicoMcTrack*)(picoDst->mctrack(mcTrk->parentId())))->GePid();
+                //parentGid2 = ((StPicoMcTrack*)(picoDst->mctrack(mcTrk->parentId())))->GePid();
                 
                 singleTree->Fill();
                 
