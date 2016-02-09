@@ -216,7 +216,8 @@ Int_t StPicoMcNpeAnaMaker::Make()
             if(mcTrk->parentId() != Pico::USHORTMAX) {
                 StPicoMcTrack *mcParentTrk = (StPicoMcTrack*)picoDst->mctrack(mcTrk->parentId());
                 parentGid=mcParentTrk->GePid();
-                if(mcParentTrk->parentId() != Pico::USHORTMAX) continue;
+                //if(mcParentTrk->parentId() != Pico::USHORTMAX) continue;
+                delete mcParentTrk;
             }
             trackId=mcTrk->GePid();
             //cout << parentGid << " " << trackId << " " ;
@@ -280,7 +281,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
                         idPicoDstRcPositrons.push_back(id);
                         idPicoDstMcPositrons.push_back(i_Mc);
                     }
-                    else {
+                    else if (trackId==cuts::dau2Gid){
                         idPicoDstRcElectrons.push_back(id);
                         idPicoDstMcElectrons.push_back(i_Mc);
                     }
@@ -295,98 +296,100 @@ Int_t StPicoMcNpeAnaMaker::Make()
             StPicoMcTrack *mcPositron = (StPicoMcTrack*)picoDst->mctrack(idPicoDstMcPositrons[i]);
             for (int j=0; j<idPicoDstMcElectrons.size(); j++) {
                 StPicoMcTrack *mcElectron = (StPicoMcTrack*)picoDst->mctrack(idPicoDstMcElectrons[j]);
-                if (mcPositron->parentId() != Pico::USHORTMAX && mcPositron->parentId() == mcElectron->parentId())
-                {
-               //     if (mcElectron->hitsPxl1()==0) continue;
-               //     if (mcElectron->hitsPxl2()==0) continue;
-               //     if (mcPositron->hitsPxl1()==0) continue;
-               //     if (mcPositron->hitsPxl2()==0) continue;
-                    StPicoTrack *rcPositron = picoDst->track(idPicoDstRcPositrons[i]);
-                    StPicoTrack *rcElectron = picoDst->track(idPicoDstRcElectrons[j]);
-                    StElectronPair * rcPair = new StElectronPair(rcPositron,rcElectron,i,j,bField,pVtx);
-                    if (isGoodTrack(rcPositron) && isGoodTrack(rcElectron)) {
-                        fillHistogram(rcPair);
-
-                        length = rcPair->length();
-                        angle = rcPair->angle();
-                        mcPairPt = ((StPicoMcTrack*)(picoDst->mctrack(mcElectron->parentId())))->Mom().perp();
-                        pairDca = rcPair->pairDca();
-                        mass = rcPair->pairMass();
-                        eta = rcPair->eta();
-                        phi = rcPair->phi();
-                        openangle = rcPair->openAngle();
-                        TVector3 ppp(mcPositron->Mom().x(),mcPositron->Mom().y(),mcPositron->Mom().z());
-                        TVector3 eee(mcElectron->Mom().x(),mcElectron->Mom().y(),mcElectron->Mom().z());
-                        mcopenangle = ppp.Angle(eee);
-                        phiV = rcPair->phiV();
-                        pt1 = rcPositron->gPt();
-                        pt2 = rcElectron->gPt() * -1;
-                        
-                        rc_x = rcPair->positionX();
-                        rc_y = rcPair->positionY();
-                        rc_z = rcPair->positionZ();
-                        
-                        mc_x = mcElectron->Origin().x();
-                        mc_y = mcElectron->Origin().y();
-                        mc_z = mcElectron->Origin().z();
-                        
-                        nHits1_pxl1 = (mcPositron->hitsPxl1());
-                        nHits1_pxl2 = (mcPositron->hitsPxl2());
-                        nHits1_ist = (mcPositron->hitsIst());
-                        nHits1_ssd = (mcPositron->hitsSst());
-                        
-                        truth1_pxl1 = (mcPositron->Pxl1Truth());
-                        truth1_pxl2 = (mcPositron->Pxl2Truth());
-                        truth1_ist = (mcPositron->IstTruth());
-                        truth1_ssd = (mcPositron->SsdTruth());
-
-                        nHits2_pxl1 = (mcElectron->hitsPxl1());
-                        nHits2_pxl2 = (mcElectron->hitsPxl2());
-                        nHits2_ist = (mcElectron->hitsIst());
-                        nHits2_ssd = (mcElectron->hitsSst());
-                        
-                        truth2_pxl1 = (mcElectron->Pxl1Truth());
-                        truth2_pxl2 = (mcElectron->Pxl2Truth());
-                        truth2_ist = (mcElectron->IstTruth());
-                        truth2_ssd = (mcElectron->SsdTruth());
-
-                        // get Geant Id for track and parent
-                        parentGid= -999;
-                        if(mcElectron->parentId() != Pico::USHORTMAX) {
-                            StPicoMcTrack *mcParentTrk = (StPicoMcTrack*)picoDst->mctrack(mcElectron->parentId());
-                            parentGid=mcParentTrk->GePid();
-                        }
-                        
-                        chi1 = rcPositron->chi2();
-                        chi2 = rcElectron->chi2();
-                        
-                        rcHftHit1_pxl1 = rcPositron->nHitsMapHFT()>>0 & 0x1;
-                        rcHftHit1_pxl2 = rcPositron->nHitsMapHFT()>>1 & 0x3;
-                        rcHftHit1_ist = rcPositron->nHitsMapHFT()>>3 & 0x3;
-                        rcHftHit1_ssd = 0;
-
-                        rcHftHit2_pxl1 = rcElectron->nHitsMapHFT()>>0 & 0x1;
-                        rcHftHit2_pxl2 = rcElectron->nHitsMapHFT()>>1 & 0x3;
-                        rcHftHit2_ist = rcElectron->nHitsMapHFT()>>3 & 0x3;
-                        rcHftHit2_ssd = 0;
-                        
-                        StPhysicalHelixD rc1Helix = rcPositron->dcaGeometry().helix();
-                        StPhysicalHelixD rc2Helix = rcElectron->dcaGeometry().helix();
-                        rcdca1 = rc1Helix.curvatureSignedDistance(pVtx.x(),pVtx.y());
-                        rcdca2 = rc2Helix.curvatureSignedDistance(pVtx.x(),pVtx.y());
-
-                        StPhysicalHelixD mc1Helix(mcPositron->Mom(), pVtx, bField, 1);
-                        StPhysicalHelixD mc2Helix(mcElectron->Mom(), pVtx, bField, -1);
-                        mcdca1 = mc1Helix.curvatureSignedDistance(pVtx.x(),pVtx.y());
-                        mcdca2 = mc2Helix.curvatureSignedDistance(pVtx.x(),pVtx.y());
-                        
-                        distHits = sqrt(
-                                        (rc1Helix.at(2.7).x() - rc2Helix.at(2.7).x()) * (rc1Helix.at(2.7).x() - rc2Helix.at(2.7).x()) +
-                                        (rc1Helix.at(2.7).y() - rc2Helix.at(2.7).y()) * (rc1Helix.at(2.7).y() - rc2Helix.at(2.7).y())
-                                        );
-
-                        tree->Fill();
+                
+                if (mcPositron->parentId() == Pico::USHORTMAX) continue;
+                if (mcPositron->parentId() != mcElectron->parentId()) continue;
+                //     if (mcElectron->hitsPxl1()==0) continue;
+                //     if (mcElectron->hitsPxl2()==0) continue;
+                //     if (mcPositron->hitsPxl1()==0) continue;
+                //     if (mcPositron->hitsPxl2()==0) continue;
+                StPicoTrack *rcPositron = picoDst->track(idPicoDstRcPositrons[i]);
+                StPicoTrack *rcElectron = picoDst->track(idPicoDstRcElectrons[j]);
+                StElectronPair * rcPair = new StElectronPair(rcPositron,rcElectron,i,j,bField,pVtx);
+                
+                if (isGoodTrack(rcPositron) && isGoodTrack(rcElectron)) {
+                    fillHistogram(rcPair);
+                    
+                    length = rcPair->length();
+                    angle = rcPair->angle();
+                    mcPairPt = ((StPicoMcTrack*)(picoDst->mctrack(mcElectron->parentId())))->Mom().perp();
+                    pairDca = rcPair->pairDca();
+                    mass = rcPair->pairMass();
+                    eta = rcPair->eta();
+                    phi = rcPair->phi();
+                    openangle = rcPair->openAngle();
+                    TVector3 ppp(mcPositron->Mom().x(),mcPositron->Mom().y(),mcPositron->Mom().z());
+                    TVector3 eee(mcElectron->Mom().x(),mcElectron->Mom().y(),mcElectron->Mom().z());
+                    mcopenangle = ppp.Angle(eee);
+                    phiV = rcPair->phiV();
+                    pt1 = rcPositron->gPt();
+                    pt2 = rcElectron->gPt() * -1;
+                    
+                    rc_x = rcPair->positionX();
+                    rc_y = rcPair->positionY();
+                    rc_z = rcPair->positionZ();
+                    
+                    mc_x = mcElectron->Origin().x();
+                    mc_y = mcElectron->Origin().y();
+                    mc_z = mcElectron->Origin().z();
+                    
+                    nHits1_pxl1 = (mcPositron->hitsPxl1());
+                    nHits1_pxl2 = (mcPositron->hitsPxl2());
+                    nHits1_ist = (mcPositron->hitsIst());
+                    nHits1_ssd = (mcPositron->hitsSst());
+                    
+                    truth1_pxl1 = (mcPositron->Pxl1Truth());
+                    truth1_pxl2 = (mcPositron->Pxl2Truth());
+                    truth1_ist = (mcPositron->IstTruth());
+                    truth1_ssd = (mcPositron->SsdTruth());
+                    
+                    nHits2_pxl1 = (mcElectron->hitsPxl1());
+                    nHits2_pxl2 = (mcElectron->hitsPxl2());
+                    nHits2_ist = (mcElectron->hitsIst());
+                    nHits2_ssd = (mcElectron->hitsSst());
+                    
+                    truth2_pxl1 = (mcElectron->Pxl1Truth());
+                    truth2_pxl2 = (mcElectron->Pxl2Truth());
+                    truth2_ist = (mcElectron->IstTruth());
+                    truth2_ssd = (mcElectron->SsdTruth());
+                    
+                    // get Geant Id for track and parent
+                    parentGid= -999;
+                    if(mcElectron->parentId() != Pico::USHORTMAX) {
+                        StPicoMcTrack *mcParentTrk = (StPicoMcTrack*)picoDst->mctrack(mcElectron->parentId());
+                        parentGid=mcParentTrk->GePid();
+                        delete mcParentTrk;
                     }
+                    
+                    chi1 = rcPositron->chi2();
+                    chi2 = rcElectron->chi2();
+                    
+                    rcHftHit1_pxl1 = rcPositron->nHitsMapHFT()>>0 & 0x1;
+                    rcHftHit1_pxl2 = rcPositron->nHitsMapHFT()>>1 & 0x3;
+                    rcHftHit1_ist = rcPositron->nHitsMapHFT()>>3 & 0x3;
+                    rcHftHit1_ssd = 0;
+                    
+                    rcHftHit2_pxl1 = rcElectron->nHitsMapHFT()>>0 & 0x1;
+                    rcHftHit2_pxl2 = rcElectron->nHitsMapHFT()>>1 & 0x3;
+                    rcHftHit2_ist = rcElectron->nHitsMapHFT()>>3 & 0x3;
+                    rcHftHit2_ssd = 0;
+                    
+                    StPhysicalHelixD rc1Helix = rcPositron->dcaGeometry().helix();
+                    StPhysicalHelixD rc2Helix = rcElectron->dcaGeometry().helix();
+                    rcdca1 = rc1Helix.curvatureSignedDistance(pVtx.x(),pVtx.y());
+                    rcdca2 = rc2Helix.curvatureSignedDistance(pVtx.x(),pVtx.y());
+                    
+                    StPhysicalHelixD mc1Helix(mcPositron->Mom(), pVtx, bField, 1);
+                    StPhysicalHelixD mc2Helix(mcElectron->Mom(), pVtx, bField, -1);
+                    mcdca1 = mc1Helix.curvatureSignedDistance(pVtx.x(),pVtx.y());
+                    mcdca2 = mc2Helix.curvatureSignedDistance(pVtx.x(),pVtx.y());
+                    
+                    distHits = sqrt(
+                                    (rc1Helix.at(2.7).x() - rc2Helix.at(2.7).x()) * (rc1Helix.at(2.7).x() - rc2Helix.at(2.7).x()) +
+                                    (rc1Helix.at(2.7).y() - rc2Helix.at(2.7).y()) * (rc1Helix.at(2.7).y() - rc2Helix.at(2.7).y())
+                                    );
+                    
+                    tree->Fill();
                 }
             }
         }
