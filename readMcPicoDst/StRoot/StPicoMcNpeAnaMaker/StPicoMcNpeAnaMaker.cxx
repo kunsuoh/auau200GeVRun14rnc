@@ -238,7 +238,8 @@ Int_t StPicoMcNpeAnaMaker::Make()
             isRcTrack(mcTrk,picoDst,id);
             //cout << id << " " ;
             if(id!=-999){
-                
+                cout << parentGid << " " << trackId << " " << id <<  endl;
+
                 rcTrk = (StPicoTrack*)picoDst->track(id);
                 fillHistogram(rcTrk,mcTrk);
                 
