@@ -242,6 +242,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
 
                 rcTrk = (StPicoTrack*)picoDst->track(id);
                 fillHistogram(rcTrk,mcTrk);
+                cout << parentGid << " " << trackId << " " << id <<  endl;
                 
                 nHits_pxl1 = (mcTrk->hitsPxl1());
                 nHits_pxl2 = (mcTrk->hitsPxl2());
@@ -277,9 +278,11 @@ Int_t StPicoMcNpeAnaMaker::Make()
                 mcdca = mcHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
                 
                 //parentGid2 = ((StPicoMcTrack*)(picoDst->mctrack(mcTrk->parentId())))->GePid();
+                cout << parentGid << " " << trackId << " " << id <<  endl;
                 
                 singleTree->Fill();
-                
+                cout << parentGid << " " << trackId << " " << id <<  endl;
+          
                 if (trackId==cuts::dau1Gid) {
                     idPicoDstRcPositrons.push_back(id);
                     idPicoDstMcPositrons.push_back(i_Mc);
@@ -289,7 +292,8 @@ Int_t StPicoMcNpeAnaMaker::Make()
                     idPicoDstMcElectrons.push_back(i_Mc);
                 }
                 
-            }
+                cout << parentGid << " " << trackId << " " << id <<  endl;
+     }
             //          cout << endl;
         }
         cout << idPicoDstRcPositrons.size() << " " << idPicoDstRcElectrons.size() << endl;
