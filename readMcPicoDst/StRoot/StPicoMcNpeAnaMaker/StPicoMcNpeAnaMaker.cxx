@@ -226,11 +226,12 @@ Int_t StPicoMcNpeAnaMaker::Make()
             
             hTrackParentGeantId->Fill(parentGid);
             hTrackGeantId->Fill(trackId);
-            cout << parentGid << endl;
             // get Rc Trcak
             //if (parentGid != cuts::parentGid && cuts::parentGid != Pico::USHORTMAX) continue;
             if (parentGid != -999) continue;
             if (trackId != cuts::dau1Gid && trackId != cuts::dau2Gid) continue;
+
+            cout << parentGid << " " << trackId << endl;
             
             StPicoTrack *rcTrk=0;
             Int_t id=-999;
