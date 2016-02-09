@@ -296,7 +296,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
             StPicoMcTrack *mcPositron = (StPicoMcTrack*)picoDst->mctrack(idPicoDstMcPositrons[i]);
             for (int j=0; j<idPicoDstMcElectrons.size(); j++) {
                 StPicoMcTrack *mcElectron = (StPicoMcTrack*)picoDst->mctrack(idPicoDstMcElectrons[j]);
-                
+                continue;
                 if (mcPositron->parentId() == Pico::USHORTMAX) continue;
                 if (mcPositron->parentId() != mcElectron->parentId()) continue;
                 //     if (mcElectron->hitsPxl1()==0) continue;
