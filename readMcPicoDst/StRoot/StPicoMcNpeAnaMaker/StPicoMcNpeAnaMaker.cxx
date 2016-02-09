@@ -227,7 +227,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
             //if (parentGid != -999) continue;
             if (trackId != cuts::dau1Gid && trackId != cuts::dau2Gid) continue;
 
-            cout << parentGid << " " << trackId << endl;
+            //cout << parentGid << " " << trackId << endl;
             
             StPicoTrack *rcTrk=0;
             Int_t id=-999;
@@ -284,7 +284,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
                 }
             }
         }
-        cout << idPicoDstRcPositrons.size() << " " << idPicoDstRcElectrons.size() << endl;
+        //cout << idPicoDstRcPositrons.size() << " " << idPicoDstRcElectrons.size() << endl;
         
         for (int i=0; i<idPicoDstMcPositrons.size(); i++) {
             StPicoMcTrack *mcPositron = (StPicoMcTrack*)picoDst->mctrack(idPicoDstMcPositrons[i]);
