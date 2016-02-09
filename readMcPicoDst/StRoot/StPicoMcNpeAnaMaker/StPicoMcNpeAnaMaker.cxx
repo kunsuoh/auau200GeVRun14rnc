@@ -216,12 +216,12 @@ Int_t StPicoMcNpeAnaMaker::Make()
             if(mcTrk->parentId() != Pico::USHORTMAX) {
                 StPicoMcTrack *mcParentTrk = (StPicoMcTrack*)picoDst->mctrack(mcTrk->parentId());
                 parentGid=mcParentTrk->GePid();
-            //    if(mcParentTrk->parentId() != Pico::USHORTMAX) continue;
+                if(mcParentTrk->parentId() != Pico::USHORTMAX) continue;
             }
             trackId=mcTrk->GePid();
             //cout << parentGid << " " << trackId << " " ;
             
-            if (parentGid!=1) continue;
+            //if (parentGid!=1) continue;
             
             hTrackParentGeantId->Fill(parentGid);
             hTrackGeantId->Fill(trackId);
