@@ -208,7 +208,6 @@ Int_t StPicoMcNpeAnaMaker::Make()
             //cout << i_Mc << " " ;
             // get Mc Track
             StPicoMcTrack *mcTrk = (StPicoMcTrack*)picoDst->mctrack(i_Mc);
-            //  if(mcTrk->Pxl1Truth()==0 || mcTrk->Pxl2Truth()==0) continue;
             
             
             // get Geant Id for track and parent
@@ -220,15 +219,12 @@ Int_t StPicoMcNpeAnaMaker::Make()
                 delete mcParentTrk;
             }
             trackId=mcTrk->GePid();
-            //cout << parentGid << " " << trackId << " " ;
-            
-            //if (parentGid!=1) continue;
-            
             hTrackParentGeantId->Fill(parentGid);
             hTrackGeantId->Fill(trackId);
+            
             // get Rc Trcak
-            //if (parentGid != cuts::parentGid && cuts::parentGid != Pico::USHORTMAX) continue;
-            if (parentGid != -999) continue;
+            if (parentGid != cuts::parentGid && cuts::parentGid != Pico::USHORTMAX) continue;
+            //if (parentGid != -999) continue;
             if (trackId != cuts::dau1Gid && trackId != cuts::dau2Gid) continue;
 
             cout << parentGid << " " << trackId << endl;
@@ -236,13 +232,10 @@ Int_t StPicoMcNpeAnaMaker::Make()
             StPicoTrack *rcTrk=0;
             Int_t id=-999;
             isRcTrack(mcTrk,picoDst,id);
-            //cout << id << " " ;
             if(id!=-999){
-                cout << parentGid << " " << trackId << " " << id <<  endl;
 
                 rcTrk = (StPicoTrack*)picoDst->track(id);
                 fillHistogram(rcTrk,mcTrk);
-                cout << parentGid << " " << trackId << " " << id <<  endl;
                 
                 nHits_pxl1 = (mcTrk->hitsPxl1());
                 nHits_pxl2 = (mcTrk->hitsPxl2());
@@ -278,10 +271,8 @@ Int_t StPicoMcNpeAnaMaker::Make()
                 mcdca = mcHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
                 
                 //parentGid2 = ((StPicoMcTrack*)(picoDst->mctrack(mcTrk->parentId())))->GePid();
-                cout << parentGid << " " << trackId << " " << id <<  endl;
                 
                 singleTree->Fill();
-                cout << parentGid << " " << trackId << " " << id <<  endl;
           
                 if (trackId==cuts::dau1Gid) {
                     idPicoDstRcPositrons.push_back(id);
@@ -291,10 +282,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
                     idPicoDstRcElectrons.push_back(id);
                     idPicoDstMcElectrons.push_back(i_Mc);
                 }
-                
-                cout << parentGid << " " << trackId << " " << id <<  endl;
-     }
-            //          cout << endl;
+            }
         }
         cout << idPicoDstRcPositrons.size() << " " << idPicoDstRcElectrons.size() << endl;
         
