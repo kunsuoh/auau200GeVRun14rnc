@@ -228,65 +228,65 @@ Int_t StPicoMcNpeAnaMaker::Make()
             hTrackGeantId->Fill(trackId);
             
             // get Rc Trcak
-            if ((parentGid == cuts::parentGid || cuts::parentGid == Pico::USHORTMAX) &&
-                (trackId == cuts::dau1Gid || trackId == cuts::dau2Gid)) {
-
-                StPicoTrack *rcTrk=0;
-                Int_t id=-999;
-                isRcTrack(mcTrk,picoDst,id);
-                //cout << id << " " ;
-                if(id!=-999){
-
-                    rcTrk = (StPicoTrack*)picoDst->track(id);
-                    fillHistogram(rcTrk,mcTrk);
-
-                    nHits_pxl1 = (mcTrk->hitsPxl1());
-                    nHits_pxl2 = (mcTrk->hitsPxl2());
-                    nHits_ist = (mcTrk->hitsIst());
-                    nHits_ssd = (mcTrk->hitsSst());
-                    
-                    truth_pxl1 = (mcTrk->Pxl1Truth());
-                    truth_pxl2 = (mcTrk->Pxl2Truth());
-                    truth_ist = (mcTrk->IstTruth());
-                    truth_ssd = (mcTrk->SsdTruth());
-                    
-                    rcHftHit_pxl1 = rcTrk->nHitsMapHFT()>>0 & 0x1;
-                    rcHftHit_pxl2 = rcTrk->nHitsMapHFT()>>1 & 0x3;
-                    rcHftHit_ist = rcTrk->nHitsMapHFT()>>3 & 0x3;
-                    rcHftHit_ssd = 0;
-
-                    mc_x = mcTrk->Origin().x();
-                    mc_y = mcTrk->Origin().y();
-                    mc_z = mcTrk->Origin().z();
-
-                    rcPt = rcTrk->gPt();
-                    rcPhi = rcTrk->gMom(pVtx,bField).phi();
-                    rcEta = rcTrk->gMom(pVtx,bField).pseudoRapidity();
-                    mcPt = mcTrk->Mom().perp();
-                    mcPhi = mcTrk->Mom().phi();
-                    mcEta = mcTrk->pseudorapidity();
-                    chi = rcTrk->chi2();
-
-                    StPhysicalHelixD rcHelix = rcTrk->dcaGeometry().helix();
-                    rcdca = rcHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
-
-                    StPhysicalHelixD mcHelix(mcTrk->Mom(), mcTrk->Origin(), bField, trackId == 2 ? 1 : -1);
-                    mcdca = mcHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
-
-                    parentGid2 = ((StPicoMcTrack*)(picoDst->mctrack(mcTrk->parentId())))->GePid();
-
-                    singleTree->Fill();
-                    
-                    if (trackId==cuts::dau1Gid) {
-                        idPicoDstRcPositrons.push_back(id);
-                        idPicoDstMcPositrons.push_back(i_Mc);
-                    }
-                    else if (trackId==cuts::dau2Gid){
-                        idPicoDstRcElectrons.push_back(id);
-                        idPicoDstMcElectrons.push_back(i_Mc);
-                    }
-                    
+            //if (parentGid != cuts::parentGid && cuts::parentGid != Pico::USHORTMAX) continue;
+            if (mcTrk->parentId() != Pico::USHORTMAX) continue;
+            if (trackId != cuts::dau1Gid && trackId != cuts::dau2Gid) continue;
+            
+            StPicoTrack *rcTrk=0;
+            Int_t id=-999;
+            isRcTrack(mcTrk,picoDst,id);
+            //cout << id << " " ;
+            if(id!=-999){
+                
+                rcTrk = (StPicoTrack*)picoDst->track(id);
+                fillHistogram(rcTrk,mcTrk);
+                
+                nHits_pxl1 = (mcTrk->hitsPxl1());
+                nHits_pxl2 = (mcTrk->hitsPxl2());
+                nHits_ist = (mcTrk->hitsIst());
+                nHits_ssd = (mcTrk->hitsSst());
+                
+                truth_pxl1 = (mcTrk->Pxl1Truth());
+                truth_pxl2 = (mcTrk->Pxl2Truth());
+                truth_ist = (mcTrk->IstTruth());
+                truth_ssd = (mcTrk->SsdTruth());
+                
+                rcHftHit_pxl1 = rcTrk->nHitsMapHFT()>>0 & 0x1;
+                rcHftHit_pxl2 = rcTrk->nHitsMapHFT()>>1 & 0x3;
+                rcHftHit_ist = rcTrk->nHitsMapHFT()>>3 & 0x3;
+                rcHftHit_ssd = 0;
+                
+                mc_x = mcTrk->Origin().x();
+                mc_y = mcTrk->Origin().y();
+                mc_z = mcTrk->Origin().z();
+                
+                rcPt = rcTrk->gPt();
+                rcPhi = rcTrk->gMom(pVtx,bField).phi();
+                rcEta = rcTrk->gMom(pVtx,bField).pseudoRapidity();
+                mcPt = mcTrk->Mom().perp();
+                mcPhi = mcTrk->Mom().phi();
+                mcEta = mcTrk->pseudorapidity();
+                chi = rcTrk->chi2();
+                
+                StPhysicalHelixD rcHelix = rcTrk->dcaGeometry().helix();
+                rcdca = rcHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
+                
+                StPhysicalHelixD mcHelix(mcTrk->Mom(), mcTrk->Origin(), bField, trackId == 2 ? 1 : -1);
+                mcdca = mcHelix.curvatureSignedDistance(pVtx.x(),pVtx.y());
+                
+                parentGid2 = ((StPicoMcTrack*)(picoDst->mctrack(mcTrk->parentId())))->GePid();
+                
+                singleTree->Fill();
+                
+                if (trackId==cuts::dau1Gid) {
+                    idPicoDstRcPositrons.push_back(id);
+                    idPicoDstMcPositrons.push_back(i_Mc);
                 }
+                else if (trackId==cuts::dau2Gid){
+                    idPicoDstRcElectrons.push_back(id);
+                    idPicoDstMcElectrons.push_back(i_Mc);
+                }
+                
             }
   //          cout << endl;
         }
