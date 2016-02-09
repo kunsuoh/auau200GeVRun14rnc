@@ -292,7 +292,7 @@ Int_t StPicoMcNpeAnaMaker::Make()
             }
             //          cout << endl;
         }
-        //cout << idPicoDstRcPositrons.size() << " " << idPicoDstRcElectrons.size() << endl;
+        cout << idPicoDstRcPositrons.size() << " " << idPicoDstRcElectrons.size() << endl;
         
         for (int i=0; i<idPicoDstMcPositrons.size(); i++) {
             StPicoMcTrack *mcPositron = (StPicoMcTrack*)picoDst->mctrack(idPicoDstMcPositrons[i]);
