@@ -151,9 +151,9 @@ class StPicoNpeAnaMaker : public StMaker
     
     Float_t distHits;
     Float_t rc_x, rc_y, rc_z;
-    UChar_t nHits1_pxl1, nHits1_pxl2, nHits1_ist, nHits1_ssd;
-    UChar_t nHits2_pxl1, nHits2_pxl2, nHits2_ist, nHits2_ssd;
-    UChar_t nHits_pxl1, nHits_pxl2, nHits_ist, nHits_ssd;
+    UChar_t rcHftHit1_pxl1, rcHftHit1_pxl2, rcHftHit1_ist, rcHftHit1_ssd;
+    UChar_t rcHftHit2_pxl1, rcHftHit2_pxl2, rcHftHit2_ist, rcHftHit2_ssd;
+    UChar_t rcHftHit_pxl1, rcHftHit_pxl2, rcHftHit_ist, rcHftHit_ssd;
     Float_t length, angle, pairDca, mass, eta, phi, openangle, phiV, pt1, pt2, chi1, chi2, nsige1, nsige2, rcdca1, rcdca2;
     Int_t refmult;
     
