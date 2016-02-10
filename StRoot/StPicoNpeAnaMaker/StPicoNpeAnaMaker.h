@@ -41,6 +41,7 @@ class StPicoDstMaker;
 class StPicoTrack;
 class StPicoDst;
 class StPicoPrescales;
+class TTree;
 
 class StNpeCuts;
 
@@ -140,14 +141,21 @@ class StPicoNpeAnaMaker : public StMaker
     TH2D * h2dPhELConvRVsZ_HFT;
     TH3D * h2dPhELConvXYZ_HFT;
     TH2D * h2dPhELInvMassvsZ_HFT;
-    
-    TNtuple * nt;
-    TNtuple * nt2;
-    
+
+    TTree *tree;
+
     TH2D * h2dPhEMassVsPt;
     TH2D * h2dPhELMassVsPt;
     TH2D * h2dPhEPairDcaVsPt;
     TH2D * h2dPhELPairDcaVsPt;
+    
+    Float_t distHits;
+    Float_t rc_x, rc_y, rc_z;
+    UChar_t nHits1_pxl1, nHits1_pxl2, nHits1_ist, nHits1_ssd;
+    UChar_t nHits2_pxl1, nHits2_pxl2, nHits2_ist, nHits2_ssd;
+    UChar_t nHits_pxl1, nHits_pxl2, nHits_ist, nHits_ssd;
+    Float_t length, angle, pairDca, mass, eta, phi, openangle, phiV, pt1, pt2, chi1, chi2, nsige1, nsige2, rcdca1, rcdca2;
+    Int_t refmult;
     
     ClassDef(StPicoNpeAnaMaker, 0)
 };

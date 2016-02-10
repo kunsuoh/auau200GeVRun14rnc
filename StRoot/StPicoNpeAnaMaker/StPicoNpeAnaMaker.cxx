@@ -129,14 +129,47 @@ Int_t StPicoNpeAnaMaker::Init()
     h2dPhELConvRVsZ_HFT = new TH2D("h2dPhELConvRVsZ_HFT","h2dPhELConvRVsZ_HFT",100,-20,20, 1000, 0, 100);
     h2dPhELConvXYZ_HFT = new TH3D("h2dPhELConvXYZ_HFT","h2dPhELConvXYZ_HFT",100,-50,50, 100,-50,50, 40,-20,20);
     h2dPhELInvMassvsZ_HFT = new TH2D("h2dPhELInvMassvsZ_HFT","h2dPhELInvMassvsZ_HFT",100,-20,20, 100, 0, 0.5);
-
-    nt = new TNtuple("nt","electron pair ntuple","pt1:pt2:phiV:openangle:v0x:v0y:v0z:phi:eta:mass:pairDca:nsige1:nsige2");
-    nt2 = new TNtuple("nt2","electron pair ntuple","pt1:pt2:v0x:v0y:v0z:phi:eta:mass:pairDca:nsige1:nsige2:angle:length");
     
     h2dPhEMassVsPt = new TH2D("h2dPhEMassVsPt","h2dPhEMassVsPt",100,0,0.5,100,0,20);
     h2dPhELMassVsPt = new TH2D("h2dPhELMassVsPt","h2dPhELMassVsPt",100,0,0.5,100,0,20);
     h2dPhEPairDcaVsPt = new TH2D("h2dPhEPairDcaVsPt","h2dPhEPairDcaVsPt",100,0,0.5,100,0,20);
     h2dPhELPairDcaVsPt = new TH2D("h2dPhELPairDcaVsPt","h2dPhELPairDcaVsPt",100,0,0.5,100,0,20);
+    
+    tree = new TTree("T","Electron pair tree");
+    tree->Branch("rc_x",&rc_x,"rc_x/F");
+    tree->Branch("rc_y",&rc_y,"rc_y/F");
+    tree->Branch("rc_z",&rc_z,"rc_z/F");
+    
+    tree->Branch("pt1",&pt1,"pt1/F");
+    tree->Branch("pt2",&pt2,"pt2/F");
+    tree->Branch("phiV",&phiV,"phiV/F");
+    tree->Branch("openangle",&openangle,"openangle/F");
+    tree->Branch("phi",&phi,"phi/F");
+    tree->Branch("eta",&eta,"eta/F");
+    tree->Branch("mass",&mass,"mass/F");
+    tree->Branch("pairDca",&pairDca,"pairDca/F");
+    tree->Branch("angle",&angle,"angle/F");
+    tree->Branch("length",&length,"length/F");          //
+    tree->Branch("refmult",&refmult,"refmult/I");   //
+    tree->Branch("chi1",&chi1,"chi1/F");
+    tree->Branch("chi2",&chi2,"chi2/F");
+    tree->Branch("rcdca1",&rcdca1,"rcdca1/F");
+    tree->Branch("rcdca2",&rcdca2,"rcdca2/F");
+    tree->Branch("distHits",&distHits,"distHits/F");
+    
+    tree->Branch("nsige1",&nsige1,"nsige1/F");
+    tree->Branch("nsige2",&nsige2,"nsige2/F");
+
+    tree->Branch("rcHftHit1_pxl1",&rcHftHit1_pxl1,"rcHftHit1_pxl1/b");   //
+    tree->Branch("rcHftHit1_pxl2",&rcHftHit1_pxl2,"rcHftHit1_pxl2/b");   //
+    tree->Branch("rcHftHit1_ist",&rcHftHit1_ist,"rcHftHit1_ist/b");   //
+    tree->Branch("rcHftHit1_ssd",&rcHftHit1_ssd,"rcHftHit1_ssd/b");   //
+    
+    tree->Branch("rcHftHit2_pxl1",&rcHftHit2_pxl1,"rcHftHit2_pxl1/b");   //
+    tree->Branch("rcHftHit2_pxl2",&rcHftHit2_pxl2,"rcHftHit2_pxl2/b");   //
+    tree->Branch("rcHftHit2_ist",&rcHftHit2_ist,"rcHftHit2_ist/b");   //
+    tree->Branch("rcHftHit2_ssd",&rcHftHit2_ssd,"rcHftHit2_ssd/b");   //
+
     
     return kStOK;
 }
@@ -152,8 +185,7 @@ Int_t StPicoNpeAnaMaker::Finish()
     mOutputFile->cd();
     // --------------- USER HISTOGRAM WRITE --------------------
     
-    nt->Write();
-    nt2->Write();
+    tree->Write();
     
     h2dPhEMassVsPt->Write();
     h2dPhELMassVsPt->Write();
@@ -312,26 +344,51 @@ Int_t StPicoNpeAnaMaker::Make()
         StLorentzVectorF const partnerFourMom(partnerMomAtDca, partnerMomAtDca.massHypothesis(M_ELECTRON));
         StLorentzVectorF const epairFourMom = electronFourMom + partnerFourMom;
 
-        double phiV = 0;
-        double openangle = 0;
+        
+        // fill tree
+        rc_x = epair->positionX();
+        rc_y = epair->positionY();
+        rc_z = epair->positionZ();
+        
+        pt1 = electron->gPt() * electron->charge();
+        pt2 = partner->gPt() * partner->charge();
+        phiV = 0;
+        openangle = 0;
         phiCalculation(electronFourMom,partnerFourMom,picoDst->event()->bField() > 0 ? 1. : -1.,phiV,openangle);
         
-        float pt1 = electron->gPt() * electron->charge();
-        float pt2 = partner->gPt() * partner->charge();
-        float eta = epairFourMom.pseudoRapidity();
-        float phi = epairFourMom.phi();
-        float v0x = epair->positionX();
-        float v0y = epair->positionY();
-        float v0z = epair->positionZ();
-        float mass = epairFourMom.m();
-        float pairDca = epair->pairDca();
-        float nsige1 =  electron->nSigmaElectron();
-        float nsige2 =  partner->nSigmaElectron();
+        phi = epairFourMom.phi();
+        eta = epairFourMom.pseudoRapidity();
+        mass = epairFourMom.m();
+        pairDca = epair->pairDca();
         StElectronSimPair * epairSim = new StElectronSimPair(electron,partner,epair->electronIdx(),epair->partnerIdx(),picoDst->event()->bField(),pVtx);
+        angle = epairSim->angle();
+        length = epairSim->length();
+        refmult = mRefMult;
+        chi1 = electron->chi2();
+        chi2 = partner->chi2();
+        StPhysicalHelixD rc1Helix = electron->dcaGeometry().helix();
+        StPhysicalHelixD rc2Helix = partner->dcaGeometry().helix();
+        rcdca1 = rc1Helix.curvatureSignedDistance(pVtx.x(),pVtx.y());
+        rcdca2 = rc2Helix.curvatureSignedDistance(pVtx.x(),pVtx.y());
+        distHits = sqrt(
+                        (rc1Helix.at(2.7).x() - rc2Helix.at(2.7).x()) * (rc1Helix.at(2.7).x() - rc2Helix.at(2.7).x()) +
+                        (rc1Helix.at(2.7).y() - rc2Helix.at(2.7).y()) * (rc1Helix.at(2.7).y() - rc2Helix.at(2.7).y())
+                        );
+        nsige1 =  electron->nSigmaElectron();
+        nsige2 =  partner->nSigmaElectron();
 
+
+        rcHftHit1_pxl1 = electron->nHitsMapHFT()>>0 & 0x1;
+        rcHftHit1_pxl2 = electron->nHitsMapHFT()>>1 & 0x3;
+        rcHftHit1_ist = electron->nHitsMapHFT()>>3 & 0x3;
+        rcHftHit1_ssd = 0;
         
-        nt->Fill(pt1,pt2,phiV,openangle,v0x,v0y,v0z,phi,eta,mass,pairDca,nsige1,nsige2);
-        nt2->Fill(pt1,pt2,v0x,v0y,v0z,phi,eta,mass,pairDca,nsige1,nsige2,epairSim->angle(),epairSim->length());
+        rcHftHit2_pxl1 = partner->nHitsMapHFT()>>0 & 0x1;
+        rcHftHit2_pxl2 = partner->nHitsMapHFT()>>1 & 0x3;
+        rcHftHit2_ist = partner->nHitsMapHFT()>>3 & 0x3;
+        rcHftHit2_ssd = 0;
+
+        tree->Fill();
     }
 
     
