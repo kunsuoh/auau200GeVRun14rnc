@@ -62,6 +62,7 @@ class StPicoNpeAnaMaker : public StMaker
     void phiCalculation(StLorentzVectorF ,StLorentzVectorF , double , Float_t &, Float_t &);
 
     
+    
   private:
     StPicoNpeAnaMaker() {}
     void readNextEvent();
