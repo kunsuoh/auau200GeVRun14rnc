@@ -183,7 +183,7 @@ Int_t StPxlSimMaker::Make()
     }
     else if (mUseFastSimRaw)
     {
-        
+        StPxlRawHitCollection* pxlRawHitCol = 0;
         TObjectSet* pxlRawHitDataSet = (TObjectSet*)GetDataSet("pxlRawHit");
         
         if (!pxlRawHitDataSet)
