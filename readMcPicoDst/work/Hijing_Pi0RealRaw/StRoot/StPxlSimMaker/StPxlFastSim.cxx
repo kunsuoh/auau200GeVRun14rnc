@@ -59,6 +59,8 @@
 #include "StPxlFastSim.h"
 #include "StEvent/StPxlHit.h"
 #include "StEvent/StPxlHitCollection.h"
+#include "StEvent/StPxlRawHit.h"
+#include "StEvent/StPxlRawHitCollection.h"
 #include "StMcEvent/StMcPxlHitCollection.hh"
 #include "StMcEvent/StMcPxlHit.hh"
 #include "tables/St_HitError_Table.h"
