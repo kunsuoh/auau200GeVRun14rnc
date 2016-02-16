@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<job filesPerHour="1" nProcesses="&nRuns;"  simulateSubmission="false">
+<command>
+starver SL15k
+
+./run.sh ${JOBID}
+
+</command>
+
+<stdout URL="file:&base;/log/hj_$JOBID.out" />
+<stderr URL="file:&base;/log/hj_$JOBID.err" />
+<output fromScratch="*tar" toURL="file:&base;/files/" />
+
+<SandBox installer="ZIP">
+  <Package name="LocalLibraries">
+    <File>file:./starsim.hijing.Pi0.C</File>
+    <File>file:./makePicoDst.C</File>
+    <File>file:./run.sh</File>
+    <File>file:./StRoot/</File>
+    <File>file:./.sl64_gcc482/</File>
+  </Package>
+</SandBox>
+
+</job>
+
