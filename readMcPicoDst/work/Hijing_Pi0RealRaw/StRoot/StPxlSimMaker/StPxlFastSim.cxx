@@ -222,11 +222,11 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
 }
 //____________________________________________________________
 Int_t StPxlFastSim::getRow(float local){
-    const double mFirstPixelX =  (StPxlConsts::kPxlNumRowsPerSensor - 1) * StPxlConsts::kPixelSize / 2
+    const double mFirstPixelX =  (StPxlConsts::kPxlNumRowsPerSensor - 1) * StPxlConsts::kPixelSize / 2;
     return -(local - mFirstPixelX) / StPxlConsts::kPixelSize;
 }
 Int_t StPxlFastSim::getColumn(float local){
-    const double mFirstPixelZ = -(StPxlConsts::kPxlNumColumnsPerSensor - 1) * StPxlConsts::kPixelSize / 2
+    const double mFirstPixelZ = -(StPxlConsts::kPxlNumColumnsPerSensor - 1) * StPxlConsts::kPixelSize / 2;
     return (local - mFirstPixelZ) / StPxlConsts::kPixelSize
 }
 
