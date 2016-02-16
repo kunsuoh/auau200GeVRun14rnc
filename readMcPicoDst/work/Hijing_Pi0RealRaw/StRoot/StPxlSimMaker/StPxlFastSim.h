@@ -89,7 +89,7 @@ private:
     
     void localToMatser(Double_t* local,Double_t* master,Int_t sector,Int_t ladder,Int_t sensor);
     Int_t getRow(float local);
-    Int_t getRow(float local);
+    Int_t getColumn(float local);
     
 private:
     StPxlDb* mPxlDb;
