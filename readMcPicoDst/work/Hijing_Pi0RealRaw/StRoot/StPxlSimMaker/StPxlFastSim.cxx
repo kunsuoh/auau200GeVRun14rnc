@@ -231,7 +231,6 @@ Int_t StPxlFastSim::getColumn(float local){
 }
 
 
-
 //____________________________________________________________
 Int_t StPxlFastSim::addPxlHits(const StMcPxlHitCollection& mcPxlHitCol,
                                StPxlHitCollection& pxlHitCol)

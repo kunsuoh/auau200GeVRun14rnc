@@ -206,7 +206,10 @@ Int_t StPxlSimMaker::Make()
         }
         
         mPxlSimulator->addPxlRawHits(*mcPxlHitCol,*pxlRawHitCol);
-        rcEvent->setPxlRawHitCollection(pxlRawHitCol);
+        
+        //StPxlHitCollection *pxlHitCol = new StPxlHitCollection();
+        //mPxlSimulator->addPxlHits(*pxlRawHitCol,*pxlHitCol);
+        //rcEvent->setPxlHitCollection(pxlHitCol);
     
     }
     else if (mUseDIGMAPSSim)
