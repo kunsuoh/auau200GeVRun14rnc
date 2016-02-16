@@ -74,7 +74,7 @@ public:
      *  kStOk: if hits have been loaded to StPxlHitCollection successfully.
      */
     Int_t addPxlHits(const StMcPxlHitCollection&, StPxlHitCollection&);
-    Int_t addPxlRawHits(const StMcPxlHitCollection&, StPxlHitCollection&);
+    Int_t addPxlRawHits(const StMcPxlHitCollection&, StPxlRawHitCollection&);
     
     /*! \brief Documentation method. GetCVS can be called from the chain, providing a list
      *  of all maker versions in use.
