@@ -33,6 +33,7 @@
 #include "StPxlISim.h"
 #include "StMcEvent/StMcPxlHitCollection.hh"
 #include "StEvent/StPxlHitCollection.h"
+#include "StMcPxlRawHitMaker/StPxlRawHitCollection.h"
 
 //Lomnitz::Hack for pileup
 #include "StPxlPileupAdder.h"
