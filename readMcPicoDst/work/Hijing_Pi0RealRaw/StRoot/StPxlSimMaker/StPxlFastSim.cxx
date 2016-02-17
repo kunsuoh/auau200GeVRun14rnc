@@ -196,7 +196,7 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
                     
                     unsigned short idTruth = mcPix->parentTrack() ? mcPix->parentTrack()->key() : -999;
 
-                    pxlRawHitCol.addRawHit(addRawHit(localPixHitPos[0],localPixHitPos[2], iSec + 1, iLad + 1, iSen + 1, idTruth, 0));
+                    pxlRawHitCol.addRawHit(*addRawHit(localPixHitPos[0],localPixHitPos[2], iSec + 1, iLad + 1, iSen + 1, idTruth, 0));
 
                     /*
                      Int_t row2=row;
