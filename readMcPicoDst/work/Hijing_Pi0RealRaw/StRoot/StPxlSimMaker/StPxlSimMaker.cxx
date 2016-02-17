@@ -186,11 +186,11 @@ Int_t StPxlSimMaker::Make()
     else if (mUseFastSimRaw)
     {
         int iCheck=0;
-        StPxlRawHitCollection* pxlRawHitCol = 0;
-        TObjectSet*  pxlRawHitDataSet = new TObjectSet("pxlRawHit");
-        m_DataSet = pxlRawHitDataSet;
-        pxlRawHitCol = new StPxlRawHitCollection();
-        pxlRawHitDataSet->AddObject(pxlRawHitCol);
+        StPxlRawHitCollection* pxlRawHitCol = new StPxlRawHitCollection();
+        //TObjectSet*  pxlRawHitDataSet = new TObjectSet("pxlRawHit");
+        //m_DataSet = pxlRawHitDataSet;
+        //pxlRawHitCol = new StPxlRawHitCollection();
+        //pxlRawHitDataSet->AddObject(pxlRawHitCol);
         if(!pxlRawHitCol)
         {
             LOG_ERROR << "Make() - no pxlRawHitCollection."<<endm;
