@@ -195,7 +195,7 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
                     
                     unsigned short idTruth = mcPix->parentTrack() ? mcPix->parentTrack()->key() : -999;
 
-                    pxlRawHitCol.addRawHit(*addRawHit(localPixHitPos[0],localPixHitPos[2], iSec + 1, iLad + 1, iSen + 1, idTruth, 0));
+                    pxlRawHitCol.addRawHit(*makeRawHit(localPixHitPos[0],localPixHitPos[2], iSec + 1, iLad + 1, iSen + 1, idTruth, 0));
 
                     cout << "i " << iSec + 1 << " " << iLad + 1 << " " << iSen + 1 << endl;
                     cout << "m " << mcPix->sector() << " " << mcPix->ladder() << " " << mcPix->sensor() << endl;
@@ -288,7 +288,7 @@ Float_t StPxlFastSim::getLocalZ(Int_t value){
     const double mFirstPixelZ = -(StPxlConsts::kPxlNumColumnsPerSensor - 1) * StPxlConsts::kPixelSize / 2;
     return mFirstPixelZ + StPxlConsts::kPixelSize * value;
 }
-StPxlRawHit * StPxlFastSim::addRawHit(float localX, float localZ, int iSec, int iLad, int iSen, int idTruth, int nHits=0){
+StPxlRawHit StPxlFastSim::makeRawHit(float localX, float localZ, int iSec, int iLad, int iSen, int idTruth, int nHits=0){
     Int_t row = getRow(localX);
     Int_t column = getColumn(localZ);
     
