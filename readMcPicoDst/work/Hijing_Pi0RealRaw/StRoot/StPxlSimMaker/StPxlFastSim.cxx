@@ -176,21 +176,15 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
                 // Loop over hits in the sensor
                 for (UInt_t iHit = 0; iHit < nSenHits; iHit++)
                 {
-                    int iCheck=0;
-                    LOG_INFO << "mUseFastSimRaw ..." << iCheck << endm; iCheck++;
-
                     StMcPxlHit* mcPix = mcPxlSensorHitCol->hits()[iHit];
-                    LOG_INFO << "mUseFastSimRaw ..." << iCheck << endm; iCheck++;
                     
                     //Long_t volId = mcPix->volumeId();
                     Int_t sector = mcPix->sector();
                     Int_t ladder = mcPix->ladder();
                     //Int_t sensor = mcPix->sensor();
-                    LOG_INFO << "mUseFastSimRaw ..." << iCheck << endm; iCheck++;
                     
                     Double_t localPixHitPos[3] = {mcPix->position().x(), mcPix->position().y(), mcPix->position().z()};
 
-                    LOG_INFO << "mUseFastSimRaw ..." << iCheck << endm; iCheck++;
                     LOG_DEBUG << "localPixHitPos = " << localPixHitPos[0] << " " << localPixHitPos[1] << " " << localPixHitPos[2] << endm;
                     // please note that what is called local Y in the PXL sensor design
                     // is actually called Z in STAR coordinates convention and vice-versa
@@ -198,23 +192,17 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
                     smearedZ = distortHit(localPixHitPos[2], 10*0.1*0.001, StPxlConsts::kPxlActiveLengthY / 2.0); //
                     smearedY = localPixHitPos[1];
                     
-                    LOG_INFO << "mUseFastSimRaw ..." << iCheck << endm; iCheck++;
                     localPixHitPos[0] = smearedX;
                     localPixHitPos[2] = smearedZ;
                     localPixHitPos[1] = smearedY;
-                    LOG_INFO << "mUseFastSimRaw ..." << iCheck << endm; iCheck++;
                     LOG_DEBUG << "smearedlocal = " << localPixHitPos[0] << " " << localPixHitPos[1] << " " << localPixHitPos[2] << endm;
                     Double_t smearedGlobalPixHitPos[3] = {0, 0, 0};
-                    LOG_INFO << "mUseFastSimRaw ..." << iCheck << endm; iCheck++;
                     localToMatser(localPixHitPos,smearedGlobalPixHitPos,iSec+1,iLad+1,iSen+1);
-                    LOG_INFO << "mUseFastSimRaw ..." << iCheck << endm; iCheck++;
                     
                     unsigned short idTruth = mcPix->parentTrack() ? mcPix->parentTrack()->key() : -999;
-                    LOG_INFO << "mUseFastSimRaw ..." << iCheck << endm; iCheck++;
 
                     Int_t row = getRow(localPixHitPos[0]);
                     Int_t column = getColumn(localPixHitPos[2]);
-                    LOG_INFO << "mUseFastSimRaw ..." << iCheck << endm; iCheck++;
  
                     StPxlRawHit* tempHit;
                     tempHit->setSector(iSec+1);
@@ -225,15 +213,12 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
                     tempHit->setIdTruth(idTruth);
 
                     // StPxlRawHit (Int_t sector, Int_t ladder, Int_t sensor, Int_t row, Int_t column, Int_t idTruth)
-                    LOG_INFO << "mUseFastSimRaw ..." << iCheck << endm; iCheck++;
  
                     LOG_DEBUG << "key() : " << mcPix->key() - 1 << " idTruth: " << mcPix->parentTrack()->key() << endm;
                     LOG_DEBUG << "from StMcPxlHit : x= " << mcPix->position().x() << ";  y= " << mcPix->position().y() << ";  z= " << mcPix->position().z() << endm;
                     //LOG_DEBUG << "pxlHit location x= " << tempHit->position().x() << "; y= " << tempHit->position().y() << "; z= " << tempHit->position().z() << endm;
                     
-                    LOG_INFO << "mUseFastSimRaw ..." << iCheck << endm; iCheck++;
                     pxlRawHitCol.addRawHit(*tempHit);
-                    LOG_INFO << "mUseFastSimRaw ..." << iCheck << endm; iCheck++;
                 }
             }
         }
