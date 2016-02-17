@@ -192,12 +192,13 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
                     localPixHitPos[2] = smearedZ;
                     localPixHitPos[1] = smearedY;
                     LOG_DEBUG << "smearedlocal = " << localPixHitPos[0] << " " << localPixHitPos[1] << " " << localPixHitPos[2] << endm;
-                    Double_t smearedGlobalPixHitPos[3] = {0, 0, 0};
                     
                     unsigned short idTruth = mcPix->parentTrack() ? mcPix->parentTrack()->key() : -999;
 
                     pxlRawHitCol.addRawHit(*addRawHit(localPixHitPos[0],localPixHitPos[2], iSec + 1, iLad + 1, iSen + 1, idTruth, 0));
 
+                    cout << "i " << iSec + 1 << " " << iLad + 1 << " " << iSen + 1 << endl;
+                    cout << "m " << mcPix->sector() << " " << mcPix->ladder() << " " << mcPix->sensor() << endl;
                     /*
                      Int_t row2=row;
                     Int_t column2=column;
@@ -291,7 +292,6 @@ StPxlRawHit * StPxlFastSim::addRawHit(float localX, float localZ, int iSec, int 
     Int_t row = getRow(localX);
     Int_t column = getColumn(localZ);
     
-    StPxlRawHit* tempHit;
     tempHit->setSector(iSec);
     tempHit->setLadder(iLad);
     tempHit->setSensor(iSen);
