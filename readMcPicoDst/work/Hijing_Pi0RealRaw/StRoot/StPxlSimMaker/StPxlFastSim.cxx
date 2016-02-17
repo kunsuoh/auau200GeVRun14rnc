@@ -206,7 +206,7 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
                     Int_t column = getColumn(localPixHitPos[2]);
                     
  
-                    StPxlRawHit* tempHit=0;
+                    StPxlRawHit* tempHit;
                     tempHit->setSector(iSec+1);
                     tempHit->setLadder(mcPix->ladder());
                     tempHit->setSensor(mcPix->sensor());
