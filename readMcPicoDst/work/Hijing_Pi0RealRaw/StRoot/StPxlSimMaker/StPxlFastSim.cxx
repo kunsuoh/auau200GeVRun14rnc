@@ -210,7 +210,7 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
                     int nClusterSize = (int)clusterSize->GetRandom();
                     nClusterSize++;
                     
-                    for(int i=0;i<nClusterSize;i++){
+//                    for(int i=0;i<nClusterSize;i++){
                         cout << i << " " << nClusterSize << endl;
                         StPxlRawHit* tempHit;
                         tempHit->setSector(iSec+1);
@@ -227,7 +227,7 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
                         //LOG_DEBUG << "pxlHit location x= " << tempHit->position().x() << "; y= " << tempHit->position().y() << "; z= " << tempHit->position().z() << endm;
                         
                         pxlRawHitCol.addRawHit(*tempHit);
-                    }
+             //       }
                 }
             }
         }
