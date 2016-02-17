@@ -204,8 +204,6 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
 
                     pxlRawHitCol.addRawHit(addRawHit(localPixHitPos[0],localPixHitPos[2],0));
 
-                    
-                    cout << row << " " << column << endl;
                     /*
                      Int_t row2=row;
                     Int_t column2=column;
