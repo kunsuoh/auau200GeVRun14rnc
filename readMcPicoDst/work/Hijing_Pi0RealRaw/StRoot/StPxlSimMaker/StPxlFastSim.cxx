@@ -215,7 +215,14 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
                     Int_t column = getColumn(localPixHitPos[2]);
                     LOG_INFO << "mUseFastSimRaw ..." << iCheck << endm; iCheck++;
  
-                    StPxlRawHit tempHit = StPxlRawHit(iSec+1, mcPix->ladder(), mcPix->sensor(), row, column, idTruth);
+                    StPxlRawHit tempHit;
+                    tempHit.setSector(iSec+1);
+                    tempHit.setLadder(mcPix->ladder());
+                    tempHit.setSensor(mcPix->sensor());
+                    tempHit.setRow(row);
+                    tempHit.setColumn(column);
+                    tempHit.setIdTruth(idTruth);
+
                     // StPxlRawHit (Int_t sector, Int_t ladder, Int_t sensor, Int_t row, Int_t column, Int_t idTruth)
                     LOG_INFO << "mUseFastSimRaw ..." << iCheck << endm; iCheck++;
  
