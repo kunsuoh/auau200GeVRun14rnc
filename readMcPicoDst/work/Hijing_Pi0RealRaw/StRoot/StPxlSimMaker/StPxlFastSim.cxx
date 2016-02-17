@@ -163,11 +163,14 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
         
         for (UInt_t iLad = 0; iLad < mcPxlSectorHitCol->numberOfLadders(); iLad++)
         {
+            if (iLad!=0) continue;
             const StMcPxlLadderHitCollection* mcPxlLadderHitCol = mcPxlSectorHitCol->ladder(iLad);
             if (!mcPxlLadderHitCol) continue;
             
             for (UInt_t iSen = 0; iSen < mcPxlLadderHitCol->numberOfSensors(); iSen++)
             {
+                if (iSen!=0)continue;
+                
                 const StMcPxlSensorHitCollection* mcPxlSensorHitCol = mcPxlLadderHitCol->sensor(iSen);
                 if (!mcPxlSensorHitCol) continue;
                 
