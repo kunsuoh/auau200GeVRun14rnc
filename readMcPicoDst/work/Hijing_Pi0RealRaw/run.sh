@@ -16,12 +16,12 @@ at=`perl -e 'srand; print int(rand(99)+1)'`
 cp -p /star/data01/pwg/kunsu/pileup/pileupSet$at/pile**.root ./Files_$job/pile_up/pile_up$at.root
 
 # ---- Producing sim file .fzd
-root4star -b -l <<EOF
-.L starsim.hijing.Pi0.C
-starsim(0,$run,$RANDOM)
-.q
-EOF
-mv hijing_pi0real* ./Files_$job/fzd/.
+#root4star -b -l <<EOF
+#.L starsim.hijing.Pi0.C
+#starsim(0,$run,$RANDOM)
+#.q
+#EOF
+#mv hijing_pi0real* ./Files_$job/fzd/.
 
 echo "Kunsu: HFT reco starting"
 # ---- HFT reconstruction
