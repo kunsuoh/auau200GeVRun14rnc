@@ -269,26 +269,7 @@ Int_t StPxlFastSim::addPxlHits(const StMcPxlHitCollection& mcPxlHitCol,
                     //Int_t sensor = mcPix->sensor();
                     
                     Double_t localPixHitPos[3] = {mcPix->position().x(), mcPix->position().y(), mcPix->position().z()};
-                    // start merging cluster
-                    float isMerged = 0;
-                    if (nSenHits > 1) {
-                        for (UInt_t iHit2 = 0; iHit2 < nSenHits; iHit2++){
-                            if (iHit2 == iHit) continue;
-                            StMcPxlHit* mcPix2 = mcPxlSensorHitCol->hits()[iHit2];
-                            Double_t localPixHitPos2[3] = {mcPix2->position().x(), mcPix2->position().y(), mcPix2->position().z()};
-                            Double_t distanceHits = sqrt((localPixHitPos[0]-localPixHitPos2[0])*(localPixHitPos[0]-localPixHitPos2[0]) +
-                                                         (localPixHitPos[1]-localPixHitPos2[1])*(localPixHitPos[1]-localPixHitPos2[1]) +
-                                                         (localPixHitPos[2]-localPixHitPos2[2])*(localPixHitPos[2]-localPixHitPos2[2]));
-                            if (distanceHits < 50*0.1*0.001) {
-                                isMerged++;
-                                localPixHitPos[0] = (localPixHitPos[0]*((Double_t)isMerged) + localPixHitPos2[0])/((Double_t)isMerged+1.);
-                                localPixHitPos[1] = (localPixHitPos[1]*((Double_t)isMerged) + localPixHitPos2[1])/((Double_t)isMerged+1.);
-                                localPixHitPos[2] = (localPixHitPos[2]*((Double_t)isMerged) + localPixHitPos2[2])/((Double_t)isMerged+1.);
-                            }
-                        }
-                    }
-                    cout << "##### merging cluster: " << isMerged << "/" << nSenHits << " " << mcPix->position().x() << " " << mcPix->position().y() << " " << mcPix->position().z() << " " << localPixHitPos[0] << " " << localPixHitPos[1] << " " << localPixHitPos[2] << endl;
-                    // end mergin cluster
+
                     LOG_DEBUG << "localPixHitPos = " << localPixHitPos[0] << " " << localPixHitPos[1] << " " << localPixHitPos[2] << endm;
                     // please note that what is called local Y in the PXL sensor design
                     // is actually called Z in STAR coordinates convention and vice-versa
@@ -308,8 +289,8 @@ Int_t StPxlFastSim::addPxlHits(const StMcPxlHitCollection& mcPxlHitCol,
                     
                     UInt_t hw = sector * 10 + ladder; // needs to be updated later after clustering alogrithms are finalized
                     
-                    unsigned short idTruth = mcPix->parentTrack() && isMerged==0 ? mcPix->parentTrack()->key() : -999;
-                    unsigned short quality = mcPix->parentTrack() && isMerged==0 ? 100 : 0;
+                    unsigned short idTruth = mcPix->parentTrack() ? mcPix->parentTrack()->key() : -999;
+                    unsigned short quality = mcPix->parentTrack() ? 100 : 0;
                     
                     StPxlDigiHit* tempHit = new StPxlDigiHit(localPixHitPos, iSec+1, mcPix->ladder(), mcPix->sensor(),
                                                              gpixpos, mRndHitError, hw, mcPix->dE(), 0, idTruth, quality, mcPix->key());
