@@ -211,7 +211,7 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
                     nClusterSize++;
                     
 //                    for(int i=0;i<nClusterSize;i++){
-                        cout << i << " " << nClusterSize << endl;
+                //        cout << i << " " << nClusterSize << endl;
                         StPxlRawHit* tempHit;
                         tempHit->setSector(iSec+1);
                         tempHit->setLadder(mcPix->ladder());
