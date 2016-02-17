@@ -209,7 +209,9 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
                     clusterSize->SetParameters(1,3,1.5);
                     int nClusterSize = (int)clusterSize->GetRandom();
                     nClusterSize++;
+                    
                     for(int i=0;i<nClusterSize;i++){
+                        cout << i << " " << nClusterSize << endl;
                         int dr,dc;
                         if (i == 0){
                             dr=0;
@@ -297,7 +299,7 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
     }
     
     return kStOK;
-
+    
     
 }
 //____________________________________________________________
