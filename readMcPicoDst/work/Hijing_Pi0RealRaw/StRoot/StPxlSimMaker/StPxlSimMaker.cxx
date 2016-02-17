@@ -184,18 +184,26 @@ Int_t StPxlSimMaker::Make()
     }
     else if (mUseFastSimRaw)
     {
-        LOG_INFO << "mUseFastSimRaw ..." <<endm;
+        int iCheck=0;
+        LOG_INFO << "mUseFastSimRaw ..." << iCheck << endm; iCheck++;
         StPxlRawHitCollection* pxlRawHitCol = 0;
+        LOG_INFO << "mUseFastSimRaw ..." << iCheck << endm; iCheck++;
         TObjectSet*  pxlRawHitDataSet = new TObjectSet("pxlRawHit");
+        LOG_INFO << "mUseFastSimRaw ..." << iCheck << endm; iCheck++;
         m_DataSet = pxlRawHitDataSet;
+        LOG_INFO << "mUseFastSimRaw ..." << iCheck << endm; iCheck++;
         pxlRawHitCol = new StPxlRawHitCollection();
+        LOG_INFO << "mUseFastSimRaw ..." << iCheck << endm; iCheck++;
         pxlRawHitDataSet->AddObject(pxlRawHitCol);
+        LOG_INFO << "mUseFastSimRaw ..." << iCheck << endm; iCheck++;
         if(!pxlRawHitCol)
         {
             LOG_ERROR << "Make() - no pxlRawHitCollection."<<endm;
             return kStErr;
         }
+        LOG_INFO << "mUseFastSimRaw ..." << iCheck << endm; iCheck++;
         mPxlSimulator->addPxlRawHits(*mcPxlHitCol,*pxlRawHitCol);
+        LOG_INFO << "mUseFastSimRaw ..." << iCheck << endm; iCheck++;
         ToWhiteBoard("pxlRawHit", pxlRawHitCol);
         
         //StPxlHitCollection *pxlHitCol = new StPxlHitCollection();
