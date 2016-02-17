@@ -218,7 +218,7 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
                         tempHit->setRow(row);
                         tempHit->setColumn(column);
                         tempHit->setIdTruth(idTruth);
-                        
+                    cout <<  row << " " << column << " " << localPixHitPos[0] << " " << localPixHitPos[2] << endl;
                         // StPxlRawHit (Int_t sector, Int_t ladder, Int_t sensor, Int_t row, Int_t column, Int_t idTruth)
                         
                         LOG_DEBUG << "key() : " << mcPix->key() - 1 << " idTruth: " << mcPix->parentTrack()->key() << endm;
