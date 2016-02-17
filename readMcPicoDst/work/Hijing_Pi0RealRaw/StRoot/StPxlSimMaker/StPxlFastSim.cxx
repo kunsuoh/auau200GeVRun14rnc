@@ -59,7 +59,7 @@
 #include "StPxlFastSim.h"
 #include "StEvent/StPxlHit.h"
 #include "StEvent/StPxlHitCollection.h"
-#include "StPxlRawHitMaker/StPxlRawHit.h"
+#include "StPxlRawHit.h"
 #include "StPxlRawHitMaker/StPxlRawHitMaker.h"
 #include "StPxlRawHitMaker/StPxlRawHitCollection.h"
 #include "StMcEvent/StMcPxlHitCollection.hh"
@@ -196,72 +196,7 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
                     unsigned short idTruth = mcPix->parentTrack() ? mcPix->parentTrack()->key() : -999;
 
                     pxlRawHitCol.addRawHit(makeRawHit(localPixHitPos[0],localPixHitPos[2], iSec + 1, iLad + 1, iSen + 1, idTruth, 0));
-
-                    cout << "i " << iSec + 1 << " " << iLad + 1 << " " << iSen + 1 << endl;
-                    cout << "m " << mcPix->sector() << " " << mcPix->ladder() << " " << mcPix->sensor() << endl;
-                    /*
-                     Int_t row2=row;
-                    Int_t column2=column;
-                    Float_t smallR = 99999;
-                    for (int iRow=-1; iRow<2; iRow++) {
-                        if (row+iRow < 0) continue;
-                        if (row+iRow > StPxlConsts::kPxlNumRowsPerSensor - 1) continue;
-                        for (int iColumn=-1; iColumn<2; iColumn++) {
-                            if (iRow == 0 && iColumn==0) continue;
-                            if (column+iColumn < 0) continue;
-                            if (column+iColumn > StPxlConsts::kPxlNumColumnsPerSensor - 1) continue;
-                            Float_t r = (getLocalX(row+iRow)-localPixHitPos[0])*(getLocalX(row+iRow)-localPixHitPos[0]) + (getLocalZ(column+iColumn)-localPixHitPos[2])*(getLocalZ(column+iColumn)-localPixHitPos[2]);
-                            if (r < smallR) {
-                                smallR = r;
-                                row2=row+iRow;
-                                column2=column+iColumn;
-                                cout << " " << row2 << " " << column2 << endl;
-
-                            }
-                        }
-                    }
-                    if (row==row2 && column==column2) continue;
-                    StPxlRawHit* tempHit2;
-                    tempHit2->setSector(iSec+1);
-                    tempHit2->setLadder(mcPix->ladder());
-                    tempHit2->setSensor(mcPix->sensor());
-                    tempHit2->setRow(row2);
-                    tempHit2->setColumn(column2);
-                    tempHit2->setIdTruth(idTruth);
-                    pxlRawHitCol.addRawHit(*tempHit2);
-                    
-                    
-                    Int_t row3=row;
-                    Int_t column3=column;
-                    Float_t smallR = 99999;
-                    for (int iRow=-1; iRow<2; iRow++) {
-                        if (row+iRow < 0) continue;
-                        if (row+iRow > StPxlConsts::kPxlNumRowsPerSensor - 1) continue;
-                        for (int iColumn=-1; iColumn<2; iColumn++) {
-                            if (iRow == 0 && iColumn==0) continue;
-                            if (iRow+row == row2 && iColumn+column == column2) continue;
-                            if (column+iColumn < 0) continue;
-                            if (column+iColumn > StPxlConsts::kPxlNumColumnsPerSensor - 1) continue;
-                            Float_t r = (getLocalX(row+iRow)-localPixHitPos[0])*(getLocalX(row+iRow)-localPixHitPos[0]) + (getLocalZ(column+iColumn)-localPixHitPos[2])*(getLocalZ(column+iColumn)-localPixHitPos[2]);
-                            if (r < smallR) {
-                                smallR = r;
-                                row3=row+iRow;
-                                column3=column+iColumn;
-                            }
-                        }
-                    }
-                    if (row==row3 && column==column3) continue;
-                    StPxlRawHit* tempHit3;
-                    tempHit3->setSector(iSec+1);
-                    tempHit3->setLadder(mcPix->ladder());
-                    tempHit3->setSensor(mcPix->sensor());
-                    tempHit3->setRow(row3);
-                    tempHit3->setColumn(column3);
-                    tempHit3->setIdTruth(idTruth);
-                    pxlRawHitCol.addRawHit(*tempHit3);
-                    
-                    */
-                    
+                    pxlRawHitCol.addRawHit(makeRawHit(localPixHitPos[0],localPixHitPos[2], iSec + 1, iLad + 1, iSen + 1, idTruth, 1));                    
                 }
             }
         }
@@ -291,12 +226,34 @@ Float_t StPxlFastSim::getLocalZ(Int_t value){
 StPxlRawHit StPxlFastSim::makeRawHit(float localX, float localZ, int iSec, int iLad, int iSen, int idTruth, int nHits=0){
     Int_t row = getRow(localX);
     Int_t column = getColumn(localZ);
+    Int_t rowColumn[25][2];
+    Float_t smallR = 999999;
+    for (int iRow=-2; iRow<3; iRow++) {
+        if (row+iRow < 0) continue;
+        if (row+iRow > StPxlConsts::kPxlNumRowsPerSensor - 1) continue;
+        for (int iColumn=-2; iColumn<3; iColumn++) {
+            if (column+iColumn < 0) continue;
+            if (column+iColumn > StPxlConsts::kPxlNumColumnsPerSensor - 1) continue;
+            
+            Int_t beep = 0;
+            for (int i=0; i<nHits; i++) if (iRow == rowColumn[0][i] && iColumn==rowColumn[0][i]) beep=1;
+            if (beep) continue;
+            
+            Float_t r = (getLocalX(row+iRow)-localX)*(getLocalX(row+iRow)-localX) + (getLocalZ(column+iColumn)-localZ)*(getLocalZ(column+iColumn)-localZ);
+            if (r < smallR) {
+                smallR = r;
+                rowColumn[nHits][0]=iRow;
+                rowColumn[nHits][1]=iColumn;
+                
+            }
+        }
+    }
     
     tempHit.setSector(iSec);
     tempHit.setLadder(iLad);
     tempHit.setSensor(iSen);
-    tempHit.setRow(row);
-    tempHit.setColumn(column);
+    tempHit.setRow(row+rowColumn[nHits][0]);
+    tempHit.setColumn(column+rowColumn[nHits][1]);
     tempHit.setIdTruth(idTruth);
     return tempHit;
 
