@@ -196,6 +196,7 @@ Int_t StPxlSimMaker::Make()
             return kStErr;
         }
         mPxlSimulator->addPxlRawHits(*mcPxlHitCol,*pxlRawHitCol);
+        ToWhiteBoard("pxlRawHit", pxlRawHitCol);
         
         //StPxlHitCollection *pxlHitCol = new StPxlHitCollection();
         //mPxlSimulator->addPxlHits(*pxlRawHitCol,*pxlHitCol);
