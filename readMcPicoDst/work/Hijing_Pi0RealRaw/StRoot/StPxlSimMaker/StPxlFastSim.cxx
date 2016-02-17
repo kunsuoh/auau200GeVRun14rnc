@@ -215,7 +215,6 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
                     tempHit->setIdTruth(idTruth);
                     pxlRawHitCol.addRawHit(*tempHit);
                     
-                    /*
                     cout << row << " " << column << endl;
                     Int_t row2=row;
                     Int_t column2=column;
@@ -238,7 +237,7 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
                         }
                     }
                     if (row==row2 && column==column2) continue;
-                    StPxlRawHit* tempHit2=0;
+                    StPxlRawHit* tempHit2;
                     tempHit2->setSector(iSec+1);
                     tempHit2->setLadder(mcPix->ladder());
                     tempHit2->setSensor(mcPix->sensor());
@@ -248,7 +247,7 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
                     pxlRawHitCol.addRawHit(*tempHit2);
                     
                     
-                    
+                    */
                     Int_t row3=row;
                     Int_t column3=column;
                     Float_t smallR = 99999;
