@@ -271,6 +271,10 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
                             dr=-2;
                             dc=-1;
                         }
+                        if (row+dr > StPxlConsts::kPxlNumRowsPerSensor-1) continue;
+                        if (row+dr < 0) continue;
+                        if (column+dc > StPxlConsts::kPxlNumColumnsPerSensor-1) continue;
+                        if (column+dc < 0) continue;
                         StPxlRawHit* tempHit;
                         tempHit->setSector(iSec+1);
                         tempHit->setLadder(mcPix->ladder());
