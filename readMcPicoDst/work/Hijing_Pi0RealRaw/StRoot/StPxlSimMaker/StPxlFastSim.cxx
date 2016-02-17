@@ -292,12 +292,12 @@ StPxlRawHit StPxlFastSim::makeRawHit(float localX, float localZ, int iSec, int i
     Int_t row = getRow(localX);
     Int_t column = getColumn(localZ);
     
-    tempHit->setSector(iSec);
-    tempHit->setLadder(iLad);
-    tempHit->setSensor(iSen);
-    tempHit->setRow(row);
-    tempHit->setColumn(column);
-    tempHit->setIdTruth(idTruth);
+    tempHit.setSector(iSec);
+    tempHit.setLadder(iLad);
+    tempHit.setSensor(iSen);
+    tempHit.setRow(row);
+    tempHit.setColumn(column);
+    tempHit.setIdTruth(idTruth);
     return tempHit;
 
 }
