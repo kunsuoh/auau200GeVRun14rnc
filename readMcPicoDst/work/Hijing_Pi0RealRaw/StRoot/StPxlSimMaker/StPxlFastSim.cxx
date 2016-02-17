@@ -198,7 +198,7 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
                     localPixHitPos[1] = smearedY;
                     LOG_DEBUG << "smearedlocal = " << localPixHitPos[0] << " " << localPixHitPos[1] << " " << localPixHitPos[2] << endm;
                     Double_t smearedGlobalPixHitPos[3] = {0, 0, 0};
-                    localToMatser(localPixHitPos,smearedGlobalPixHitPos,iSec+1,iLad+1,iSen+1);
+                    //localToMatser(localPixHitPos,smearedGlobalPixHitPos,iSec+1,iLad+1,iSen+1);
                     
                     unsigned short idTruth = mcPix->parentTrack() ? mcPix->parentTrack()->key() : -999;
 
@@ -216,6 +216,7 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
                     pxlRawHitCol.addRawHit(*tempHit);
                     
                     cout << row << " " << column << endl;
+                    /*
                     Int_t row2=row;
                     Int_t column2=column;
                     Float_t smallR = 99999;
@@ -247,7 +248,6 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
                     pxlRawHitCol.addRawHit(*tempHit2);
                     
                     
-                    /*
                     
                     Int_t row3=row;
                     Int_t column3=column;
