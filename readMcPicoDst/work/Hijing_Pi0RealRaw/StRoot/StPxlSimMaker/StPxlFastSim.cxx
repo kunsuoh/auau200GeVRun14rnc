@@ -266,10 +266,6 @@ Float_t StPxlFastSim::getLocalZ(Int_t value){
     const double mFirstPixelZ = -(StPxlConsts::kPxlNumColumnsPerSensor - 1) * StPxlConsts::kPixelSize / 2;
     return mFirstPixelZ + StPxlConsts::kPixelSize * value;
 }
-Int_t StPxlFastSim::findNearHit(Int_t row, Int_t column){
-    
-}
-
 
 //____________________________________________________________
 Int_t StPxlFastSim::addPxlHits(const StMcPxlHitCollection& mcPxlHitCol,
