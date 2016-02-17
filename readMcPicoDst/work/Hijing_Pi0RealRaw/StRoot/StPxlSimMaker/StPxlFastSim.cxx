@@ -60,6 +60,7 @@
 #include "StEvent/StPxlHit.h"
 #include "StEvent/StPxlHitCollection.h"
 #include "StPxlRawHitMaker/StPxlRawHit.h"
+#include "StPxlRawHitMaker/StPxlRawHitMaker.h"
 #include "StPxlRawHitMaker/StPxlRawHitCollection.h"
 #include "StMcEvent/StMcPxlHitCollection.hh"
 #include "StMcEvent/StMcPxlHit.hh"
