@@ -100,7 +100,7 @@ private:
     
 private:
     TF1 * clusterSize = new TF1("clusterSize","gaus",0,15);
-    StPxlRawHit * addRawHit(float , float , int );
+    StPxlRawHit * addRawHit(float , float , int , int , int , int , int );
     StPxlDb* mPxlDb;
     StRandom* mRandom;
     
