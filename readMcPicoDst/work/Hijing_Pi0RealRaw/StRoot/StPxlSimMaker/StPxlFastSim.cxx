@@ -202,18 +202,8 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
                     
                     unsigned short idTruth = mcPix->parentTrack() ? mcPix->parentTrack()->key() : -999;
 
-                    Int_t row = getRow(localPixHitPos[0]);
-                    Int_t column = getColumn(localPixHitPos[2]);
-                    
- 
-                    StPxlRawHit* tempHit;
-                    tempHit->setSector(iSec+1);
-                    tempHit->setLadder(mcPix->ladder());
-                    tempHit->setSensor(mcPix->sensor());
-                    tempHit->setRow(row);
-                    tempHit->setColumn(column);
-                    tempHit->setIdTruth(idTruth);
-                    pxlRawHitCol.addRawHit(*tempHit);
+                    pxlRawHitCol.addRawHit(addRawHit(localPixHitPos[0],localPixHitPos[2],0));
+
                     
                     cout << row << " " << column << endl;
                     /*
@@ -304,6 +294,20 @@ Float_t StPxlFastSim::getLocalX(Int_t value){
 Float_t StPxlFastSim::getLocalZ(Int_t value){
     const double mFirstPixelZ = -(StPxlConsts::kPxlNumColumnsPerSensor - 1) * StPxlConsts::kPixelSize / 2;
     return mFirstPixelZ + StPxlConsts::kPixelSize * value;
+}
+StPxlRawHit StPxlFastSim::addRawHit(float localX, float localY, int nHits=0){
+    Int_t row = getRow(localPixHitPos[0]);
+    Int_t column = getColumn(localPixHitPos[2]);
+    
+    StPxlRawHit* tempHit;
+    tempHit->setSector(iSec+1);
+    tempHit->setLadder(mcPix->ladder());
+    tempHit->setSensor(mcPix->sensor());
+    tempHit->setRow(row);
+    tempHit->setColumn(column);
+    tempHit->setIdTruth(idTruth);
+    return tempHit;
+
 }
 
 //____________________________________________________________
