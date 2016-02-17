@@ -34,6 +34,7 @@
 #include "StMcEvent/StMcPxlHitCollection.hh"
 #include "StEvent/StPxlHitCollection.h"
 #include "StPxlRawHitMaker/StPxlRawHitCollection.h"
+#include "StPxlRawHitMaker/StPxlRawHit.h"
 
 //Lomnitz::Hack for pileup
 #include "StPxlPileupAdder.h"
