@@ -76,6 +76,7 @@
 
 #include "TDataSet.h"
 #include "TObjectSet.h"
+#include "TF1.h"
 
 StPxlFastSim::~StPxlFastSim()
 {
