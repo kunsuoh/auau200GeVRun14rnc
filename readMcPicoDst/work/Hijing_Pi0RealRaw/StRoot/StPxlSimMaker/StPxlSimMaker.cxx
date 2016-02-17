@@ -76,7 +76,7 @@ Int_t StPxlSimMaker::Init()
     //else
     //{
     // temporary till DIGMAPS algorithm is added and option added in StMaker
-    mUseFastSim = kTRUE;
+    mUseFastSimRaw = kTRUE;
     //Lomnitz
     if(mAddPileup)
     {
@@ -184,6 +184,7 @@ Int_t StPxlSimMaker::Make()
     }
     else if (mUseFastSimRaw)
     {
+        LOG_INFO << "mUseFastSimRaw ..." <<endm;
         StPxlRawHitCollection* pxlRawHitCol = 0;
         TObjectSet*  pxlRawHitDataSet = new TObjectSet("pxlRawHit");
         m_DataSet = pxlRawHitDataSet;
