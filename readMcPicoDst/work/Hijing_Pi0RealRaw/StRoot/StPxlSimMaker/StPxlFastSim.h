@@ -43,6 +43,7 @@
 #define STAR_StPxlFastSim
 
 #include "StPxlISim.h"
+class TF1;
 class StRandom;
 class StPxlDb;
 class TObjectSet;
@@ -91,8 +92,10 @@ private:
     void localToMatser(Double_t* local,Double_t* master,Int_t sector,Int_t ladder,Int_t sensor);
     Int_t getRow(float local);
     Int_t getColumn(float local);
+
     
 private:
+    TF1 * clusterSize = new TF1("clusterSize","gaus",0,15);
     StPxlDb* mPxlDb;
     StRandom* mRandom;
     

@@ -205,12 +205,9 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
                     Int_t row = getRow(localPixHitPos[0]);
                     Int_t column = getColumn(localPixHitPos[2]);
  
-                    TF1 * clusterSize = new TF1("clusterSize","gaus",0,15);
                     clusterSize->SetParameters(1,3,1.5);
                     int nClusterSize = (int)clusterSize->GetRandom();
                     nClusterSize++;
-                    
-                    delete clusterSize;
                     
 //                    for(int i=0;i<nClusterSize;i++){
                 //        cout << i << " " << nClusterSize << endl;
