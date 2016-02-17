@@ -43,7 +43,8 @@
 #define STAR_StPxlFastSim
 
 #include "StPxlISim.h"
-class TF1;
+#include "TF1.h"
+
 class StRandom;
 class StPxlDb;
 class TObjectSet;
