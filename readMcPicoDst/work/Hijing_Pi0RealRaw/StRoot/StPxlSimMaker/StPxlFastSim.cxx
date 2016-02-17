@@ -247,7 +247,7 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
                     pxlRawHitCol.addRawHit(*tempHit2);
                     
                     
-                    */
+                    /*
                     Int_t row3=row;
                     Int_t column3=column;
                     Float_t smallR = 99999;
