@@ -204,21 +204,88 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
                     Int_t row = getRow(localPixHitPos[0]);
                     Int_t column = getColumn(localPixHitPos[2]);
  
-                    StPxlRawHit* tempHit;
-                    tempHit->setSector(iSec+1);
-                    tempHit->setLadder(mcPix->ladder());
-                    tempHit->setSensor(mcPix->sensor());
-                    tempHit->setRow(row);
-                    tempHit->setColumn(column);
-                    tempHit->setIdTruth(idTruth);
-
-                    // StPxlRawHit (Int_t sector, Int_t ladder, Int_t sensor, Int_t row, Int_t column, Int_t idTruth)
- 
-                    LOG_DEBUG << "key() : " << mcPix->key() - 1 << " idTruth: " << mcPix->parentTrack()->key() << endm;
-                    LOG_DEBUG << "from StMcPxlHit : x= " << mcPix->position().x() << ";  y= " << mcPix->position().y() << ";  z= " << mcPix->position().z() << endm;
-                    //LOG_DEBUG << "pxlHit location x= " << tempHit->position().x() << "; y= " << tempHit->position().y() << "; z= " << tempHit->position().z() << endm;
-                    
-                    pxlRawHitCol.addRawHit(*tempHit);
+                    TF1 * clusterSize = new TF1("clusterSize","gaus",0,15);
+                    clusterSize->SetParameters(1,3,1.5);
+                    int nClusterSize = (int)clusterSize->GetRandom();
+                    nClusterSize++;
+                    for(int i=0;i<nClusterSize;i++){
+                        int dr,dc;
+                        if (i == 0){
+                            dr=0;
+                            dc=0;
+                        }
+                        if (i == 1){
+                            dr=1;
+                            dc=0;
+                        }
+                        if (i == 2){
+                            dr=0;
+                            dc=1;
+                        }
+                        if (i == 3){
+                            dr=-1;
+                            dc=0;
+                        }
+                        if (i == 4){
+                            dr=0;
+                            dc=-1;
+                        }
+                        if (i == 5){
+                            dr=1;
+                            dc=1;
+                        }
+                        if (i == 6){
+                            dr=1;
+                            dc=-1;
+                        }
+                        if (i == 7){
+                            dr=-1;
+                            dc=1;
+                        }
+                        if (i == 8){
+                            dr=-1;
+                            dc=-1;
+                        }
+                        if (i == 9){
+                            dr=2;
+                            dc=0;
+                        }
+                        if (i == 10){
+                            dr=-2;
+                            dc=0;
+                        }
+                        if (i == 11){
+                            dr=0;
+                            dc=2;
+                        }
+                        if (i == 12){
+                            dr=0;
+                            dc=-2;
+                        }
+                        if (i == 13){
+                            dr=2;
+                            dc=1;
+                        }
+                        if (i == 14){
+                            dr=-2;
+                            dc=-1;
+                        }
+                        StPxlRawHit* tempHit;
+                        tempHit->setSector(iSec+1);
+                        tempHit->setLadder(mcPix->ladder());
+                        tempHit->setSensor(mcPix->sensor());
+                        tempHit->setRow(row+dr);
+                        tempHit->setColumn(column+dc);
+                        tempHit->setIdTruth(idTruth);
+                        
+                        // StPxlRawHit (Int_t sector, Int_t ladder, Int_t sensor, Int_t row, Int_t column, Int_t idTruth)
+                        
+                        LOG_DEBUG << "key() : " << mcPix->key() - 1 << " idTruth: " << mcPix->parentTrack()->key() << endm;
+                        LOG_DEBUG << "from StMcPxlHit : x= " << mcPix->position().x() << ";  y= " << mcPix->position().y() << ";  z= " << mcPix->position().z() << endm;
+                        //LOG_DEBUG << "pxlHit location x= " << tempHit->position().x() << "; y= " << tempHit->position().y() << "; z= " << tempHit->position().z() << endm;
+                        
+                        pxlRawHitCol.addRawHit(*tempHit);
+                    }
                 }
             }
         }
