@@ -232,6 +232,7 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
                             }
                         }
                     }
+                    if (row==row2 && column==column2) continue;
                     StPxlRawHit* tempHit2;
                     tempHit2->setSector(iSec+1);
                     tempHit2->setLadder(mcPix->ladder());
