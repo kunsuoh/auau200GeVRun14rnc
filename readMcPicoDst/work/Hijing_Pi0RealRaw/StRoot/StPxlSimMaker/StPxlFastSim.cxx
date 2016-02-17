@@ -158,6 +158,7 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
     // Loop over sectors
     for (UInt_t iSec = 0; iSec < mcPxlHitCol.numberOfSectors(); iSec++)
     {
+        if (iSec!=0) continue;
         const StMcPxlSectorHitCollection* mcPxlSectorHitCol = mcPxlHitCol.sector(iSec);
         if (!mcPxlSectorHitCol) continue;
         
