@@ -216,8 +216,8 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
                         tempHit->setSector(iSec+1);
                         tempHit->setLadder(mcPix->ladder());
                         tempHit->setSensor(mcPix->sensor());
-                        tempHit->setRow(row+dr);
-                        tempHit->setColumn(column+dc);
+                        tempHit->setRow(row);
+                        tempHit->setColumn(column);
                         tempHit->setIdTruth(idTruth);
                         
                         // StPxlRawHit (Int_t sector, Int_t ladder, Int_t sensor, Int_t row, Int_t column, Int_t idTruth)
