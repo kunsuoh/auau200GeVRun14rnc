@@ -185,26 +185,15 @@ Int_t StPxlSimMaker::Make()
     else if (mUseFastSimRaw)
     {
         StPxlRawHitCollection* pxlRawHitCol = 0;
-        /*TObjectSet* pxlRawHitDataSet = (TObjectSet*)GetDataSet("pxlRawHit");
-        
-        if (!pxlRawHitDataSet)
-        {
-            pxlRawHitDataSet = new TObjectSet("pxlRawHit");
-            m_DataSet = pxlRawHitDataSet;
-            pxlRawHitCol = new StPxlRawHitCollection();
-            pxlRawHitDataSet->AddObject(pxlRawHitCol);
-        }
-        else
-        {
-            pxlRawHitCol= (StPxlRawHitCollection*)pxlRawHitDataSet->GetObject();
-        }
-        
+        TObjectSet*  pxlRawHitDataSet = new TObjectSet("pxlRawHit");
+        m_DataSet = pxlRawHitDataSet;
+        pxlRawHitCol = new StPxlRawHitCollection();
+        pxlRawHitDataSet->AddObject(pxlRawHitCol);
         if(!pxlRawHitCol)
         {
             LOG_ERROR << "Make() - no pxlRawHitCollection."<<endm;
             return kStErr;
         }
-        */
         mPxlSimulator->addPxlRawHits(*mcPxlHitCol,*pxlRawHitCol);
         
         //StPxlHitCollection *pxlHitCol = new StPxlHitCollection();
