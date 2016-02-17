@@ -54,6 +54,7 @@ class StPxlISim;
 //Added Mlomnitz
 class TString;
 class StPxlPileupAdder;
+class StPxlRawHit;
 
 class StPxlSimMaker : public StMaker 
 {
