@@ -215,7 +215,8 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
                     tempHit->setIdTruth(idTruth);
                     pxlRawHitCol.addRawHit(*tempHit);
                     
-                    Int_t row2, column2;
+                    Int_t row2=row;
+                    Int_t column2=column;
                     Float_t smallR = 99999;
                     for (int iRow=-1; iRow<2; iRow++) {
                         if (row+iRow < 0) continue;
