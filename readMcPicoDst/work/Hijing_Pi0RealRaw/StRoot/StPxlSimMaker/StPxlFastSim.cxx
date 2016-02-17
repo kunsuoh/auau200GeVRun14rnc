@@ -215,7 +215,7 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
                     Int_t column = getColumn(localPixHitPos[2]);
                     LOG_INFO << "mUseFastSimRaw ..." << iCheck << endm; iCheck++;
  
-                    StPxlRawHit* tempHit = new StPxlRawHit(iSec+1, mcPix->ladder(), mcPix->sensor(), row, column, idTruth);
+                    StPxlRawHit tempHit = StPxlRawHit(iSec+1, mcPix->ladder(), mcPix->sensor(), row, column, idTruth);
                     // StPxlRawHit (Int_t sector, Int_t ladder, Int_t sensor, Int_t row, Int_t column, Int_t idTruth)
                     LOG_INFO << "mUseFastSimRaw ..." << iCheck << endm; iCheck++;
  
@@ -224,7 +224,7 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
                     //LOG_DEBUG << "pxlHit location x= " << tempHit->position().x() << "; y= " << tempHit->position().y() << "; z= " << tempHit->position().z() << endm;
                     
                     LOG_INFO << "mUseFastSimRaw ..." << iCheck << endm; iCheck++;
-                    pxlRawHitCol.addRawHit((const StPxlRawHit &)tempHit);
+                    pxlRawHitCol.addRawHit(tempHit);
                     LOG_INFO << "mUseFastSimRaw ..." << iCheck << endm; iCheck++;
                 }
             }
