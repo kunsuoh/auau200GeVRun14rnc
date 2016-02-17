@@ -76,7 +76,7 @@ Int_t StPxlSimMaker::Init()
     //else
     //{
     // temporary till DIGMAPS algorithm is added and option added in StMaker
-    mUseFastSimRaw = kTRUE;
+    mUseFastSim = kTRUE;
     //Lomnitz
     if(mAddPileup)
     {
