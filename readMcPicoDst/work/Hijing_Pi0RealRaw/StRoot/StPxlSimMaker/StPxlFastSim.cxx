@@ -214,7 +214,7 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
                     tempHit->setColumn(column);
                     tempHit->setIdTruth(idTruth);
                     pxlRawHitCol.addRawHit(*tempHit);
-                    /*
+                    cout << row << " " << column << endl;
                     Int_t row2=row;
                     Int_t column2=column;
                     Float_t smallR = 99999;
@@ -230,6 +230,8 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
                                 smallR = r;
                                 row2=row+iRow;
                                 column2=column+iColumn;
+                                cout << " " << row2 << " " << column2 << endl;
+
                             }
                         }
                     }
@@ -243,6 +245,8 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
                     tempHit2->setIdTruth(idTruth);
                     pxlRawHitCol.addRawHit(*tempHit2);
                     
+                    
+                    /*
                     
                     Int_t row3=row;
                     Int_t column3=column;
