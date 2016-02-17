@@ -231,7 +231,7 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
                     //LOG_DEBUG << "pxlHit location x= " << tempHit->position().x() << "; y= " << tempHit->position().y() << "; z= " << tempHit->position().z() << endm;
                     
                     LOG_INFO << "mUseFastSimRaw ..." << iCheck << endm; iCheck++;
-                    pxlRawHitCol.addRawHit(tempHit);
+                    pxlRawHitCol->addRawHit(tempHit);
                     LOG_INFO << "mUseFastSimRaw ..." << iCheck << endm; iCheck++;
                 }
             }
