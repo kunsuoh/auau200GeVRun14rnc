@@ -46,6 +46,7 @@
 class StRandom;
 class StPxlDb;
 class TObjectSet;
+class StPxlRawHit;
 
 class StPxlFastSim: public StPxlISim
 {
