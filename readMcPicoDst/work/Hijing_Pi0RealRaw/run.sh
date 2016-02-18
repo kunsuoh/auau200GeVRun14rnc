@@ -54,6 +54,7 @@ mv *.root Files_$job/hft_reco/.
 
 # ---- PicoDst
 root4star -l -b -q makePicoDst.C\($run,\"Files_$job/hft_reco/hijing_pi0real_$run.MuDst.root\",\"Files_$job/hft_reco/hijing_pi0real_$run.McEvent.root\"\)
+mv *.picoDst.root Pi0Raw_hijing_sim_production_v0_$job.picoDst.root
 #mv *.picoDst.root Files_$job/picodst/Pi0_hijing_sim_production_v0_$job.picoDst.root
 #privilges
 find Files_$job/ -type d -exec chgrp rhstar {} \;

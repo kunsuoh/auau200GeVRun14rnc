@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <job filesPerHour="1" nProcesses="&nRuns;"  simulateSubmission="false">
-<command>
-starver SL15k
-
-./run.sh ${JOBID}
-
-</command>
-
-<stdout URL="file:&base;/log/hj_$JOBID.out" />
-<stderr URL="file:&base;/log/hj_$JOBID.err" />
-<output fromScratch="*.picoDst.root" toURL="file:&base;/pico/" />
-
-<SandBox installer="ZIP">
-  <Package name="LocalLibraries">
-    <File>file:./starsim.hijing.Pi0.C</File>
-    <File>file:./makePicoDst.C</File>
-    <File>file:./run.sh</File>
-    <File>file:./StRoot/</File>
-    <File>file:./.sl64_gcc482/</File>
-  </Package>
-</SandBox>
-
+    <command>
+        starver SL15k
+        
+        ./run.sh ${JOBID}
+        
+    </command>
+    
+    <stdout URL="file:&base;/log/hj_$JOBID.out" />
+    <stderr URL="file:&base;/log/hj_$JOBID.err" />
+    <output fromScratch="*.picoDst.root" toURL="file:&base;/pico/" />
+    
+    <SandBox installer="ZIP">
+        <Package name="LocalLibraries">
+            <File>file:./auau200GeVRun14rnc/readMcPicoDst/work/Hijing_Pi0RealRaw/starsim.hijing.Pi0.C</File>
+            <File>file:./auau200GeVRun14rnc/readMcPicoDst/work/Hijing_Pi0RealRaw/makePicoDst.C</File>
+            <File>file:./auau200GeVRun14rnc/readMcPicoDst/work/Hijing_Pi0RealRaw/run.sh</File>
+            <File>file:./starsim.hijing.Pi0.C</File>
+            <File>file:./makePicoDst.C</File>
+            <File>file:./run.sh</File>
+            <File>file:./StRoot/</File>
+            <File>file:./.sl64_gcc482/</File>
+        </Package>
+    </SandBox>
+    
 </job>
-
