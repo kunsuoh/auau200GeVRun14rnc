@@ -9,7 +9,7 @@ starver SL15k
 
 <stdout URL="file:&base;/log/hj_$JOBID.out" />
 <stderr URL="file:&base;/log/hj_$JOBID.err" />
-<output fromScratch="*tar" toURL="file:&base;/files/" />
+<output fromScratch="*.picoDst.root" toURL="file:&base;/pico/" />
 
 <SandBox installer="ZIP">
   <Package name="LocalLibraries">
