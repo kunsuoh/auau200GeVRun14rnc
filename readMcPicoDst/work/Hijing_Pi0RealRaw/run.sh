@@ -17,7 +17,7 @@ cp -p /star/data01/pwg/kunsu/pileup/pileupSet$at/pile**.root ./Files_$job/pile_u
 
 # ---- Producing sim file .fzd
 root4star -b -l <<EOF
-#.L starsim.hijing.Pi0.C
+//.L starsim.hijing.Pi0.C
 .L starsim.hijing.gamma.C
 starsim(19,$run,$RANDOM)
 .q
