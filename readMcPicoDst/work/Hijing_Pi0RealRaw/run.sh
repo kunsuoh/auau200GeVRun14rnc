@@ -19,7 +19,7 @@ cp -p /star/data01/pwg/kunsu/pileup/pileupSet$at/pile**.root ./Files_$job/pile_u
 root4star -b -l <<EOF
 //.L starsim.hijing.Pi0.C
 .L starsim.hijing.gamma.C
-starsim(0,$run,$RANDOM)
+starsim(1,$run,$RANDOM)
 .q
 EOF
 #mv hijing_pi0real* ./Files_$job/fzd/.
