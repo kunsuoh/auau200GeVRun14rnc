@@ -44,6 +44,7 @@
 
 #include "StPxlISim.h"
 #include "TF1.h"
+#include "TH1F.h"
 #include "StPxlRawHitMaker/StPxlRawHit.h"
 
 class StRandom;
@@ -110,6 +111,8 @@ private:
     Double_t mResZPix;
     
     Bool_t mUseRandomSeed;
+    
+    TH1F *dataH2;
     
 };
 #endif

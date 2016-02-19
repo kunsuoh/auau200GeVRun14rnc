@@ -73,15 +73,16 @@
 
 #include "TGeoManager.h"
 #include "TGeoMatrix.h"
-
 #include "TDataSet.h"
 #include "TObjectSet.h"
 #include "TF1.h"
+#include "TH1F.h"
 
 StPxlFastSim::~StPxlFastSim()
 {
     if (mRandom) delete mRandom;
     if (mPxlDb) delete mPxlDb;
+    if (dataH2) delete dataH2;
 }
 //____________________________________________________________
 Int_t StPxlFastSim::initRun(const TDataSet& calib_db, const TObjectSet* pxlDbDataSet, const Int_t run)
@@ -147,6 +148,41 @@ Int_t StPxlFastSim::initRun(const TDataSet& calib_db, const TObjectSet* pxlDbDat
     mResZPix = sqrt(pxlHitError->coeff[3]); // local Y
     mResYPix = 0;//sqrt(pxlHitError->coeff[2]); // needs to be updated in the DB later
     
+    // Cluster size from 20 to 30 degrees in cosmic ray
+    dataH2 = new TH1F("dataH2","Cluster multiplicity from 20 to 30 degrees",14,1,15);
+    dataH2->SetBinContent(1,0.09685086);
+    dataH2->SetBinContent(2,0.1921569);
+    dataH2->SetBinContent(3,0.1858586);
+    dataH2->SetBinContent(4,0.332145);
+    dataH2->SetBinContent(5,0.07213309);
+    dataH2->SetBinContent(6,0.05692216);
+    dataH2->SetBinContent(7,0.02507427);
+    dataH2->SetBinContent(8,0.01283422);
+    dataH2->SetBinContent(9,0.008437314);
+    dataH2->SetBinContent(10,0.004634581);
+    dataH2->SetBinContent(11,0.004872252);
+    dataH2->SetBinContent(12,0.004040404);
+    dataH2->SetBinContent(13,0.002614379);
+    dataH2->SetBinContent(14,0.001426025);
+    dataH2->SetBinContent(15,0.002257873);
+    dataH2->SetBinError(1,0.003392538);
+    dataH2->SetBinError(2,0.004778602);
+    dataH2->SetBinError(3,0.004699636);
+    dataH2->SetBinError(4,0.006282562);
+    dataH2->SetBinError(5,0.002927792);
+    dataH2->SetBinError(6,0.00260084);
+    dataH2->SetBinError(7,0.001726184);
+    dataH2->SetBinError(8,0.001234974);
+    dataH2->SetBinError(9,0.001001325);
+    dataH2->SetBinError(10,0.0007421269);
+    dataH2->SetBinError(11,0.0007609179);
+    dataH2->SetBinError(12,0.0006929236);
+    dataH2->SetBinError(13,0.0005573875);
+    dataH2->SetBinError(14,0.0004116579);
+    dataH2->SetBinError(15,0.0005179916);
+    dataH2->SetEntries(8434);
+
+    
     return kStOk;
 }
 
@@ -196,7 +232,7 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
                     unsigned short idTruth = mcPix->parentTrack() ? mcPix->parentTrack()->key() : -999;
 
                     Int_t clusterSize = 999;
-                    while (clusterSize > 8) clusterSize = (Int_t)abs(mRandom->gauss(3, 1.5)) + 1;
+                    while (clusterSize > 8) clusterSize = (Int_t)dataH2->GetRandom();
                     for (int i = 0 ; i < clusterSize ; i++) pxlRawHitCol.addRawHit(makeRawHit(localPixHitPos[0],localPixHitPos[2], iSec + 1, iLad + 1, iSen + 1, idTruth, i));
 
                 }
