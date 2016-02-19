@@ -132,8 +132,8 @@ void starsim( Int_t nevents=1, Int_t Index = 0, Int_t rngSeed=4321 )
   StarRandom::capture();
 
   char rootname[100],fzname[100];
-  sprintf(rootname,"hijing_pi0real_%d.starsim.root",Index);
-  sprintf(fzname,"gfile o hijing_pi0real_%d.starsim.fzd",Index);
+  sprintf(rootname,"gamma_%d.starsim.root",Index);
+  sprintf(fzname,"gfile o gamma_%d.starsim.fzd",Index);
 
   //
   // Create the primary event generator and insert it
