@@ -1,5 +1,6 @@
 #include "TFile.h"
 #include "TH3F.h"
+#include "TH2F.h"
 #include "TNtuple.h"
 #include "TSystem.h"
 

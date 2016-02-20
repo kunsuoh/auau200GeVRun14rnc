@@ -5,6 +5,7 @@
 
 class TFile;
 class TH3F;
+class TH2F;
 class TNtuple;
 
 class StMcTrack;
