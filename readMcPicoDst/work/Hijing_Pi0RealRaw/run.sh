@@ -47,6 +47,13 @@ pxl->useRandomSeed();
 //pxl->addPileup();
 //pxl->setPileupFile("$inPile");
 
+
+TString OutputFileName(gSystem->BaseName("$inFile2"));
+OutputFileName.ReplaceAll(".event.root","");
+StMcAnalysisMaker* mcAnalysisMaker = (StMcAnalysisMaker*)chain->GetMaker("StMcAnalysisMaker");
+mcAnalysisMaker->setOutFileName(OutputFileName);
+
+
 chain->Init();
 chain->EventLoop($start,$end);
 chain->Finish();
