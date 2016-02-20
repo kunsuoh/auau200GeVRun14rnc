@@ -108,7 +108,7 @@ int StMcAnalysisMaker::Make()
     float mcNHitsPxl1 = mcEvent->pxlHitCollection()->numberOfHits();
     float rcNHitsPxl1 = event->pxlHitCollection()->numberOfHits();
     
-    hMcVsRcNPxlHits->Fill(mcNHitsPxl1,rcNHitsPxl1)
+    hMcVsRcNPxlHits->Fill(mcNHitsPxl1,rcNHitsPxl1);
     return fillTracks(mcEvent,event);
 }
 //____________________________________
