@@ -10,6 +10,7 @@
     <stdout URL="file:&base;/log/hj_$JOBID.out" />
     <stderr URL="file:&base;/log/hj_$JOBID.err" />
     <output fromScratch="*.picoDst.root" toURL="file:&base;/pico/" />
+    <output fromScratch="*.tar" toURL="file:&base;/files/" />
     
     <SandBox installer="ZIP">
         <Package name="LocalLibraries">

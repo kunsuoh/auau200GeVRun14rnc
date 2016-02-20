@@ -16,14 +16,14 @@ at=`perl -e 'srand; print int(rand(99)+1)'`
 cp -p /star/data01/pwg/kunsu/pileup/pileupSet$at/pile**.root ./Files_$job/pile_up/pile_up$at.root
 
 # ---- Producing sim file .fzd
-#root4star -b -l <<EOF
-#//.L starsim.hijing.Pi0.C
-#.L starsim.hijing.gamma.C
-#starsim(1,$run,$RANDOM)
-#.q
-#EOF
+root4star -b -l <<EOF
+//.L starsim.hijing.Pi0.C
+.L starsim.hijing.gamma.C
+starsim(19,$run,$RANDOM)
+.q
+EOF
 #mv hijing_pi0real* ./Files_$job/fzd/.
-#mv gamma* ./Files_$job/fzd/.
+mv gamma* ./Files_$job/fzd/.
 
 echo "Kunsu: HFT reco starting"
 # ---- HFT reconstruction
@@ -63,8 +63,8 @@ mv *.root Files_$job/hft_reco/.
 #root4star -l -b -q makePicoDst.C\($run,\"Files_$job/hft_reco/hijing_pi0real_$run.MuDst.root\",\"Files_$job/hft_reco/hijing_pi0real_$run.McEvent.root\"\)
 root4star -l -b -q makePicoDst.C\($run,\"Files_$job/hft_reco/gamma_$run.MuDst.root\",\"Files_$job/hft_reco/gamma_$run.McEvent.root\"\)
 #mv *.picoDst.root Pi0Raw_hijing_sim_production_v0_$job.picoDst.root
-#mv *.picoDst.root Files_$job/picodst/Pi0_hijing_sim_production_v0_$job.picoDst.root
 mv *.picoDst.root gamma_sim_production_v0_$job.picoDst.root
+
 #privilges
 find Files_$job/ -type d -exec chgrp rhstar {} \;
 find Files_$job/ -type d -exec chmod g+rw {} \;
@@ -72,4 +72,4 @@ find Files_$job/ -type f -exec chgrp rhstar {} \;
 find Files_$job/ -type f -exec chmod g+rw {} \;
 
 # ---- Done bring files back
-#tar -cvf Files_$job.tar Files_$job
+tar -cvf Files_$job.tar Files_$job

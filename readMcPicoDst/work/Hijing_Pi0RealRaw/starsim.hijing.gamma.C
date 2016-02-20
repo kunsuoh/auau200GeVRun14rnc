@@ -61,7 +61,7 @@ void trig( Int_t n=0 )
 
     // Generate 5 D0 according to a PT and Y distribution
     //if(kinematics) kinematics->Dist(500, "pi0", ptDist, yDist );
-    if(kinematics) kinematics->Kine(100, "gamma", 0.0, 20.0, -1.0, +1.0 );;
+    if(kinematics) kinematics->Kine(1000, "gamma", 0.0, 20.0, -1.0, +1.0 );;
 
     chain->Make();
     //    command("gprint kine");
