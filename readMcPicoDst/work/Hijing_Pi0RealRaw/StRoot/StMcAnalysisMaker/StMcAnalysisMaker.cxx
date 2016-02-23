@@ -391,7 +391,7 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                         rcConvR[nPair] = TMath::Sqrt(Position.x()*Position.x()+Position.y()+Position.y());
                         parentGid[nPair] = mcTrack->geantId();
                         mass[nPair] = epairFourMom.m();
-                        pairDca[nPair] =  = static_cast<float>(VectorDca.mag());
+                        pairDca[nPair] = static_cast<float>(VectorDca.mag());
                         pt1[nPair] = positron->pt();
                         pt2[nPair] = electron->pt();
                         eta1[nPair] = positron->pseudoRapidity();
