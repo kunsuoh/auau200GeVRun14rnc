@@ -219,7 +219,7 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
             rcDist_pxl1[nPair] = 0;
             rcDist_pxl2[nPair] = 0;
             rcDist_ist[nPair] = 0;
-            convR[nPair] = TMath::Sqrt(electron->startVertex().positron().x()*electron->startVertex().positron().x()+electron->startVertex().positron().y()*electron->startVertex().positron().y());
+            convR[nPair] = TMath::Sqrt(electron->startVertex()->positron().x()*electron->startVertex()->positron().x()+electron->startVertex()->positron().y()*electron->startVertex()->positron().y());
             parentGid[nPair] = parentPositron->geantId();
             mass[nPair] = 0;
             pairDca[nPair] = 0;
