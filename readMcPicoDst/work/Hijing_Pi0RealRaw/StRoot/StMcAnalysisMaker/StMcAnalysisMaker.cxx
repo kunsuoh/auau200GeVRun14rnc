@@ -455,7 +455,7 @@ const StMcTrack* StMcAnalysisMaker::findPartner(StGlobalTrack* rcTrack, int& max
 int StMcAnalysisMaker::Finish()
 {
     mFile->cd();
-    mTree->Write;
+    mTree->Write();
     mFile->Close();
     return kStOk;
 }
