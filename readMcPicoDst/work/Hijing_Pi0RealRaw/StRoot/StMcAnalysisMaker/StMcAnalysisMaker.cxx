@@ -202,10 +202,11 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
     for(int i = 0; i < idMcPositrons.size(); i++){
         StMcTrack * positron = trks[i];
         StMcTrack * parentPositron = positron->parent();
-        
+        if (!parentPositron) continue;
         for(int j = 0; j < idMcElectrons.size(); j++){
             StMcTrack * electron = trks[j];
             StMcTrack * parentElectron = electron->parent();
+            if (!parentElectron) continue;
             //if (parentPositron!=parentElectron) continue;
 
 
