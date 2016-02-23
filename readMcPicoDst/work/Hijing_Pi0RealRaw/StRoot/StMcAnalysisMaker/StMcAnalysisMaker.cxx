@@ -41,7 +41,7 @@
 
 #include "StEvent/StPxlHit.h"
 #include "StEvent/StPxlHitCollection.h"
-#include "StPxlRawHit.h"
+#include "StPxlRawHitMaker/StPxlRawHit.h"
 #include "StPxlRawHitMaker/StPxlRawHitMaker.h"
 #include "StPxlRawHitMaker/StPxlRawHitCollection.h"
 
