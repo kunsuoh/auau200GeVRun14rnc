@@ -170,7 +170,7 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
     {
         StMcTrack* mcTrack = trks[i];
         Int_t trackGid = mcTrack->geantId();
-        if (trackGid!=2 || trackGid!=3 ) continue;
+        if (trackGid!=2 && trackGid!=3 ) continue;
 
         int ncommonhits = 0;
         StTrack const* rcTrack = findPartner(mcTrack, ncommonhits);
@@ -188,7 +188,9 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
             }
         }
     }
-    
+
+    cout << trks.size() << " " << idMcPositrons.size() << " " << idMcElectrons.size() << endl;
+
     nPair=0;
     nMcPxl1Hits=0;
     nMcPxl2Hits=0;
@@ -204,7 +206,7 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
         for(int j = 0; j < idMcElectrons.size(); j++){
             StMcTrack * electron = trks[j];
             StMcTrack * parentElectron = electron->parent();
-            if (parentPositron!=parentElectron) continue;
+            //if (parentPositron!=parentElectron) continue;
 
 
             
