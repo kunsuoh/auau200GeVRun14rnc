@@ -5,11 +5,11 @@ job=$1
 run=${job: -1}
 
 # ---- Make folder
-mkdir ./Files_$job
-mkdir ./Files_$job/fzd
-mkdir ./Files_$job/hft_reco
-mkdir ./Files_$job/pile_up
-mkdir ./Files_$job/picodst
+#mkdir ./Files_$job
+#mkdir ./Files_$job/fzd
+#mkdir ./Files_$job/hft_reco
+#mkdir ./Files_$job/pile_up
+#mkdir ./Files_$job/picodst
 
 # ---- Pile up file
 at=`perl -e 'srand; print int(rand(99)+1)'`
@@ -17,14 +17,14 @@ cp -p /star/data01/pwg/kunsu/pileup/pileupSet$at/pile**.root ./Files_$job/pile_u
 
 
 # ---- Producing sim file .fzd
-root4star -b -l <<EOF
-//.L starsim.hijing.Pi0.C
-.L starsim.hijing.gamma.C
-starsim(4,$run,$RANDOM)
-.q
-EOF
+#root4star -b -l <<EOF
+#//.L starsim.hijing.Pi0.C
+#.L starsim.hijing.gamma.C
+#starsim(4,$run,$RANDOM)
+#.q
+#EOF
 #mv hijing_pi0real* ./Files_$job/fzd/.
-mv gamma* ./Files_$job/fzd/.
+#mv gamma* ./Files_$job/fzd/.
 
 echo "Kunsu: HFT reco starting"
 # ---- HFT reconstruction
