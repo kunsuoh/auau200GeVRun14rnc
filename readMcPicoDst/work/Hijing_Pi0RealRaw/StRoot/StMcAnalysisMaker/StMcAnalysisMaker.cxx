@@ -6,6 +6,7 @@
 #include "TH2F.h"
 #include "TTree.h"
 #include "TSystem.h"
+#include "TVector3.h"
 
 #include "StParticleDefinition.hh"
 #include "StTrack.h"
