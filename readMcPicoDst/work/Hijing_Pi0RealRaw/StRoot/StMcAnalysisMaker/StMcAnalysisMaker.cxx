@@ -44,6 +44,7 @@
 #include "StPxlRawHitMaker/StPxlRawHit.h"
 #include "StPxlRawHitMaker/StPxlRawHitMaker.h"
 #include "StPxlRawHitMaker/StPxlRawHitCollection.h"
+#include "StLorentzVectorF.hh"
 
 
 #include "StDetectorDbMaker/StDetectorDbTriggerID.h"
