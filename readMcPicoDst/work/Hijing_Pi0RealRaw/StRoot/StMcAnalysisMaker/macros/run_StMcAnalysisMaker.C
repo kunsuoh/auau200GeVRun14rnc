@@ -1,4 +1,4 @@
-void run_StMcAnalysisMaker(const char* file ="small.list")
+void run_StMcAnalysisMaker(TString file ="small.list")
 {
     //Check STAR Library. Please set SL_version to the original star library used 
     // in the production from http://www.star.bnl.gov/devcgi/dbProdOptionRetrv.pl
@@ -26,10 +26,7 @@ void run_StMcAnalysisMaker(const char* file ="small.list")
     ioMaker->SetBranch("geantBranch", 0, "r");
     ioMaker->SetBranch("eventBranch", 0, "r");
 
-    TString mudstfile = file;
-    mudstfile.ReplaceAll(".event.root",".MuDst.root");
-    mudstfile.ReplaceAll(".geant.root",".MuDst.root");
-    StMuDstMaker* muDstMaker = new StMuDstMaker(0,0,"",mudstfile.Data(),"",100000,"MuDst");
+    StMuDstMaker* muDstMaker = new StMuDstMaker(0,0,"",file,"",100000,"MuDst");
 
     StMcEventMaker *mcEventMaker = new StMcEventMaker();
     mcEventMaker->doPrintEventInfo = false;
