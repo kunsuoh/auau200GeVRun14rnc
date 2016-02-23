@@ -47,7 +47,6 @@ void run_StMcAnalysisMaker(const char* file)
 
     // Monte Carlo event maker
     StMcAnalysisMaker* analysis = new StMcAnalysisMaker("StMcAnalysisMaker");
-    analysis->produceNtuple(true);
 
     // Initialize chain
     chain->Init();

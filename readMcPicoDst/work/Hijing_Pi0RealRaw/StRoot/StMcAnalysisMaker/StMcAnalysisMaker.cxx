@@ -1,7 +1,10 @@
+#include <vector>
+#include <cmath>
+
 #include "TFile.h"
 #include "TH3F.h"
 #include "TH2F.h"
-#include "TNtuple.h"
+#include "TTree.h"
 #include "TSystem.h"
 
 #include "StParticleDefinition.hh"
@@ -39,8 +42,7 @@
 
 ClassImp(StMcAnalysisMaker);
 
-StMcAnalysisMaker::StMcAnalysisMaker(const char *name, const char *title): StMaker(name), mFile(NULL),
-mIsNtuple(true) , mNtuple(NULL), mTpcNtuple(NULL)
+StMcAnalysisMaker::StMcAnalysisMaker(const char *name, const char *title): StMaker(name), mFile(NULL), mTree(NULL)
 {
     cout << "StMcAnalysisMaker::StMcAnalysisMaker - DONE" << endl;
 }
@@ -57,14 +59,9 @@ int StMcAnalysisMaker::Init()
     if(!mOutFileName.Length()) mOutFileName = "mcAnalysis";
     mOutFileName = mOutFileName.ReplaceAll(".root","");
     
-    mFile = new TFile(Form("%s.tpcRes.root",mOutFileName.Data()), "recreate");
+    mFile = new TFile(Form("%s.pxlSimQa.root",mOutFileName.Data()), "recreate");
     assert(mFile && !mFile->IsZombie());
     
-    hTpcHitsDiffXVsPadrowVsSector = new TH3F("hTpcHitsDiffXVsPadrowVsSector", "hTpcHitsDiffXVsPadrowVsSector", 50, 0, 50, 26, 0, 26, 200, -2, 2);
-    hTpcHitsDiffYVsPadrowVsSector = new TH3F("hTpcHitsDiffYVsPadrowVsSector", "hTpcHitsDiffYVsPadrowVsSector", 50, 0, 50, 26, 0, 26, 200, -2, 2);
-    hTpcHitsDiffZVsPadrowVsSector = new TH3F("hTpcHitsDiffZVsPadrowVsSector", "hTpcHitsDiffZVsPadrowVsSector", 50, 0, 50, 26, 0, 26, 200, -2, 2);
-    
-    hMcVsRcNPxlHits = new TH2F("hMcVsRcNPxlHits","hMcVsRcNPxlHits",1000,0,1000,1000,0,1000);
     
     mAssoc = (StAssociationMaker*)GetMaker("StAssociationMaker");
     
@@ -74,12 +71,57 @@ int StMcAnalysisMaker::Init()
         exit(1);
     }
     
-    if (mIsNtuple)
-    {
-        mNtuple = new TNtuple("nt", "nt", "vx:vy:vz:pt:phi:eta:geantId:pGeantId:sVx:sVy:sVz:stVx:stVy:stVz:nCom:nFit:nMax:gPt:gPhi:gEta:dca:dcaXY:dcaZ:hftTopo:isTrueHft");
-        mTpcNtuple = new TNtuple("tpc","tpc","eta:phi:mcX:mcY:mcZ:mcTb:rcX:rcY:rcZ:rcTb:sector:padrow:pad:dE:adc:mcHitToRcTrackX:mcHitToRcTrackY:mcHitToRcTrackZ");
-    }
-    
+    // TTree
+    mTree = new TTree("mTree","electron pair tree for QA");
+    mTree->Branch("nPair",&nPair,"nPair/I");
+    mTree->Branch("nMcPxl1Hits",&nMcPxl1Hits,"nMcPxl1Hits/I");
+    mTree->Branch("nMcPxl2Hits",&nMcPxl2Hits,"nMcPxl2Hits/I");
+    mTree->Branch("nMcIstHits", &nMcIstHits, "nMcIstHits/I");
+    mTree->Branch("nRcPxl1Hits",&nRcPxl1Hits,"nRcPxl1Hits/I");
+    mTree->Branch("nRcPxl2Hits",&nRcPxl2Hits,"nRcPxl2Hits/I");
+    mTree->Branch("nRcIstHits", &nRcIstHits, "nRcIstHits/I");
+    mTree->Branch("pairPt", &pairPt, "pairPt[nPair]/F");
+    mTree->Branch("pairEta", &pairEta, "pairEta[nPair]/F");
+    mTree->Branch("openangle", &openangle, "openangle[nPair]/F");
+    mTree->Branch("mcopenangle", &mcopenangle, "mcopenangle[nPair]/F");
+    mTree->Branch("mcDist_pxl1", &mcDist_pxl1, "mcDist_pxl1[nPair]/F");
+    mTree->Branch("mcDist_pxl2", &mcDist_pxl2, "mcDist_pxl2[nPair]/F");
+    mTree->Branch("mcDist_ist", &mcDist_ist, "mcDist_ist[nPair]/F");
+    mTree->Branch("rcDist_pxl1", &rcDist_pxl1, "rcDist_pxl1[nPair]/F");
+    mTree->Branch("rcDist_pxl2", &rcDist_pxl2, "rcDist_pxl2[nPair]/F");
+    mTree->Branch("rcDist_ist", &rcDist_ist, "rcDist_ist[nPair]/F");
+    mTree->Branch("convR", &convR, "convR[nPair]/F");
+    mTree->Branch("parentGid", &parentGid, "parentGid[nPair]/I");
+    mTree->Branch("mass", &mass, "mass[nPair]/F");
+    mTree->Branch("pairDca", &pairDca, "pairDca[nPair]/F");
+    mTree->Branch("pt1", &pt1, "pt1[nPair]/F");
+    mTree->Branch("pt2", &pt2, "pt2[nPair]/F");
+    mTree->Branch("eta1", &eta1, "eta1[nPair]/F");
+    mTree->Branch("eta2", &eta2, "eta2[nPair]/F");
+    mTree->Branch("clusterSize1_pxl1", &clusterSize1_pxl1, "clusterSize1_pxl1[nPair]/I");
+    mTree->Branch("clusterSize1_pxl2", &clusterSize1_pxl2, "clusterSize1_pxl2[nPair]/I");
+    mTree->Branch("clusterSize2_pxl1", &clusterSize2_pxl1, "clusterSize2_pxl1[nPair]/I");
+    mTree->Branch("clusterSize2_pxl2", &clusterSize2_pxl2, "clusterSize2_pxl2[nPair]/I");
+    mTree->Branch("idTruth", &idTruth, "idTruth[nPair]/I");
+    mTree->Branch("rcHftHit1_pxl1", &rcHftHit1_pxl1, "rcHftHit1_pxl1[nPair]/I");
+    mTree->Branch("rcHftHit1_pxl2", &rcHftHit1_pxl2, "rcHftHit1_pxl2[nPair]/I");
+    mTree->Branch("rcHftHit1_ist",  &rcHftHit1_ist,  "rcHftHit1_ist[nPair]/I");
+    mTree->Branch("truth1_pxl1", &truth1_pxl1, "truth1_pxl1[nPair]/I");
+    mTree->Branch("truth1_pxl2", &truth1_pxl2, "truth1_pxl2[nPair]/I");
+    mTree->Branch("truth1_ist",  &truth1_ist,  "truth1_ist[nPair]/I");
+    mTree->Branch("nHits1_pxl1", &nHits1_pxl1, "nHits1_pxl1[nPair]/I");
+    mTree->Branch("nHits1_pxl2", &nHits1_pxl2, "nHits1_pxl2[nPair]/I");
+    mTree->Branch("nHits1_ist",  &nHits1_ist,  "nHits1_ist[nPair]/I");
+    mTree->Branch("rcHftHit2_pxl1", &rcHftHit2_pxl1, "rcHftHit2_pxl1[nPair]/I");
+    mTree->Branch("rcHftHit2_pxl2", &rcHftHit2_pxl2, "rcHftHit2_pxl2[nPair]/I");
+    mTree->Branch("rcHftHit2_ist",  &rcHftHit2_ist,  "rcHftHit2_ist[nPair]/I");
+    mTree->Branch("truth2_pxl1", &truth2_pxl1, "truth2_pxl1[nPair]/I");
+    mTree->Branch("truth2_pxl2", &truth2_pxl2, "truth2_pxl2[nPair]/I");
+    mTree->Branch("truth2_ist",  &truth2_ist,  "truth2_ist[nPair]/I");
+    mTree->Branch("nHits2_pxl1", &nHits2_pxl1, "nHits2_pxl1[nPair]/I");
+    mTree->Branch("nHits2_pxl2", &nHits2_pxl2, "nHits2_pxl2[nPair]/I");
+    mTree->Branch("nHits2_ist",  &nHits2_ist,  "nHits2_ist[nPair]/I");
+
     cout << "StMcAnalysisMaker::Init - DONE" << endl;
     return StMaker::Init();
 }
@@ -104,16 +146,13 @@ int StMcAnalysisMaker::Make()
     }
     
     cout << "StMcAnalysisMaker::Make() : event: " << event->id() << endl;
-    
-    float mcNHitsPxl1 = mcEvent->pxlHitCollection()->numberOfHits();
-    float rcNHitsPxl1 = event->pxlHitCollection()->numberOfHits();
-    
-    hMcVsRcNPxlHits->Fill(mcNHitsPxl1,rcNHitsPxl1);
     return fillTracks(mcEvent,event);
 }
 //____________________________________
 int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
 {
+    
+    
     StSPtrVecMcTrack& trks = mcEvent->tracks();
     cout << "Filling " << trks.size() << " mcTracks..." << endl;
     
@@ -123,11 +162,112 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
         return 1;
     }
     
+    
+    std::vector<Int_t> idMcElectrons;
+    std::vector<Int_t> idMcPositrons;
+
     for (unsigned int i = 0;  i < trks.size(); i++)
     {
         StMcTrack* mcTrack = trks[i];
+        Int_t trackGid = mcTrack->geantId();
+        if (trackGid!=2 || trackGid!=3 ) continue;
+
+        int ncommonhits = 0;
+        StTrack const* rcTrack = findPartner(mcTrack, ncommonhits);
+        if(rcTrack)
+        {
+            if(StGlobalTrack const* glRcTrack = dynamic_cast<StGlobalTrack const*>(rcTrack))
+            {
+                
+                if (trackGid==2) {
+                    idMcPositrons.push_back(i);
+                }
+                else if (trackGid==3){
+                    idMcElectrons.push_back(i);
+                }
+            }
+        }
+    }
+    
+    nPair=0;
+    nMcPxl1Hits=0;
+    nMcPxl2Hits=0;
+    nMcIstHits=0;
+    nRcPxl1Hits=0;
+    nRcPxl2Hits=0;
+    nRcIstHits=0;
+    
+    for(int i = 0; i < idMcPositrons.size(); i++){
+        StMcTrack * positron = trks[i];
+        StMcTrack * parentPositron = positron->parent();
         
-        float pTrkSvx, pTrkSvy;
+        for(int j = 0; j < idMcElectrons.size(); j++){
+            StMcTrack * electron = trks[j];
+            StMcTrack * parentElectron = electron->parent();
+            if (parentPositron!=parentElectron) continue;
+
+
+            
+            
+            pairPt[nPair] = parentPositron->pt();
+            pairEta[nPair] = parentPositron->pseudoRapidity();
+            openangle[nPair] = 0;
+            mcopenangle[nPair] = positron->momentum().angle(electron->momentum());
+            mcDist_pxl1[nPair] = ;
+            mcDist_pxl2[nPair] = ;
+            mcDist_ist[nPair] = ;
+            rcDist_pxl1[nPair] = ;
+            rcDist_pxl2[nPair] = ;
+            rcDist_ist[nPair] = ;
+            convR[nPair] = TMath::Sqrt(electron->startVertex()->positron().x()*electron->startVertex()->positron().x()+electron->startVertex()->positron().y()*electron->startVertex()->positron().y());
+            parentGid[nPair] = parentPositron->geantId();
+            mass[nPair] = 0;
+            pairDca[nPair] = 0;
+            pt1[nPair] = positron->pt();
+            pt2[nPair] = electron->pt();
+            eta1[nPair] = positron->pseudoRapidity();
+            eta2[nPair] = electron->pseudoRapidity();
+            clusterSize1_pxl1[nPair] = 0;
+            clusterSize1_pxl2[nPair] = 0;
+            clusterSize2_pxl1[nPair] = 0;
+            clusterSize2_pxl2[nPair] = 0;
+            idTruth[nPair] = 1; // electron(2) or positron(1) idTruth
+            rcHftHit1_pxl1[nPair]=0;
+            rcHftHit1_pxl2[nPair]=0;
+            rcHftHit1_ist[nPair]=0;
+            truth1_pxl1[nPair]=0;
+            truth1_pxl2[nPair]=0;
+            truth1_ist[nPair]=0;
+            nHits1_pxl1[nPair]=0;
+            nHits1_pxl2[nPair]=0;
+            nHits1_ist[nPair]=0;
+            rcHftHit2_pxl1[nPair]=0;
+            rcHftHit2_pxl2[nPair]=0;
+            rcHftHit2_ist[nPair]=0;
+            truth2_pxl1[nPair]=0;
+            truth2_pxl2[nPair]=0;
+            truth2_ist[nPair]=0;
+            nHits2_pxl1[nPair]=0;
+            nHits2_pxl2[nPair]=0;
+            nHits2_ist[nPair]=0;
+
+            
+            if (1) nMcPxl1Hits++;
+            if (1) nMcPxl2Hits++;
+            if (1) nMcIstHits++;
+            if (1) nRcPxl1Hits++;
+            if (1) nRcPxl2Hits++;
+            if (1) nRcIstHits++;
+            nPair++;
+        }
+    }
+    mTree->Fill();
+    
+    return kStOk;
+}
+/*
+ 
+ float pTrkSvx, pTrkSvy;
         if(mcTrack->startVertex())
         {
             pTrkSvx = mcTrack->startVertex()->position().x();
@@ -194,35 +334,9 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                 }
             }
         }
+
         
-        float arr[55];
-        int iArr = 0;
-        arr[iArr++] = event->primaryVertex()->position().x();
-        arr[iArr++] = event->primaryVertex()->position().y();
-        arr[iArr++] = event->primaryVertex()->position().z();
-        arr[iArr++] = mcTrack->pt();
-        arr[iArr++] = mcTrack->momentum().phi();
-        arr[iArr++] = mcTrack->pseudoRapidity();
-        arr[iArr++] = mcTrack->geantId();
-        arr[iArr++] = mcTrack->parent()? mcTrack->parent()->geantId() : -999.;
-        arr[iArr++] = mcTrack->startVertex()->position().x();
-        arr[iArr++] = mcTrack->startVertex()->position().y();
-        arr[iArr++] = mcTrack->startVertex()->position().z();
-        arr[iArr++] = mcTrack->stopVertex() ? mcTrack->stopVertex()->position().x() : -999.;
-        arr[iArr++] = mcTrack->stopVertex() ? mcTrack->stopVertex()->position().y() : -999.;
-        arr[iArr++] = mcTrack->stopVertex() ? mcTrack->stopVertex()->position().z() : -999.;
-        arr[iArr++] = rcTrack ? ncommonhits : -999;
-        arr[iArr++] = rcTrack ? rcTrack->fitTraits().numberOfFitPoints(kTpcId) : -999;
-        arr[iArr++] = rcTrack ? rcTrack->numberOfPossiblePoints() : -999;
-        arr[iArr++] = rcTrack ? rcTrack->geometry()->momentum().perp() : -999;
-        arr[iArr++] = rcTrack ? rcTrack->geometry()->momentum().phi() : -999;
-        arr[iArr++] = rcTrack ? rcTrack->geometry()->momentum().pseudoRapidity() : -999;
-        arr[iArr++] = dca;
-        arr[iArr++] = dcaXY;
-        arr[iArr++] = dcaZ;
-        arr[iArr++] = rcTrack ? (rcTrack->topologyMap().data(0)) >> 1 & 0x7F: 0;
-        arr[iArr++] = static_cast<float>(istTruth && pxlTruth1 && pxlTruth2);
-        mNtuple->Fill(arr);
+        mTree->Fill();
         
         continue; // this is a hack
         if (!rcTrack) continue;
@@ -250,32 +364,10 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                 {
                     StThreeVectorF mcHitTotRcTrack = helix.at(helix.pathLength(mcHit->position().x(),mcHit->position().y())) - mcHit->position();
                     
-                    float arr[50];
-                    int iArr = 0;
-                    arr[iArr++] = mcTrack->pseudoRapidity();
-                    arr[iArr++] = mcTrack->momentum().phi();
-                    arr[iArr++] = mcHit->position().x();
-                    arr[iArr++] = mcHit->position().y();
-                    arr[iArr++] = mcHit->position().z();
-                    arr[iArr++] = mcHit->timeBucket();
-                    arr[iArr++] = rcHit->position().x();
-                    arr[iArr++] = rcHit->position().y();
-                    arr[iArr++] = rcHit->position().z();
-                    arr[iArr++] = rcHit->timeBucket();
-                    arr[iArr++] = mcHit->sector();
-                    arr[iArr++] = mcHit->padrow();
-                    arr[iArr++] = mcHit->pad();
-                    arr[iArr++] = mcHit->dE();
-                    arr[iArr++] = rcHit->adc();
-                    arr[iArr++] = mcHitTotRcTrack.x();
-                    arr[iArr++] = mcHitTotRcTrack.y();
-                    arr[iArr++] = mcHitTotRcTrack.z();
                     
-                    mTpcNtuple->Fill(arr);
                     
-                    hTpcHitsDiffXVsPadrowVsSector->Fill(mcHit->padrow(), mcHit->sector(), mcHit->position().x() - rcHit->position().x());
-                    hTpcHitsDiffYVsPadrowVsSector->Fill(mcHit->padrow(), mcHit->sector(), mcHit->position().y() - rcHit->position().y());
-                    hTpcHitsDiffZVsPadrowVsSector->Fill(mcHit->padrow(), mcHit->sector(), mcHit->position().z() - rcHit->position().z());
+                    mTree->Fill();
+                    
                     found = true;
                 }
                 else
@@ -308,13 +400,13 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
          if(!mcHit) continue;
          cout<<mcHit->key()<<endl;
          }
-         */
+ 
     }
     
     return kStOk;
 }
 
-
+*/
 //________________________________________________
 const StTrack* StMcAnalysisMaker::findPartner(StMcTrack* mcTrack, int& maxCommonTpcHits)
 {
@@ -364,15 +456,7 @@ const StMcTrack* StMcAnalysisMaker::findPartner(StGlobalTrack* rcTrack, int& max
 int StMcAnalysisMaker::Finish()
 {
     mFile->cd();
-    if (mIsNtuple) 
-    {
-        mNtuple->Write();
-        mTpcNtuple->Write();
-    }
-    hTpcHitsDiffXVsPadrowVsSector->Write();
-    hTpcHitsDiffYVsPadrowVsSector->Write();
-    hTpcHitsDiffZVsPadrowVsSector->Write();
-    hMcVsRcNPxlHits->Write();
+    mTree->Write;
     mFile->Close();
     return kStOk;
 }
