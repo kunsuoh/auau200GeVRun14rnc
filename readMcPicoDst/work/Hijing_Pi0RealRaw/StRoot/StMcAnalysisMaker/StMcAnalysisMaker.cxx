@@ -336,10 +336,10 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                                         pxl1HitPosition2 = pos;
                                     }
                                     else if (clusterSize2_pxl2[nPair]) {
-                                        clusterSize1_pxl3[nPair] = PartnerPxlHits2[ipxlhit]->nRawHits();
+                                        //clusterSize1_pxl3[nPair] = PartnerPxlHits2[ipxlhit]->nRawHits();
                                     }
                                     else {
-                                        clusterSize2_pxl2[nPair] = PartnerPxlHits2[ipxlhit]->nRawHits();
+                                        //clusterSize2_pxl2[nPair] = PartnerPxlHits2[ipxlhit]->nRawHits();
                                     }
                                     continue;
                                 }
@@ -397,9 +397,11 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                         eta1[nPair] = positron->pseudoRapidity();
                         eta2[nPair] = electron->pseudoRapidity();
                         //clusterSize1_pxl1[nPair] = 0;
-                        //clusterSize1_pxl2[nPair] = 0;
+                        clusterSize1_pxl2[nPair] = 0;
+                        clusterSize1_pxl3[nPair] = 0;
                         //clusterSize2_pxl1[nPair] = 0;
-                        //clusterSize2_pxl2[nPair] = 0;
+                        clusterSize2_pxl2[nPair] = 0;
+                        clusterSize2_pxl3[nPair] = 0;
                         idTruth[nPair] = 1; // electron(2) or positron(1) idTruth
                         rcHftHit1_pxl1[nPair]=hftHitMap1>>0 & 0x1;
                         rcHftHit1_pxl2[nPair]=hftHitMap1>>1 & 0x3;
