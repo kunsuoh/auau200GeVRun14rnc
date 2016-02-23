@@ -431,14 +431,6 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                         nHits2_pxl1[nPair]=pxl2Hits1;
                         nHits2_pxl2[nPair]=pxl2Hits2;
                         nHits2_ist[nPair]=0;
-                        
-                        
-                        if (1) nMcPxl1Hits++;
-                        if (1) nMcPxl2Hits++;
-                        if (1) nMcIstHits++;
-                        if (1) nRcPxl1Hits++;
-                        if (1) nRcPxl2Hits++;
-                        if (1) nRcIstHits++;
                         nPair++;
 
                     }
