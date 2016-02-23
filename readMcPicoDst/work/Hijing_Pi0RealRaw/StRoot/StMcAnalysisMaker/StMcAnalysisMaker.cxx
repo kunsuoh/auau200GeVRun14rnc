@@ -273,7 +273,7 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                 
                 if (!nPartnerPxlHits1 && !nPartnerPxlHits2) continue;
                 if (nPartnerPxlHits1) {
-                    for(unsigned int ipxlhit=0; ipxlhit<nPartnerPxlHits1; ipxlhit++) {
+                    for(int ipxlhit=0; ipxlhit<nPartnerPxlHits1; ipxlhit++) {
                         cout << "check ipxlhit loop " << ipxlhit << endl;
                         StThreeVectorF pos = PartnerPxlHits1[ipxlhit]->position();
                         float const R = pow(pos.x(),2.0) + pow(pos.y(),2.0);
@@ -283,15 +283,15 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                             if(R < 3.5*3.5) pxl1HitPosition1 = pos;
                             for (unsigned int iSec = 0; iSec<pxlHitCol->numberOfSectors(); iSec++){
                                 cout << "check iSec loop " << iSec << endl;
-                                StPxlSectorHitCollection * pxlSecHitCol = pxlHitCol->sector(iSec);
+                                const StPxlSectorHitCollection * pxlSecHitCol = pxlHitCol->sector(iSec);
                                 if (!pxlSecHitCol) continue;
                                 for (unsigned int iLad; iLad < pxlSecHitCol->numberOfLadders(); iLad++) {
                                     cout << "check iLad loop " << iLad << endl;
-                                    StPxlLadderHitCollection * pxlLadHitCol = pxlSecHitCol->ladder(iLad);
+                                    const StPxlLadderHitCollection * pxlLadHitCol = pxlSecHitCol->ladder(iLad);
                                     if (!pxlLadHitCol) continue;
                                     for (unsigned int iSen=0; iSen<pxlLadHitCol->numberOfSensors(); iSen++) {
                                         cout << "check iSen loop " << iSen << endl;
-                                        StPxlSensorHitCollection * pxlSenHitCol = pxlLadHitCol->sensor(iSen);
+                                        const StPxlSensorHitCollection * pxlSenHitCol = pxlLadHitCol->sensor(iSen);
                                         if (!pxlSenHitCol) continue;
                                         UInt_t nSenHits = pxlSenHitCol->hits().size();
                                         cout << "nSenHit: " << nSenHits << endl;
@@ -321,7 +321,7 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                     }
                 }
                 if (nPartnerPxlHits2) {
-                    for(unsigned int ipxlhit=0; ipxlhit<nPartnerPxlHits2; ipxlhit++) {
+                    for(int ipxlhit=0; ipxlhit<nPartnerPxlHits2; ipxlhit++) {
                         StThreeVectorF pos = PartnerPxlHits2[ipxlhit]->position();
                         float const R = pow(pos.x(),2.0) + pow(pos.y(),2.0);
                         
