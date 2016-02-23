@@ -269,6 +269,7 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                                 
                                 if(PartnerPxlHits1[ipxlhit]->idTruth() == positron->key()) {
                                     if(R < 3.5*3.5) {
+                                        nRcPxl1Hits++;
                                         for (int iSec = 0; iSec<pxlHitCol->numberOfSectors(); iSec++){
                                             StPxlSectorHitCollection * pxlSecHitCol = pxlHitCol->sector(iSec);
                                             if (!pxlSecHitCol) continue;
@@ -292,9 +293,11 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                                         pxl1HitPosition1 = pos;
                                     }
                                     else if (clusterSize1_pxl2[nPair]) {
+                                        nRcPxl2Hits++;
                                         //clusterSize1_pxl3[nPair] = PartnerPxlHits1[ipxlhit]->nRawHits();
                                     }
                                     else {
+                                        nRcPxl2Hits++;
                                         //clusterSize1_pxl2[nPair] = PartnerPxlHits1[ipxlhit]->nRawHits();
                                     }
                                     continue;
@@ -314,6 +317,7 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
 
                                 if(PartnerPxlHits2[ipxlhit]->idTruth() == electron->key()) {
                                     if(R < 3.5*3.5) {
+                                        nRcPxl1Hits++;
                                         for (int iSec = 0; iSec<pxlHitCol->numberOfSectors(); iSec++){
                                             StPxlSectorHitCollection * pxlSecHitCol = pxlHitCol->sector(iSec);
                                             if (!pxlSecHitCol) continue;
@@ -337,9 +341,11 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                                         pxl1HitPosition2 = pos;
                                     }
                                     else if (clusterSize2_pxl2[nPair]) {
+                                        nRcPxl2Hits++;
                                         //clusterSize1_pxl3[nPair] = PartnerPxlHits2[ipxlhit]->nRawHits();
                                     }
                                     else {
+                                        nRcPxl2Hits++;
                                         //clusterSize2_pxl2[nPair] = PartnerPxlHits2[ipxlhit]->nRawHits();
                                     }
                                     continue;
@@ -370,10 +376,13 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                         for(int ipxlhit = 0; ipxlhit < (int)mcPxlHits2.size(); ipxlhit++){
                             if((int)mcPxlHits2.at(ipxlhit)->ladder() > 1){
                                 pxl2Hits2++;
+                                nMcPxl2Hits++;
                             }
                             else{
                                 pxl1Hits2++;
                                 mcPxl1HitPosition2= mcPxlHits2.at(ipxlhit)->position();
+                                nMcPxl1Hits++;
+
                             }
                         }
 
