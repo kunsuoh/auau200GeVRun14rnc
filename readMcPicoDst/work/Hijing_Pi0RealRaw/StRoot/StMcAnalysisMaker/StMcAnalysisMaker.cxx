@@ -177,8 +177,8 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
         if (trackGid==1 && mcTrack->stopVertex()) {
             StMcTrack * positron = 0;
             StMcTrack * electron = 0;
-            StGlobalTrack * rcPositron = 0;
-            StGlobalTrack * rcElectron = 0;
+            StTrack * rcPositron = 0;
+            StTrack * rcElectron = 0;
             for (int j = 0; j < mcTrack->stopVertex()->numberOfDaughters(); j++){
                 StMcTrack * dauTrack = mcTrack->stopVertex()->daughter(j);
                 Int_t dauTrackGid = dauTrack->geantId();
@@ -189,16 +189,13 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                 StTrack const* rcTrack = findPartner(dauTrack, ncommonhits);
                 if(rcTrack)
                 {
-                    if(StGlobalTrack const* glRcTrack = dynamic_cast<StGlobalTrack const*>(rcTrack))
-                    {
-                        if (dauTrackGid==2) {
-                            positron = dauTrack;
-                            rcPositron = dynamic_cast<StGlobalTrack *>(rcTrack);
-                        }
-                        else if (dauTrackGid==3) {
-                            electron = dauTrack;
-                            rcElectron = dynamic_cast<StGlobalTrack *>(rcTrack);
-                        }
+                    if (dauTrackGid==2) {
+                        positron = dauTrack;
+                        rcPositron = (StTrack *)rcTrack;
+                    }
+                    else if (dauTrackGid==3) {
+                        electron = dauTrack;
+                        rcElectron = (StTrack *)rcTrack;
                     }
                 }
             }// end dauther loop
