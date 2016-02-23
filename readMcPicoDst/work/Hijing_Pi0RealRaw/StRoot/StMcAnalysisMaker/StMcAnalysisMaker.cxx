@@ -193,11 +193,11 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                     {
                         if (dauTrackGid==2) {
                             positron = dauTrack;
-                            rcPositron = dynamic_cast<StGlobalTrack const*>(rcTrack);
+                            rcPositron = dynamic_cast<StGlobalTrack *>(rcTrack);
                         }
                         else if (dauTrackGid==3) {
                             electron = dauTrack;
-                            rcElectron = dynamic_cast<StGlobalTrack const*>(rcTrack);
+                            rcElectron = dynamic_cast<StGlobalTrack *>(rcTrack);
                         }
                     }
                 }
@@ -214,7 +214,7 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                 rcDist_pxl2[nPair] = 0;
                 rcDist_ist[nPair] = 0;
                 convR[nPair] = TMath::Sqrt(electron->startVertex()->position().x()*electron->startVertex()->position().x()+electron->startVertex()->position().y()*electron->startVertex()->position().y());
-                parentGid[nPair] = parentPositron->geantId();
+                parentGid[nPair] = mcTrack->geantId();
                 mass[nPair] = 0;
                 pairDca[nPair] = 0;
                 pt1[nPair] = positron->pt();
