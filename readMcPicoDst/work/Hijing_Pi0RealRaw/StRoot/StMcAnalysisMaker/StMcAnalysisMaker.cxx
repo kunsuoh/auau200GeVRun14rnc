@@ -376,8 +376,8 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                             }
                         }
 
-                        Int_t hftHitMap1 = (Int_t)((UInt_t)(glRcPositron->topologyMap().data(0)) >> 1 & 0x7F)
-                        Int_t hftHitMap2 = (Int_t)((UInt_t)(glRcElectron->topologyMap().data(0)) >> 1 & 0x7F)
+                        Int_t hftHitMap1 = (Int_t)((UInt_t)(glRcPositron->topologyMap().data(0)) >> 1 & 0x7F);
+                        Int_t hftHitMap2 = (Int_t)((UInt_t)(glRcElectron->topologyMap().data(0)) >> 1 & 0x7F);
                         
                         pairPt[nPair] = mcTrack->pt();
                         pairEta[nPair] = mcTrack->pseudoRapidity();
