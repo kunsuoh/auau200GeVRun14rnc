@@ -186,7 +186,7 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
     
     StPxlHitCollection * pxlHitCol = event->pxlHitCollection();
     StMcPxlHitCollection * pxlMcHitCol = mcEvent->pxlHitCollection();
-    
+    /*
     for (unsigned int i = 0;  i < trks.size(); i++){
         StMcTrack* mcTrack = trks[i];
         Int_t trackGid = mcTrack->geantId();
@@ -283,19 +283,16 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                             if(R < 3.5*3.5) pxl1HitPosition1 = pos;
                             for (unsigned int iSec = 0; iSec<pxlHitCol->numberOfSectors(); iSec++){
                                 cout << "check iSec loop " << iSec << endl;
-                                const StPxlSectorHitCollection * pxlSecHitCol = pxlHitCol->sector(iSec);
-                                if (pxlSecHitCol->numberOfHits()==0) continue;
-                                
+                                StPxlSectorHitCollection * pxlSecHitCol = pxlHitCol->sector(iSec);
+                                if (!pxlSecHitCol) continue;
                                 for (unsigned int iLad; iLad < pxlSecHitCol->numberOfLadders(); iLad++) {
                                     cout << "check iLad loop " << iLad << endl;
-                                    const StPxlLadderHitCollection * pxlLadHitCol = pxlSecHitCol->ladder(iLad);
-                                    if (pxlLadHitCol->numberOfHits()==0) continue;
-                                    
+                                    StPxlLadderHitCollection * pxlLadHitCol = pxlSecHitCol->ladder(iLad);
+                                    if (!pxlLadHitCol) continue;
                                     for (unsigned int iSen=0; iSen<pxlLadHitCol->numberOfSensors(); iSen++) {
                                         cout << "check iSen loop " << iSen << endl;
-                                        const StPxlSensorHitCollection * pxlSenHitCol = pxlLadHitCol->sensor(iSen);
-                                        if (pxlSenHitCol->numberOfHits()==0) continue;
-                                        
+                                        StPxlSensorHitCollection * pxlSenHitCol = pxlLadHitCol->sensor(iSen);
+                                        if (!pxlSenHitCol) continue;
                                         UInt_t nSenHits = pxlSenHitCol->hits().size();
                                         cout << "nSenHit: " << nSenHits << endl;
                                         for (unsigned int iHit = 0; iHit < nSenHits; iHit++){
@@ -439,18 +436,23 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
             }
         }
     }
+     */
     // RC
     for (unsigned int iSec = 0; iSec<pxlHitCol->numberOfSectors(); iSec++){
+        cout << "Check iSec : " << iSec << endl;
         StPxlSectorHitCollection * pxlSecHitCol = pxlHitCol->sector(iSec);
         if (!pxlSecHitCol) continue;
         for (unsigned int iLad; iLad < pxlSecHitCol->numberOfLadders(); iLad++) {
+            cout << "Check iLad : " << iLad << endl;
             StPxlLadderHitCollection * pxlLadHitCol = pxlSecHitCol->ladder(iLad);
             if (!pxlLadHitCol) continue;
             for (unsigned int iSen=0; iSen<pxlLadHitCol->numberOfSensors(); iSen++) {
+                cout << "Check iSen : " << iSen << endl;
                 StPxlSensorHitCollection * pxlSenHitCol = pxlLadHitCol->sensor(iSen);
                 if (!pxlSenHitCol) continue;
                 UInt_t nSenHits = pxlSenHitCol->hits().size();
                 for (unsigned int iHit = 0; iHit < nSenHits; iHit++){
+                    cout << "Check iHit : " << iHit << endl;
                     StPxlHit* pixHit = pxlSenHitCol->hits()[iHit];
                     if (!pixHit) continue;
                     if (pixHit->ladder() == 1)nRcPxl1Hits++;
@@ -459,6 +461,8 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
             }
         }
     }
+    cout << "nRcPxl1Hits / nRcPxl2Hits / pxlHitCol->numberOfHits() : " << nRcPxl1Hits << " / " << nRcPxl2Hits << " / " << pxlHitCol->numberOfHits() << endl;
+    
     // MC
     for (unsigned int iSec = 0; iSec<pxlMcHitCol->numberOfSectors(); iSec++){
         StMcPxlSectorHitCollection * pxlSecHitCol = pxlMcHitCol->sector(iSec);
