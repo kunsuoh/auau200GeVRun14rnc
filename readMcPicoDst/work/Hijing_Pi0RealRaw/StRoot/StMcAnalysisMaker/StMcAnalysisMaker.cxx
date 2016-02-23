@@ -213,12 +213,12 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
             pairEta[nPair] = parentPositron->pseudoRapidity();
             openangle[nPair] = 0;
             mcopenangle[nPair] = positron->momentum().angle(electron->momentum());
-            mcDist_pxl1[nPair] = ;
-            mcDist_pxl2[nPair] = ;
-            mcDist_ist[nPair] = ;
-            rcDist_pxl1[nPair] = ;
-            rcDist_pxl2[nPair] = ;
-            rcDist_ist[nPair] = ;
+            mcDist_pxl1[nPair] = 0;
+            mcDist_pxl2[nPair] = 0;
+            mcDist_ist[nPair] = 0;
+            rcDist_pxl1[nPair] = 0;
+            rcDist_pxl2[nPair] = 0;
+            rcDist_ist[nPair] = 0;
             convR[nPair] = TMath::Sqrt(electron->startVertex()->positron().x()*electron->startVertex()->positron().x()+electron->startVertex()->positron().y()*electron->startVertex()->positron().y());
             parentGid[nPair] = parentPositron->geantId();
             mass[nPair] = 0;
@@ -383,7 +383,6 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
         }
         
         
-        /*
          cout<<"ncommonhits "<<ncommonhits<<endl;
          cout<<"Rc track hits"<<endl;
          for(size_t ih = 0; ih <rcTpcHits.size(); ih++)

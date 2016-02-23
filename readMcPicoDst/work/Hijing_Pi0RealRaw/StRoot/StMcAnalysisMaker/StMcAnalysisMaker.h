@@ -18,12 +18,12 @@ class StEvent;
 #include "StMaker.h"
 
 
+const Int_t kMaxPair= 500;
 class StMcAnalysisMaker : public StMaker
 {
 private:
     TFile* mFile;
     TTree * mTree;
-    const Int_t kMaxPair= 500;
     Int_t nPair;
     Int_t nMcPxl1Hits;
     Int_t nMcPxl2Hits;
