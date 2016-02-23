@@ -465,16 +465,20 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
     
     // MC
     for (unsigned int iSec = 0; iSec<pxlMcHitCol->numberOfSectors(); iSec++){
+        cout << "Check iSec : " << iSec << endl;
         StMcPxlSectorHitCollection * pxlSecHitCol = pxlMcHitCol->sector(iSec);
         if (!pxlSecHitCol) continue;
         for (unsigned int iLad; iLad < pxlSecHitCol->numberOfLadders(); iLad++) {
+            cout << "Check iLad : " << iLad << endl;
             StMcPxlLadderHitCollection * pxlLadHitCol = pxlSecHitCol->ladder(iLad);
             if (!pxlLadHitCol) continue;
             for (unsigned int iSen=0; iSen<pxlLadHitCol->numberOfSensors(); iSen++) {
+                cout << "Check iSen : " << iSen << endl;
                 StMcPxlSensorHitCollection * pxlSenHitCol = pxlLadHitCol->sensor(iSen);
                 if (!pxlSenHitCol) continue;
                 UInt_t nSenHits = pxlSenHitCol->hits().size();
                 for (unsigned int iHit = 0; iHit < nSenHits; iHit++){
+                    cout << "Check iHit : " << iHit << endl;
                     StMcPxlHit* pixHit = pxlSenHitCol->hits()[iHit];
                     if (!pixHit) continue;
                     if (pixHit->ladder() == 1)nMcPxl1Hits++;
@@ -483,6 +487,7 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
             }
         }
     }
+    cout << "nMcPxl1Hits / nMcPxl2Hits / pxlMcHitCol->numberOfHits() : " << nMcPxl1Hits << " / " << nMcPxl2Hits << " / " << pxlMcHitCol->numberOfHits() << endl;
 
     mTree->Fill();
     
