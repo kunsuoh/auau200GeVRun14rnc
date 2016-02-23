@@ -193,11 +193,11 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                     {
                         if (dauTrackGid==2) {
                             positron = dauTrack;
-                            rcPositron = glRcTrack;
+                            rcPositron = dynamic_cast<StGlobalTrack const*>(rcTrack);
                         }
                         else if (dauTrackGid==3) {
                             electron = dauTrack;
-                            rcElectron = glRcTrack;
+                            rcElectron = dynamic_cast<StGlobalTrack const*>(rcTrack);
                         }
                     }
                 }
