@@ -1,4 +1,4 @@
-void run_StMcAnalysisMaker(const char* file ="Files_0/hft_reco/gamma_0.MuDst.root")
+void run_StMcAnalysisMaker(const char* file ="MuDst.list")
 {
     //Check STAR Library. Please set SL_version to the original star library used 
     // in the production from http://www.star.bnl.gov/devcgi/dbProdOptionRetrv.pl
