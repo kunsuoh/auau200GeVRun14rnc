@@ -218,216 +218,215 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                     }
                 }
             }// end dauther loop
-            if (rcElectron && rcPositron && electron && positron) {
-                if (StGlobalTrack const* glRcPositron = dynamic_cast<StGlobalTrack const*>(rcPositron)) {
-                    if (StGlobalTrack const* glRcElectron = dynamic_cast<StGlobalTrack const*>(rcElectron)) {
-                        StPhysicalHelixD electronHelix = glRcElectron->dcaGeometry()->helix();
-                        StPhysicalHelixD partnerHelix = glRcPositron->dcaGeometry()->helix();
+            if (rcElectron && rcPositron && electron && positron)
+            if (StGlobalTrack const* glRcPositron = dynamic_cast<StGlobalTrack const*>(rcPositron))
+            if (StGlobalTrack const* glRcElectron = dynamic_cast<StGlobalTrack const*>(rcElectron)) {
+                StPhysicalHelixD electronHelix = glRcElectron->dcaGeometry()->helix();
+                StPhysicalHelixD partnerHelix = glRcPositron->dcaGeometry()->helix();
+                
+                // normal method
+                pair<double,double> ss = electronHelix.pathLengths(partnerHelix);
+                StThreeVectorD kAtDcaToPartner = electronHelix.at(ss.first);
+                StThreeVectorD pAtDcaToElectron = partnerHelix.at(ss.second);
+                
+                // calculate DCA of partner to electron at their DCA
+                StThreeVectorD VectorDca = kAtDcaToPartner - pAtDcaToElectron;
+                
+                // calculate Lorentz vector of electron-partner pair
+                StThreeVectorF const electronMomAtDca = electronHelix.momentumAt(ss.first, bField * kilogauss);
+                StThreeVectorF const partnerMomAtDca = partnerHelix.momentumAt(ss.second, bField * kilogauss);
+                
+                StLorentzVectorF const electronFourMom(electronMomAtDca, electronMomAtDca.massHypothesis(0.000511));
+                StLorentzVectorF const partnerFourMom(partnerMomAtDca, partnerMomAtDca.massHypothesis(0.000511));
+                StLorentzVectorF const epairFourMom = electronFourMom + partnerFourMom;
+                
+                StThreeVectorF const epairMomAtDca = epairFourMom.vect();
+                StThreeVectorF const Position = (kAtDcaToPartner + pAtDcaToElectron)/2.0;
+                
+                float mPhiV, mOpenAngle;
+                phiCalculation(partnerFourMom, electronFourMom, bField > 0 ? 1 : -1, mPhiV, mOpenAngle);
+                
+                // Pxl
+                StPtrVecHit PartnerPxlHits1 = glRcPositron->detectorInfo()->hits(kPxlId);
+                StPtrVecHit PartnerPxlHits2 = glRcElectron->detectorInfo()->hits(kPxlId);
+                int nPartnerPxlHits1 = (int) PartnerPxlHits1.size();
+                int nPartnerPxlHits2 = (int) PartnerPxlHits2.size();
+                
+                uint pxl1Truth1 = 1; // first Pxl positron
+                uint pxl1Truth2 = 1; // first Pxl electron
+                int pxl1Hits1 = 0;
+                int pxl1Hits2 = 0;
+                
+                uint pxl2Truth1 = 1;  // second Pxl positron
+                uint pxl2Truth2 = 1;  // second Pxl electron
+                int pxl2Hits1 = 0;
+                int pxl2Hits2 = 0;
+                
+                StThreeVectorF pxl1HitPosition1 = 0;
+                StThreeVectorF pxl1HitPosition2 = 0;
+                clusterSize1_pxl1[nPair] = 0;
+                clusterSize1_pxl2[nPair] = 0;
+                clusterSize1_pxl3[nPair] = 0;
+                clusterSize2_pxl1[nPair] = 0;
+                clusterSize2_pxl2[nPair] = 0;
+                clusterSize2_pxl3[nPair] = 0;
+                
+                if (!nPartnerPxlHits1 && !nPartnerPxlHits2) continue;
+                if (nPartnerPxlHits1) {
+                    for(int ipxlhit=0; ipxlhit<nPartnerPxlHits1; ipxlhit++) {
+                        StThreeVectorF pos = PartnerPxlHits1[ipxlhit]->position();
+                        float const R = pow(pos.x(),2.0) + pow(pos.y(),2.0);
                         
-                        // normal method
-                        pair<double,double> ss = electronHelix.pathLengths(partnerHelix);
-                        StThreeVectorD kAtDcaToPartner = electronHelix.at(ss.first);
-                        StThreeVectorD pAtDcaToElectron = partnerHelix.at(ss.second);
-                        
-                        // calculate DCA of partner to electron at their DCA
-                        StThreeVectorD VectorDca = kAtDcaToPartner - pAtDcaToElectron;
-                        
-                        // calculate Lorentz vector of electron-partner pair
-                        StThreeVectorF const electronMomAtDca = electronHelix.momentumAt(ss.first, bField * kilogauss);
-                        StThreeVectorF const partnerMomAtDca = partnerHelix.momentumAt(ss.second, bField * kilogauss);
-                        
-                        StLorentzVectorF const electronFourMom(electronMomAtDca, electronMomAtDca.massHypothesis(0.000511));
-                        StLorentzVectorF const partnerFourMom(partnerMomAtDca, partnerMomAtDca.massHypothesis(0.000511));
-                        StLorentzVectorF const epairFourMom = electronFourMom + partnerFourMom;
-                        
-                        StThreeVectorF const epairMomAtDca = epairFourMom.vect();
-                        StThreeVectorF const Position = (kAtDcaToPartner + pAtDcaToElectron)/2.0;
-                        
-                        float mPhiV, mOpenAngle;
-                        phiCalculation(partnerFourMom, electronFourMom, bField > 0 ? 1 : -1, mPhiV, mOpenAngle);
-                        
-                        // Pxl
-                        StPtrVecHit PartnerPxlHits1 = glRcPositron->detectorInfo()->hits(kPxlId);
-                        StPtrVecHit PartnerPxlHits2 = glRcElectron->detectorInfo()->hits(kPxlId);
-                        int nPartnerPxlHits1 = (int) PartnerPxlHits1.size();
-                        int nPartnerPxlHits2 = (int) PartnerPxlHits2.size();
-
-                        uint pxl1Truth1 = 1; // first Pxl positron
-                        uint pxl1Truth2 = 1; // first Pxl electron
-                        int pxl1Hits1 = 0;
-                        int pxl1Hits2 = 0;
-
-                        uint pxl2Truth1 = 1;  // second Pxl positron
-                        uint pxl2Truth2 = 1;  // second Pxl electron
-                        int pxl2Hits1 = 0;
-                        int pxl2Hits2 = 0;
-                        
-                        StThreeVectorF pxl1HitPosition1 = 0;
-                        StThreeVectorF pxl1HitPosition2 = 0;
-                        clusterSize1_pxl1[nPair] = 0;
-                        clusterSize1_pxl2[nPair] = 0;
-                        clusterSize1_pxl3[nPair] = 0;
-                        clusterSize2_pxl1[nPair] = 0;
-                        clusterSize2_pxl2[nPair] = 0;
-                        clusterSize2_pxl3[nPair] = 0;
-                        
-                        if (!nPartnerPxlHits1 && !nPartnerPxlHits2) continue;
-                        if (nPartnerPxlHits1) {
-                            for(int ipxlhit=0; ipxlhit<nPartnerPxlHits1; ipxlhit++) {
-                                StThreeVectorF pos = PartnerPxlHits1[ipxlhit]->position();
-                                float const R = pow(pos.x(),2.0) + pow(pos.y(),2.0);
-                                
-                                if(PartnerPxlHits1[ipxlhit]->idTruth() == positron->key()) {
-                                    if(R < 3.5*3.5) pxl1HitPosition1 = pos;
-                                    for (int iSec = 0; iSec<pxlHitCol->numberOfSectors(); iSec++){
-                                        StPxlSectorHitCollection * pxlSecHitCol = pxlHitCol->sector(iSec);
-                                        if (!pxlSecHitCol) continue;
-                                        for (int iLad; iLad < pxlSecHitCol->numberOfLadders(); iLad++) {
-                                            StPxlLadderHitCollection * pxlLadHitCol = pxlSecHitCol->ladder(iLad);
-                                            if (!pxlLadHitCol) continue;
-                                            for (int iSen=0; iSen<pxlLadHitCol->numberOfSensors(); iSen++) {
-                                                StPxlSensorHitCollection * pxlSenHitCol = pxlLadHitCol->sensor(iSen);
-                                                if (!pxlSenHitCol) continue;
-                                                UInt_t nSenHits = pxlSenHitCol->hits().size();
-                                                for (int iHit = 0; iHit < nSenHits; iHit++){
-                                                    StPxlHit* pixHit = pxlSenHitCol->hits()[iHit];
-                                                    if (!pixHit) continue;
-                                                    if (pixHit->idTruth()==PartnerPxlHits1[ipxlhit]->idTruth()) {
-                                                        if(R < 3.5*3.5) clusterSize1_pxl1[nPair] = pixHit->nRawHits();
-                                                        else if (clusterSize1_pxl2[nPair]) clusterSize1_pxl3[nPair] = pixHit->nRawHits();
-                                                        else clusterSize1_pxl2[nPair] = pixHit->nRawHits();
-                                                    }
-                                                }
-                                                
+                        if(PartnerPxlHits1[ipxlhit]->idTruth() == positron->key()) {
+                            if(R < 3.5*3.5) pxl1HitPosition1 = pos;
+                            for (int iSec = 0; iSec<pxlHitCol->numberOfSectors(); iSec++){
+                                StPxlSectorHitCollection * pxlSecHitCol = pxlHitCol->sector(iSec);
+                                if (!pxlSecHitCol) continue;
+                                for (int iLad; iLad < pxlSecHitCol->numberOfLadders(); iLad++) {
+                                    StPxlLadderHitCollection * pxlLadHitCol = pxlSecHitCol->ladder(iLad);
+                                    if (!pxlLadHitCol) continue;
+                                    for (int iSen=0; iSen<pxlLadHitCol->numberOfSensors(); iSen++) {
+                                        StPxlSensorHitCollection * pxlSenHitCol = pxlLadHitCol->sensor(iSen);
+                                        if (!pxlSenHitCol) continue;
+                                        UInt_t nSenHits = pxlSenHitCol->hits().size();
+                                        cout << "nSenHit: " << nSenHits << endl;
+                                        for (int iHit = 0; iHit < nSenHits; iHit++){
+                                            StPxlHit* pixHit = pxlSenHitCol->hits()[iHit];
+                                            if (!pixHit) continue;
+                                            if (pixHit->idTruth()==PartnerPxlHits1[ipxlhit]->idTruth()) {
+                                                if(R < 3.5*3.5) clusterSize1_pxl1[nPair] = pixHit->nRawHits();
+                                                else if (clusterSize1_pxl2[nPair]) clusterSize1_pxl3[nPair] = pixHit->nRawHits();
+                                                else clusterSize1_pxl2[nPair] = pixHit->nRawHits();
                                             }
                                         }
+                                        
                                     }
-                                    
-                                    continue;
-                                }
-                                if(R > 3.5*3.5){
-                                    pxl2Truth1 = 0;
-                                }
-                                else{
-                                    pxl1Truth1 = 0;
                                 }
                             }
+                            
+                            continue;
                         }
-                        if (nPartnerPxlHits2) {
-                            for(int ipxlhit=0; ipxlhit<nPartnerPxlHits2; ipxlhit++) {
-                                StThreeVectorF pos = PartnerPxlHits2[ipxlhit]->position();
-                                float const R = pow(pos.x(),2.0) + pow(pos.y(),2.0);
-
-                                if(PartnerPxlHits2[ipxlhit]->idTruth() == electron->key()) {
-                                    if(R < 3.5*3.5) pxl1HitPosition2 = pos;
-                                    for (int iSec = 0; iSec<pxlHitCol->numberOfSectors(); iSec++){
-                                        StPxlSectorHitCollection * pxlSecHitCol = pxlHitCol->sector(iSec);
-                                        if (!pxlSecHitCol) continue;
-                                        for (int iLad; iLad < pxlSecHitCol->numberOfLadders(); iLad++) {
-                                            StPxlLadderHitCollection * pxlLadHitCol = pxlSecHitCol->ladder(iLad);
-                                            if (!pxlLadHitCol) continue;
-                                            for (int iSen=0; iSen<pxlLadHitCol->numberOfSensors(); iSen++) {
-                                                StPxlSensorHitCollection * pxlSenHitCol = pxlLadHitCol->sensor(iSen);
-                                                if (!pxlSenHitCol) continue;
-                                                UInt_t nSenHits = pxlSenHitCol->hits().size();
-                                                for (int iHit = 0; iHit < nSenHits; iHit++){
-                                                    StPxlHit* pixHit = pxlSenHitCol->hits()[iHit];
-                                                    if (!pixHit) continue;
-                                                    if (pixHit->idTruth()==PartnerPxlHits2[ipxlhit]->idTruth()) {
-                                                        if(R < 3.5*3.5) clusterSize2_pxl1[nPair] = pixHit->nRawHits();
-                                                        else if (clusterSize2_pxl2[nPair]) clusterSize2_pxl3[nPair] = pixHit->nRawHits();
-                                                        else clusterSize2_pxl2[nPair] = pixHit->nRawHits();
-                                                    }
-                                                    
-                                                }
-                                            }
-                                        }
-                                    }
-                                    continue;
-                                }
-                                if(R > 3.5*3.5){
-                                    pxl2Truth2 = 0;
-                                }
-                                else{
-                                    pxl1Truth2 = 0;
-                                }
-                            }
+                        if(R > 3.5*3.5){
+                            pxl2Truth1 = 0;
                         }
-
-                        const StPtrVecMcPxlHit mcPxlHits1 = positron->pxlHits();
-                        const StPtrVecMcPxlHit mcPxlHits2 = electron->pxlHits();
-                        StThreeVectorF mcPxl1HitPosition1 = 0;
-                        StThreeVectorF mcPxl1HitPosition2 = 0;
-                        //Loop over PXL hits to separate into layers
-                        for(int ipxlhit = 0; ipxlhit < (int)mcPxlHits1.size(); ipxlhit++){
-                            if((int)mcPxlHits1.at(ipxlhit)->ladder() > 1){
-                                pxl2Hits1++;
-                            }
-                            else{
-                                pxl1Hits1++;
-                                mcPxl1HitPosition1 = mcPxlHits1.at(ipxlhit)->position();
-                            }
+                        else{
+                            pxl1Truth1 = 0;
                         }
-                        for(int ipxlhit = 0; ipxlhit < (int)mcPxlHits2.size(); ipxlhit++){
-                            if((int)mcPxlHits2.at(ipxlhit)->ladder() > 1){
-                                pxl2Hits2++;
-                            }
-                            else{
-                                pxl1Hits2++;
-                                mcPxl1HitPosition2= mcPxlHits2.at(ipxlhit)->position();
-
-                            }
-                        }
-
-                        Int_t hftHitMap1 = (Int_t)((UInt_t)(glRcPositron->topologyMap().data(0)) >> 1 & 0x7F);
-                        Int_t hftHitMap2 = (Int_t)((UInt_t)(glRcElectron->topologyMap().data(0)) >> 1 & 0x7F);
-                        
-                        pairPt[nPair] = mcTrack->pt();
-                        pairEta[nPair] = mcTrack->pseudoRapidity();
-                        openangle[nPair] = mOpenAngle;
-                        mcopenangle[nPair] = positron->momentum().angle(electron->momentum());
-                        mcDist_pxl1[nPair] = (mcPxl1HitPosition1-mcPxl1HitPosition2).mag();
-                        mcDist_pxl2[nPair] = 0;
-                        rcDist_pxl1[nPair] = (pxl1HitPosition1-pxl1HitPosition2).mag();
-                        rcDist_pxl2[nPair] = 0;
-                        mcConvR[nPair] = TMath::Sqrt(mcTrack->stopVertex()->position().x()*mcTrack->stopVertex()->position().x()+mcTrack->stopVertex()->position().y()*mcTrack->stopVertex()->position().y());
-                        rcConvR[nPair] = TMath::Sqrt(Position.x()*Position.x()+Position.y()+Position.y());
-                        parentGid[nPair] = mcTrack->geantId();
-                        mass[nPair] = epairFourMom.m();
-                        pairDca[nPair] = static_cast<float>(VectorDca.mag());
-                        pt1[nPair] = positron->pt();
-                        pt2[nPair] = electron->pt();
-                        eta1[nPair] = positron->pseudoRapidity();
-                        eta2[nPair] = electron->pseudoRapidity();
-                        //clusterSize1_pxl1[nPair] = 0;
-                        //clusterSize1_pxl2[nPair] = 0;
-                        //clusterSize1_pxl3[nPair] = 0;
-                        //clusterSize2_pxl1[nPair] = 0;
-                        //clusterSize2_pxl2[nPair] = 0;
-                        //clusterSize2_pxl3[nPair] = 0;
-                        idTruth[nPair] = 1; // electron(2) or positron(1) idTruth
-                        rcHftHit1_pxl1[nPair]=hftHitMap1>>0 & 0x1;
-                        rcHftHit1_pxl2[nPair]=hftHitMap1>>1 & 0x3;
-                        rcHftHit1_ist[nPair]=hftHitMap1>>3 & 0x3;
-                        truth1_pxl1[nPair]=pxl1Truth1;
-                        truth1_pxl2[nPair]=pxl1Truth2;
-                        truth1_ist[nPair]=0;
-                        nHits1_pxl1[nPair]=pxl1Hits1;
-                        nHits1_pxl2[nPair]=pxl1Hits2;
-                        nHits1_ist[nPair]=0;
-                        rcHftHit2_pxl1[nPair]=hftHitMap2>>0 & 0x1;
-                        rcHftHit2_pxl2[nPair]=hftHitMap2>>1 & 0x3;
-                        rcHftHit2_ist[nPair]=hftHitMap2>>3 & 0x3;
-                        truth2_pxl1[nPair]=pxl2Truth1;
-                        truth2_pxl2[nPair]=pxl2Truth2;
-                        truth2_ist[nPair]=0;
-                        nHits2_pxl1[nPair]=pxl2Hits1;
-                        nHits2_pxl2[nPair]=pxl2Hits2;
-                        nHits2_ist[nPair]=0;
-                        nPair++;
-
                     }
                 }
+                if (nPartnerPxlHits2) {
+                    for(int ipxlhit=0; ipxlhit<nPartnerPxlHits2; ipxlhit++) {
+                        StThreeVectorF pos = PartnerPxlHits2[ipxlhit]->position();
+                        float const R = pow(pos.x(),2.0) + pow(pos.y(),2.0);
+                        
+                        if(PartnerPxlHits2[ipxlhit]->idTruth() == electron->key()) {
+                            if(R < 3.5*3.5) pxl1HitPosition2 = pos;
+                            for (int iSec = 0; iSec<pxlHitCol->numberOfSectors(); iSec++){
+                                StPxlSectorHitCollection * pxlSecHitCol = pxlHitCol->sector(iSec);
+                                if (!pxlSecHitCol) continue;
+                                for (int iLad; iLad < pxlSecHitCol->numberOfLadders(); iLad++) {
+                                    StPxlLadderHitCollection * pxlLadHitCol = pxlSecHitCol->ladder(iLad);
+                                    if (!pxlLadHitCol) continue;
+                                    for (int iSen=0; iSen<pxlLadHitCol->numberOfSensors(); iSen++) {
+                                        StPxlSensorHitCollection * pxlSenHitCol = pxlLadHitCol->sensor(iSen);
+                                        if (!pxlSenHitCol) continue;
+                                        UInt_t nSenHits = pxlSenHitCol->hits().size();
+                                        for (int iHit = 0; iHit < nSenHits; iHit++){
+                                            StPxlHit* pixHit = pxlSenHitCol->hits()[iHit];
+                                            if (!pixHit) continue;
+                                            if (pixHit->idTruth()==PartnerPxlHits2[ipxlhit]->idTruth()) {
+                                                if(R < 3.5*3.5) clusterSize2_pxl1[nPair] = pixHit->nRawHits();
+                                                else if (clusterSize2_pxl2[nPair]) clusterSize2_pxl3[nPair] = pixHit->nRawHits();
+                                                else clusterSize2_pxl2[nPair] = pixHit->nRawHits();
+                                            }
+                                            
+                                        }
+                                    }
+                                }
+                            }
+                            continue;
+                        }
+                        if(R > 3.5*3.5){
+                            pxl2Truth2 = 0;
+                        }
+                        else{
+                            pxl1Truth2 = 0;
+                        }
+                    }
+                }
+                
+                const StPtrVecMcPxlHit mcPxlHits1 = positron->pxlHits();
+                const StPtrVecMcPxlHit mcPxlHits2 = electron->pxlHits();
+                StThreeVectorF mcPxl1HitPosition1 = 0;
+                StThreeVectorF mcPxl1HitPosition2 = 0;
+                //Loop over PXL hits to separate into layers
+                for(int ipxlhit = 0; ipxlhit < (int)mcPxlHits1.size(); ipxlhit++){
+                    if((int)mcPxlHits1.at(ipxlhit)->ladder() > 1){
+                        pxl2Hits1++;
+                    }
+                    else{
+                        pxl1Hits1++;
+                        mcPxl1HitPosition1 = mcPxlHits1.at(ipxlhit)->position();
+                    }
+                }
+                for(int ipxlhit = 0; ipxlhit < (int)mcPxlHits2.size(); ipxlhit++){
+                    if((int)mcPxlHits2.at(ipxlhit)->ladder() > 1){
+                        pxl2Hits2++;
+                    }
+                    else{
+                        pxl1Hits2++;
+                        mcPxl1HitPosition2= mcPxlHits2.at(ipxlhit)->position();
+                        
+                    }
+                }
+                
+                Int_t hftHitMap1 = (Int_t)((UInt_t)(glRcPositron->topologyMap().data(0)) >> 1 & 0x7F);
+                Int_t hftHitMap2 = (Int_t)((UInt_t)(glRcElectron->topologyMap().data(0)) >> 1 & 0x7F);
+                
+                pairPt[nPair] = mcTrack->pt();
+                pairEta[nPair] = mcTrack->pseudoRapidity();
+                openangle[nPair] = mOpenAngle;
+                mcopenangle[nPair] = positron->momentum().angle(electron->momentum());
+                mcDist_pxl1[nPair] = (mcPxl1HitPosition1-mcPxl1HitPosition2).mag();
+                mcDist_pxl2[nPair] = 0;
+                rcDist_pxl1[nPair] = (pxl1HitPosition1-pxl1HitPosition2).mag();
+                rcDist_pxl2[nPair] = 0;
+                mcConvR[nPair] = TMath::Sqrt(mcTrack->stopVertex()->position().x()*mcTrack->stopVertex()->position().x()+mcTrack->stopVertex()->position().y()*mcTrack->stopVertex()->position().y());
+                rcConvR[nPair] = TMath::Sqrt(Position.x()*Position.x()+Position.y()+Position.y());
+                parentGid[nPair] = mcTrack->geantId();
+                mass[nPair] = epairFourMom.m();
+                pairDca[nPair] = static_cast<float>(VectorDca.mag());
+                pt1[nPair] = positron->pt();
+                pt2[nPair] = electron->pt();
+                eta1[nPair] = positron->pseudoRapidity();
+                eta2[nPair] = electron->pseudoRapidity();
+                //clusterSize1_pxl1[nPair] = 0;
+                //clusterSize1_pxl2[nPair] = 0;
+                //clusterSize1_pxl3[nPair] = 0;
+                //clusterSize2_pxl1[nPair] = 0;
+                //clusterSize2_pxl2[nPair] = 0;
+                //clusterSize2_pxl3[nPair] = 0;
+                idTruth[nPair] = 1; // electron(2) or positron(1) idTruth
+                rcHftHit1_pxl1[nPair]=hftHitMap1>>0 & 0x1;
+                rcHftHit1_pxl2[nPair]=hftHitMap1>>1 & 0x3;
+                rcHftHit1_ist[nPair]=hftHitMap1>>3 & 0x3;
+                truth1_pxl1[nPair]=pxl1Truth1;
+                truth1_pxl2[nPair]=pxl1Truth2;
+                truth1_ist[nPair]=0;
+                nHits1_pxl1[nPair]=pxl1Hits1;
+                nHits1_pxl2[nPair]=pxl1Hits2;
+                nHits1_ist[nPair]=0;
+                rcHftHit2_pxl1[nPair]=hftHitMap2>>0 & 0x1;
+                rcHftHit2_pxl2[nPair]=hftHitMap2>>1 & 0x3;
+                rcHftHit2_ist[nPair]=hftHitMap2>>3 & 0x3;
+                truth2_pxl1[nPair]=pxl2Truth1;
+                truth2_pxl2[nPair]=pxl2Truth2;
+                truth2_ist[nPair]=0;
+                nHits2_pxl1[nPair]=pxl2Hits1;
+                nHits2_pxl2[nPair]=pxl2Hits2;
+                nHits2_ist[nPair]=0;
+                nPair++;
+                
             }
         }
     }
