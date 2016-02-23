@@ -14,6 +14,7 @@ class StGlobalTrack;
 class StAssociationMaker;
 class StMcEvent;
 class StEvent;
+class StLorentzVectorF;
 
 #include "StMaker.h"
 
