@@ -284,15 +284,18 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                             for (unsigned int iSec = 0; iSec<pxlHitCol->numberOfSectors(); iSec++){
                                 cout << "check iSec loop " << iSec << endl;
                                 const StPxlSectorHitCollection * pxlSecHitCol = pxlHitCol->sector(iSec);
-                                if (!pxlSecHitCol) continue;
+                                if (pxlSecHitCol->numberOfHits()==0) continue;
+                                
                                 for (unsigned int iLad; iLad < pxlSecHitCol->numberOfLadders(); iLad++) {
                                     cout << "check iLad loop " << iLad << endl;
                                     const StPxlLadderHitCollection * pxlLadHitCol = pxlSecHitCol->ladder(iLad);
-                                    if (!pxlLadHitCol) continue;
+                                    if (pxlLadHitCol->numberOfHits()==0) continue;
+                                    
                                     for (unsigned int iSen=0; iSen<pxlLadHitCol->numberOfSensors(); iSen++) {
                                         cout << "check iSen loop " << iSen << endl;
                                         const StPxlSensorHitCollection * pxlSenHitCol = pxlLadHitCol->sensor(iSen);
-                                        if (!pxlSenHitCol) continue;
+                                        if (pxlSenHitCol->numberOfHits()==0) continue;
+                                        
                                         UInt_t nSenHits = pxlSenHitCol->hits().size();
                                         cout << "nSenHit: " << nSenHits << endl;
                                         for (unsigned int iHit = 0; iHit < nSenHits; iHit++){
