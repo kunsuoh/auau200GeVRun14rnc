@@ -90,7 +90,8 @@ int StMcAnalysisMaker::Init()
     mTree->Branch("rcDist_pxl1", &rcDist_pxl1, "rcDist_pxl1[nPair]/F");
     mTree->Branch("rcDist_pxl2", &rcDist_pxl2, "rcDist_pxl2[nPair]/F");
     mTree->Branch("rcDist_ist", &rcDist_ist, "rcDist_ist[nPair]/F");
-    mTree->Branch("convR", &convR, "convR[nPair]/F");
+    mTree->Branch("mcConvR", &mcConvR, "mcConvR[nPair]/F");
+    mTree->Branch("rcConvR", &rcConvR, "rcConvR[nPair]/F");
     mTree->Branch("parentGid", &parentGid, "parentGid[nPair]/I");
     mTree->Branch("mass", &mass, "mass[nPair]/F");
     mTree->Branch("pairDca", &pairDca, "pairDca[nPair]/F");
@@ -100,8 +101,10 @@ int StMcAnalysisMaker::Init()
     mTree->Branch("eta2", &eta2, "eta2[nPair]/F");
     mTree->Branch("clusterSize1_pxl1", &clusterSize1_pxl1, "clusterSize1_pxl1[nPair]/I");
     mTree->Branch("clusterSize1_pxl2", &clusterSize1_pxl2, "clusterSize1_pxl2[nPair]/I");
+    mTree->Branch("clusterSize1_pxl3", &clusterSize1_pxl3, "clusterSize1_pxl3[nPair]/I");
     mTree->Branch("clusterSize2_pxl1", &clusterSize2_pxl1, "clusterSize2_pxl1[nPair]/I");
     mTree->Branch("clusterSize2_pxl2", &clusterSize2_pxl2, "clusterSize2_pxl2[nPair]/I");
+    mTree->Branch("clusterSize2_pxl3", &clusterSize2_pxl3, "clusterSize2_pxl3[nPair]/I");
     mTree->Branch("idTruth", &idTruth, "idTruth[nPair]/I");
     mTree->Branch("rcHftHit1_pxl1", &rcHftHit1_pxl1, "rcHftHit1_pxl1[nPair]/I");
     mTree->Branch("rcHftHit1_pxl2", &rcHftHit1_pxl2, "rcHftHit1_pxl2[nPair]/I");
@@ -200,56 +203,185 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                 }
             }// end dauther loop
             if (rcElectron && rcPositron && electron && positron) {
-                pairPt[nPair] = mcTrack->pt();
-                pairEta[nPair] = mcTrack->pseudoRapidity();
-                openangle[nPair] = 0;
-                mcopenangle[nPair] = positron->momentum().angle(electron->momentum());
-                mcDist_pxl1[nPair] = 0;
-                mcDist_pxl2[nPair] = 0;
-                mcDist_ist[nPair] = 0;
-                rcDist_pxl1[nPair] = 0;
-                rcDist_pxl2[nPair] = 0;
-                rcDist_ist[nPair] = 0;
-                convR[nPair] = TMath::Sqrt(electron->startVertex()->position().x()*electron->startVertex()->position().x()+electron->startVertex()->position().y()*electron->startVertex()->position().y());
-                parentGid[nPair] = mcTrack->geantId();
-                mass[nPair] = 0;
-                pairDca[nPair] = 0;
-                pt1[nPair] = positron->pt();
-                pt2[nPair] = electron->pt();
-                eta1[nPair] = positron->pseudoRapidity();
-                eta2[nPair] = electron->pseudoRapidity();
-                clusterSize1_pxl1[nPair] = 0;
-                clusterSize1_pxl2[nPair] = 0;
-                clusterSize2_pxl1[nPair] = 0;
-                clusterSize2_pxl2[nPair] = 0;
-                idTruth[nPair] = 1; // electron(2) or positron(1) idTruth
-                rcHftHit1_pxl1[nPair]=0;
-                rcHftHit1_pxl2[nPair]=0;
-                rcHftHit1_ist[nPair]=0;
-                truth1_pxl1[nPair]=0;
-                truth1_pxl2[nPair]=0;
-                truth1_ist[nPair]=0;
-                nHits1_pxl1[nPair]=0;
-                nHits1_pxl2[nPair]=0;
-                nHits1_ist[nPair]=0;
-                rcHftHit2_pxl1[nPair]=0;
-                rcHftHit2_pxl2[nPair]=0;
-                rcHftHit2_ist[nPair]=0;
-                truth2_pxl1[nPair]=0;
-                truth2_pxl2[nPair]=0;
-                truth2_ist[nPair]=0;
-                nHits2_pxl1[nPair]=0;
-                nHits2_pxl2[nPair]=0;
-                nHits2_ist[nPair]=0;
                 
-                
-                if (1) nMcPxl1Hits++;
-                if (1) nMcPxl2Hits++;
-                if (1) nMcIstHits++;
-                if (1) nRcPxl1Hits++;
-                if (1) nRcPxl2Hits++;
-                if (1) nRcIstHits++;
-                nPair++;
+                if (StGlobalTrack const* glRcPositron = dynamic_cast<StGlobalTrack const*>(rcPositron)) {
+                    if (StGlobalTrack const* glRcElectron = dynamic_cast<StGlobalTrack const*>(rcElectron)) {
+                        StPhysicalHelixD electronHelix = glRcElectron->dcaGeometry().helix();
+                        StPhysicalHelixD partnerHelix = glRcPositron->dcaGeometry().helix();
+                        
+                        // normal method
+                        pair<double,double> ss = electronHelix.pathLengths(partnerHelix);
+                        StThreeVectorD kAtDcaToPartner = electronHelix.at(ss.first);
+                        StThreeVectorD pAtDcaToElectron = partnerHelix.at(ss.second);
+                        
+                        // calculate DCA of partner to electron at their DCA
+                        StThreeVectorD VectorDca = kAtDcaToPartner - pAtDcaToElectron;
+                        
+                        // calculate Lorentz vector of electron-partner pair
+                        StThreeVectorF const electronMomAtDca = electronHelix.momentumAt(ss.first, bField * kilogauss);
+                        StThreeVectorF const partnerMomAtDca = partnerHelix.momentumAt(ss.second, bField * kilogauss);
+                        
+                        StLorentzVectorF const electronFourMom(electronMomAtDca, electronMomAtDca.massHypothesis(M_ELECTRON));
+                        StLorentzVectorF const partnerFourMom(partnerMomAtDca, partnerMomAtDca.massHypothesis(M_ELECTRON));
+                        StLorentzVectorF const epairFourMom = electronFourMom + partnerFourMom;
+                        
+                        StThreeVectorF const epairMomAtDca = epairFourMom.vect();
+                        StThreeVectorF const Position = (kAtDcaToPartner + pAtDcaToElectron)/2.0;
+                        
+                        float mPhiV, float mOpenAngle;
+                        phiCalculation(partnerFourMom, electronFourMom, bField > 0 ? 1 : -1, mPhiV, mOpenAngle);
+                        
+                        // Pxl
+                        StPtrVecHit PartnerPxlHits1 = glRcPositron->detectorInfo()->hits(kPxlId);
+                        StPtrVecHit PartnerPxlHits2 = glRcElectron->detectorInfo()->hits(kPxlId);
+                        int nPartnerPxlHits1 = (int) PartnerPxlHits1.size();
+                        int nPartnerPxlHits2 = (int) PartnerPxlHits2.size();
+
+                        uint pxl1Truth1 = 1; // first Pxl positron
+                        uint pxl1Truth2 = 1; // first Pxl electron
+                        int pxl1Hits1 = 0;
+                        int pxl1Hits2 = 0;
+
+                        uint pxl2Truth1 = 1;  // second Pxl positron
+                        uint pxl2Truth2 = 1;  // second Pxl electron
+                        int pxl2Hits1 = 0;
+                        int pxl2Hits2 = 0;
+                        
+                        StThreeVectorF pxl1HitPosition1 = 0;
+                        StThreeVectorF pxl1HitPosition2 = 0;
+                        
+                        if(nPartnerPxlHits1 > 0) {
+                            for(int ipxlhit=0; ipxlhit<nPartnerPxlHits1; ipxlhit++) {
+                                StThreeVectorF pos = PartnerPxlHits1[ipxlhit]->position();
+                                float const R = pow(pos.x(),2.0) + pow(pos.y(),2.0);
+
+                                if(PartnerPxlHits1[ipxlhit]->idTruth() == positron->key()) {
+                                    if(R < 3.5*3.5) {
+                                        clusterSize1_pxl1[nPair] = PartnerPxlHits1[ipxlhit]->nRawHits();
+                                        pxl1HitPosition1 = pos;
+                                    }
+                                    else if (clusterSize1_pxl2[nPair]) {
+                                        clusterSize1_pxl3[nPair] = PartnerPxlHits1[ipxlhit]->nRawHits();
+                                    }
+                                    else {
+                                        clusterSize1_pxl2[nPair] = PartnerPxlHits1[ipxlhit]->nRawHits();
+                                    }
+                                    continue;
+                                }
+                                if(R > 3.5*3.5){
+                                    pxl2Truth1 = 0;
+                                }
+                                else{
+                                    pxl1Truth1 = 0;
+                                }
+                            }
+                        }
+                        if(nPartnerPxlHits2 > 0) {
+                            for(int ipxlhit=0; ipxlhit<nPartnerPxlHits2; ipxlhit++) {
+                                StThreeVectorF pos = PartnerPxlHits2[ipxlhit]->position();
+                                float const R = pow(pos.x(),2.0) + pow(pos.y(),2.0);
+
+                                if(PartnerPxlHits2[ipxlhit]->idTruth() == electron->key()) {
+                                    if(R < 3.5*3.5) {
+                                        clusterSize2_pxl1[nPair] = PartnerPxlHits2[ipxlhit]->nRawHits();
+                                        pxl1HitPosition2 = pos;
+                                    }
+                                    else if (clusterSize2_pxl2[nPair]) {
+                                        clusterSize1_pxl3[nPair] = PartnerPxlHits2[ipxlhit]->nRawHits();
+                                    }
+                                    else {
+                                        clusterSize2_pxl2[nPair] = PartnerPxlHits2[ipxlhit]->nRawHits();
+                                    }
+                                    continue;
+                                }
+                                if(R > 3.5*3.5){
+                                    pxl2Truth2 = 0;
+                                }
+                                else{
+                                    pxl1Truth2 = 0;
+                                }
+                            }
+                        }
+
+                        const StPtrVecMcPxlHit mcPxlHits1 = positron->pxlHits();
+                        const StPtrVecMcPxlHit mcPxlHits2 = electron->pxlHits();
+                        StThreeVectorF mcPxl1HitPosition1 = 0;
+                        StThreeVectorF mcPxl1HitPosition2 = 0;
+                        //Loop over PXL hits to separate into layers
+                        for(int ipxlhit = 0; ipxlhit < (int)mcPxlHits1.size(); ipxlhit++){
+                            if((int)mcPxlHits1.at(ipxlhit)->ladder() > 1){
+                                pxl2Hits1++;
+                            }
+                            else{
+                                pxl1Hits1++;
+                                mcPxl1HitPosition1 = mcPxlHits1.at(ipxlhit)->positron();
+                            }
+                        }
+                        for(int ipxlhit = 0; ipxlhit < (int)mcPxlHits2.size(); ipxlhit++){
+                            if((int)mcPxlHits2.at(ipxlhit)->ladder() > 1){
+                                pxl2Hits2++;
+                            }
+                            else{
+                                pxl1Hits2++;
+                                mcPxl1HitPosition2= mcPxlHits2.at(ipxlhit)->positron();
+                            }
+                        }
+
+                        Int_t hftHitMap1 = (Int_t)((UInt_t)(positron->topologyMap().data(0)) >> 1 & 0x7F)
+                        Int_t hftHitMap2 = (Int_t)((UInt_t)(electron->topologyMap().data(0)) >> 1 & 0x7F)
+                        
+                        pairPt[nPair] = mcTrack->pt();
+                        pairEta[nPair] = mcTrack->pseudoRapidity();
+                        openangle[nPair] = mOpenAngle;
+                        mcopenangle[nPair] = positron->momentum().angle(electron->momentum());
+                        mcDist_pxl1[nPair] = (mcPxl1HitPosition1-mcPxl1HitPosition2).mag();
+                        mcDist_pxl2[nPair] = 0;
+                        rcDist_pxl1[nPair] = (pxl1HitPosition1-pxl1HitPosition2).mag();
+                        rcDist_pxl2[nPair] = 0;
+                        mcConvR[nPair] = TMath::Sqrt(mcTrack->stopVertex()->position().x()*mcTrack->stopVertex()->position().x()+mcTrack->stopVertex()->position().y()*mcTrack->stopVertex()->position().y());
+                        rcConvR[nPair] = TMath::Sqrt(Position.x()*Position.x()+Position.y()+Position.y());
+                        parentGid[nPair] = mcTrack->geantId();
+                        mass[nPair] = epairFourMom.m();
+                        pairDca[nPair] =  = static_cast<float>(VectorDca.mag());
+                        pt1[nPair] = positron->pt();
+                        pt2[nPair] = electron->pt();
+                        eta1[nPair] = positron->pseudoRapidity();
+                        eta2[nPair] = electron->pseudoRapidity();
+                        //clusterSize1_pxl1[nPair] = 0;
+                        //clusterSize1_pxl2[nPair] = 0;
+                        //clusterSize2_pxl1[nPair] = 0;
+                        //clusterSize2_pxl2[nPair] = 0;
+                        idTruth[nPair] = 1; // electron(2) or positron(1) idTruth
+                        rcHftHit1_pxl1[nPair]=hftHitMap1>>0 & 0x1;
+                        rcHftHit1_pxl2[nPair]=hftHitMap1>>1 & 0x3;
+                        rcHftHit1_ist[nPair]=hftHitMap1>>3 & 0x3;
+                        truth1_pxl1[nPair]=pxl1Truth1;
+                        truth1_pxl2[nPair]=pxl1Truth2;
+                        truth1_ist[nPair]=0;
+                        nHits1_pxl1[nPair]=pxl1Hits1;
+                        nHits1_pxl2[nPair]=pxl1Hits2;
+                        nHits1_ist[nPair]=0;
+                        rcHftHit2_pxl1[nPair]=hftHitMap2>>0 & 0x1;
+                        rcHftHit2_pxl2[nPair]=hftHitMap2>>1 & 0x3;
+                        rcHftHit2_ist[nPair]=hftHitMap2>>3 & 0x3;
+                        truth2_pxl1[nPair]=pxl2Truth1;
+                        truth2_pxl2[nPair]=pxl2Truth2;
+                        truth2_ist[nPair]=0;
+                        nHits2_pxl1[nPair]=pxl2Hits1;
+                        nHits2_pxl2[nPair]=pxl2Hits2;
+                        nHits2_ist[nPair]=0;
+                        
+                        
+                        if (1) nMcPxl1Hits++;
+                        if (1) nMcPxl2Hits++;
+                        if (1) nMcIstHits++;
+                        if (1) nRcPxl1Hits++;
+                        if (1) nRcPxl2Hits++;
+                        if (1) nRcIstHits++;
+                        nPair++;
+
+                    }
+                }
             }
         }
     }
@@ -309,4 +441,19 @@ int StMcAnalysisMaker::Finish()
     mTree->Write();
     mFile->Close();
     return kStOk;
+}
+//______________________________________________________
+void StMcAnalysisMaker::phiCalculation(StLorentzVectorF const positron,StLorentzVectorF const electron, int mN, float &phiV, float &openangle)
+{
+    TVector3 ppp(positron.px(),positron.py(),positron.pz());
+    TVector3 eee(electron.px(),electron.py(),electron.pz());
+    TVector3 u=ppp+eee;
+    TVector3 v=eee.Cross(ppp);
+    TVector3 w=u.Cross(v);
+    TVector3 nz(0.,0.,mN);
+    TVector3 wc=u.Cross(nz);
+    
+    phiV =w.Angle(wc);
+    openangle=ppp.Angle(eee);
+    
 }

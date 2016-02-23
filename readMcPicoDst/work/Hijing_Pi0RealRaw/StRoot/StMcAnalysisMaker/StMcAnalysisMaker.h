@@ -41,7 +41,8 @@ private:
     Float_t rcDist_pxl1[kMaxPair];
     Float_t rcDist_pxl2[kMaxPair];
     Float_t rcDist_ist[kMaxPair];
-    Float_t convR[kMaxPair];
+    Float_t mcConvR[kMaxPair];
+    Float_t rcConvR[kMaxPair];
     Int_t parentGid[kMaxPair];
     Float_t mass[kMaxPair];
     Float_t pairDca[kMaxPair];
@@ -51,8 +52,10 @@ private:
     Float_t eta2[kMaxPair];
     Int_t clusterSize1_pxl1[kMaxPair];
     Int_t clusterSize1_pxl2[kMaxPair];
+    Int_t clusterSize1_pxl3[kMaxPair];
     Int_t clusterSize2_pxl1[kMaxPair];
     Int_t clusterSize2_pxl2[kMaxPair];
+    Int_t clusterSize2_pxl3[kMaxPair];
     Int_t idTruth[kMaxPair];
     Int_t rcHftHit1_pxl1[kMaxPair];
     Int_t rcHftHit1_pxl2[kMaxPair];
@@ -76,7 +79,7 @@ private:
     StAssociationMaker* mAssoc;
     const StTrack* findPartner(StMcTrack*, int&);
     const StMcTrack* findPartner(StGlobalTrack*, int&);
-    
+    void phiCalculation(StLorentzVectorF const,StLorentzVectorF const, int, float &, float &);
     int fillTracks(StMcEvent*,StEvent*);
     
     TString mOutFileName;
