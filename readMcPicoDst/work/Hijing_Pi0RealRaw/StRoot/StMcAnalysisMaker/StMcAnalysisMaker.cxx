@@ -185,6 +185,7 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
     nRcIstHits=0;
     
     StPxlHitCollection * pxlHitCol = event->pxlHitCollection();
+    StMcPxlHitCollection * pxlMcHitCol = mcEvent->pxlHitCollection();
     
     for (unsigned int i = 0;  i < trks.size(); i++){
         StMcTrack* mcTrack = trks[i];
@@ -269,7 +270,6 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                                 
                                 if(PartnerPxlHits1[ipxlhit]->idTruth() == positron->key()) {
                                     if(R < 3.5*3.5) {
-                                        nRcPxl1Hits++;
                                         for (int iSec = 0; iSec<pxlHitCol->numberOfSectors(); iSec++){
                                             StPxlSectorHitCollection * pxlSecHitCol = pxlHitCol->sector(iSec);
                                             if (!pxlSecHitCol) continue;
@@ -293,11 +293,9 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                                         pxl1HitPosition1 = pos;
                                     }
                                     else if (clusterSize1_pxl2[nPair]) {
-                                        nRcPxl2Hits++;
                                         //clusterSize1_pxl3[nPair] = PartnerPxlHits1[ipxlhit]->nRawHits();
                                     }
                                     else {
-                                        nRcPxl2Hits++;
                                         //clusterSize1_pxl2[nPair] = PartnerPxlHits1[ipxlhit]->nRawHits();
                                     }
                                     continue;
@@ -317,7 +315,6 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
 
                                 if(PartnerPxlHits2[ipxlhit]->idTruth() == electron->key()) {
                                     if(R < 3.5*3.5) {
-                                        nRcPxl1Hits++;
                                         for (int iSec = 0; iSec<pxlHitCol->numberOfSectors(); iSec++){
                                             StPxlSectorHitCollection * pxlSecHitCol = pxlHitCol->sector(iSec);
                                             if (!pxlSecHitCol) continue;
@@ -341,11 +338,9 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                                         pxl1HitPosition2 = pos;
                                     }
                                     else if (clusterSize2_pxl2[nPair]) {
-                                        nRcPxl2Hits++;
                                         //clusterSize1_pxl3[nPair] = PartnerPxlHits2[ipxlhit]->nRawHits();
                                     }
                                     else {
-                                        nRcPxl2Hits++;
                                         //clusterSize2_pxl2[nPair] = PartnerPxlHits2[ipxlhit]->nRawHits();
                                     }
                                     continue;
@@ -367,23 +362,19 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                         for(int ipxlhit = 0; ipxlhit < (int)mcPxlHits1.size(); ipxlhit++){
                             if((int)mcPxlHits1.at(ipxlhit)->ladder() > 1){
                                 pxl2Hits1++;
-                                nMcPxl2Hits++;
                             }
                             else{
                                 pxl1Hits1++;
                                 mcPxl1HitPosition1 = mcPxlHits1.at(ipxlhit)->position();
-                                nMcPxl1Hits++;
                             }
                         }
                         for(int ipxlhit = 0; ipxlhit < (int)mcPxlHits2.size(); ipxlhit++){
                             if((int)mcPxlHits2.at(ipxlhit)->ladder() > 1){
                                 pxl2Hits2++;
-                                nMcPxl2Hits++;
                             }
                             else{
                                 pxl1Hits2++;
                                 mcPxl1HitPosition2= mcPxlHits2.at(ipxlhit)->position();
-                                nMcPxl1Hits++;
 
                             }
                         }
@@ -440,6 +431,47 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
             }
         }
     }
+    for (int iSec = 0; iSec<pxlHitCol->numberOfSectors(); iSec++){
+        StPxlSectorHitCollection * pxlSecHitCol = pxlHitCol->sector(iSec);
+        if (!pxlSecHitCol) continue;
+        for (int iLad; iLad < pxlSecHitCol->numberOfLadders(); iLad++) {
+            StPxlLadderHitCollection * pxlLadHitCol = pxlSecHitCol->ladder(iLad);
+            if (!pxlLadHitCol) continue;
+            for (int iSen=0; iSen<pxlLadHitCol->numberOfSensors(); iSen++) {
+                StPxlSensorHitCollection * pxlSenHitCol = pxlLadHitCol->sensor(iSen);
+                if (!pxlSenHitCol) continue;
+                UInt_t nSenHits = pxlSenHitCol->hits().size();
+                for (int iHit = 0; iHit < nSenHits; iHit++){
+                    StPxlHit* pixHit = pxlSenHitCol->hits()[iHit];
+                    if (!pixHit) continue;
+                    if (pixHit->ladder() == 0)nRcPxl1Hits++;
+                    else nRcPxl2Hits++;
+                }
+                
+            }
+        }
+    }
+    for (int iSec = 0; iSec<pxlMcHitCol->numberOfSectors(); iSec++){
+        StMcPxlSectorHitCollection * pxlSecHitCol = pxlMcHitCol->sector(iSec);
+        if (!pxlSecHitCol) continue;
+        for (int iLad; iLad < pxlSecHitCol->numberOfLadders(); iLad++) {
+            StMcPxlLadderHitCollection * pxlLadHitCol = pxlSecHitCol->ladder(iLad);
+            if (!pxlLadHitCol) continue;
+            for (int iSen=0; iSen<pxlLadHitCol->numberOfSensors(); iSen++) {
+                StMcPxlSensorHitCollection * pxlSenHitCol = pxlLadHitCol->sensor(iSen);
+                if (!pxlSenHitCol) continue;
+                UInt_t nSenHits = pxlSenHitCol->hits().size();
+                for (int iHit = 0; iHit < nSenHits; iHit++){
+                    StMcPxlHit* pixHit = pxlSenHitCol->hits()[iHit];
+                    if (!pixHit) continue;
+                    if (pixHit->ladder() == 0)nMcPxl1Hits++;
+                    else nMcPxl2Hits++;
+                }
+                
+            }
+        }
+    }
+
     mTree->Fill();
     
     return kStOk;
