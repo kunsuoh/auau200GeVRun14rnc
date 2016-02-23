@@ -2,6 +2,8 @@
 #define ST_MCANALYSISMAKER_H
 
 #include "TString.h"
+#include "StLorentzVectorF.h"
+
 
 class TFile;
 class TH3F;
