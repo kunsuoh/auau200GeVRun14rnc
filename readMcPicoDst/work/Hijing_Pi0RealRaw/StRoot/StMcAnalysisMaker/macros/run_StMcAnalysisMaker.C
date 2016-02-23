@@ -18,7 +18,8 @@ void run_StMcAnalysisMaker(const char* file ="small.list")
     StChain* chain = new StChain;
 
     // I/O maker
-    StFileI* fileset = new StFileI(file,"list");
+    StFileI* fileset = new StFileI("list","list");
+    fileset->AddFile(file);
     
     StIOMaker* ioMaker = new StIOMaker;
     ioMaker->SetFileSet(fileset);
