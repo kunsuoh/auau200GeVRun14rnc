@@ -189,7 +189,7 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
         }
     }
 
-    cout << trks.size() << " " << idMcPositrons.size() << " " << idMcElectrons.size() << endl;
+    cout << ">>>>>>>>>>>>>>>>>>>>>>>> " << trks.size() << " " << idMcPositrons.size() << " " << idMcElectrons.size() << endl;
 
     nPair=0;
     nMcPxl1Hits=0;
@@ -209,7 +209,7 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
             if (!parentElectron) continue;
             //if (parentPositron!=parentElectron) continue;
 
-
+            cout << i << " " << j << endl;
             
             
             pairPt[nPair] = parentPositron->pt();
