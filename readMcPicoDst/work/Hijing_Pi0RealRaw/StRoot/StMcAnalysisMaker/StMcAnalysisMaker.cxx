@@ -170,6 +170,19 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
     {
         StMcTrack* mcTrack = trks[i];
         Int_t trackGid = mcTrack->geantId();
+        
+        if (trackGid==1 && mcTrack->stopVertex()) {
+            cout << " !!!!!!!!!!!!!! numberOfDaughters: " << mcTrack->stopVertex()->numberOfDaughters();
+            for (int j = 0; j < mcTrack->stopVertex()->numberOfDaughters(); j++){
+                cout << " " << mcTrack->stopVertex()->daughter(j)->pt() << " " << mcTrack->stopVertex()->daughter(j)->geantId();
+            }
+            cout << endl;
+        }
+        
+        
+        continue;
+        
+        
         if (trackGid!=2 && trackGid!=3 ) continue;
 
         int ncommonhits = 0;
