@@ -16,7 +16,7 @@ void run_StMcAnalysisMaker(const char* file ="small.list")
 
     // Create chain
     StChain* chain = new StChain;
-
+/*
     // I/O maker
     StIOMaker* ioMaker = new StIOMaker;
     ioMaker->SetFile(file);
@@ -25,7 +25,7 @@ void run_StMcAnalysisMaker(const char* file ="small.list")
     //ioMaker->SetBranch("McEventBranch",0,"r"); 
     ioMaker->SetBranch("geantBranch", 0, "r");
     ioMaker->SetBranch("eventBranch", 0, "r");
-
+*/
     TString mudstfile = file;
     mudstfile.ReplaceAll(".event.root",".MuDst.root");
     mudstfile.ReplaceAll(".geant.root",".MuDst.root");
