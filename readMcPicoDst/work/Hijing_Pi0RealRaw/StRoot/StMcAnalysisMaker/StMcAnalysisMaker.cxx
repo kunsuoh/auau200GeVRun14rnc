@@ -367,10 +367,12 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                         for(int ipxlhit = 0; ipxlhit < (int)mcPxlHits1.size(); ipxlhit++){
                             if((int)mcPxlHits1.at(ipxlhit)->ladder() > 1){
                                 pxl2Hits1++;
+                                nMcPxl2Hits++;
                             }
                             else{
                                 pxl1Hits1++;
                                 mcPxl1HitPosition1 = mcPxlHits1.at(ipxlhit)->position();
+                                nMcPxl1Hits++;
                             }
                         }
                         for(int ipxlhit = 0; ipxlhit < (int)mcPxlHits2.size(); ipxlhit++){
