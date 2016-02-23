@@ -1,4 +1,4 @@
-void run_StMcAnalysisMaker(TString file ="small.list")
+void run_StMcAnalysisMaker(Char_t* file ="small.list")
 {
     //Check STAR Library. Please set SL_version to the original star library used 
     // in the production from http://www.star.bnl.gov/devcgi/dbProdOptionRetrv.pl
