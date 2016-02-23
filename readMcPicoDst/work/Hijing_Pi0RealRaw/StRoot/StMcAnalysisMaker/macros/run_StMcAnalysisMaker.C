@@ -18,11 +18,8 @@ void run_StMcAnalysisMaker(const char* file ="small.list")
     StChain* chain = new StChain;
 
     // I/O maker
-    StFileI* fileset = new StFileI("list","list");
-    fileset->AddFile(file);
-    
     StIOMaker* ioMaker = new StIOMaker;
-    ioMaker->SetFileSet(fileset);
+    ioMaker->SetFile(file);
     ioMaker->SetIOMode("r");
     ioMaker->SetBranch("*", 0, "0");
     //ioMaker->SetBranch("McEventBranch",0,"r"); 
