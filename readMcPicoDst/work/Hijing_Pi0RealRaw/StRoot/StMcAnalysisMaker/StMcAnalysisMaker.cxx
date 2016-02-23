@@ -166,6 +166,7 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
         return 1;
     }
     
+    float bField = event->runInfo()->magneticField();
     
     nPair=0;
     nMcPxl1Hits=0;
@@ -207,8 +208,8 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                 
                 if (StGlobalTrack const* glRcPositron = dynamic_cast<StGlobalTrack const*>(rcPositron)) {
                     if (StGlobalTrack const* glRcElectron = dynamic_cast<StGlobalTrack const*>(rcElectron)) {
-                        StPhysicalHelixD electronHelix = glRcElectron->dcaGeometry().helix();
-                        StPhysicalHelixD partnerHelix = glRcPositron->dcaGeometry().helix();
+                        StPhysicalHelixD electronHelix = glRcElectron->dcaGeometry()->helix();
+                        StPhysicalHelixD partnerHelix = glRcPositron->dcaGeometry()->helix();
                         
                         // normal method
                         pair<double,double> ss = electronHelix.pathLengths(partnerHelix);
@@ -222,14 +223,14 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                         StThreeVectorF const electronMomAtDca = electronHelix.momentumAt(ss.first, bField * kilogauss);
                         StThreeVectorF const partnerMomAtDca = partnerHelix.momentumAt(ss.second, bField * kilogauss);
                         
-                        StLorentzVectorF const electronFourMom(electronMomAtDca, electronMomAtDca.massHypothesis(M_ELECTRON));
-                        StLorentzVectorF const partnerFourMom(partnerMomAtDca, partnerMomAtDca.massHypothesis(M_ELECTRON));
+                        StLorentzVectorF const electronFourMom(electronMomAtDca, electronMomAtDca.massHypothesis(0.000511));
+                        StLorentzVectorF const partnerFourMom(partnerMomAtDca, partnerMomAtDca.massHypothesis(0.000511));
                         StLorentzVectorF const epairFourMom = electronFourMom + partnerFourMom;
                         
                         StThreeVectorF const epairMomAtDca = epairFourMom.vect();
                         StThreeVectorF const Position = (kAtDcaToPartner + pAtDcaToElectron)/2.0;
                         
-                        float mPhiV, float mOpenAngle;
+                        float mPhiV, mOpenAngle;
                         phiCalculation(partnerFourMom, electronFourMom, bField > 0 ? 1 : -1, mPhiV, mOpenAngle);
                         
                         // Pxl
@@ -315,7 +316,7 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                             }
                             else{
                                 pxl1Hits1++;
-                                mcPxl1HitPosition1 = mcPxlHits1.at(ipxlhit)->positron();
+                                mcPxl1HitPosition1 = mcPxlHits1.at(ipxlhit)->position();
                             }
                         }
                         for(int ipxlhit = 0; ipxlhit < (int)mcPxlHits2.size(); ipxlhit++){
@@ -324,12 +325,12 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                             }
                             else{
                                 pxl1Hits2++;
-                                mcPxl1HitPosition2= mcPxlHits2.at(ipxlhit)->positron();
+                                mcPxl1HitPosition2= mcPxlHits2.at(ipxlhit)->position();
                             }
                         }
 
-                        Int_t hftHitMap1 = (Int_t)((UInt_t)(positron->topologyMap().data(0)) >> 1 & 0x7F)
-                        Int_t hftHitMap2 = (Int_t)((UInt_t)(electron->topologyMap().data(0)) >> 1 & 0x7F)
+                        Int_t hftHitMap1 = (Int_t)((UInt_t)(glRcPositron->topologyMap().data(0)) >> 1 & 0x7F)
+                        Int_t hftHitMap2 = (Int_t)((UInt_t)(glRcElectron->topologyMap().data(0)) >> 1 & 0x7F)
                         
                         pairPt[nPair] = mcTrack->pt();
                         pairEta[nPair] = mcTrack->pseudoRapidity();
