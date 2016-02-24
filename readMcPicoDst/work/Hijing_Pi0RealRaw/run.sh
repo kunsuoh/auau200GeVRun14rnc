@@ -13,7 +13,7 @@ mkdir ./Files_$job/hft_reco
 #mkdir ./Files_$job/picodst
 
 # ---- Pile up file
-at=`perl -e 'srand; print int(rand(99)+1)'`
+#at=`perl -e 'srand; print int(rand(99)+1)'`
 #cp -p /star/data01/pwg/kunsu/pileup/pileupSet$at/pile**.root ./Files_$job/pile_up/pile_up$at.root
 
 
@@ -76,3 +76,4 @@ find Files_$job/ -type f -exec chmod g+rw {} \;
 
 # ---- Done bring files back
 tar -cvf Files_$job.tar Files_$job
+mv Files_$job/hft_reco/mcAnalysis.pxlSimQa.root /star/u/kunsu/pwg/gamma/qaHist/qa_$job.root
