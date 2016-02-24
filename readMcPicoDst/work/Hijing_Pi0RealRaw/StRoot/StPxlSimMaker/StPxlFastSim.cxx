@@ -258,7 +258,7 @@ Int_t StPxlFastSim::getColumn(float local){
 }
 Float_t StPxlFastSim::getLocalX(Int_t value){
     const double mFirstPixelX =  (StPxlConsts::kPxlNumRowsPerSensor - 1) * StPxlConsts::kPixelSize / 2;
-    return mFirstPixelX - StPxlConsts::kPixelSize * value + StPxlConsts::kPixelSize/2;
+    return mFirstPixelX - StPxlConsts::kPixelSize * value - StPxlConsts::kPixelSize/2;
 }
 Float_t StPxlFastSim::getLocalZ(Int_t value){
     const double mFirstPixelZ = -(StPxlConsts::kPxlNumColumnsPerSensor - 1) * StPxlConsts::kPixelSize / 2;
