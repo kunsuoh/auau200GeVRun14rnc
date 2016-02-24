@@ -2,7 +2,8 @@
 echo "Kunsu: Start makeFZ + Reco + Pico"
 starver SL15k
 job=$1
-run=${job: -1}
+#run=${job: -1}
+run=`echo $job | cut -f2 -d"_"`
 
 # ---- Make folder
 #mkdir ./Files_$job
@@ -13,7 +14,7 @@ run=${job: -1}
 
 # ---- Pile up file
 at=`perl -e 'srand; print int(rand(99)+1)'`
-cp -p /star/data01/pwg/kunsu/pileup/pileupSet$at/pile**.root ./Files_$job/pile_up/pile_up$at.root
+#cp -p /star/data01/pwg/kunsu/pileup/pileupSet$at/pile**.root ./Files_$job/pile_up/pile_up$at.root
 
 
 # ---- Producing sim file .fzd
@@ -31,7 +32,8 @@ echo "Kunsu: HFT reco starting"
 start=0
 end=19
 #inFile=Files_$job/fzd/hijing_pi0real_$run.starsim.fzd
-inFile=Files_$job/fzd/gamma_$run.starsim.fzd
+#inFile=Files_$job/fzd/gamma_$run.starsim.fzd
+inFile=/star/u/kunsu/pwg/gamma/fz/gamma_$run.fzd
 inPile=Files_$job/pile_up/pile_up$at.root
 chain=y2014a,event,McEvent,MuDst,tpc,fzin,sim_T,gen_T,geantout,tpcrs,TpcHitMover,TpxClu,evout,-HitFilt,FieldOn,AgML,usexgeom,MakeEvent,ITTF,Sti,NoSsdIt,NoSvtIt,StiHftC,pxlFastSim,pxlCluster,pxlHit,istFastSim,Idst,BAna,l0,Tree,logger,genvtx,tpcDB,bbcSim,btofsim,tags,emcY2,EEfs,evout,-dstout,IdTruth,big,McEvout,MiniMcMk,StiPulls,ReadAll,clearmem,McAna
 echo $chain
