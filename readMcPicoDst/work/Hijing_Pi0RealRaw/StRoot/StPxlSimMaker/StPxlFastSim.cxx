@@ -262,7 +262,7 @@ Float_t StPxlFastSim::getLocalZ(Int_t value){
     const double mFirstPixelZ = -(StPxlConsts::kPxlNumColumnsPerSensor - 1) * StPxlConsts::kPixelSize / 2;
     return mFirstPixelZ + StPxlConsts::kPixelSize * value;
 }
-StPxlRawHit StPxlFastSim::makeRawHit(float localX, float localZ, int iSec, int iLad, int iSen, int idTruth, int nHits=0){
+StPxlRawHit StPxlFastSim::makeRawHit(float localX, float localZ, int iSec, int iLad, int iSen, int idTruth, int nHits){
     Int_t row = getRow(localX);
     Int_t column = getColumn(localZ);
     Int_t rowColumn[25][2];
