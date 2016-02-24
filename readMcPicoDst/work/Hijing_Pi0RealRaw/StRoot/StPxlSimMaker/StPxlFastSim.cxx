@@ -284,11 +284,13 @@ StPxlRawHit StPxlFastSim::makeRawHit(float localX, float localZ, int iSec, int i
                 smallR = r;
                 rowColumn[nHits][0]=iRow;
                 rowColumn[nHits][1]=iColumn;
-                
+                cout << iRow << " " << iColumn << " " << r << " " << smallR << " <-" << endl;
             }
+            else cout << iRow << " " << iColumn << " " << r << " " << smallR << endl;
+
         }
     }
-    
+    cout << nHits << " " << rowColumn[nHits][0] << " " << rowColumn[nHits][1] << endl;
     tempHit.setSector(iSec);
     tempHit.setLadder(iLad);
     tempHit.setSensor(iSen);
