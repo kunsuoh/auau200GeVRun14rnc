@@ -109,7 +109,8 @@ private:
     Double_t mResXPix;
     Double_t mResYPix;
     Double_t mResZPix;
-    
+    Int_t rowColumn[25][2];
+
     Bool_t mUseRandomSeed;
     
     TH1F *dataH2;
