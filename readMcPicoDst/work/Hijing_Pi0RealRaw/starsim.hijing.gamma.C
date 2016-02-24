@@ -60,8 +60,8 @@ void trig( Int_t n=0 )
     //if(kinematics) kinematics->Kine( 5, "D0", minPt, maxPt, minY, maxY );
 
     // Generate 5 D0 according to a PT and Y distribution
-    //if(kinematics) kinematics->Dist(500, "pi0", ptDist, yDist );
-    if(kinematics) kinematics->Kine(1000, "gamma", 0.0, 20.0, -1.0, +1.0 );;
+    if(kinematics) kinematics->Dist(500, "pi0", ptDist, yDist );
+    //if(kinematics) kinematics->Kine(1000, "gamma", 0.0, 20.0, -1.0, +1.0 );;
 
     chain->Make();
     //    command("gprint kine");
@@ -70,7 +70,7 @@ void trig( Int_t n=0 )
 // ----------------------------------------------------------------------------
 void myKine()
 { 
-  kinematics = new StarKinematics("gamma");
+  kinematics = new StarKinematics("pi0");
   _primary -> AddGenerator(kinematics);
 }
 // ----------------------------------------------------------------------------
@@ -179,13 +179,13 @@ void starsim( Int_t nevents=1, Int_t Index = 0, Int_t rngSeed=4321 )
   //ptDist = new TF1("ptDist","(x/[0])/(1+(x/[0])^2)^6",0.0,10.0);
   //ptDist->SetParameter(0, pt0);
   //ptDist->Draw();
-//  ptDist = new TF1("ptDist","[0]*x*TMath::Exp(-x/[1])",minPt,maxPt); //dN/pT/dpT is exp 
-//  ptDist->SetParameters(1.,1.);//slope = 1.;
-//  ptDist = new TF1("ptDist", funModiHagedorn_pt,1.0,10,6);
-//  ptDist->SetParameters(5.655567e+02,5.072933e-01,1.215052e-01,7.709202e-01,8.340029e+00,1.395702e-01);
+  //ptDist = new TF1("ptDist","[0]*x*TMath::Exp(-x/[1])",minPt,maxPt); //dN/pT/dpT is exp
+  //ptDist->SetParameters(1.,1.);//slope = 1.;
+  ptDist = new TF1("ptDist", funModiHagedorn_pt,1.0,10,6);
+  ptDist->SetParameters(5.655567e+02,5.072933e-01,1.215052e-01,7.709202e-01,8.340029e+00,1.395702e-01);
   //yDist = new TF1("yDist","-TMath::Erf(x+2.6)*TMath::Erf(x-2.6)",minY,maxY);
-//  yDist = new TF1("yDist","pol0",minY,maxY);
-//  yDist->SetParameter(0,1.);
+  yDist = new TF1("yDist","pol0",minY,maxY);
+  yDist->SetParameter(0,1.);
   
   //phi, default 0 ~ TMath::TwoPi() flat
 

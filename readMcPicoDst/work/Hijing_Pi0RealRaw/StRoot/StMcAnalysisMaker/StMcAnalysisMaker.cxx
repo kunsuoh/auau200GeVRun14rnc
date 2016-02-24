@@ -193,7 +193,7 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
     for (unsigned int i = 0;  i < trks.size(); i++){
         StMcTrack* mcTrack = trks[i];
         Int_t trackGid = mcTrack->geantId();
-        if (trackGid == 1 &&
+        if ((trackGid == 1 || trackGid==7) &&
             mcTrack->stopVertex() &&
             TMath::Sqrt(mcTrack->stopVertex()->position().x()*mcTrack->stopVertex()->position().x() + mcTrack->stopVertex()->position().y()*mcTrack->stopVertex()->position().y()) < 30.)
         {
