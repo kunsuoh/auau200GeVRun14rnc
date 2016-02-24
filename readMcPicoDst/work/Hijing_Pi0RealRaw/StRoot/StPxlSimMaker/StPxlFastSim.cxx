@@ -233,6 +233,7 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
 
                     Int_t clusterSize = 999;
                     while (clusterSize > 8) clusterSize = (Int_t)dataH2->GetRandom();
+                    cout << "cluster size: " << clusterSize << endl;
                     for (int i = 0 ; i < clusterSize ; i++) pxlRawHitCol.addRawHit(makeRawHit(localPixHitPos[0],localPixHitPos[2], iSec + 1, iLad + 1, iSen + 1, idTruth, i));
 
                 }
