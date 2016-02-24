@@ -33,6 +33,8 @@ private:
     Int_t nRcPxl1Hits;
     Int_t nRcPxl2Hits;
     Int_t nRcIstHits;
+    Int_t nRcPxl1HitsCheck;
+    Int_t nRcPxl2HitsCheck;
     Float_t pairPt[kMaxPair];
     Float_t pairEta[kMaxPair];
     Float_t openangle[kMaxPair];
