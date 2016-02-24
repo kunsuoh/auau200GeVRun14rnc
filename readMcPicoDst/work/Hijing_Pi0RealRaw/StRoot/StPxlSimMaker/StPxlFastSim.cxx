@@ -232,7 +232,7 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
                     unsigned short idTruth = mcPix->parentTrack() ? mcPix->parentTrack()->key() : -999;
 
                     Int_t clusterSize = 999;
-                    while (clusterSize > 8) clusterSize = (Int_t)dataH2->GetRandom();
+                    while (clusterSize > 9) clusterSize = (Int_t)dataH2->GetRandom();
                     cout << "cluster size: " << clusterSize << endl;
                     for (int i = 0 ; i < clusterSize ; i++) pxlRawHitCol.addRawHit(makeRawHit(localPixHitPos[0],localPixHitPos[2], iSec + 1, iLad + 1, iSen + 1, idTruth, i));
 
@@ -275,7 +275,8 @@ StPxlRawHit StPxlFastSim::makeRawHit(float localX, float localZ, int iSec, int i
             if (column+iColumn > StPxlConsts::kPxlNumColumnsPerSensor - 1) continue;
             
             Int_t beep = 0;
-            for (int i=0; i<nHits; i++) if (iRow == rowColumn[0][i] && iColumn==rowColumn[0][i]) beep=1;
+            //for (int i=0; i<nHits; i++) if (iRow == rowColumn[0][i] && iColumn==rowColumn[0][i]) beep=1;
+            for (int i=0; i<nHits; i++) if (iRow == rowColumn[i][0] && iColumn==rowColumn[i][1]) beep=1;
             if (beep) continue;
             
             Float_t r = (getLocalX(row+iRow)-localX)*(getLocalX(row+iRow)-localX) + (getLocalZ(column+iColumn)-localZ)*(getLocalZ(column+iColumn)-localZ);

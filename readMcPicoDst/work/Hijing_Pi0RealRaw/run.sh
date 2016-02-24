@@ -6,7 +6,7 @@ job=$1
 run=`echo $job | cut -f2 -d"_"`
 
 # ---- Make folder
-#mkdir ./Files_$job
+mkdir ./Files_$job
 #mkdir ./Files_$job/fzd
 mkdir ./Files_$job/hft_reco
 #mkdir ./Files_$job/pile_up
