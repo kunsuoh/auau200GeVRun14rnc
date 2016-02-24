@@ -69,10 +69,10 @@ mv *.root Files_$job/hft_reco/.
 #mv *.picoDst.root gamma_sim_production_v0_$job.picoDst.root
 
 #privilges
-#find Files_$job/ -type d -exec chgrp rhstar {} \;
-#find Files_$job/ -type d -exec chmod g+rw {} \;
-#find Files_$job/ -type f -exec chgrp rhstar {} \;
-#find Files_$job/ -type f -exec chmod g+rw {} \;
+find Files_$job/ -type d -exec chgrp rhstar {} \;
+find Files_$job/ -type d -exec chmod g+rw {} \;
+find Files_$job/ -type f -exec chgrp rhstar {} \;
+find Files_$job/ -type f -exec chmod g+rw {} \;
 
 # ---- Done bring files back
-#tar -cvf Files_$job.tar Files_$job
+tar -cvf Files_$job.tar Files_$job
