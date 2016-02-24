@@ -285,7 +285,7 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                                 cout << "check iSec loop " << iSec << endl;
                                 StPxlSectorHitCollection * pxlSecHitCol = pxlHitCol->sector(iSec);
                                 if (!pxlSecHitCol) continue;
-                                for (unsigned int iLad; iLad < pxlSecHitCol->numberOfLadders(); iLad++) {
+                                for (unsigned int iLad = 0; iLad < pxlSecHitCol->numberOfLadders(); iLad++) {
                                     cout << "check iLad loop " << iLad << endl;
                                     StPxlLadderHitCollection * pxlLadHitCol = pxlSecHitCol->ladder(iLad);
                                     if (!pxlLadHitCol) continue;
@@ -330,7 +330,7 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                             for (unsigned int iSec = 0; iSec<pxlHitCol->numberOfSectors(); iSec++){
                                 StPxlSectorHitCollection * pxlSecHitCol = pxlHitCol->sector(iSec);
                                 if (!pxlSecHitCol) continue;
-                                for (unsigned int iLad; iLad < pxlSecHitCol->numberOfLadders(); iLad++) {
+                                for (unsigned int iLad = 0; iLad < pxlSecHitCol->numberOfLadders(); iLad++) {
                                     StPxlLadderHitCollection * pxlLadHitCol = pxlSecHitCol->ladder(iLad);
                                     if (!pxlLadHitCol) continue;
                                     for (unsigned int iSen=0; iSen<pxlLadHitCol->numberOfSensors(); iSen++) {
@@ -442,7 +442,7 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
         cout << "Check iSec : " << iSec << endl;
         StPxlSectorHitCollection * pxlSecHitCol = pxlHitCol->sector(iSec);
         if (!pxlSecHitCol) continue;
-        for (unsigned int iLad; iLad < pxlSecHitCol->numberOfLadders(); iLad++) {
+        for (unsigned int iLad = 0; iLad < pxlSecHitCol->numberOfLadders(); iLad++) {
             cout << "Check iLad : " << iLad << endl;
             StPxlLadderHitCollection * pxlLadHitCol = pxlSecHitCol->ladder(iLad);
             if (!pxlLadHitCol) continue;
@@ -468,7 +468,7 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
         cout << "Check iSec : " << iSec << endl;
         StMcPxlSectorHitCollection * pxlSecHitCol = pxlMcHitCol->sector(iSec);
         if (!pxlSecHitCol) continue;
-        for (unsigned int iLad; iLad < pxlSecHitCol->numberOfLadders(); iLad++) {
+        for (unsigned int iLad = 0; iLad < pxlSecHitCol->numberOfLadders(); iLad++) {
             cout << "Check iLad : " << iLad << endl;
             StMcPxlLadderHitCollection * pxlLadHitCol = pxlSecHitCol->ladder(iLad);
             if (!pxlLadHitCol) continue;
