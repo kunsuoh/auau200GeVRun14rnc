@@ -277,8 +277,12 @@ StPxlRawHit StPxlFastSim::makeRawHit(float localX, float localZ, int iSec, int i
             Int_t beep = 0;
             //for (int i=0; i<nHits; i++) if (iRow == rowColumn[0][i] && iColumn==rowColumn[0][i]) beep=1;
             for (int i=0; i<nHits; i++) if (iRow == rowColumn[i][0] && iColumn==rowColumn[i][1]) beep=1;
-            if (beep==1) continue;
-            
+            if (beep==1) {
+                cout << "skip!!" << endl;
+                continue;
+            }
+            else cout << "--" << endl;
+
             Float_t r = (getLocalX(row+iRow)-localX)*(getLocalX(row+iRow)-localX) + (getLocalZ(column+iColumn)-localZ)*(getLocalZ(column+iColumn)-localZ);
             if (r < smallR) {
                 smallR = r;
