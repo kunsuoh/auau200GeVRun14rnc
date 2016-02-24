@@ -135,6 +135,9 @@ int StMcAnalysisMaker::Init()
     mTree->Branch("nHits2_pxl1", &nHits2_pxl1, "nHits2_pxl1[nPair]/I");
     mTree->Branch("nHits2_pxl2", &nHits2_pxl2, "nHits2_pxl2[nPair]/I");
     mTree->Branch("nHits2_ist",  &nHits2_ist,  "nHits2_ist[nPair]/I");
+    mTree->Branch("nHits",&nHits,"nHits/I");
+    mTree->Branch("clusterSize_pxl1", &clusterSize_pxl1, "clusterSize_pxl1[nHits]/I");
+    mTree->Branch("clusterSize_pxl2", &clusterSize_pxl2, "clusterSize_pxl2[nHits]/I");
 
     cout << "StMcAnalysisMaker::Init - DONE" << endl;
     return StMaker::Init();
@@ -433,6 +436,7 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
         }
     }
     // RC
+    nHits = 0;
     for (unsigned int iSec = 0; iSec<pxlHitCol->numberOfSectors(); iSec++){
         StPxlSectorHitCollection * pxlSecHitCol = pxlHitCol->sector(iSec);
         if (!pxlSecHitCol) continue;
@@ -446,8 +450,14 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                 for (unsigned int iHit = 0; iHit < nSenHits; iHit++){
                     StPxlHit* pixHit = pxlSenHitCol->hits()[iHit];
                     if (!pixHit) continue;
-                    if (pixHit->ladder() == 1)nRcPxl1Hits++;
-                    else nRcPxl2Hits++;
+                    if (pixHit->ladder() == 1){
+                        nRcPxl1Hits++;
+                        clusterSize_pxl1[nHits] = pixHit->nRawHits();
+                    }
+                    else {nRcPxl2Hits++;
+                        clusterSize_pxl2[nHits] = pixHit->nRawHits();
+                    }
+                    nHits++;
                 }
             }
         }

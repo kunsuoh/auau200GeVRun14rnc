@@ -21,6 +21,7 @@ class StEvent;
 
 
 const Int_t kMaxPair= 500;
+const Int_t kMaxHits= 5000;
 class StMcAnalysisMaker : public StMaker
 {
 private:
@@ -79,7 +80,11 @@ private:
     Int_t nHits2_pxl1[kMaxPair];
     Int_t nHits2_pxl2[kMaxPair];
     Int_t nHits2_ist[kMaxPair];
+    Int_t nHits;
+    Int_t clusterSize_pxl1[kMaxHits];
+    Int_t clusterSize_pxl2[kMaxHits];
 
+    
     StAssociationMaker* mAssoc;
     const StTrack* findPartner(StMcTrack*, int&);
     const StMcTrack* findPartner(StGlobalTrack*, int&);
