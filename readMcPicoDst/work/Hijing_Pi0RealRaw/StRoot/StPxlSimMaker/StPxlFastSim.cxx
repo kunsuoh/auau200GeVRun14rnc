@@ -279,7 +279,7 @@ StPxlRawHit StPxlFastSim::makeRawHit(float localX, float localZ, int iSec, int i
             //for (int i=0; i<nHits; i++) if (iRow == rowColumn[0][i] && iColumn==rowColumn[0][i]) beep=1;
             for (int i=0; i<nHits; i++) if (iRow == rowColumn[i][0] && iColumn==rowColumn[i][1]) beep=1;
             if (beep==1) {
-                cout << "skip!!" << endl;
+                //cout << "skip!!" << endl;
                 continue;
             }
 
@@ -288,13 +288,13 @@ StPxlRawHit StPxlFastSim::makeRawHit(float localX, float localZ, int iSec, int i
                 smallR = r;
                 rowColumn[nHits][0]=iRow;
                 rowColumn[nHits][1]=iColumn;
-                cout << iRow << " " << iColumn << " " << r << " " << smallR << " <-" << endl;
+                //cout << iRow << " " << iColumn << " " << r << " " << smallR << " <-" << endl;
             }
-            else cout << iRow << " " << iColumn << " " << r << " " << smallR << endl;
+            //else cout << iRow << " " << iColumn << " " << r << " " << smallR << endl;
 
         }
     }
-    cout << nHits << " " << rowColumn[nHits][0] << " " << rowColumn[nHits][1] << endl;
+    //cout << nHits << " " << rowColumn[nHits][0] << " " << rowColumn[nHits][1] << endl;
     tempHit.setSector(iSec);
     tempHit.setLadder(iLad);
     tempHit.setSensor(iSen);
