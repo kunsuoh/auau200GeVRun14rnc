@@ -276,7 +276,7 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                 if (!nPartnerPxlHits1 || !nPartnerPxlHits2) continue;
                 if (nPartnerPxlHits1) {
                     for(int ipxlhit=0; ipxlhit<nPartnerPxlHits1; ipxlhit++) {
-                        StPxlHit * pxlHit = dynamic_cast<StGlobalTrack const*>(PartnerPxlHits1[ipxlhit]);
+                        StPxlHit * pxlHit = dynamic_cast<StPxlHit *>(PartnerPxlHits1[ipxlhit]);
 
                         StThreeVectorF pos = PartnerPxlHits1[ipxlhit]->position();
                         float const R = pow(pos.x(),2.0) + pow(pos.y(),2.0);
@@ -306,7 +306,7 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                 }
                 if (nPartnerPxlHits2) {
                     for(int ipxlhit=0; ipxlhit<nPartnerPxlHits2; ipxlhit++) {
-                        StPxlHit * pxlHit = dynamic_cast<StGlobalTrack const*>(PartnerPxlHits2[ipxlhit]);
+                        StPxlHit * pxlHit = dynamic_cast<StPxlHit *>(PartnerPxlHits2[ipxlhit]);
                         StThreeVectorF pos = PartnerPxlHits2[ipxlhit]->position();
                         float const R = pow(pos.x(),2.0) + pow(pos.y(),2.0);
                         if(R < 3.5*3.5) {
