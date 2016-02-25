@@ -248,8 +248,8 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                 phiCalculation(partnerFourMom, electronFourMom, bField > 0 ? 1 : -1, mPhiV, mOpenAngle);
                 
                 // Pxl
-                StPtrVecPxlHit PartnerPxlHits1 = dynamic_cast<StPxlHit*> glRcPositron->detectorInfo()->hits(kPxlId);
-                StPtrVecPxlHit PartnerPxlHits2 = dynamic_cast<StPxlHit*> glRcElectron->detectorInfo()->hits(kPxlId);
+                StPtrVecPxlHit PartnerPxlHits1 = dynamic_cast<StPxlHit *> glRcPositron->detectorInfo()->hits(kPxlId);
+                StPtrVecPxlHit PartnerPxlHits2 = dynamic_cast<StPxlHit *> glRcElectron->detectorInfo()->hits(kPxlId);
                 int nPartnerPxlHits1 = (int) PartnerPxlHits1.size();
                 int nPartnerPxlHits2 = (int) PartnerPxlHits2.size();
                 
@@ -276,9 +276,7 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                 if (nPartnerPxlHits1) {
                     for(int ipxlhit=0; ipxlhit<nPartnerPxlHits1; ipxlhit++) {
                         StThreeVectorF pos = PartnerPxlHits1[ipxlhit]->position();
-                        float const R = pow(pos.x(),2.0) + pow(pos.y(),2.0);
-                        if(R < 3.5*3.5)
-                        
+                        float const R = pow(pos.x(),2.0) + pow(pos.y(),2.0);                        
                         if(R < 3.5*3.5) {
                             pxl1HitPosition1 = pos;
                             clusterSize1_pxl1[nPair] = PartnerPxlHits1[ipxlhit]->nRawHits();
