@@ -85,6 +85,7 @@ private:
     Int_t clusterSize_pxl2[kMaxHits];
 
     
+    
     StAssociationMaker* mAssoc;
     const StTrack* findPartner(StMcTrack*, int&);
     const StMcTrack* findPartner(StGlobalTrack*, int&);
