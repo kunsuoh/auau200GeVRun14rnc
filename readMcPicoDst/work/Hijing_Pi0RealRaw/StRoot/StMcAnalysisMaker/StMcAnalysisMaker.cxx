@@ -190,6 +190,7 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
     for (unsigned int i = 0;  i < trks.size(); i++){
         StMcTrack* mcTrack = trks[i];
         Int_t trackGid = mcTrack->geantId();
+        hGeantId->Fill(trackGid);
         if ((trackGid == 1 || trackGid==7) &&
             mcTrack->stopVertex() &&
             TMath::Sqrt(mcTrack->stopVertex()->position().x()*mcTrack->stopVertex()->position().x() + mcTrack->stopVertex()->position().y()*mcTrack->stopVertex()->position().y()) < 30.)
@@ -533,7 +534,10 @@ const StMcTrack* StMcAnalysisMaker::findPartner(StGlobalTrack* rcTrack, int& max
 int StMcAnalysisMaker::Finish()
 {
     mFile->cd();
+    
     mTree->Write();
+    hGeantId->Write();
+    
     mFile->Close();
     return kStOk;
 }
