@@ -90,6 +90,7 @@ private:
     const StMcTrack* findPartner(StGlobalTrack*, int&);
     void phiCalculation(StLorentzVectorF const,StLorentzVectorF const, int, float &, float &);
     int fillTracks(StMcEvent*,StEvent*);
+    void initTree();
     
     TString mOutFileName;
 public:

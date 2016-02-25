@@ -139,6 +139,8 @@ int StMcAnalysisMaker::Init()
     mTree->Branch("clusterSize_pxl1", &clusterSize_pxl1, "clusterSize_pxl1[nHits]/I");
     mTree->Branch("clusterSize_pxl2", &clusterSize_pxl2, "clusterSize_pxl2[nHits]/I");
 
+    hGeantId = new TH1F("hGeantId","hGeantId",100,0,100);
+    
     cout << "StMcAnalysisMaker::Init - DONE" << endl;
     return StMaker::Init();
 }
@@ -181,16 +183,8 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
     
     float bField = event->runInfo()->magneticField();
     
-    nPair=0;
-    nMcPxl1Hits=0;
-    nMcPxl2Hits=0;
-    nMcIstHits=0;
-    nRcPxl1Hits=0;
-    nRcPxl2Hits=0;
-    nRcIstHits=0;
-    nRcPxl1HitsCheck=0;
-    nRcPxl2HitsCheck=0;
-
+    initTree();
+    
     StPxlHitCollection * pxlHitCol = event->pxlHitCollection();
     StMcPxlHitCollection * pxlMcHitCol = mcEvent->pxlHitCollection();
     for (unsigned int i = 0;  i < trks.size(); i++){
@@ -557,4 +551,68 @@ void StMcAnalysisMaker::phiCalculation(StLorentzVectorF const positron,StLorentz
     phiV =w.Angle(wc);
     openangle=ppp.Angle(eee);
     
+}
+void StMcAnalysisMaker::initTree(){
+    
+    nPair=-999;
+    nMcPxl1Hits=-999;
+    nMcPxl2Hits=-999;
+    nMcIstHits=-999;
+    nRcPxl1Hits=-999;
+    nRcPxl2Hits=-999;
+    nRcIstHits=-999;
+    nRcPxl1HitsCheck=-999;
+    nRcPxl2HitsCheck=-999;
+    for (int i=0; i<kMaxPair; i++) {
+        pairPt[i]=-999;
+        pairEta[i]=-999;
+        openangle[i]=-999;
+        mcopenangle[i]=-999;
+        mcDist_pxl1[i]=-999;
+        mcDist_pxl2[i]=-999;
+        mcDist_ist[i]=-999;
+        rcDist_pxl1[i]=-999;
+        rcDist_pxl2[i]=-999;
+        rcDist_ist[i]=-999;
+        mcConvR[i]=-999;
+        rcConvR[i]=-999;
+        parentGid[i]=-999;
+        mass[i]=-999;
+        pairDca[i]=-999;
+        pt1[i]=-999;
+        pt2[i]=-999;
+        eta1[i]=-999;
+        eta2[i]=-999;
+        clusterSize1_pxl1[i]=-999;
+        clusterSize1_pxl2[i]=-999;
+        clusterSize1_pxl3[i]=-999;
+        clusterSize2_pxl1[i]=-999;
+        clusterSize2_pxl2[i]=-999;
+        clusterSize2_pxl3[i]=-999;
+        idTruth[i]=-999;
+        rcHftHit1_pxl1[i]=-999;
+        rcHftHit1_pxl2[i]=-999;
+        rcHftHit1_ist[i]=-999;
+        truth1_pxl1[i]=-999;
+        truth1_pxl2[i]=-999;
+        truth1_ist[i]=-999;
+        nHits1_pxl1[i]=-999;
+        nHits1_pxl2[i]=-999;
+        nHits1_ist[i]=-999;
+        rcHftHit2_pxl1[i]=-999;
+        rcHftHit2_pxl2[i]=-999;
+        rcHftHit2_ist[i]=-999;
+        truth2_pxl1[i]=-999;
+        truth2_pxl2[i]=-999;
+        truth2_ist[i]=-999;
+        nHits2_pxl1[i]=-999;
+        nHits2_pxl2[i]=-999;
+        nHits2_ist[i]=-999;
+    }
+    nHits=-999;
+    for (int i=0; i<kMaxHits; i++) {
+        clusterSize_pxl1[i]=-999;
+        clusterSize_pxl2[i]=-999;
+    }
+
 }
