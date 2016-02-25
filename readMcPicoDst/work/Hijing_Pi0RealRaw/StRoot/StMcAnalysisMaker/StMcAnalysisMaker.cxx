@@ -558,15 +558,15 @@ void StMcAnalysisMaker::phiCalculation(StLorentzVectorF const positron,StLorentz
 }
 void StMcAnalysisMaker::initTree(){
     
-    nPair=-999;
-    nMcPxl1Hits=-999;
-    nMcPxl2Hits=-999;
-    nMcIstHits=-999;
-    nRcPxl1Hits=-999;
-    nRcPxl2Hits=-999;
-    nRcIstHits=-999;
-    nRcPxl1HitsCheck=-999;
-    nRcPxl2HitsCheck=-999;
+    nPair=0;
+    nMcPxl1Hits=0;
+    nMcPxl2Hits=0;
+    nMcIstHits=0;
+    nRcPxl1Hits=0;
+    nRcPxl2Hits=0;
+    nRcIstHits=0;
+    nRcPxl1HitsCheck=0;
+    nRcPxl2HitsCheck=0;
     for (int i=0; i<kMaxPair; i++) {
         pairPt[i]=-999;
         pairEta[i]=-999;
@@ -613,7 +613,7 @@ void StMcAnalysisMaker::initTree(){
         nHits2_pxl2[i]=-999;
         nHits2_ist[i]=-999;
     }
-    nHits=-999;
+    nHits=0;
     for (int i=0; i<kMaxHits; i++) {
         clusterSize_pxl1[i]=-999;
         clusterSize_pxl2[i]=-999;
