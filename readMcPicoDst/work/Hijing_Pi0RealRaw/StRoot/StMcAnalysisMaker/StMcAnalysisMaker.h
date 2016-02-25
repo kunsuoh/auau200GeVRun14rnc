@@ -8,6 +8,7 @@
 class TFile;
 class TH3F;
 class TH2F;
+class TH1F;
 class TTree;
 
 class StMcTrack;
@@ -27,6 +28,7 @@ class StMcAnalysisMaker : public StMaker
 private:
     TFile* mFile;
     TTree * mTree;
+    TH1F *  hGeantId;
     Int_t nPair;
     Int_t nMcPxl1Hits;
     Int_t nMcPxl2Hits;
