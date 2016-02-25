@@ -281,15 +281,15 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                         
                         if(R < 3.5*3.5) {
                             pxl1HitPosition1 = pos;
-                            clusterSize1_pxl1[nPair] = pixHit->nRawHits();
+                            clusterSize1_pxl1[nPair] = PartnerPxlHits1[ipxlhit]->nRawHits();
                             nRcPxl1HitsCheck++;
                         }
                         else if (clusterSize1_pxl2[nPair]) {
-                            clusterSize1_pxl3[nPair] = pixHit->nRawHits();
+                            clusterSize1_pxl3[nPair] = PartnerPxlHits1[ipxlhit]->nRawHits();
                             nRcPxl2HitsCheck++;
                         }
                         else {
-                            clusterSize1_pxl2[nPair] = pixHit->nRawHits();
+                            clusterSize1_pxl2[nPair] = PartnerPxlHits1[ipxlhit]->nRawHits();
                             nRcPxl2HitsCheck++;
                         }
                         
@@ -309,15 +309,15 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                         float const R = pow(pos.x(),2.0) + pow(pos.y(),2.0);
                         if(R < 3.5*3.5) {
                             pxl1HitPosition2 = pos;
-                            clusterSize2_pxl1[nPair] = pixHit->nRawHits();
+                            clusterSize2_pxl1[nPair] = PartnerPxlHits2[ipxlhit]->nRawHits();
                             nRcPxl1HitsCheck++;
                         }
                         else if (clusterSize2_pxl2[nPair]) {
-                            clusterSize2_pxl3[nPair] = pixHit->nRawHits();
+                            clusterSize2_pxl3[nPair] = PartnerPxlHits2[ipxlhit]->nRawHits();
                             nRcPxl2HitsCheck++;
                         }
                         else {
-                            clusterSize2_pxl2[nPair] = pixHit->nRawHits();
+                            clusterSize2_pxl2[nPair] = PartnerPxlHits2[ipxlhit]->nRawHits();
                             nRcPxl2HitsCheck++;
                         }
                         if(PartnerPxlHits2[ipxlhit]->idTruth() == electron->key()) continue;
