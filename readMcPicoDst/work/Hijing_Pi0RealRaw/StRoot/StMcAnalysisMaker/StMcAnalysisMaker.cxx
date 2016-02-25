@@ -272,7 +272,7 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                 clusterSize2_pxl2[nPair] = 0;
                 clusterSize2_pxl3[nPair] = 0;
                 
-                if (!nPartnerPxlHits1 && !nPartnerPxlHits2) continue;
+                if (!nPartnerPxlHits1 || !nPartnerPxlHits2) continue;
                 if (nPartnerPxlHits1) {
                     for(int ipxlhit=0; ipxlhit<nPartnerPxlHits1; ipxlhit++) {
                         StThreeVectorF pos = PartnerPxlHits1[ipxlhit]->position();
