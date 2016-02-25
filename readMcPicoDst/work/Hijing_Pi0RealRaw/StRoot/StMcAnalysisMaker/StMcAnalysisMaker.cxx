@@ -248,8 +248,8 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                 phiCalculation(partnerFourMom, electronFourMom, bField > 0 ? 1 : -1, mPhiV, mOpenAngle);
                 
                 // Pxl
-                StPtrVecPxlHit PartnerPxlHits1 = dynamic_cast<StPxlHit *> glRcPositron->detectorInfo()->hits(kPxlId);
-                StPtrVecPxlHit PartnerPxlHits2 = dynamic_cast<StPxlHit *> glRcElectron->detectorInfo()->hits(kPxlId);
+                StPtrVecPxlHit PartnerPxlHits1 = dynamic_cast<StPxlHit*> glRcPositron->detectorInfo()->hits(kPxlId);
+                StPtrVecPxlHit PartnerPxlHits2 = dynamic_cast<StPxlHit*> glRcElectron->detectorInfo()->hits(kPxlId);
                 int nPartnerPxlHits1 = (int) PartnerPxlHits1.size();
                 int nPartnerPxlHits2 = (int) PartnerPxlHits2.size();
                 
