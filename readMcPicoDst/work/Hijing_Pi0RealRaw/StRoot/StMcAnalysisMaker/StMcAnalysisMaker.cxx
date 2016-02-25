@@ -248,8 +248,9 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                 phiCalculation(partnerFourMom, electronFourMom, bField > 0 ? 1 : -1, mPhiV, mOpenAngle);
                 
                 // Pxl
-                StPtrVecPxlHit * PartnerPxlHits1 = dynamic_cast<StPxlHit *>(glRcPositron->detectorInfo()->hits(kPxlId));
-                StPtrVecPxlHit * PartnerPxlHits2 = dynamic_cast<StPxlHit *>(glRcElectron->detectorInfo()->hits(kPxlId));
+                StPtrVecPxlHit PartnerPxlHits1 = glRcPositron->detectorInfo()->hits(kPxlId);
+                StPtrVecPxlHit PartnerPxlHits2 = glRcElectron->detectorInfo()->hits(kPxlId);
+
                 int nPartnerPxlHits1 = (int) PartnerPxlHits1.size();
                 int nPartnerPxlHits2 = (int) PartnerPxlHits2.size();
                 
@@ -275,19 +276,21 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                 if (!nPartnerPxlHits1 || !nPartnerPxlHits2) continue;
                 if (nPartnerPxlHits1) {
                     for(int ipxlhit=0; ipxlhit<nPartnerPxlHits1; ipxlhit++) {
+                        StPxlHit * pxlHit = dynamic_cast<StGlobalTrack const*>(PartnerPxlHits1[ipxlhit]);
+
                         StThreeVectorF pos = PartnerPxlHits1[ipxlhit]->position();
                         float const R = pow(pos.x(),2.0) + pow(pos.y(),2.0);
                         if(R < 3.5*3.5) {
                             pxl1HitPosition1 = pos;
-                            clusterSize1_pxl1[nPair] = PartnerPxlHits1[ipxlhit]->nRawHits();
+                            clusterSize1_pxl1[nPair] = pxlHit->nRawHits();
                             nRcPxl1HitsCheck++;
                         }
                         else if (clusterSize1_pxl2[nPair]) {
-                            clusterSize1_pxl3[nPair] = PartnerPxlHits1[ipxlhit]->nRawHits();
+                            clusterSize1_pxl3[nPair] = pxlHit->nRawHits();
                             nRcPxl2HitsCheck++;
                         }
                         else {
-                            clusterSize1_pxl2[nPair] = PartnerPxlHits1[ipxlhit]->nRawHits();
+                            clusterSize1_pxl2[nPair] = pxlHit->nRawHits();
                             nRcPxl2HitsCheck++;
                         }
                         
@@ -303,19 +306,20 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                 }
                 if (nPartnerPxlHits2) {
                     for(int ipxlhit=0; ipxlhit<nPartnerPxlHits2; ipxlhit++) {
+                        StPxlHit * pxlHit = dynamic_cast<StGlobalTrack const*>(PartnerPxlHits2[ipxlhit]);
                         StThreeVectorF pos = PartnerPxlHits2[ipxlhit]->position();
                         float const R = pow(pos.x(),2.0) + pow(pos.y(),2.0);
                         if(R < 3.5*3.5) {
                             pxl1HitPosition2 = pos;
-                            clusterSize2_pxl1[nPair] = PartnerPxlHits2[ipxlhit]->nRawHits();
+                            clusterSize2_pxl1[nPair] = pxlHit->nRawHits();
                             nRcPxl1HitsCheck++;
                         }
                         else if (clusterSize2_pxl2[nPair]) {
-                            clusterSize2_pxl3[nPair] = PartnerPxlHits2[ipxlhit]->nRawHits();
+                            clusterSize2_pxl3[nPair] = pxlHit->nRawHits();
                             nRcPxl2HitsCheck++;
                         }
                         else {
-                            clusterSize2_pxl2[nPair] = PartnerPxlHits2[ipxlhit]->nRawHits();
+                            clusterSize2_pxl2[nPair] = pxlHit->nRawHits();
                             nRcPxl2HitsCheck++;
                         }
                         if(PartnerPxlHits2[ipxlhit]->idTruth() == electron->key()) continue;
