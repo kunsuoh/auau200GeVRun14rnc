@@ -60,8 +60,9 @@ void trig( Int_t n=0 )
     //if(kinematics) kinematics->Kine( 5, "D0", minPt, maxPt, minY, maxY );
 
     // Generate 5 D0 according to a PT and Y distribution
-    if(kinematics) kinematics->Dist(500, "pi0", ptDist, yDist );
+    //if(kinematics) kinematics->Dist(500, "pi0", ptDist, yDist );
     //if(kinematics) kinematics->Kine(1000, "gamma", 0.0, 20.0, -1.0, +1.0 );;
+      if (kinematics) kinematics->Kine(10, "Dalitz", minPt, maxPt, minY, maxY );
 
     chain->Make();
     //    command("gprint kine");
@@ -102,6 +103,21 @@ void Hijing()
   
 }
 // ----------------------------------------------------------------------------
+void Dalitzdecay()
+{
+    // The Dalitz particle is defined in starsim  in gstar_part.g --
+    //
+    //  Particle Dalitz    code=10007       TrkTyp=4 mass=0.135  charge=0 tlife=8.4e-17,                     |                                                                                        //                     pdg=100111 bratio= { 1.0,}  mode= {10203,}                                        |                                                                                       //
+    // The particle database does not know about this particle, so we have to add it.  It is
+    // important that we do not overwrite PDG id = 111, the ID of the standard pi0.  Otherwise,
+    // we will have all pi0's in the event decaying by dalitz.
+    //
+    StarParticleData &data = StarParticleData::instance();
+    data.AddParticle("Dalitz","pi0-->e+e-gamma 100%",0.135,0,0,0,"meson",100111,-100111,10007);
+    kinematics = new StarKinematics("Dalitz Decay");
+    _primary -> AddGenerator(kinematics);
+}
+
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 void starsim( Int_t nevents=1, Int_t Index = 0, Int_t rngSeed=4321 )
@@ -132,8 +148,8 @@ void starsim( Int_t nevents=1, Int_t Index = 0, Int_t rngSeed=4321 )
   StarRandom::capture();
 
   char rootname[100],fzname[100];
-  sprintf(rootname,"gamma_%d.starsim.root",Index);
-  sprintf(fzname,"gfile o gamma_%d.starsim.fzd",Index);
+  sprintf(rootname,"%d.starsim.root",Index);
+  sprintf(fzname,"gfile o %d.starsim.fzd",Index);
 
   //
   // Create the primary event generator and insert it
@@ -159,9 +175,10 @@ void starsim( Int_t nevents=1, Int_t Index = 0, Int_t rngSeed=4321 )
   // Hijing();
   //
   // Setup single particle
-  //  
-  myKine(); 
- 
+  //
+    
+  //myKine();
+    Dalitzdecay();
 
   //
   // Initialize primary event generator and all sub makers
@@ -181,11 +198,12 @@ void starsim( Int_t nevents=1, Int_t Index = 0, Int_t rngSeed=4321 )
   //ptDist->Draw();
   //ptDist = new TF1("ptDist","[0]*x*TMath::Exp(-x/[1])",minPt,maxPt); //dN/pT/dpT is exp
   //ptDist->SetParameters(1.,1.);//slope = 1.;
-  ptDist = new TF1("ptDist", funModiHagedorn_pt,1.0,10,6);
-  ptDist->SetParameters(5.655567e+02,5.072933e-01,1.215052e-01,7.709202e-01,8.340029e+00,1.395702e-01);
+  
+    //ptDist = new TF1("ptDist", funModiHagedorn_pt,1.0,10,6);
+    //ptDist->SetParameters(5.655567e+02,5.072933e-01,1.215052e-01,7.709202e-01,8.340029e+00,1.395702e-01);
   //yDist = new TF1("yDist","-TMath::Erf(x+2.6)*TMath::Erf(x-2.6)",minY,maxY);
-  yDist = new TF1("yDist","pol0",minY,maxY);
-  yDist->SetParameter(0,1.);
+    //yDist = new TF1("yDist","pol0",minY,maxY);
+    //yDist->SetParameter(0,1.);
   
   //phi, default 0 ~ TMath::TwoPi() flat
 
