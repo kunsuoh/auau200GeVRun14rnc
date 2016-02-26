@@ -191,7 +191,7 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
         StMcTrack* mcTrack = trks[i];
         Int_t trackGid = mcTrack->geantId();
         hGeantId->Fill(trackGid);
-        if ((trackGid == 1 || trackGid==7) &&
+        if ((trackGid == 1 || trackGid==7 || trackGid==10007) &&
             mcTrack->stopVertex())
         {
             StMcTrack * positron = 0;

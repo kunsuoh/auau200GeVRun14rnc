@@ -76,4 +76,4 @@ find Files_$job/ -type f -exec chmod g+rw {} \;
 
 # ---- Done bring files back
 tar -cvf Files_$job.tar Files_$job
-mv Files_$job/hft_reco/mcAnalysis.pxlSimQa.root /star/u/kunsu/pwg/Pi0Raw/qaHist/qa_$job.root
+mv Files_$job/hft_reco/mcAnalysis.pxlSimQa.root /star/u/kunsu/pwg/Pi0Dalitz/qaHist/qa_$job.root
