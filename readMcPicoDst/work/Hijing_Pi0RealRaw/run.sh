@@ -24,14 +24,14 @@ starsim(1,$run,$RANDOM)
 .q
 EOF
 
-mv * ./Files_$job/fzd/.
+mv pi0Dalitz_* ./Files_$job/fzd/.
 
 echo "Kunsu: HFT reco starting"
 # ---- HFT reconstruction
 start=0
 end=19
 #inFile=Files_$job/fzd/hijing_pi0real_$run.starsim.fzd
-inFile=Files_$job/fzd/$run.starsim.fzd
+inFile=Files_$job/fzd/pi0Dalitz_$run.starsim.fzd
 #inFile=/star/u/kunsu/pwg/Pi0Raw/fz/gamma_$run.fzd   # pi0 real
 #inFile=/star/u/kunsu/pwg/gamma/fz/gamma_$run.fzd    # gamma flat pt
 inPile=Files_$job/pile_up/pile_up$at.root
@@ -60,7 +60,7 @@ chain->Finish();
 
 EOF
 
-mv *.root Files_$job/hft_reco/.
+mv pi0Dalitz_*.root Files_$job/hft_reco/.
 
 # ---- PicoDst
 #root4star -l -b -q makePicoDst.C\($run,\"Files_$job/hft_reco/hijing_pi0real_$run.MuDst.root\",\"Files_$job/hft_reco/hijing_pi0real_$run.McEvent.root\"\)
