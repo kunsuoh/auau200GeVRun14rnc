@@ -133,7 +133,7 @@ void makePicoDst(const Int_t runnumber=999999,
 	}
 	
 	//StPicoDstMaker *picoMaker = new StPicoDstMaker(1,inputFile,"picoDst");
-	StPicoDstMaker *picoMaker = new StPicoDstMaker(1,Form("st_dezero_%i.picoDst.root",runnumber),"picoDst");
+	StPicoDstMaker *picoMaker = new StPicoDstMaker(1,Form("pi0Dalitz_%i.picoDst.root",runnumber),"picoDst");
         picoMaker->setRunNumber(runnumber);
         //picoMaker->setProdMode(prodMod); // 0-mb, 1-central, 2-ht
         picoMaker->setEmcMode(emcMode); // 0-No EMC, 1-EMC ON
