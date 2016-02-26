@@ -20,7 +20,7 @@ mkdir ./Files_$job/picodst
 # ---- Producing sim file .fzd
 root4star -b -l <<EOF
 .L starsim.hijing.gamma.C
-starsim(1,$run,$RANDOM)
+starsim(9,$run,$RANDOM)
 .q
 EOF
 
