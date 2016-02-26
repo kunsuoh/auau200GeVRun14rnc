@@ -61,10 +61,11 @@ chain->Finish();
 EOF
 
 mv pi0Dalitz_*.root Files_$job/hft_reco/.
+mv mcAnalysis.pxlSimQa.root Files_$job/hft_reco/.
 
 # ---- PicoDst
 #root4star -l -b -q makePicoDst.C\($run,\"Files_$job/hft_reco/hijing_pi0real_$run.MuDst.root\",\"Files_$job/hft_reco/hijing_pi0real_$run.McEvent.root\"\)
-root4star -l -b -q makePicoDst.C\($run,\"Files_$job/hft_reco/gamma_$run.MuDst.root\",\"Files_$job/hft_reco/gamma_$run.McEvent.root\"\)
+root4star -l -b -q makePicoDst.C\($run,\"Files_$job/hft_reco/pi0Dalitz_$run.MuDst.root\",\"Files_$job/hft_reco/pi0Dalitz_$run.McEvent.root\"\)
 #mv *.picoDst.root Pi0Raw_hijing_sim_production_v0_$job.picoDst.root
 mv *.picoDst.root sim_production_v0_$job.picoDst.root
 
