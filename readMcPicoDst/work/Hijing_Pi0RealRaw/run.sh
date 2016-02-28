@@ -5,15 +5,17 @@ job=$1
 #run=${job: -1}
 run=`echo $job | cut -f2 -d"_"`
 
-makeFolder=0
+makeFolder=1
 makeFZ=0
 makeReco=0
 makeRecoPileup=0
 makePico=0
 makeZip=0
 makeQa=0
+
 # ---- Make folder
 if [ $makeFolder -eq 1 ]; then
+echo "Kunsu: Make Folders"
 mkdir ./Files_$job
 mkdir ./Files_$job/fzd
 mkdir ./Files_$job/hft_reco
