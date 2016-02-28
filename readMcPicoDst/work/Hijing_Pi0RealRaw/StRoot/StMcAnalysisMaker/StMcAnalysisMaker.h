@@ -28,7 +28,8 @@ class StMcAnalysisMaker : public StMaker
 private:
     TFile* mFile;
     TTree * mTree;
-    TH1F *  hGeantId;
+    TH1F * hGeantId;
+    TH1F * hHitGeantId;
     Int_t nPair;
     Int_t nMcPxl1Hits;
     Int_t nMcPxl2Hits;

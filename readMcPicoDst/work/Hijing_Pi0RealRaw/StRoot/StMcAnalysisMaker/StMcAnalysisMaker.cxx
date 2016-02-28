@@ -140,6 +140,7 @@ int StMcAnalysisMaker::Init()
     mTree->Branch("clusterSize_pxl2", &clusterSize_pxl2, "clusterSize_pxl2[nHits]/I");
 
     hGeantId = new TH1F("hGeantId","hGeantId",100,0,100);
+    hHitGeantId = new TH1F("hHitGeantId","hHitGeantId",100,0,100);
     
     cout << "StMcAnalysisMaker::Init - DONE" << endl;
     return StMaker::Init();
@@ -433,6 +434,11 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                 for (unsigned int iHit = 0; iHit < nSenHits; iHit++){
                     StPxlHit* pixHit = pxlSenHitCol->hits()[iHit];
                     if (!pixHit) continue;
+                    hHitGeantId->Fill(trks[pixHit->parentTrack()]->geantId());
+                    if (trks[pixHit->parentTrack()]->geantId()==1 ||
+                        trks[pixHit->parentTrack()]->geantId()==10007 ||
+                        trks[pixHit->parentTrack()]->geantId()==7)
+                        continue;
                     if (pixHit->ladder() == 1){
                         nRcPxl1Hits++;
                         clusterSize_pxl1[nHits] = pixHit->nRawHits();
@@ -525,6 +531,7 @@ int StMcAnalysisMaker::Finish()
     
     mTree->Write();
     hGeantId->Write();
+    hHitGeantId->Write();
     
     mFile->Close();
     return kStOk;
