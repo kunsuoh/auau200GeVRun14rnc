@@ -615,7 +615,7 @@ void StMcAnalysisMaker::initTree(){
     for (int i=0; i<kMaxHits; i++) {
         clusterSize_pxl1[i]=-999;
         clusterSize_pxl2[i]=-999;
-        mcPt_pxl1[i]=-999
+        mcPt_pxl1[i]=-999;
     }
 
 }
