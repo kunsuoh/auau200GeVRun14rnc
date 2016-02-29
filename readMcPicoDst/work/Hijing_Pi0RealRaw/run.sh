@@ -63,32 +63,34 @@ echo $chain
 
 pwd 
 #env
-root4star -b -l <<EOF
-.x bfc.C(-1,"$chain","$inFile");
-StPxlSimMaker* pxl = chain->GetMaker("pxlSimMaker");
-pxl->useIdealGeom(); // ideal geometry
-//pxl->useDbGeom();  // survey geometry
-pxl->useRandomSeed();
-
+if [ -s .temprun.sh ]; then
+    rm .temprun.sh
+fi
+echo "root4star -b -l <<EOF" >> .temprun.sh
+echo ".x bfc.C(-1,"$chain","$inFile");" >> .temprun.sh
+echo "StPxlSimMaker* pxl = chain->GetMaker(\"pxlSimMaker\");" >> .temprun.sh
+echo "pxl->useIdealGeom(); // ideal geometry" >> .temprun.sh
+#echo "pxl->useDbGeom();  // survey geometry" >> .temprun.sh
+echo "pxl->useRandomSeed();" >> .temprun.sh
 if [ $makeRecoPileup -eq 1 ]; then
-pxl->addPileup();
-pxl->setPileupFile("$inPile");
+    echo "pxl->addPileup();" >> .temprun.sh
+    echo "pxl->setPileupFile("$inPile");" >> .temprun.sh
 fi
-
 if [ $makeQa -eq 1 ]; then
-StMcAnalysisMaker* mcAnalysisMaker = (StMcAnalysisMaker*)chain->GetMaker("StMcAnalysisMaker");
+    echo "StMcAnalysisMaker* mcAnalysisMaker = (StMcAnalysisMaker*)chain->GetMaker(\"StMcAnalysisMaker\");" >> .temprun.sh
 fi
+echo "chain->Init();" >> .temprun.sh
+echo "chain->EventLoop($start,$end);" >> .temprun.sh
+echo "chain->Finish();" >> .temprun.sh
+echo "EOF" >> .temprun.sh
 
-chain->Init();
-chain->EventLoop($start,$end);
-chain->Finish();
-
-EOF
+chmod +x .temprun.sh
+./temprun.sh
+rm .temprun.sh
 
 mv $inputSource_*.root Files_$job/hft_reco/.
 if [ $makeQa -eq 1 ]; then
-mv mcAnalysis.pxlSimQa.root Files_$job/hft_reco/.
-fi
+    mv mcAnalysis.pxlSimQa.root Files_$job/hft_reco/.
 fi
 
 if [ $makePico -eq 1 ]; then
