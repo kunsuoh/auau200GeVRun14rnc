@@ -32,33 +32,35 @@ fi
 
 # ---- Producing sim file .fzd
 if [ $makeFZ -eq 1 ]; then
-echo "Kunsu: make sim file .fzd"
-root4star -b -l <<EOF
-.L starsim.hijing.$inputSource.C
-starsim(9,$run,$RANDOM)
-.q
-EOF
+    echo "Kunsu: make sim file .fzd"
+    root4star -b -l <<EOF
+    .L starsim.hijing.$inputSource.C
+    starsim(9,$run,$RANDOM)
+    .q
+    EOF
 
-mv $inputSource_* ./Files_$job/fzd/.
+    mv $inputSource_* ./Files_$job/fzd/.
 fi
 
 if [ $makeReco -eq 1 ]; then
-echo "Kunsu: HFT reco starting"
-# ---- HFT reconstruction
-start=0
-end=19
-inFile=Files_$job/fzd/pi0Dalitz_$run.starsim.fzd
-if [ $makeFZ -eq 1 ]; then
-inFile=Files_$job/fzd/pi0Dalitz_$run.starsim.fzd
-else
-inFile=/star/u/kunsu/pwg/$inputSource/fz/$inputSource$run.fzd
+    echo "Kunsu: HFT reco starting"
+    # ---- HFT reconstruction
+    start=0
+    end=19
+    inFile=Files_$job/fzd/pi0Dalitz_$run.starsim.fzd
+    if [ $makeFZ -eq 1 ]; then
+        inFile=Files_$job/fzd/pi0Dalitz_$run.starsim.fzd
+    else
+        inFile=/star/u/kunsu/pwg/$inputSource/fz/$inputSource$run.fzd
+    fi
+    inPile=Files_$job/pile_up/pile_up$at.root
+    if [ $makeQa -eq 1 ]; then
+        chain=y2014a,event,McEvent,MuDst,tpc,fzin,sim_T,gen_T,geantout,tpcrs,TpcHitMover,TpxClu,evout,-HitFilt,FieldOn,AgML,usexgeom,MakeEvent,ITTF,Sti,NoSsdIt,NoSvtIt,StiHftC,pxlFastSim,pxlCluster,pxlHit,istFastSim,Idst,BAna,l0,Tree,logger,genvtx,tpcDB,bbcSim,btofsim,tags,emcY2,EEfs,evout,-dstout,IdTruth,big,McEvout,MiniMcMk,StiPulls,ReadAll,clearmem,McAna
+    else
+        chain=y2014a,event,McEvent,MuDst,tpc,fzin,sim_T,gen_T,geantout,tpcrs,TpcHitMover,TpxClu,evout,-HitFilt,FieldOn,AgML,usexgeom,MakeEvent,ITTF,Sti,NoSsdIt,NoSvtIt,StiHftC,pxlFastSim,pxlCluster,pxlHit,istFastSim,Idst,BAna,l0,Tree,logger,genvtx,tpcDB,bbcSim,btofsim,tags,emcY2,EEfs,evout,-dstout,IdTruth,big,McEvout,MiniMcMk,StiPulls,ReadAll,clearmem
+    fi
 fi
-inPile=Files_$job/pile_up/pile_up$at.root
-if [ $makeQa -eq 1 ]; then
-chain=y2014a,event,McEvent,MuDst,tpc,fzin,sim_T,gen_T,geantout,tpcrs,TpcHitMover,TpxClu,evout,-HitFilt,FieldOn,AgML,usexgeom,MakeEvent,ITTF,Sti,NoSsdIt,NoSvtIt,StiHftC,pxlFastSim,pxlCluster,pxlHit,istFastSim,Idst,BAna,l0,Tree,logger,genvtx,tpcDB,bbcSim,btofsim,tags,emcY2,EEfs,evout,-dstout,IdTruth,big,McEvout,MiniMcMk,StiPulls,ReadAll,clearmem,McAna
-else
-chain=y2014a,event,McEvent,MuDst,tpc,fzin,sim_T,gen_T,geantout,tpcrs,TpcHitMover,TpxClu,evout,-HitFilt,FieldOn,AgML,usexgeom,MakeEvent,ITTF,Sti,NoSsdIt,NoSvtIt,StiHftC,pxlFastSim,pxlCluster,pxlHit,istFastSim,Idst,BAna,l0,Tree,logger,genvtx,tpcDB,bbcSim,btofsim,tags,emcY2,EEfs,evout,-dstout,IdTruth,big,McEvout,MiniMcMk,StiPulls,ReadAll,clearmem
-fi
+
 echo $chain
 
 pwd 
@@ -85,7 +87,7 @@ echo "chain->Finish();" >> .temprun.sh
 echo "EOF" >> .temprun.sh
 
 chmod +x .temprun.sh
-./temprun.sh
+./.temprun.sh
 rm .temprun.sh
 
 mv $inputSource_*.root Files_$job/hft_reco/.
