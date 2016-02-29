@@ -61,8 +61,8 @@ void trig( Int_t n=0 )
 
     // Generate 5 D0 according to a PT and Y distribution
     //if(kinematics) kinematics->Dist(500, "pi0", ptDist, yDist );
-    if(kinematics) kinematics->Kine(1000, "gamma", 0.0, 20.0, -1.0, +1.0 );;
-//if (kinematics) kinematics->Kine(10, "Dalitz", minPt, maxPt, minY, maxY );
+    //if(kinematics) kinematics->Kine(1000, "gamma", 0.0, 20.0, -1.0, +1.0 );;
+      if (kinematics) kinematics->Kine(10, "Dalitz", minPt, maxPt, minY, maxY );
 
     chain->Make();
     //    command("gprint kine");
@@ -71,7 +71,7 @@ void trig( Int_t n=0 )
 // ----------------------------------------------------------------------------
 void myKine()
 { 
-  kinematics = new StarKinematics("gamma");
+  kinematics = new StarKinematics("pi0");
   _primary -> AddGenerator(kinematics);
 }
 // ----------------------------------------------------------------------------
@@ -177,8 +177,8 @@ void starsim( Int_t nevents=1, Int_t Index = 0, Int_t rngSeed=4321 )
   // Setup single particle
   //
     
-  myKine();
-  //  Dalitzdecay();
+  //myKine();
+    Dalitzdecay();
 
   //
   // Initialize primary event generator and all sub makers
