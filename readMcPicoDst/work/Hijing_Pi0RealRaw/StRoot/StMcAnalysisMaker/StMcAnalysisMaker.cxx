@@ -434,10 +434,10 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                 for (unsigned int iHit = 0; iHit < nSenHits; iHit++){
                     StPxlHit* pixHit = pxlSenHitCol->hits()[iHit];
                     if (!pixHit) continue;
-                    hHitGeantId->Fill(trks[pixHit->parentTrack()]->geantId());
-                    if (trks[pixHit->parentTrack()]->geantId()==1 ||
-                        trks[pixHit->parentTrack()]->geantId()==10007 ||
-                        trks[pixHit->parentTrack()]->geantId()==7)
+                    hHitGeantId->Fill(trks[pixHit->idTruth()]->geantId());
+                    if (trks[pixHit->idTruth()]->geantId()==1 ||
+                        trks[pixHit->idTruth()]->geantId()==10007 ||
+                        trks[pixHit->idTruth()]->geantId()==7)
                         continue;
                     if (pixHit->ladder() == 1){
                         nRcPxl1Hits++;
