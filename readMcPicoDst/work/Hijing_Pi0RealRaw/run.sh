@@ -68,6 +68,7 @@ if [ $makeReco -eq 1 ]; then
     if [ -s .temprun.sh ]; then
         rm .temprun.sh
     fi
+    echo "starver SL15k" > .temprun.sh
     echo "root4star -b -l <<EOF" > .temprun.sh
     echo ".x bfc.C(-1,"$chain","$inFile");" >> .temprun.sh
     echo "StPxlSimMaker* pxl = chain->GetMaker(\"pxlSimMaker\");" >> .temprun.sh
