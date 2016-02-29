@@ -59,46 +59,44 @@ if [ $makeReco -eq 1 ]; then
     else
         chain=y2014a,event,McEvent,MuDst,tpc,fzin,sim_T,gen_T,geantout,tpcrs,TpcHitMover,TpxClu,evout,-HitFilt,FieldOn,AgML,usexgeom,MakeEvent,ITTF,Sti,NoSsdIt,NoSvtIt,StiHftC,pxlFastSim,pxlCluster,pxlHit,istFastSim,Idst,BAna,l0,Tree,logger,genvtx,tpcDB,bbcSim,btofsim,tags,emcY2,EEfs,evout,-dstout,IdTruth,big,McEvout,MiniMcMk,StiPulls,ReadAll,clearmem
     fi
-fi
 
-echo $chain
+    echo $chain
+    pwd
+    #env
+    if [ -s .temprun.sh ]; then
+        rm .temprun.sh
+    fi
+    echo "root4star -b -l <<EOF" >> .temprun.sh
+    echo ".x bfc.C(-1,"$chain","$inFile");" >> .temprun.sh
+    echo "StPxlSimMaker* pxl = chain->GetMaker(\"pxlSimMaker\");" >> .temprun.sh
+    echo "pxl->useIdealGeom(); // ideal geometry" >> .temprun.sh
+    #echo "pxl->useDbGeom();  // survey geometry" >> .temprun.sh
+    echo "pxl->useRandomSeed();" >> .temprun.sh
+    if [ $makeRecoPileup -eq 1 ]; then
+        echo "pxl->addPileup();" >> .temprun.sh
+        echo "pxl->setPileupFile("$inPile");" >> .temprun.sh
+    fi
+    if [ $makeQa -eq 1 ]; then
+        echo "StMcAnalysisMaker* mcAnalysisMaker = (StMcAnalysisMaker*)chain->GetMaker(\"StMcAnalysisMaker\");" >> .temprun.sh
+    fi
+    echo "chain->Init();" >> .temprun.sh
+    echo "chain->EventLoop($start,$end);" >> .temprun.sh
+    echo "chain->Finish();" >> .temprun.sh
+    echo "EOF" >> .temprun.sh
 
-pwd 
-#env
-if [ -s .temprun.sh ]; then
+    chmod +x .temprun.sh
+    ./.temprun.sh
     rm .temprun.sh
-fi
-echo "root4star -b -l <<EOF" >> .temprun.sh
-echo ".x bfc.C(-1,"$chain","$inFile");" >> .temprun.sh
-echo "StPxlSimMaker* pxl = chain->GetMaker(\"pxlSimMaker\");" >> .temprun.sh
-echo "pxl->useIdealGeom(); // ideal geometry" >> .temprun.sh
-#echo "pxl->useDbGeom();  // survey geometry" >> .temprun.sh
-echo "pxl->useRandomSeed();" >> .temprun.sh
-if [ $makeRecoPileup -eq 1 ]; then
-    echo "pxl->addPileup();" >> .temprun.sh
-    echo "pxl->setPileupFile("$inPile");" >> .temprun.sh
-fi
-if [ $makeQa -eq 1 ]; then
-    echo "StMcAnalysisMaker* mcAnalysisMaker = (StMcAnalysisMaker*)chain->GetMaker(\"StMcAnalysisMaker\");" >> .temprun.sh
-fi
-echo "chain->Init();" >> .temprun.sh
-echo "chain->EventLoop($start,$end);" >> .temprun.sh
-echo "chain->Finish();" >> .temprun.sh
-echo "EOF" >> .temprun.sh
 
-chmod +x .temprun.sh
-./.temprun.sh
-rm .temprun.sh
-
-mv $inputSource_*.root Files_$job/hft_reco/.
-if [ $makeQa -eq 1 ]; then
-    mv mcAnalysis.pxlSimQa.root Files_$job/hft_reco/.
+    mv $inputSource_*.root Files_$job/hft_reco/.
+    if [ $makeQa -eq 1 ]; then
+        mv mcAnalysis.pxlSimQa.root Files_$job/hft_reco/.
+    fi
 fi
-
 if [ $makePico -eq 1 ]; then
-# ---- PicoDst
-root4star -l -b -q makePicoDst.C\($run,\"Files_$job/hft_reco/$inputSource_$run.MuDst.root\",\"Files_$job/hft_reco/$inputSource_$run.McEvent.root\"\)
-mv *.picoDst.root $inputSource_$job.picoDst.root
+    # ---- PicoDst
+    root4star -l -b -q makePicoDst.C\($run,\"Files_$job/hft_reco/$inputSource_$run.MuDst.root\",\"Files_$job/hft_reco/$inputSource_$run.McEvent.root\"\)
+    mv *.picoDst.root $inputSource_$job.picoDst.root
 fi
 
 #privilges
@@ -109,9 +107,9 @@ find Files_$job/ -type f -exec chmod g+rw {} \;
 
 # ---- Done bring files back
 if [ $makeZip -eq 1 ]; then
-tar -cvf Files_$job.tar Files_$job
+    tar -cvf Files_$job.tar Files_$job
 fi
 
 if [ $makeQa -eq 1 ]; then
-mv Files_$job/hft_reco/mcAnalysis.pxlSimQa.root /star/u/kunsu/pwg/$inputSource/qaHist/qa_$job.root
+    mv Files_$job/hft_reco/mcAnalysis.pxlSimQa.root /star/u/kunsu/pwg/$inputSource/qaHist/qa_$job.root
 fi
