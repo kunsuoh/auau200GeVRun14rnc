@@ -70,14 +70,14 @@ if [ $makeReco -eq 1 ]; then
     fi
     echo "starver SL15k" > .temprun.sh
     echo "root4star -b -l <<EOF" > .temprun.sh
-    echo ".x bfc.C(-1,"$chain","$inFile");" >> .temprun.sh
+    echo ".x bfc.C(-1,\"$chain\",\"$inFile\");" >> .temprun.sh
     echo "StPxlSimMaker* pxl = chain->GetMaker(\"pxlSimMaker\");" >> .temprun.sh
     echo "pxl->useIdealGeom(); // ideal geometry" >> .temprun.sh
     #echo "pxl->useDbGeom();  // survey geometry" >> .temprun.sh
     echo "pxl->useRandomSeed();" >> .temprun.sh
     if [ $makeRecoPileup -eq 1 ]; then
         echo "pxl->addPileup();" >> .temprun.sh
-        echo "pxl->setPileupFile("$inPile");" >> .temprun.sh
+        echo "pxl->setPileupFile(\"$inPile\");" >> .temprun.sh
     fi
     if [ $makeQa -eq 1 ]; then
         echo "StMcAnalysisMaker* mcAnalysisMaker = (StMcAnalysisMaker*)chain->GetMaker(\"StMcAnalysisMaker\");" >> .temprun.sh
