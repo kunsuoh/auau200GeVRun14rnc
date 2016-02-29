@@ -86,7 +86,7 @@ private:
     Int_t nHits;
     Int_t clusterSize_pxl1[kMaxHits];
     Int_t clusterSize_pxl2[kMaxHits];
-
+    Float_t mcPt_pxl1[kMaxHits];
     
     
     StAssociationMaker* mAssoc;

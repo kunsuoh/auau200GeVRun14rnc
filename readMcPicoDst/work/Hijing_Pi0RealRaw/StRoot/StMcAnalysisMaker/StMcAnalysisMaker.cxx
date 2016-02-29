@@ -138,7 +138,9 @@ int StMcAnalysisMaker::Init()
     mTree->Branch("nHits",&nHits,"nHits/I");
     mTree->Branch("clusterSize_pxl1", &clusterSize_pxl1, "clusterSize_pxl1[nHits]/I");
     mTree->Branch("clusterSize_pxl2", &clusterSize_pxl2, "clusterSize_pxl2[nHits]/I");
+    mTree->Branch("mcPt_pxl1", &mcPt_pxl1, "mcPt_pxl1[nHits]/F");
 
+    
     hGeantId = new TH1F("hGeantId","hGeantId",100,0,100);
     hHitGeantId = new TH1F("hHitGeantId","hHitGeantId",100,0,100);
     
@@ -442,6 +444,7 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                     if (pixHit->ladder() == 1){
                         nRcPxl1Hits++;
                         clusterSize_pxl1[nHits] = pixHit->nRawHits();
+                        mcPt_pxl1[nHits] = trks[pixHit->idTruth()]->pt();
                     }
                     else {nRcPxl2Hits++;
                         clusterSize_pxl2[nHits] = pixHit->nRawHits();
@@ -612,6 +615,7 @@ void StMcAnalysisMaker::initTree(){
     for (int i=0; i<kMaxHits; i++) {
         clusterSize_pxl1[i]=-999;
         clusterSize_pxl2[i]=-999;
+        mcPt_pxl1[i]=-999
     }
 
 }
