@@ -54,7 +54,7 @@ if [ $makeReco -eq 1 ]; then
     if [ $makeFZ -eq 1 ]; then
         inFile=Files_$job/fzd/pi0Dalitz_$run.starsim.fzd
     else
-        inFile=/star/u/kunsu/pwg/$inputSource/fz/$inputSource_$run.fzd
+        inFile=/star/u/kunsu/pwg/$inputSource/fz/${inputSource}_$run.fzd
     fi
     inPile=Files_$job/pile_up/pile_up$at.root
     if [ $makeQa -eq 1 ]; then
