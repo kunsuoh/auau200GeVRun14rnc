@@ -40,6 +40,8 @@ if [ $makeFZ -eq 1 ]; then
     EOF
 
     mv $inputSource_* ./Files_$job/fzd/.
+else
+    echo "Kunsu: Skip make sim file .fzd"
 fi
 
 if [ $makeReco -eq 1 ]; then
