@@ -7,7 +7,6 @@
 // Modified from Jason 's macro
 // Added real distributions for pT, y
 
-
 class St_geant_Maker;
 St_geant_Maker *geant_maker = 0;
 
