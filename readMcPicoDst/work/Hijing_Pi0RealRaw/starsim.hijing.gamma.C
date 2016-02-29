@@ -169,7 +169,6 @@ void starsim( Int_t nevents=1, Int_t Index = 0, Int_t rngSeed=4321 )
 
 
 
-
   // Setup an event generator
   //
   // Hijing();
