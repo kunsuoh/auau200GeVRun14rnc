@@ -86,7 +86,7 @@ if [ $makeReco -eq 1 ]; then
 
     chmod +x .temprun.sh
     ./.temprun.sh
-    rm .temprun.sh
+    #rm .temprun.sh
 
     mv $inputSource_*.root Files_$job/hft_reco/.
     if [ $makeQa -eq 1 ]; then
