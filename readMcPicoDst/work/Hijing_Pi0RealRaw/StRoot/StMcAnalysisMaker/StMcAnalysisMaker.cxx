@@ -135,14 +135,15 @@ int StMcAnalysisMaker::Init()
     mTree->Branch("nHits2_pxl1", &nHits2_pxl1, "nHits2_pxl1[nPair]/I");
     mTree->Branch("nHits2_pxl2", &nHits2_pxl2, "nHits2_pxl2[nPair]/I");
     mTree->Branch("nHits2_ist",  &nHits2_ist,  "nHits2_ist[nPair]/I");
+    
     mTree->Branch("nHits",&nHits,"nHits/I");
     mTree->Branch("clusterSize_pxl1", &clusterSize_pxl1, "clusterSize_pxl1[nHits]/I");
     mTree->Branch("clusterSize_pxl2", &clusterSize_pxl2, "clusterSize_pxl2[nHits]/I");
     mTree->Branch("mcPt_pxl1", &mcPt_pxl1, "mcPt_pxl1[nHits]/F");
+    mTree->Branch("hitGeantId", &hitGeantId, "hitGeantId[nHits]/I");
 
     
     hGeantId = new TH1F("hGeantId","hGeantId",100,0,100);
-    hHitGeantId = new TH1F("hHitGeantId","hHitGeantId",100,0,100);
     
     cout << "StMcAnalysisMaker::Init - DONE" << endl;
     return StMaker::Init();
@@ -436,15 +437,12 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                 for (unsigned int iHit = 0; iHit < nSenHits; iHit++){
                     StPxlHit* pixHit = pxlSenHitCol->hits()[iHit];
                     if (!pixHit) continue;
-                    hHitGeantId->Fill(trks[pixHit->idTruth()]->geantId());
-                    if (trks[pixHit->idTruth()]->geantId()==1 ||
-                        trks[pixHit->idTruth()]->geantId()==10007 ||
-                        trks[pixHit->idTruth()]->geantId()==7)
-                        continue;
+                    StMcTrack * hitTrack = trks[pixHit->idTruth()];
+                    hitGeantId[nHits] = hitTrack->geantId();
                     if (pixHit->ladder() == 1){
                         nRcPxl1Hits++;
                         clusterSize_pxl1[nHits] = pixHit->nRawHits();
-                        mcPt_pxl1[nHits] = trks[pixHit->idTruth()]->pt();
+                        mcPt_pxl1[nHits] = hitTrack->pt();
                     }
                     else {nRcPxl2Hits++;
                         clusterSize_pxl2[nHits] = pixHit->nRawHits();
@@ -534,7 +532,6 @@ int StMcAnalysisMaker::Finish()
     
     mTree->Write();
     hGeantId->Write();
-    hHitGeantId->Write();
     
     mFile->Close();
     return kStOk;
@@ -616,6 +613,8 @@ void StMcAnalysisMaker::initTree(){
         clusterSize_pxl1[i]=-999;
         clusterSize_pxl2[i]=-999;
         mcPt_pxl1[i]=-999;
+        hitGeantId[i]=-999;
+        
     }
 
 }

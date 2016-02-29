@@ -29,7 +29,6 @@ private:
     TFile* mFile;
     TTree * mTree;
     TH1F * hGeantId;
-    TH1F * hHitGeantId;
     Int_t nPair;
     Int_t nMcPxl1Hits;
     Int_t nMcPxl2Hits;
@@ -83,11 +82,12 @@ private:
     Int_t nHits2_pxl1[kMaxPair];
     Int_t nHits2_pxl2[kMaxPair];
     Int_t nHits2_ist[kMaxPair];
+    
     Int_t nHits;
     Int_t clusterSize_pxl1[kMaxHits];
     Int_t clusterSize_pxl2[kMaxHits];
     Float_t mcPt_pxl1[kMaxHits];
-    
+    Int_t hitGeantId[kMaxHits];
     
     StAssociationMaker* mAssoc;
     const StTrack* findPartner(StMcTrack*, int&);
