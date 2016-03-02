@@ -87,6 +87,8 @@ private:
     Int_t clusterSize_pxl1[kMaxHits];
     Int_t clusterSize_pxl2[kMaxHits];
     Float_t mcPt_pxl1[kMaxHits];
+    Float_t mcPt1_pxl1[kMaxHits];
+    Float_t mcPt2_pxl1[kMaxHits];
     Int_t hitGeantId[kMaxHits];
     
     StAssociationMaker* mAssoc;

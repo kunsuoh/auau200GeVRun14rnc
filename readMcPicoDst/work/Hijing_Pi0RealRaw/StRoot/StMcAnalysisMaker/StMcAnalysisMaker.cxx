@@ -140,6 +140,8 @@ int StMcAnalysisMaker::Init()
     mTree->Branch("clusterSize_pxl1", &clusterSize_pxl1, "clusterSize_pxl1[nHits]/I");
     mTree->Branch("clusterSize_pxl2", &clusterSize_pxl2, "clusterSize_pxl2[nHits]/I");
     mTree->Branch("mcPt_pxl1", &mcPt_pxl1, "mcPt_pxl1[nHits]/F");
+    mTree->Branch("mcPt1_pxl1", &mcPt1_pxl1, "mcPt1_pxl1[nHits]/F");
+    mTree->Branch("mcPt2_pxl1", &mcPt2_pxl1, "mcPt2_pxl1[nHits]/F");
     mTree->Branch("hitGeantId", &hitGeantId, "hitGeantId[nHits]/I");
 
     
@@ -442,9 +444,13 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                     StPxlHit* pixHit = pxlSenHitCol->hits()[iHit];
                     if (!pixHit) continue;
                     StMcTrack * hitTrack = 0;
+                    StMcTrack * hitTrack1 = 0;
+                    StMcTrack * hitTrack2 = 0;
                     for (int i=0;i<trks.size();i++){
                         if (pixHit->idTruth()==trks[i]->key()) {
                             hitTrack = trks[i];
+                            hitTrack1 = hitTrack->startVertex()->daughter(0)->geantId() == 2 ? hitTrack->startVertex()->daughter(0) : hitTrack->startVertex()->daughter(1);
+                            hitTrack2 = hitTrack->startVertex()->daughter(0)->geantId() == 3 ? hitTrack->startVertex()->daughter(0) : hitTrack->startVertex()->daughter(1);
                             break;
                         }
                     }
@@ -453,6 +459,8 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                         nRcPxl1Hits++;
                         clusterSize_pxl1[nHits] = pixHit->nRawHits();
                         mcPt_pxl1[nHits] = hitTrack->pt();
+                        mcPt1_pxl1[nHits] = hitTrack1->pt();
+                        mcPt2_pxl1[nHits] = hitTrack2->pt();
                     }
                     else {nRcPxl2Hits++;
                         clusterSize_pxl2[nHits] = pixHit->nRawHits();
@@ -623,6 +631,8 @@ void StMcAnalysisMaker::initTree(){
         clusterSize_pxl1[i]=-999;
         clusterSize_pxl2[i]=-999;
         mcPt_pxl1[i]=-999;
+        mcPt1_pxl1[i]=-999;
+        mcPt2_pxl1[i]=-999;
         hitGeantId[i]=-999;
         
     }
