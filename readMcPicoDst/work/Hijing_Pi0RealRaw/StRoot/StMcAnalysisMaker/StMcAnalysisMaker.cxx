@@ -191,6 +191,8 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
     
     StPxlHitCollection * pxlHitCol = event->pxlHitCollection();
     StMcPxlHitCollection * pxlMcHitCol = mcEvent->pxlHitCollection();
+    
+    // track loop
     for (unsigned int i = 0;  i < trks.size(); i++){
         StMcTrack* mcTrack = trks[i];
         Int_t trackGid = mcTrack->geantId();
@@ -202,11 +204,12 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
             StMcTrack * electron = 0;
             StTrack * rcPositron = 0;
             StTrack * rcElectron = 0;
+            // find electron and positron from gamma or pi0dalitz
             for (unsigned int j = 0; j < mcTrack->stopVertex()->numberOfDaughters(); j++){
                 StMcTrack * dauTrack = mcTrack->stopVertex()->daughter(j);
                 Int_t dauTrackGid = dauTrack->geantId();
                 
-                if (dauTrackGid!=2 && dauTrackGid!=3 ) continue;
+                //if (dauTrackGid!=2 && dauTrackGid!=3 ) continue;
                 
                 int ncommonhits = 0;
                 StTrack const* rcTrack = findPartner(dauTrack, ncommonhits);
@@ -277,73 +280,72 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                 clusterSize2_pxl2[nPair] = 0;
                 clusterSize2_pxl3[nPair] = 0;
                 
-                if (!nPartnerPxlHits1 || !nPartnerPxlHits2) continue;
+                if (nPartnerPxlHits1==0 || nPartnerPxlHits2==0) continue;
                 std::vector<int> idTruthList;
                 
-                if (nPartnerPxlHits1) {
-                    for(int ipxlhit=0; ipxlhit<nPartnerPxlHits1; ipxlhit++) {
-                        StPxlHit * pxlHit = dynamic_cast<StPxlHit *>(PartnerPxlHits1[ipxlhit]);
-
-                        StThreeVectorF pos = PartnerPxlHits1[ipxlhit]->position();
-                        float const R = pow(pos.x(),2.0) + pow(pos.y(),2.0);
-                        idTruthList.push_back(pxlHit->idTruth());
+                for(int ipxlhit=0; ipxlhit<nPartnerPxlHits1; ipxlhit++) {
+                    StPxlHit * pxlHit = dynamic_cast<StPxlHit *>(PartnerPxlHits1[ipxlhit]);
+                    
+                    StThreeVectorF pos = PartnerPxlHits1[ipxlhit]->position();
+                    float const R = pow(pos.x(),2.0) + pow(pos.y(),2.0);
+                    idTruthList.push_back(pxlHit->idTruth());
+                    if(R < 3.5*3.5) {
+                        pxl1HitPosition1 = pos;
+                        clusterSize1_pxl1[nPair] = pxlHit->nRawHits();
+                        nRcPxl1HitsCheck++;
+                    }
+                    else if (clusterSize1_pxl2[nPair]) {
+                        clusterSize1_pxl3[nPair] = pxlHit->nRawHits();
+                        nRcPxl2HitsCheck++;
+                    }
+                    else {
+                        clusterSize1_pxl2[nPair] = pxlHit->nRawHits();
+                        nRcPxl2HitsCheck++;
+                    }
+                    
+                    // set truth
+                    if(PartnerPxlHits1[ipxlhit]->idTruth() == positron->key()) continue;
+                    if(R > 3.5*3.5){
+                        pxl2Truth1 = 0;
+                    }
+                    else{
+                        pxl1Truth1 = 0;
+                    }
+                }
+                for(int ipxlhit=0; ipxlhit<nPartnerPxlHits2; ipxlhit++) {
+                    StPxlHit * pxlHit = dynamic_cast<StPxlHit *>(PartnerPxlHits2[ipxlhit]);
+                    StThreeVectorF pos = PartnerPxlHits2[ipxlhit]->position();
+                    float const R = pow(pos.x(),2.0) + pow(pos.y(),2.0);
+                    bool doubleCount = false;
+                    for (int k=0; k<idTruthList.size(); k++) {
+                        if (idTruthList.at(k)==pxlHit->idTruth()) {
+                            doubleCount=true;
+                        }
+                    }
+                    if (doubleCount == false) {
                         if(R < 3.5*3.5) {
-                            pxl1HitPosition1 = pos;
-                            clusterSize1_pxl1[nPair] = pxlHit->nRawHits();
+                            pxl1HitPosition2 = pos;
+                            clusterSize2_pxl1[nPair] = pxlHit->nRawHits();
                             nRcPxl1HitsCheck++;
                         }
-                        else if (clusterSize1_pxl2[nPair]) {
-                            clusterSize1_pxl3[nPair] = pxlHit->nRawHits();
+                        else if (clusterSize2_pxl2[nPair]) {
+                            clusterSize2_pxl3[nPair] = pxlHit->nRawHits();
                             nRcPxl2HitsCheck++;
                         }
                         else {
-                            clusterSize1_pxl2[nPair] = pxlHit->nRawHits();
+                            clusterSize2_pxl2[nPair] = pxlHit->nRawHits();
                             nRcPxl2HitsCheck++;
                         }
-                        
-                        // set truth
-                        if(PartnerPxlHits1[ipxlhit]->idTruth() == positron->key()) continue;
-                        if(R > 3.5*3.5){
-                            pxl2Truth1 = 0;
-                        }
-                        else{
-                            pxl1Truth1 = 0;
-                        }
+                        idTruth[nPair] = 2;
                     }
-                }
-                if (nPartnerPxlHits2) {
-                    for(int ipxlhit=0; ipxlhit<nPartnerPxlHits2; ipxlhit++) {
-                        StPxlHit * pxlHit = dynamic_cast<StPxlHit *>(PartnerPxlHits2[ipxlhit]);
-                        StThreeVectorF pos = PartnerPxlHits2[ipxlhit]->position();
-                        float const R = pow(pos.x(),2.0) + pow(pos.y(),2.0);
-                        bool doubleCount = false;
-                        for (int k=0; k<idTruthList.size(); k++) {
-                            if (idTruthList.at(k)==pxlHit->idTruth()) {
-                                doubleCount=true;
-                            }
-                        }
-                        if (!doubleCount) {
-                            if(R < 3.5*3.5) {
-                                pxl1HitPosition2 = pos;
-                                clusterSize2_pxl1[nPair] = pxlHit->nRawHits();
-                                nRcPxl1HitsCheck++;
-                            }
-                            else if (clusterSize2_pxl2[nPair]) {
-                                clusterSize2_pxl3[nPair] = pxlHit->nRawHits();
-                                nRcPxl2HitsCheck++;
-                            }
-                            else {
-                                clusterSize2_pxl2[nPair] = pxlHit->nRawHits();
-                                nRcPxl2HitsCheck++;
-                            }
-                        }
-                        if(PartnerPxlHits2[ipxlhit]->idTruth() == electron->key()) continue;
-                        if(R > 3.5*3.5){
-                            pxl2Truth2 = 0;
-                        }
-                        else{
-                            pxl1Truth2 = 0;
-                        }
+                    else idTruth[nPair] = 1;
+
+                    if(PartnerPxlHits2[ipxlhit]->idTruth() == electron->key()) continue;
+                    if(R > 3.5*3.5){
+                        pxl2Truth2 = 0;
+                    }
+                    else{
+                        pxl1Truth2 = 0;
                     }
                 }
                 
@@ -398,7 +400,7 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                 //clusterSize2_pxl1[nPair] = 0;
                 //clusterSize2_pxl2[nPair] = 0;
                 //clusterSize2_pxl3[nPair] = 0;
-                idTruth[nPair] = 1; // electron(2) or positron(1) idTruth
+                //idTruth[nPair] = 1; // electron(2) or positron(1) idTruth
                 rcHftHit1_pxl1[nPair]=hftHitMap1>>0 & 0x1;
                 rcHftHit1_pxl2[nPair]=hftHitMap1>>1 & 0x3;
                 rcHftHit1_ist[nPair]=hftHitMap1>>3 & 0x3;
@@ -422,6 +424,8 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
             }
         }
     }
+    
+    // pxl hit loop
     // RC
     nHits = 0;
     for (unsigned int iSec = 0; iSec<pxlHitCol->numberOfSectors(); iSec++){
