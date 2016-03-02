@@ -441,7 +441,14 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                 for (unsigned int iHit = 0; iHit < nSenHits; iHit++){
                     StPxlHit* pixHit = pxlSenHitCol->hits()[iHit];
                     if (!pixHit) continue;
-                    StMcTrack * hitTrack = trks[pixHit->idTruth()];
+                    StMcTrack * hitTrack = 0;
+                    for (int i=0;i<trks.size();i++){
+                        if (pixHit->idTruth()==trks[i]->idTruth()) {
+                            hitTrack = trks[pixHit->idTruth()];
+                            break;
+                        }
+                    }
+                    
                     hitGeantId[nHits] = hitTrack->geantId();
                     if (pixHit->ladder() == 1){
                         nRcPxl1Hits++;
