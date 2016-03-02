@@ -443,8 +443,8 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                     if (!pixHit) continue;
                     StMcTrack * hitTrack = 0;
                     for (int i=0;i<trks.size();i++){
-                        if (pixHit->idTruth()==trks[i]->idTruth()) {
-                            hitTrack = trks[pixHit->idTruth()];
+                        if (pixHit->idTruth()==trks[i]->key()) {
+                            hitTrack = trks[i];
                             break;
                         }
                     }
