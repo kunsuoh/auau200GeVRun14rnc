@@ -83,12 +83,12 @@ int StMcAnalysisMaker::Init()
     // TTree
     mTree = new TTree("mTree","electron pair tree for QA");
     mTree->Branch("nTrack",&nTrack,"nTrack/I");
-    mTree->Branch("trksGeantId",&trksGeantId,"trksGeantId/I");
-    mTree->Branch("trksGeantProcess",&trksGeantProcess,"trksGeantProcess/I");
-    mTree->Branch("trksGeantMedium",&trksGeantMedium,"trksGeantMedium/I");
-    mTree->Branch("trksGeneratorProcess",&trksGeneratorProcess,"trksGeneratorProcess/I");
-    mTree->Branch("trksNumberOfDaughters",&trksNumberOfDaughters,"trksNumberOfDaughters/I");
-    mTree->Branch("trksPt",&trksPt,"trksPt/F");
+    mTree->Branch("trksGeantId",&trksGeantId,"trksGeantId[nTrack]/I");
+    mTree->Branch("trksGeantProcess",&trksGeantProcess,"trksGeantProcess[nTrack]/I");
+    mTree->Branch("trksGeantMedium",&trksGeantMedium,"trksGeantMedium[nTrack]/I");
+    mTree->Branch("trksGeneratorProcess",&trksGeneratorProcess,"trksGeneratorProcess[nTrack]/I");
+    mTree->Branch("trksNumberOfDaughters",&trksNumberOfDaughters,"trksNumberOfDaughters[nTrack]/I");
+    mTree->Branch("trksPt",&trksPt,"trksPt[nTrack]/F");
 
     mTree->Branch("nPair",&nPair,"nPair/I");
     mTree->Branch("nMcPxl1Hits",&nMcPxl1Hits,"nMcPxl1Hits/I");
