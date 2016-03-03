@@ -89,6 +89,7 @@ int StMcAnalysisMaker::Init()
     mTree->Branch("trksGeneratorProcess",&trksGeneratorProcess,"trksGeneratorProcess[nTrack]/I");
     mTree->Branch("trksNumberOfDaughters",&trksNumberOfDaughters,"trksNumberOfDaughters[nTrack]/I");
     mTree->Branch("trksPt",&trksPt,"trksPt[nTrack]/F");
+    mTree->Branch("trksConvR",&trksConvR,"trksConvR[nTrack]/F");
 
     mTree->Branch("nPair",&nPair,"nPair/I");
     mTree->Branch("nMcPxl1Hits",&nMcPxl1Hits,"nMcPxl1Hits/I");
@@ -215,9 +216,11 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
         trksGeneratorProcess[nTrack] = mcTrack->startVertex()->generatorProcess();
         trksNumberOfDaughters[nTrack] = mcTrack->startVertex()->numberOfDaughters();
         trksPt[nTrack] = mcTrack->pt();
+        trksConvR[nTrack] = TMath::Sqrt(mcTrack->stopVertex()->position().x()*mcTrack->stopVertex()->position().x()+mcTrack->stopVertex()->position().y()*mcTrack->stopVertex()->position().y());
         nTrack++;
         
         hGeantId->Fill(trackGid);
+        
         if ((trackGid == 1 || trackGid==7 || trackGid==10007) &&
             mcTrack->stopVertex())
         {
@@ -473,7 +476,6 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                             break;
                         }
                     }
-                    
                     hitGeantId[nHits] = hitTrack->geantId();
                     if (pixHit->ladder() == 1){
                         nRcPxl1Hits++;
@@ -664,6 +666,7 @@ void StMcAnalysisMaker::initTree(){
         trksGeneratorProcess[i]=-999;
         trksNumberOfDaughters[i]=-999;
         trksPt[i]=-999;
+        trksConvR[i]=-999;
     }
 
 

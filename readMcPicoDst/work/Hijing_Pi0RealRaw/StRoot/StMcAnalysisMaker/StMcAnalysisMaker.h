@@ -99,6 +99,7 @@ private:
     Int_t trksGeneratorProcess[kMaxTrack];
     Int_t trksNumberOfDaughters[kMaxTrack];
     Float_t trksPt[kMaxTrack];
+    Float_t trksConvR[kMaxTrack];
 
     StAssociationMaker* mAssoc;
     const StTrack* findPartner(StMcTrack*, int&);
