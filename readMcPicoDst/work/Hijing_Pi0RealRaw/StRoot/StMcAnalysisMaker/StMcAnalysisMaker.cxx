@@ -212,7 +212,7 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
         Int_t trackGid = mcTrack->geantId();
         
         trksGeantId[nTrack] = trackGid;
-        if (trackGid->parent()) trksParentGeantId[nTrack] = trackGid->parent()->geantId();
+        if (mcTrack->parent()) trksParentGeantId[nTrack] = mcTrack->parent()->geantId();
         trksGeantProcess[nTrack] = mcTrack->startVertex()->geantProcess();
         trksGeantMedium[nTrack] = mcTrack->startVertex()->geantMedium();
         trksGeneratorProcess[nTrack] = mcTrack->startVertex()->generatorProcess();
