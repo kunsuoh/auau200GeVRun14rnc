@@ -456,6 +456,7 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                             break;
                         }
                     }
+                    
                     hitGeantId[nHits] = hitTrack->geantId();
                     if (pixHit->ladder() == 1){
                         nRcPxl1Hits++;
