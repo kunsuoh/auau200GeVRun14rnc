@@ -79,9 +79,17 @@ int StMcAnalysisMaker::Init()
         cout << " empty StAssociateMaker, stop!!" << endl;
         exit(1);
     }
-    
+
     // TTree
     mTree = new TTree("mTree","electron pair tree for QA");
+    mTree->Branch("nTrack",&nTrack,"nTrack/I");
+    mTree->Branch("trksGeantId",&trksGeantId,"trksGeantId/I");
+    mTree->Branch("trksGeantProcess",&trksGeantProcess,"trksGeantProcess/I");
+    mTree->Branch("trksGeantMedium",&trksGeantMedium,"trksGeantMedium/I");
+    mTree->Branch("trksGeneratorProcess",&trksGeneratorProcess,"trksGeneratorProcess/I");
+    mTree->Branch("trksNumberOfDaughters",&trksNumberOfDaughters,"trksNumberOfDaughters/I");
+    mTree->Branch("trksPt",&trksPt,"trksPt/F");
+
     mTree->Branch("nPair",&nPair,"nPair/I");
     mTree->Branch("nMcPxl1Hits",&nMcPxl1Hits,"nMcPxl1Hits/I");
     mTree->Branch("nMcPxl2Hits",&nMcPxl2Hits,"nMcPxl2Hits/I");
@@ -200,6 +208,15 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
     for (unsigned int i = 0;  i < trks.size(); i++){
         StMcTrack* mcTrack = trks[i];
         Int_t trackGid = mcTrack->geantId();
+        
+        trksGeantId[nTrack] = trackGid;
+        trksGeantProcess[nTrack] = mcTrack->startVertex()->geantProcess();
+        trksGeantMedium[nTrack] = mcTrack->startVertex()->geantMedium();
+        trksGeneratorProcess[nTrack] = mcTrack->startVertex()->generatorProcess();
+        trksNumberOfDaughters[nTrack] = mcTrack->startVertex()->numberOfDaughters();
+        trksPt[nTrack] = mcTrack->pt();
+        nTrack++;
+        
         hGeantId->Fill(trackGid);
         if ((trackGid == 1 || trackGid==7 || trackGid==10007) &&
             mcTrack->stopVertex())
@@ -639,5 +656,15 @@ void StMcAnalysisMaker::initTree(){
         hitGeantId[i]=-999;
         
     }
+    nTrack=0;
+    for (int i=0; i<kMaxTrack; i++) {
+        trksGeantId[i]=-999;
+        trksGeantProcess[i]=-999;
+        trksGeantMedium[i]=-999;
+        trksGeneratorProcess[i]=-999;
+        trksNumberOfDaughters[i]=-999;
+        trksPt[i]=-999;
+    }
+
 
 }

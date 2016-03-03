@@ -23,6 +23,7 @@ class StEvent;
 
 const Int_t kMaxPair= 500;
 const Int_t kMaxHits= 5000;
+const Int_t kMaxTrack= 5000;
 class StMcAnalysisMaker : public StMaker
 {
 private:
@@ -91,6 +92,14 @@ private:
     Float_t mcPt2_pxl1[kMaxHits];
     Int_t hitGeantId[kMaxHits];
     
+    Int_t nTrack;
+    Int_t trksGeantId[kMaxTrack];
+    Int_t trksGeantProcess[kMaxTrack];
+    Int_t trksGeantMedium[kMaxTrack];
+    Int_t trksGeneratorProcess[kMaxTrack];
+    Int_t trksNumberOfDaughters[kMaxTrack];
+    Float_t trksPt[kMaxTrack];
+
     StAssociationMaker* mAssoc;
     const StTrack* findPartner(StMcTrack*, int&);
     const StMcTrack* findPartner(StGlobalTrack*, int&);
