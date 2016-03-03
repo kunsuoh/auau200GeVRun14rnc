@@ -189,12 +189,14 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
     
     float bField = event->runInfo()->magneticField();
     
+    cout << "Init Tree..." << endl;
     initTree();
     
     StPxlHitCollection * pxlHitCol = event->pxlHitCollection();
     StMcPxlHitCollection * pxlMcHitCol = mcEvent->pxlHitCollection();
     
     // track loop
+    cout << "Track Loop start" << endl;
     for (unsigned int i = 0;  i < trks.size(); i++){
         StMcTrack* mcTrack = trks[i];
         Int_t trackGid = mcTrack->geantId();
@@ -428,7 +430,7 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
     }
     
     // pxl hit loop
-    // RC
+    cout << "Rc hit Loop start" << endl;
     nHits = 0;
     for (unsigned int iSec = 0; iSec<pxlHitCol->numberOfSectors(); iSec++){
         StPxlSectorHitCollection * pxlSecHitCol = pxlHitCol->sector(iSec);
@@ -472,7 +474,7 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
     }
     cout << "nRcPxl1Hits / nRcPxl2Hits / pxlHitCol->numberOfHits() : " << nRcPxl1Hits << " / " << nRcPxl2Hits << " / " << pxlHitCol->numberOfHits() << endl;
     
-    // MC
+    cout << "Mc hit Loop start" << endl;
     for (unsigned int iSec = 0; iSec<pxlMcHitCol->numberOfSectors(); iSec++){
         StMcPxlSectorHitCollection * pxlSecHitCol = pxlMcHitCol->sector(iSec);
         if (!pxlSecHitCol) continue;
