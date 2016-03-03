@@ -216,7 +216,7 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
         trksGeneratorProcess[nTrack] = mcTrack->startVertex()->generatorProcess();
         trksNumberOfDaughters[nTrack] = mcTrack->startVertex()->numberOfDaughters();
         trksPt[nTrack] = mcTrack->pt();
-        trksConvR[nTrack] = TMath::Sqrt(mcTrack->stopVertex()->position().x()*mcTrack->stopVertex()->position().x()+mcTrack->stopVertex()->position().y()*mcTrack->stopVertex()->position().y());
+        trksConvR[nTrack] = TMath::Sqrt(mcTrack->startVertex()->position().x()*mcTrack->startVertex()->position().x()+mcTrack->startVertex()->position().y()*mcTrack->startVertex()->position().y());
         nTrack++;
         
         hGeantId->Fill(trackGid);
