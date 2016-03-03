@@ -94,6 +94,7 @@ private:
     
     Int_t nTrack;
     Int_t trksGeantId[kMaxTrack];
+    Int_t trksParentGeantId[kMaxTrack];
     Int_t trksGeantProcess[kMaxTrack];
     Int_t trksGeantMedium[kMaxTrack];
     Int_t trksGeneratorProcess[kMaxTrack];

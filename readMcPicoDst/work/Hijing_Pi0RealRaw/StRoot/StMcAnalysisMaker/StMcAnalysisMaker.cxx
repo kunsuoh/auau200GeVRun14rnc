@@ -84,6 +84,7 @@ int StMcAnalysisMaker::Init()
     mTree = new TTree("mTree","electron pair tree for QA");
     mTree->Branch("nTrack",&nTrack,"nTrack/I");
     mTree->Branch("trksGeantId",&trksGeantId,"trksGeantId[nTrack]/I");
+    mTree->Branch("trksParentGeantId",&trksParentGeantId,"trksParentGeantId[nTrack]/I");
     mTree->Branch("trksGeantProcess",&trksGeantProcess,"trksGeantProcess[nTrack]/I");
     mTree->Branch("trksGeantMedium",&trksGeantMedium,"trksGeantMedium[nTrack]/I");
     mTree->Branch("trksGeneratorProcess",&trksGeneratorProcess,"trksGeneratorProcess[nTrack]/I");
@@ -211,6 +212,7 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
         Int_t trackGid = mcTrack->geantId();
         
         trksGeantId[nTrack] = trackGid;
+        if (trackGid->parent()) trksParentGeantId[nTrack] = trackGid->parent()->geantId();
         trksGeantProcess[nTrack] = mcTrack->startVertex()->geantProcess();
         trksGeantMedium[nTrack] = mcTrack->startVertex()->geantMedium();
         trksGeneratorProcess[nTrack] = mcTrack->startVertex()->generatorProcess();
@@ -661,6 +663,7 @@ void StMcAnalysisMaker::initTree(){
     nTrack=0;
     for (int i=0; i<kMaxTrack; i++) {
         trksGeantId[i]=-999;
+        trksParentGeantId[i]=-999;
         trksGeantProcess[i]=-999;
         trksGeantMedium[i]=-999;
         trksGeneratorProcess[i]=-999;
