@@ -461,8 +461,8 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
                         nRcPxl1Hits++;
                         clusterSize_pxl1[nHits] = pixHit->nRawHits();
                         mcPt_pxl1[nHits] = hitTrack->pt();
-                        mcPt1_pxl1[nHits] = hitTrack1->pt();
-                        mcPt2_pxl1[nHits] = hitTrack2->pt();
+                        if (hitTrack1) mcPt1_pxl1[nHits] = hitTrack1->pt();
+                        if (hitTrack2) mcPt2_pxl1[nHits] = hitTrack2->pt();
                     }
                     else {nRcPxl2Hits++;
                         clusterSize_pxl2[nHits] = pixHit->nRawHits();
