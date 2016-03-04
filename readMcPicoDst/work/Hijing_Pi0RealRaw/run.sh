@@ -50,9 +50,8 @@ if [ $makeReco -eq 1 ]; then
     # ---- HFT reconstruction
     start=0
     end=19
-    inFile=Files_$job/fzd/pi0Dalitz_$run.starsim.fzd
     if [ $makeFZ -eq 1 ]; then
-        inFile=Files_$job/fzd/pi0Dalitz_$run.starsim.fzd
+        inFile=Files_$job/fzd/${inputSource}_$run.starsim.fzd
     else
         inFile=/star/u/kunsu/pwg/$inputSource/fz/${inputSource}_$run.fzd
     fi
