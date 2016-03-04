@@ -40,7 +40,7 @@ starsim(9,$run,$RANDOM)
 .q
 EOF
 
-    mv $inputSource_* ./Files_$job/fzd/.
+    mv ${inputSource}_* ./Files_$job/fzd/.
 else
     echo "Kunsu: Skip make sim file .fzd"
 fi
@@ -92,7 +92,7 @@ if [ $makeReco -eq 1 ]; then
     ./.temprun.sh
     #rm .temprun.sh
 
-    mv $inputSource_*.root Files_$job/hft_reco/.
+    mv ${inputSource}_*.root Files_$job/hft_reco/.
     if [ $makeQa -eq 1 ]; then
         mv mcAnalysis.pxlSimQa.root Files_$job/hft_reco/.
     fi
