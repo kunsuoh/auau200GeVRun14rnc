@@ -30,9 +30,9 @@ StPxlDigiHit::StPxlDigiHit(const StPxlCluster &cluster, unsigned sector, unsigne
    mIdTruth  = cluster.idTruth();
    mNRawHits = cluster.nRawHits();
 
-    mLocalPosition[0] = mFirstPixelX - StPxlConsts::kPixelSize * mMeanRow;// - StPxlConsts::kPixelSize/2; // add StPxlConsts::kPixelSize/2 by kunsu
+    mLocalPosition[0] = mFirstPixelX - StPxlConsts::kPixelSize * mMeanRow - StPxlConsts::kPixelSize/2; // add StPxlConsts::kPixelSize/2 by kunsu
    mLocalPosition[1] = 0;
-   mLocalPosition[2] = mFirstPixelZ + StPxlConsts::kPixelSize * mMeanColumn;// + StPxlConsts::kPixelSize/2; // add StPxlConsts::kPixelSize/2 by kunsu
+   mLocalPosition[2] = mFirstPixelZ + StPxlConsts::kPixelSize * mMeanColumn + StPxlConsts::kPixelSize/2; // add StPxlConsts::kPixelSize/2 by kunsu
 }
 
 
@@ -52,7 +52,7 @@ StPxlDigiHit::StPxlDigiHit(const double (&localPos)[3], unsigned sector, unsigne
 void StPxlDigiHit::setMeanRow(double val)
 {
    mMeanRow = val;
-   mLocalPosition[0] = mFirstPixelX - StPxlConsts::kPixelSize * mMeanRow;// - StPxlConsts::kPixelSize/2; // add StPxlConsts::kPixelSize/2 by kunsu
+   mLocalPosition[0] = mFirstPixelX - StPxlConsts::kPixelSize * mMeanRow - StPxlConsts::kPixelSize/2; // add StPxlConsts::kPixelSize/2 by kunsu
 }
 
 
@@ -60,7 +60,7 @@ void StPxlDigiHit::setMeanRow(double val)
 void StPxlDigiHit::setMeanColumn(double val)
 {
    mMeanColumn = val;
-   mLocalPosition[2] = mFirstPixelZ + StPxlConsts::kPixelSize * mMeanColumn;// + StPxlConsts::kPixelSize/2; // add StPxlConsts::kPixelSize/2 by kunsu
+   mLocalPosition[2] = mFirstPixelZ + StPxlConsts::kPixelSize * mMeanColumn + StPxlConsts::kPixelSize/2; // add StPxlConsts::kPixelSize/2 by kunsu
 }
 
 
