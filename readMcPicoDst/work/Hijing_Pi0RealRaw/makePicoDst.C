@@ -128,7 +128,7 @@ void makePicoDst(const Int_t runnumber=999999,
 #endif
         
     }
-    cout << "======================" <<  Form("%s_%i.picoDst.root",outfilename,runnumber) << endl;
+    cout << "======================" <<  Form("%s_%i.picoDst.root",outfilename.data(),runnumber) << endl;
     StPicoDstMaker *picoMaker = new StPicoDstMaker(1,Form("%s_%i.picoDst.root",outfilename,runnumber),"picoDst");
     picoMaker->setRunNumber(runnumber);
     picoMaker->setEmcMode(emcMode); // 0-No EMC, 1-EMC ON
