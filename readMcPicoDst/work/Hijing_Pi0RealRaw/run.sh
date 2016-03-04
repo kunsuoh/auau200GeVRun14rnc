@@ -6,7 +6,7 @@ job=$1
 run=`echo $job | cut -f2 -d"_"`
 
 makeFolder=1
-makeFZ=0
+makeFZ=1
 makeReco=1
 makeRecoPileup=0
 makePico=1
