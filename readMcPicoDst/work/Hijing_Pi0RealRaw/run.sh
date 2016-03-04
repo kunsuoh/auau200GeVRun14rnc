@@ -99,7 +99,7 @@ if [ $makeReco -eq 1 ]; then
 fi
 if [ $makePico -eq 1 ]; then
     # ---- PicoDst
-    root4star -l -b -q makePicoDst.C\($run,\"Files_$job/hft_reco/${inputSource}_$run.MuDst.root\",\"Files_$job/hft_reco/${inputSource}_$run.McEvent.root\"\)
+    root4star -l -b -q makePicoDst.C\($run,\"Files_$job/hft_reco/${inputSource}_$run.MuDst.root\",\"Files_$job/hft_reco/${inputSource}_$run.McEvent.root\",\"$inputSource\"\)
     mv *.picoDst.root ${inputSource}_$job.picoDst.root
 fi
 
