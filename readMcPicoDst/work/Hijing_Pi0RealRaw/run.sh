@@ -73,8 +73,8 @@ if [ $makeReco -eq 1 ]; then
     echo "root4star -b -l <<EOF" > .temprun.sh
     echo ".x bfc.C(-1,\"$chain\",\"$inFile\");" >> .temprun.sh
     echo "StPxlSimMaker* pxl = chain->GetMaker(\"pxlSimMaker\");" >> .temprun.sh
-    echo "pxl->useIdealGeom(); // ideal geometry" >> .temprun.sh
-    #echo "pxl->useDbGeom();  // survey geometry" >> .temprun.sh
+    #echo "pxl->useIdealGeom(); // ideal geometry" >> .temprun.sh
+    echo "pxl->useDbGeom();  // survey geometry" >> .temprun.sh
     echo "pxl->useRandomSeed();" >> .temprun.sh
     if [ $makeRecoPileup -eq 1 ]; then
         echo "pxl->addPileup();" >> .temprun.sh
