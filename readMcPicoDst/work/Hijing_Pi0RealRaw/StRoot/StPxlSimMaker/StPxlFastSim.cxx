@@ -231,8 +231,9 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
                     
                     unsigned short idTruth = mcPix->parentTrack() ? mcPix->parentTrack()->key() : -999;
 
-                    Int_t clusterSize = 4;
+                    //Int_t clusterSize = 4;
                     //while (clusterSize > 9) clusterSize = (Int_t)dataH2->GetRandom();
+                    clusterSize = (Int_t)dataH2->GetRandom();
                     //cout << "cluster size: " << clusterSize << endl;
                     // init rowColumn[25][2];
                     for (int i=0;i<25;i++) for (int j=0;j<2;j++) rowColumn[i][j] = 0;
