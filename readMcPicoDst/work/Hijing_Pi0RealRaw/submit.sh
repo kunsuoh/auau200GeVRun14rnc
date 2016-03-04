@@ -1,6 +1,6 @@
 #!/bin/bash
 date
-particle=gamma
+particle=pi0Dalitz
 nrun=$1
 path=/star/data01/pwg/kunsu/$particle/
 rm -rf LocalLibraries_$particle*
