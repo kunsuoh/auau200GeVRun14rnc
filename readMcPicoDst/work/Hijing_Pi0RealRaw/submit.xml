@@ -3,7 +3,7 @@
     <command>
         starver SL15k
         
-        ./run.sh ${JOBID}
+        ./run.sh ${JOBID} &particle;
         
     </command>
     
