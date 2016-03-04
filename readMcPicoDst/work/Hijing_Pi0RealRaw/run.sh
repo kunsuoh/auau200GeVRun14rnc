@@ -36,7 +36,7 @@ if [ $makeFZ -eq 1 ]; then
     echo "Kunsu: make sim file .fzd"
     root4star -b -l << EOF
 .L starsim.hijing.$inputSource.C
-starsim(9,$run,$RANDOM)
+starsim(1,$run,$RANDOM)
 .q
 EOF
 
