@@ -7,9 +7,9 @@ run=`echo $job | cut -f2 -d"_"`
 inputSource=$2
 
 makeFolder=1
-makeFZ=1
+makeFZ=0
 makeReco=1
-makeRecoPileup=1
+makeRecoPileup=0
 makePico=1
 makeZip=1
 makeQa=1
