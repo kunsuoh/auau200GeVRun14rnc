@@ -233,9 +233,10 @@ int StMcAnalysisMaker::fillTracks(StMcEvent* mcEvent,StEvent* event)
             // find electron and positron from gamma or pi0dalitz
             for (unsigned int j = 0; j < mcTrack->stopVertex()->numberOfDaughters(); j++){
                 StMcTrack * dauTrack = mcTrack->stopVertex()->daughter(j);
-                Int_t dauTrackGid = dauTrack->geantId();
+                Int_t dauTrackGid = 0;
+                if (dauTrack) dauTrackGid = dauTrack->geantId();
                 
-                //if (dauTrackGid!=2 && dauTrackGid!=3 ) continue;
+                if (dauTrackGid!=2 && dauTrackGid!=3 ) continue;
                 
                 int ncommonhits = 0;
                 StTrack const* rcTrack = findPartner(dauTrack, ncommonhits);
