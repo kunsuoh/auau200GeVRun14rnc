@@ -12,7 +12,7 @@ makeReco=1
 makeRecoPileup=1
 makePico=1
 makeZip=1
-makeQa=1
+makeQa=0
 
 
 # ---- Make folder
