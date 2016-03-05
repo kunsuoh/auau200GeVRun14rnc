@@ -115,8 +115,8 @@ private:
     
     TH1F *dataH2;
     
-    Double_t wrongRowRatio;
-    Bool_t wrongRow;
+    Double_t mPxlWrongRowRatio;
+    Bool_t mPxlWrongRow;
     
 };
 #endif
