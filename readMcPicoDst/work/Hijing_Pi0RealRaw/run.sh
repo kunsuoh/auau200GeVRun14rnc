@@ -11,7 +11,7 @@ makeFZ=1
 makeReco=1
 makeRecoPileup=1
 makePico=1
-makeZip=1
+makeZip=0
 makeQa=0
 
 
@@ -36,7 +36,7 @@ if [ $makeFZ -eq 1 ]; then
     echo "Kunsu: make sim file .fzd"
     root4star -b -l << EOF
 .L starsim.hijing.$inputSource.C
-starsim(1,$run,$RANDOM)
+starsim(19,$run,$RANDOM)
 .q
 EOF
 
@@ -114,5 +114,9 @@ if [ $makeZip -eq 1 ]; then
 fi
 
 if [ $makeQa -eq 1 ]; then
-    mv Files_$job/hft_reco/mcAnalysis.pxlSimQa.root /star/u/kunsu/pwg/$inputSource/qaHist/qa_$job.root
+mv Files_$job/hft_reco/mcAnalysis.pxlSimQa.root /star/u/kunsu/pwg/$inputSource/qaHist/qa_$job.root
+fi
+
+if [ $makeFZ -eq 1 ]; then
+mv Files_$job/fzd/* /star/u/kunsu/pwg/$inputSource/fz/
 fi

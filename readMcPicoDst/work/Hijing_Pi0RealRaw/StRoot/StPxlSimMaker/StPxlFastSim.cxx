@@ -299,7 +299,11 @@ StPxlRawHit StPxlFastSim::makeRawHit(float localX, float localZ, int iSec, int i
     tempHit.setSector(iSec);
     tempHit.setLadder(iLad);
     tempHit.setSensor(iSen);
-    tempHit.setRow(row+rowColumn[nHits][0]);
+    if (mPxlWrongRow) {
+        if (mRandom->flat(0.,1.) < mPxlWrongRowRatio) tempHit.setRow(mRandom->flat(0,928));
+        else tempHit.setRow(row+rowColumn[nHits][0]);
+    }
+    else tempHit.setRow(row+rowColumn[nHits][0]);
     tempHit.setColumn(column+rowColumn[nHits][1]);
     tempHit.setIdTruth(idTruth);
     return tempHit;

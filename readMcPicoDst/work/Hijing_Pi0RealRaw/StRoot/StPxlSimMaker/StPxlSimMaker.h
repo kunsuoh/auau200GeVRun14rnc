@@ -91,7 +91,8 @@ class StPxlSimMaker : public StMaker
   //Lomnitz::Hack for pileup
   void addPileup(){mAddPileup = kTRUE;}
   void setPileupFile(TString pileupFile) {mPileupFile = pileupFile;}
-
+    void setWrongRowRatio(Double_t value) {mPxlWrongRowRatio=value;}
+    
   /*! \brief Documentation method. GetCVS can be called from the chain, providing a list
    *  of all maker versions in use.
   */
@@ -109,6 +110,7 @@ private:
     Bool_t mUseDbGeom;
     Bool_t mUseRandomSeed;
 
+    Double_t mPxlWrongRowRatio;
     //Lomnitz::Hack for pileup
     TString mPileupFile; 
     Bool_t mAddPileup;
