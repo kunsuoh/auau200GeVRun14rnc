@@ -77,6 +77,7 @@ if [ $makeReco -eq 1 ]; then
     #echo "pxl->useDbGeom();  // survey geometry" >> .temprun.sh
     #echo "pxl->setFastSim();" >> .temprun.sh
     echo "pxl->setFastSimRaw();" >> .temprun.sh
+    echo "pxl->setWrongRowRatio(-1);" >> .temprun.sh # -1 : off, other : ratio
     echo "pxl->useRandomSeed();" >> .temprun.sh
     if [ $makeRecoPileup -eq 1 ]; then
         echo "pxl->addPileup();" >> .temprun.sh

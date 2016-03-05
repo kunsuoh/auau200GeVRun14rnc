@@ -300,6 +300,7 @@ StPxlRawHit StPxlFastSim::makeRawHit(float localX, float localZ, int iSec, int i
     tempHit.setLadder(iLad);
     tempHit.setSensor(iSen);
     if (mPxlWrongRow) {
+        cout << "StPxlFastSim::mPxlWrongRow is on!" << endl;
         if (mRandom->flat(0.,1.) < mPxlWrongRowRatio) tempHit.setRow(mRandom->flat(0,928));
         else tempHit.setRow(row+rowColumn[nHits][0]);
     }
