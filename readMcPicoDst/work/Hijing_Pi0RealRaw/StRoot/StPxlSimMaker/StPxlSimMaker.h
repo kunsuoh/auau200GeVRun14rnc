@@ -92,7 +92,8 @@ class StPxlSimMaker : public StMaker
   void addPileup(){mAddPileup = kTRUE;}
   void setPileupFile(TString pileupFile) {mPileupFile = pileupFile;}
     void setWrongRowRatio(Double_t value) {mPxlWrongRowRatio=value;}
-    
+    void setFastSim() {mUseFastSim = kTRUE;}
+    void setFastSimRaw() {mUseFastSimRaw = kTRUE;}
   /*! \brief Documentation method. GetCVS can be called from the chain, providing a list
    *  of all maker versions in use.
   */

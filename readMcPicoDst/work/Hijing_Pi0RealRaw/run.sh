@@ -32,28 +32,29 @@ cp -p /star/data01/pwg/kunsu/pileup/pileupSet$at/pile**.root ./Files_$job/pile_u
 fi
 
 # ---- Producing sim file .fzd
-if [ $makeFZ -eq 1 ]; then
-    echo "Kunsu: make sim file .fzd"
-    root4star -b -l << EOF
+if [ -s /star/u/kunsu/pwg/${inputSource}/fz/${inputSource}_${run}.starsim.fzd ]; then
+echo "Kunsu: Skip make sim file .fzd"
+else
+echo "Kunsu: make sim file .fzd"
+root4star -b -l << EOF
 .L starsim.hijing.$inputSource.C
 starsim(19,$run,$RANDOM)
 .q
 EOF
+mv ${inputSource}_* ./Files_$job/fzd/.
+cp Files_$job/fzd/* /star/u/kunsu/pwg/$inputSource/fz/
 
-    mv ${inputSource}_* ./Files_$job/fzd/.
-else
-    echo "Kunsu: Skip make sim file .fzd"
 fi
 
+# ---- HFT reconstruction
 if [ $makeReco -eq 1 ]; then
     echo "Kunsu: HFT reco starting"
-    # ---- HFT reconstruction
     start=0
     end=19
-    if [ $makeFZ -eq 1 ]; then
-        inFile=Files_$job/fzd/${inputSource}_$run.starsim.fzd
+    if [ -s /star/u/kunsu/pwg/${inputSource}/fz/${inputSource}_${run}.starsim.fzd ]; then
+     inFile=/star/u/kunsu/pwg/${inputSource}/fz/${inputSource}_${run}.starsim.fzd
     else
-        inFile=/star/u/kunsu/pwg/$inputSource/fz/${inputSource}_$run.fzd
+        inFile=Files_$job/fzd/${inputSource}_$run.starsim.fzd
     fi
     inPile=Files_$job/pile_up/pile_up$at.root
     if [ $makeQa -eq 1 ]; then
@@ -74,6 +75,8 @@ if [ $makeReco -eq 1 ]; then
     echo "StPxlSimMaker* pxl = chain->GetMaker(\"pxlSimMaker\");" >> .temprun.sh
     echo "pxl->useIdealGeom(); // ideal geometry" >> .temprun.sh
     #echo "pxl->useDbGeom();  // survey geometry" >> .temprun.sh
+    #echo "pxl->setFastSim();" >> .temprun.sh
+    echo "pxl->setFastSimRaw();" >> .temprun.sh
     echo "pxl->useRandomSeed();" >> .temprun.sh
     if [ $makeRecoPileup -eq 1 ]; then
         echo "pxl->addPileup();" >> .temprun.sh
@@ -115,8 +118,4 @@ fi
 
 if [ $makeQa -eq 1 ]; then
 mv Files_$job/hft_reco/mcAnalysis.pxlSimQa.root /star/u/kunsu/pwg/$inputSource/qaHist/qa_$job.root
-fi
-
-if [ $makeFZ -eq 1 ]; then
-mv Files_$job/fzd/* /star/u/kunsu/pwg/$inputSource/fz/
 fi
