@@ -13,7 +13,7 @@
     <output fromScratch="*.tar" toURL="file:&base;/files/" />
     
     <SandBox installer="ZIP">
-        <Package name="LocalLibraries_&particle;">
+        <Package name="LocalLibraries_&particle;&tag;">
             <File>file:./auau200GeVRun14rnc/readMcPicoDst/work/Hijing_Pi0RealRaw/starsim.hijing.pi0real.C</File>
             <File>file:./auau200GeVRun14rnc/readMcPicoDst/work/Hijing_Pi0RealRaw/starsim.hijing.gamma.C</File>
             <File>file:./auau200GeVRun14rnc/readMcPicoDst/work/Hijing_Pi0RealRaw/starsim.hijing.pi0Dalitz.C</File>
