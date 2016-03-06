@@ -55,7 +55,7 @@ ClassImp(StPxlSimMaker)
 
 using namespace std;
 
-StPxlSimMaker::StPxlSimMaker(const Char_t* name) : StMaker(name) , mPxlSimulator(0), mUseFastSim(kFALSE), mUseFastSimRaw(kFALSE), mUseDIGMAPSSim(kFALSE) , mUseIdealGeom(kFALSE), mUseDbGeom(kTRUE), mUseRandomSeed(kTRUE),mAddPileup(kFALSE),mPxlWrongRowRatio(0)
+StPxlSimMaker::StPxlSimMaker(const Char_t* name) : StMaker(name) , mPxlSimulator(0), mUseFastSim(kFALSE), mUseFastSimRaw(kFALSE), mUseDIGMAPSSim(kFALSE) , mUseIdealGeom(kFALSE), mUseDbGeom(kTRUE), mUseRandomSeed(kTRUE),mAddPileup(kFALSE),mPxlWrongRowRatio1(-1),mPxlWrongRowRatio2(-1)
 {
 }
 //____________________________________________________________
@@ -84,7 +84,7 @@ Int_t StPxlSimMaker::Init()
         mPileupAdder = new StPxlPileupAdder();
     }
     
-    mPxlSimulator = new StPxlFastSim("pxlFastSim",mUseRandomSeed,mPxlWrongRowRatio);
+    mPxlSimulator = new StPxlFastSim("pxlFastSim",mUseRandomSeed,mPxlWrongRowRatio1,mPxlWrongRowRatio2);
     
     LOG_INFO << "StPxlSimMaker: using StPxlFastSim " << endm;
     //}

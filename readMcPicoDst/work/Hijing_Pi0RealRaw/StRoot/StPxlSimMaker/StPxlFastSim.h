@@ -57,7 +57,7 @@ class StPxlFastSim: public StPxlISim
 public:
     
     /*! \brief Constructor */
-    StPxlFastSim(const Char_t *name="pxlFastSim",Bool_t randomSeed=kFALSE, Double_t wrongRowRatio=-1): StPxlISim(name), mPxlDb(0), mRandom(0), mResXPix(0), mResYPix(0), mResZPix(0), mUseRandomSeed(randomSeed), mPxlWrongRow(wrongRowRatio < 0 ? kFALSE : kTRUE), mPxlWrongRowRatio(wrongRowRatio) {}
+    StPxlFastSim(const Char_t *name="pxlFastSim",Bool_t randomSeed=kFALSE, Double_t wrongRowRatio1=-1, Double_t wrongRowRatio2=-1): StPxlISim(name), mPxlDb(0), mRandom(0), mResXPix(0), mResYPix(0), mResZPix(0), mUseRandomSeed(randomSeed), mPxlWrongRow(wrongRowRatio1 < 0 && wrongRowRatio2 < 0 ? kFALSE : kTRUE), mPxlWrongRowRatio1(wrongRowRatio1), mPxlWrongRowRatio2(wrongRowRatio2) {}
     
     /*! \brief This class does not own any hit containers.
      *        mRandom is deleted here.
@@ -115,7 +115,8 @@ private:
     
     TH1F *dataH2;
     
-    Double_t mPxlWrongRowRatio;
+    Double_t mPxlWrongRowRatio1;
+    Double_t mPxlWrongRowRatio2;
     Bool_t mPxlWrongRow;
     
 };

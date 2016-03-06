@@ -91,7 +91,7 @@ class StPxlSimMaker : public StMaker
   //Lomnitz::Hack for pileup
   void addPileup(){mAddPileup = kTRUE;}
   void setPileupFile(TString pileupFile) {mPileupFile = pileupFile;}
-    void setWrongRowRatio(Double_t value) {mPxlWrongRowRatio=value;}
+    void setWrongRowRatio(Double_t value1,Double_t value2) {mPxlWrongRowRatio1=value1;mPxlWrongRowRatio2=value2;}
     void setFastSim() {mUseFastSim = kTRUE;}
     void setFastSimRaw() {mUseFastSimRaw = kTRUE;}
   /*! \brief Documentation method. GetCVS can be called from the chain, providing a list
@@ -111,7 +111,8 @@ private:
     Bool_t mUseDbGeom;
     Bool_t mUseRandomSeed;
 
-    Double_t mPxlWrongRowRatio;
+    Double_t mPxlWrongRowRatio1;
+    Double_t mPxlWrongRowRatio2;
     //Lomnitz::Hack for pileup
     TString mPileupFile; 
     Bool_t mAddPileup;
