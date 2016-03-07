@@ -34,7 +34,7 @@ fi
 if [ -s /star/u/kunsu/pwg/${inputSource}/fz/${inputSource}_${run}.starsim.fzd ]; then
 echo "Kunsu: Skip make sim file .fzd"
 else
-echo "Kunsu: make sim file .fzd"
+echo "Kunsu: Make sim file .fzd"
 root4star -b -l << EOF
 .L starsim.hijing.$inputSource.C
 starsim(19,$run,$RANDOM)
@@ -49,6 +49,7 @@ fi
 if [ -s /star/u/kunsu/pwg/${inputSource}/tpc_reco/${inputSource}_${run}.event.root ]; then
 echo "Kunsu: Skip make tpc_reco files"
 else
+echo "Kunsu: Make tpc_reco files"
 start=0
 end=19
 if [ -s /star/u/kunsu/pwg/${inputSource}/fz/${inputSource}_${run}.starsim.fzd ]; then
