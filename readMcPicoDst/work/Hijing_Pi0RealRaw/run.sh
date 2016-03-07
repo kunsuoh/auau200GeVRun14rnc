@@ -51,7 +51,7 @@ echo "Kunsu: Skip make tpc_reco files"
 else
 echo "Kunsu: Make tpc_reco files"
 start=0
-end=19
+end=1
 if [ -s /star/u/kunsu/pwg/${inputSource}/fz/${inputSource}_${run}.starsim.fzd ]; then
 inFile=/star/u/kunsu/pwg/${inputSource}/fz/${inputSource}_${run}.starsim.fzd
 else
