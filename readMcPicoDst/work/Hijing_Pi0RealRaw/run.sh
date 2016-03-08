@@ -51,7 +51,7 @@ echo "Kunsu: Skip make tpc_reco files"
 else
 echo "Kunsu: Make tpc_reco files"
 start=0
-end=1
+end=19
 if [ -s /star/u/kunsu/pwg/${inputSource}/fz/${inputSource}_${run}.starsim.fzd ]; then
 inFile=/star/u/kunsu/pwg/${inputSource}/fz/${inputSource}_${run}.starsim.fzd
 else
@@ -139,11 +139,11 @@ if [ $makeReco -eq 1 ]; then
     echo "root4star -b -l <<EOF" > .temprun.sh
     echo ".x bfc.C(-1,\"$chain\",\"$inFile\");" >> .temprun.sh
     echo "StPxlSimMaker* pxl = chain->GetMaker(\"pxlSimMaker\");" >> .temprun.sh
-    #echo "pxl->useIdealGeom(); // ideal geometry" >> .temprun.sh
-    echo "pxl->useDbGeom();  // survey geometry" >> .temprun.sh
+    echo "pxl->useIdealGeom(); // ideal geometry" >> .temprun.sh
+    #echo "pxl->useDbGeom();  // survey geometry" >> .temprun.sh
     #echo "pxl->setFastSim();" >> .temprun.sh
     echo "pxl->setFastSimRaw();" >> .temprun.sh
-    echo "pxl->setWrongRowRatio(0.5,0.5);" >> .temprun.sh # -1 : off, other : ratio
+    echo "pxl->setWrongRowRatio(0.0,0.5);" >> .temprun.sh # -1 : off, other : ratio
     echo "pxl->useRandomSeed();" >> .temprun.sh
     if [ $makeRecoPileup -eq 1 ]; then
         echo "pxl->addPileup();" >> .temprun.sh
