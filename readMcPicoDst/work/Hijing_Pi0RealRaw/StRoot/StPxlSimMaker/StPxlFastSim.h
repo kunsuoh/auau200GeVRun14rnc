@@ -45,6 +45,7 @@
 #include "StPxlISim.h"
 #include "TF1.h"
 #include "TH1F.h"
+#include "TH2F.h"
 #include "StPxlRawHitMaker/StPxlRawHit.h"
 
 class StRandom;
