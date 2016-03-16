@@ -2704,7 +2704,7 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
         {
             const StMcPxlLadderHitCollection* mcPxlLadderHitCol = mcPxlSectorHitCol->ladder(iLad);
             if (!mcPxlLadderHitCol) continue;
-            Int_t nHitsOnLadder = mcPxlLadderHitCol->numberOfHits()i*4/100+1;
+            Int_t nHitsOnLadder = mcPxlLadderHitCol->numberOfHits()*4/100+1;
             Float_t randomRatio = histRandomHitDistribution->ProjectionX("_px",nHitsonLadder)->GetRandom();
             cout << nHitsOnLadder << " " << randomRatio << endl;
             for (UInt_t iSen = 0; iSen < mcPxlLadderHitCol->numberOfSensors(); iSen++)
