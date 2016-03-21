@@ -115,6 +115,7 @@ private:
     Bool_t mUseRandomSeed;
     
     TH1F *dataH2;
+    TH1F *HistRandomRawHit;
     TH2F *histRandomHitDistribution;    
     Double_t mPxlWrongRowRatio1;
     Double_t mPxlWrongRowRatio2;
