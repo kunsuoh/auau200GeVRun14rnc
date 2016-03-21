@@ -403,7 +403,7 @@ Int_t StPxlFastSim::addPxlRawHits(const StMcPxlHitCollection& mcPxlHitCol,
             if (!mcPxlLadderHitCol) continue;
             Int_t nHitsOnLadder = mcPxlLadderHitCol->numberOfHits()*4.127/100 + 1;
             Float_t randomRatio = mRandom->gauss(HistRandomRawHit->GetBinContent(nHitsOnLadder),HistRandomRawHit->GetBinError(nHitsOnLadder));
-            cout << nHitsOnLadder << " " << randomRatio << endl;
+            cout << "Check random ratio: " << nHitsOnLadder << " " << randomRatio << endl;
             mPxlWrongRowRatio1 = randomRatio;
             mPxlWrongRowRatio2 = randomRatio;
 
